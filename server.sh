@@ -1,6 +1,7 @@
 #!/bin/sh
 set -x
+BTCD=bitcoind
 mkdir -p regtest-datadir
 cp bitcoin.conf regtest-datadir
-bitcoind -server -regtest -datadir=regtest-datadir -debug
+$BTCD -server -regtest -datadir=regtest-datadir -debug
 

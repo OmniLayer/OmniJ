@@ -1,9 +1,10 @@
 #!/bin/sh
-TESTADDR=`bitcoin-cli -regtest -datadir=regtest-datadir getnewaddress`
-TESTTX=`bitcoin-cli -regtest -datadir=regtest-datadir sendtoaddress $TESTADDR 1.0`
-bitcoin-cli -regtest -datadir=regtest-datadir gettransaction $TESTTX
+CLI=bitcoin-cli
+TESTADDR=`$CLI -regtest -datadir=regtest-datadir getnewaddress`
+TESTTX=`$CLI -regtest -datadir=regtest-datadir sendtoaddress $TESTADDR 1.0`
+$CLI -regtest -datadir=regtest-datadir gettransaction $TESTTX
 echo Adresses
-bitcoin-cli -regtest -datadir=regtest-datadir getaddressesbyaccount 
+$CLI -regtest -datadir=regtest-datadir getaddressesbyaccount 
 echo Balance
-bitcoin-cli -regtest -datadir=regtest-datadir getbalance 
+$CLI -regtest -datadir=regtest-datadir getbalance 
 
