@@ -1,4 +1,40 @@
-bitcoin-spock
-=============
+= bitcoin-spock
 
 Bitcoin Unit Testing
+
+== Regression Test Mode
+
+Bitcoin 0.9 and later include support for Regression Test Mode (aka Regtest mode). RegTest mode creates a single node Bitcoin "network" that can confirm blocks upon command.
+
+For example the following command will generate 101 blocks
+
+    ./bitcoin-cli -regtest setgenerate true 101
+
+And yes, you get the newly mined coins. They can't be spent anywhere, but they're great for testing.
+
+The best documentation of RegTest mode that I've seen so far is https://bitcoinj.github.io/testing[How to test applications] on the new https://bitcoinj.github.io[Bitcoinj website].
+
+
+Other Links::
+* http://geraldkaszuba.com/creating-your-own-experimental-bitcoin-network/[Creating your own experimental Bitcoin network]
+* https://github.com/gak/docker-bitcoin-regtest[docker-bitcoin-regtest]
+
+== Simple Demo of RegTest mode with Bash Scripts
+
+These are some really rough Bash scripts that can drive bitcoind in RegTest mode.
+
+Procedure::
+* Make sure Bitcoin Core 0.9 or later is installed and in your path.
+* Run the server script
+
+    ./server.sh &
+
+* Run the client setup script to mine some coins to get started:
+
+    ./setup-client.sh
+
+* Run the client script (repeat as desired)
+
+    ./client.sh
+
+* A directory named +regtest-datadir+ is created in the current directory.
