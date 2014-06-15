@@ -1,0 +1,48 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.7
+version = '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.fasterxml.jackson.core:jackson-core:2.3.2'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
+}
+
+mainClassName = "GetBlockCount"
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'GetBlockCount', 'Implementation-Version': version, 'Main-Class': mainClassName
+    }
+}
+
+task startRegtest(type:Exec) {
+  executable 'bitcoind'
+  args '-regtest', ' -server'
+}
+
+def homePath = System.properties['user.home']
+def roboLibPath = "lib"
+
+task copyToRoboLib(type: Copy) {
+    into roboLibPath
+    from configurations.runtime
+}
+
+task roboCompile(type:Exec, dependsOn: classes) {
+    executable "${homePath}/robovm-0.0.11/bin/robovm"
+    args '-verbose', '-debug',
+            '-cp', 'build/classes/main:lib/jackson-core-2.3.3.jar:lib/jackson-databind-2.3.3.jar:lib/jackson-annotations-2.3.0.jar',
+            '-d', 'build',
+            'GetBlockCount'
+}
+
+task roboRun(type:Exec, dependsOn: roboCompile) {
+    executable "build/GetBlockCount"
+    args '-rvm:log=debug'
+}
