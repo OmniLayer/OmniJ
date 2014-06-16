@@ -1,70 +1,70 @@
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
-import com.msgilligan.bitcoin.rpc.RPCClient;
+import com.msgilligan.bitcoin.rpc.BitcoinClient;
+import com.msgilligan.bitcoin.rpc.CliTool;
 
-public class GetBlockCount {
-    static final String rpcuser ="bitcoinrpc";
-    static final String rpcpassword ="pass";
-    static RPCClient client;
+public class GetBlockCount extends CliTool {
+
+    public GetBlockCount(String[] args) {
+        super(args);
+    }
 
     public static void main(String[] args) {
+        GetBlockCount tool = new GetBlockCount(args);
+        tool.count();
+        tool.incrementAndCount(2);
+    }
 
-        String blockCount = "<error>";
+    public void count() {
+        Integer blockCount = -1;
         try {
-//            URL rpcServerURL = new URL("http://localhost:8332");
-//            URL rpcServerURL = new URL("http://localhost:8080/bitcoin-rpc");
-            URL rpcServerURL = new URL("http://127.0.0.1:28332");
-            System.out.println("Connecting to: " + rpcServerURL);
-            client = new RPCClient(rpcServerURL, rpcuser, rpcpassword);
-            blockCount = getBlockCount().toString();
-            System.out.println("Block count is: " + blockCount);
-            setGenerate();
-            blockCount = getBlockCount().toString();
-            System.out.println("Block count is: " + blockCount);
+            blockCount = client.getBlockCount();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Starting Block count is: " + blockCount);
     }
 
-    public static Integer getBlockCount() throws IOException {
-        Map<String, Object> jsonrpcReq = new HashMap<>();
-        jsonrpcReq.put("jsonrpc", "2.0");
-        jsonrpcReq.put("method", "getblockcount");
-        jsonrpcReq.put("id", "1");
+    public void incrementAndCount(long blocksToGen) {
+        Integer blockCount = -1;
+        try {
+            BigInteger balance = client.getBalance(null, null);
+            System.out.println("Starting balance: " + new BigDecimal(balance.divide(BitcoinClient.SATOSHIS_PER_BITCOIN)));
+            client.setGenerate(true, 101L);
+            balance = client.getBalance(null, null);
+            System.out.println("Balance after mining 101 blocks: " + new BigDecimal(balance.divide(BitcoinClient.SATOSHIS_PER_BITCOIN)));
 
-        Map<String, Object> response = client.send(jsonrpcReq);
+            List<Object> balances = client.listReceivedByAddress(1, false);
+            System.out.println("balances: " + balances);
 
-        assert response.get("jsonrpc").equals("2.0");
-        assert response.get("id").equals("1");
+            client.setGenerate(true, blocksToGen);
+            blockCount = client.getBlockCount();
+            String address1 = client.getNewAddress();
+            String address2 = client.getNewAddress();
+            System.out.println("Address: " + address1);
+            System.out.println("Address: " + address2);
+            String txid = client.sendToAddress(address2, BigInteger.valueOf(1), "comment", "comment-to");
+            System.out.println("txid: " + txid);
+            client.setGenerate(true, 6L);
+            Map<String, Object> transaction = client.getTransaction(txid);
+            System.out.println("transaction: " + transaction);
 
-        Integer blockCount = (Integer) response.get("result");
-        return blockCount;
-    }
+            balance = client.getBalance(null, null);
+            System.out.println("Ending balance: " + new BigDecimal(balance.divide(BitcoinClient.SATOSHIS_PER_BITCOIN)));
 
-    public static String setGenerate() throws IOException {
-        Map<String, Object> jsonrpcReq = new HashMap<>();
-        jsonrpcReq.put("jsonrpc", "2.0");
-        jsonrpcReq.put("method", "setgenerate");
-        jsonrpcReq.put("id", "2");
+            balances = client.listReceivedByAddress(0, true);
+            System.out.println("balances: " + balances);
 
-        List<Object> params = new ArrayList<>();
-        params.add(true);
-        params.add(101);
+            blockCount = client.getBlockCount();
 
-        jsonrpcReq.put("params", params);
-
-        Map<String, Object> response = client.send(jsonrpcReq);
-
-        assert response.get("jsonrpc").equals("2.0");
-        assert response.get("id").equals("2");
-
-        String result = (String) response.get("result");
-        return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Block count is: " + blockCount);
     }
 
 }

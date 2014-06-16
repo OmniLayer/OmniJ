@@ -9,6 +9,9 @@ import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,6 +23,7 @@ public class RPCClient {
     private URL serverURL;
     private HttpURLConnection connection;
     private ObjectMapper mapper;
+    private long requestId;
 
     public RPCClient(URL server, final String rpcuser, final String rpcpassword) throws IOException {
         Authenticator.setDefault(new Authenticator() {
@@ -29,6 +33,7 @@ public class RPCClient {
         });
 
         serverURL = server;
+        requestId = 0;
         mapper = new ObjectMapper();
     }
 
@@ -36,7 +41,7 @@ public class RPCClient {
         openConnection();
         OutputStream output = connection.getOutputStream();
         String reqString = mapper.writeValueAsString(request);
-        System.out.println("Req json = " + reqString);
+//        System.out.println("Req json = " + reqString);
         mapper.writeValue(output, request);
          try {
              output.close();
@@ -46,12 +51,29 @@ public class RPCClient {
          }
 
         int code = connection.getResponseCode();
-        System.out.println("Response code: " + code);
+        if (code != 200) {
+            System.out.println("Response code: " + code);
+        }
         InputStream responseStream = connection.getInputStream();
 
         Map<String, Object> responseMap = mapper.readValue(responseStream, Map.class);
         closeConnection();
         return responseMap;
+    }
+
+    public Map<String, Object> send(String method, List<Object> params) throws IOException {
+        Map<String, Object> request = new HashMap<>();
+        request.put("jsonrpc", "2.0");
+        request.put("method", method);
+        request.put("id", Long.toString(requestId));
+        request.put("params", params);
+
+        Map<String, Object> response = send(request);
+
+        assert response.get("jsonrpc").equals("2.0");
+        assert response.get("id").equals(Long.toString(requestId++));
+
+        return response;
     }
 
     private void openConnection() throws IOException {
