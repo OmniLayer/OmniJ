@@ -76,6 +76,8 @@ public class RPCClient {
 //        assert response.get("id") != null;
 //        assert response.get("id").equals(Long.toString(requestId++));
 
+        requestId++;
+
         return response;
     }
 
