@@ -70,8 +70,11 @@ public class RPCClient {
 
         Map<String, Object> response = send(request);
 
-        assert response.get("jsonrpc").equals("2.0");
-        assert response.get("id").equals(Long.toString(requestId++));
+//        assert response != null;
+//        assert response.get("jsonrpc") != null;
+//        assert response.get("jsonrpc").equals("2.0");
+//        assert response.get("id") != null;
+//        assert response.get("id").equals(Long.toString(requestId++));
 
         return response;
     }

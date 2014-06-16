@@ -32,11 +32,11 @@ public class GetBlockCount extends CliTool {
     public void incrementAndCount(long blocksToGen) {
         Integer blockCount = -1;
         try {
-            BigInteger balance = client.getBalance(null, null);
-            System.out.println("Starting balance: " + new BigDecimal(balance.divide(BitcoinClient.SATOSHIS_PER_BITCOIN)));
+            BigDecimal balance = client.getBalance(null, null);
+            System.out.println("Starting balance: " + balance);
             client.setGenerate(true, 101L);
             balance = client.getBalance(null, null);
-            System.out.println("Balance after mining 101 blocks: " + new BigDecimal(balance.divide(BitcoinClient.SATOSHIS_PER_BITCOIN)));
+            System.out.println("Balance after mining 101 blocks: " + balance);
 
             List<Object> balances = client.listReceivedByAddress(1, false);
             System.out.println("balances: " + balances);
@@ -47,14 +47,14 @@ public class GetBlockCount extends CliTool {
             String address2 = client.getNewAddress();
             System.out.println("Address: " + address1);
             System.out.println("Address: " + address2);
-            String txid = client.sendToAddress(address2, BigInteger.valueOf(1), "comment", "comment-to");
+            String txid = client.sendToAddress(address2, BigDecimal.valueOf(1), "comment", "comment-to");
             System.out.println("txid: " + txid);
             client.setGenerate(true, 6L);
             Map<String, Object> transaction = client.getTransaction(txid);
             System.out.println("transaction: " + transaction);
 
             balance = client.getBalance(null, null);
-            System.out.println("Ending balance: " + new BigDecimal(balance.divide(BitcoinClient.SATOSHIS_PER_BITCOIN)));
+            System.out.println("Ending balance: " + balance);
 
             balances = client.listReceivedByAddress(0, true);
             System.out.println("balances: " + balances);

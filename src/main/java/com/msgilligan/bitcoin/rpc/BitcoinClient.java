@@ -61,6 +61,14 @@ public class BitcoinClient extends RPCClient {
         return address;
     }
 
+    public BigDecimal getReceivedByAddress(String address, Integer minConf) throws IOException {
+        if (minConf == null) minConf = 1;
+        List<Object> params = Arrays.asList((Object) address, minConf);
+        Map<String, Object> response = send("getreceivedbyaddress", params);
+        BigDecimal balance = new BigDecimal((Double) response.get("result"));
+        return balance;
+    }
+
     public List<Object> listReceivedByAddress(Integer minConf, Boolean includeEmpty ) throws IOException {
         List<Object> params = Arrays.asList((Object) minConf, includeEmpty);
 
@@ -70,16 +78,18 @@ public class BitcoinClient extends RPCClient {
         return addresses;
     }
 
-    public BigInteger getBalance(String account, Long minConf ) throws IOException {
+    public BigDecimal getBalance(String account, Long minConf ) throws IOException {
 //        List<Object> params = Arrays.asList((Object) account, minConf);
 
         Map<String, Object> response = send("getbalance", null);
-        BigDecimal balanceBTC = new BigDecimal((Double) response.get("result"));
-        BigInteger balanceSatoshis = balanceBTC.multiply(D_SATOSHIS_PER_BITCOIN).toBigInteger();;
-        return balanceSatoshis;
+        Double balanceBTCd = (Double) response.get("result");
+        // Beware of the new BigDecimal(double d) constructor, it results in unexpected/undesired values.
+        BigDecimal balanceBTC = BigDecimal.valueOf(balanceBTCd);
+//        BigInteger balanceSatoshis = balanceBTC.multiply(D_SATOSHIS_PER_BITCOIN).toBigInteger();;
+        return balanceBTC;
     }
 
-    public String sendToAddress(String address, BigInteger amount, String comment, String commentTo) throws IOException {
+    public String sendToAddress(String address, BigDecimal amount, String comment, String commentTo) throws IOException {
         List<Object> params = Arrays.asList((Object) address, amount, comment, commentTo);
 
         Map<String, Object> response = send("sendtoaddress", params);
