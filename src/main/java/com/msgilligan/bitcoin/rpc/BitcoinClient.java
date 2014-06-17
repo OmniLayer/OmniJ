@@ -107,6 +107,13 @@ public class BitcoinClient extends RPCClient {
         return transaction;
     }
 
+    public Map<String, Object> getInfo() throws IOException {
+        Map<String, Object> response = send("getinfo", null);
+
+        Map<String, Object> result = (Map<String, Object>) response.get("result");
+        return result;
+    }
+
 
 
 }

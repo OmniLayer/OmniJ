@@ -7,6 +7,16 @@ package com.msgilligan.bitcoin.rpc
  */
 class DemoSpec extends BaseRPCSpec {
 
+    def "returns basic info" () {
+        when: "we request info"
+            def info = client.getInfo()
+
+        then: "we get back some basic information"
+            info != null
+            info.version == 90100
+            info.protocolversion == 70002
+    }
+
     def "can write a block"() {
         when: "we generate 1 new block"
             def startCount = client.getBlockCount()                 // Get starting block count
