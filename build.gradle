@@ -32,17 +32,17 @@ task startRegtest(type:Exec) {
 }
 
 def homePath = System.properties['user.home']
-def roboLibPath = "lib"
+def roboLibPath = "robolib"
 
 task copyToRoboLib(type: Copy) {
     into roboLibPath
     from configurations.runtime
 }
 
-task roboCompile(type:Exec, dependsOn: classes) {
+task roboCompile(type:Exec, dependsOn: [classes, copyToRoboLib]) {
     executable "${homePath}/robovm-0.0.11/bin/robovm"
     args '-verbose', '-debug',
-            '-cp', 'build/classes/main:lib/jackson-core-2.3.3.jar:lib/jackson-databind-2.3.3.jar:lib/jackson-annotations-2.3.0.jar',
+            '-cp', "build/classes/main:${roboLibPath}/jackson-core-2.3.3.jar:${roboLibPath}/jackson-databind-2.3.3.jar:${roboLibPath}/jackson-annotations-2.3.0.jar",
             '-d', 'build',
             'GetBlockCount'
 }
