@@ -5,7 +5,7 @@ package com.msgilligan.bitcoin.rpc
  * Date: 6/16/14
  * Time: 12:30 PM
  */
-class DemoSpec extends BaseRPCSpec {
+class BitcoinSpec extends BaseRPCSpec {
 
     def "returns basic info" () {
         when: "we request info"
