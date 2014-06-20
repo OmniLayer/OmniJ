@@ -30,15 +30,18 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
     def "Can simple send MSC from one address to another" () {
 
         when: "we send MSC"
+            def richBalance = client.getbalance_MP(richAddress, currencyMSC)
             def amount = 1.0
             def toAddress = client.getNewAddress()      // New address
-            client.send_MP(richAddress, toAddress, currencyMSC, amount)
+            client.sendMPsimple(richAddress, toAddress, currencyMSC, amount)
 
         and: "a block is generated"
             client.setGenerate(true, 1)                // Generate 1 block
+            def newRichBalance = client.getbalance_MP(richAddress, currencyMSC)
 
-        then: "the toAddress has the correct MSC balance"
+        then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
             amount == client.getbalance_MP(toAddress, currencyMSC)
+            newRichBalance == richBalance - amount
     }
 
     def "Invalid Simple Sends defined in spec are rejected by the RPC"() {
@@ -49,10 +52,15 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
             def toAddress = client.getNewAddress()
 
         when: "the amount to transfer is zero"
-            client.send_MP(richAddress, toAddress, currencyMSC, 0)
+            client.sendMPsimple(richAddress, toAddress, currencyMSC, 0)
+        // TODO: Test sending a negative amount of coins?
 
+
+        // TODO: Check that the *right type* of exceptions are thrown
+        // Currently it seems they're all 500s
         then: "exception is thrown"
             Exception e1 = thrown()
+        // TODO: Verify that blockchain state didn't change
 
         when: "the sending address has zero coins in its available balance for the specified currency identifier"
             client.send_MP(emptyAddress, toAddress, currencyMSC, 1.0)

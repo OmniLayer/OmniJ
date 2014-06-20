@@ -11,7 +11,7 @@ import spock.lang.Specification
 abstract class BaseRPCSpec extends Specification {
     static def rpcproto = "http"
     static def rpchost = "127.0.0.1"
-    static def rpcport = 28332
+    static def rpcport = 18332
     static def rpcfile = "/"
     static def rpcuser = "bitcoinrpc"
     static def rpcpassword = "pass"
@@ -28,7 +28,8 @@ abstract class BaseRPCSpec extends Specification {
 
         // Make sure we have enough test coins
         def balance = client.getBalance(null, null);
-        if (balance > minSatoshisForTest) {
+        if (balance < minSatoshisForTest) {
+            // Mine 101 blocks so we have some coins to spend
             client.setGenerate(true, 101)
         }
     }

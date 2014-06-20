@@ -53,10 +53,20 @@ public class RPCClient {
         int code = connection.getResponseCode();
         if (code != 200) {
             System.out.println("Response code: " + code);
+            // Should probably throw exception based upon response code right here
         }
-        InputStream responseStream = connection.getInputStream();
+        InputStream responseStream = null;
+        try {
+            responseStream = connection.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        }
 
-        Map<String, Object> responseMap = mapper.readValue(responseStream, Map.class);
+        Map<String, Object> responseMap = null;
+        if (responseStream != null) {
+            responseMap = mapper.readValue(responseStream, Map.class);
+        }
         closeConnection();
         return responseMap;
     }

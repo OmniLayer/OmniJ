@@ -36,5 +36,6 @@ class BitcoinSpec extends BaseRPCSpec {
 
         then: "the new address has a balance of testAmount"
             testAmount == client.getReceivedByAddress(destAddr, 1)  // Verify destAddr balance
+        // TODO: check balance
     }
 }

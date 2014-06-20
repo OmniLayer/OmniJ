@@ -10,14 +10,13 @@ import org.junit.Ignore
 class MastercoinSpec extends BaseRPCSpec {
     Long currencyMSC = 1L
 
-    def "mastercoin is not present"() {
-        when: "mastercoin is not present and we call a mastercoin method"
+    def "mastercoin is present"() {
+        when: "we call getMPbalance on a newly generated address"
             def destAddr = client.getNewAddress()                   // Create new Bitcoin address
-            client.getMPbalance(destAddr, currencyMSC)
+            def balance = client.getMPbalance(destAddr, currencyMSC)
 
-        then: "it should throw an exception with status code 404"
-            IOException e = thrown()
-            e != null
+        then: "it should return a balance of zero"
+            balance == 0
     }
 
     def "returns mastercoin version along with basic info" () {
@@ -26,7 +25,7 @@ class MastercoinSpec extends BaseRPCSpec {
 
         then: "we get back some mastercoin information, too"
         info != null
-//        info.mastercoreversion == 10100
+        info.mastercoreversion == 10100
     }
 
 }
