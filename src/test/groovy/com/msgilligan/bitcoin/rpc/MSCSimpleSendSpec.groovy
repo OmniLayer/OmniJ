@@ -44,7 +44,7 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
             newRichBalance == richBalance - amount
     }
 
-    def "Invalid Simple Sends defined in spec are rejected by the RPC"() {
+    def "When the amount to transfer is zero Simple Sends are rejected by the RPC"() {
         // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
         // treated as invalid by the Master Core parser
 
@@ -54,31 +54,53 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
         when: "the amount to transfer is zero"
             client.sendMPsimple(richAddress, toAddress, currencyMSC, 0)
         // TODO: Test sending a negative amount of coins?
-
-
         // TODO: Check that the *right type* of exceptions are thrown
         // Currently it seems they're all 500s
         then: "exception is thrown"
-            Exception e1 = thrown()
+            Exception e = thrown()
         // TODO: Verify that blockchain state didn't change
+    }
+
+    def "When the sending address has zero coins in its available balance for the specified currency identifier are rejected by the RPC"() {
+        // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
+        // treated as invalid by the Master Core parser
+
+        given: "a new, empty destination address"
+        def toAddress = client.getNewAddress()
 
         when: "the sending address has zero coins in its available balance for the specified currency identifier"
-            client.send_MP(emptyAddress, toAddress, currencyMSC, 1.0)
+        client.send_MP(emptyAddress, toAddress, currencyMSC, 1.0)
 
         then: "exception is thrown"
-            Exception e2 = thrown()
+        Exception e = thrown()
+    }
+
+    def "When the amount to transfer exceeds the number owned and available by the sending address are rejected by the RPC"() {
+        // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
+        // treated as invalid by the Master Core parser
+
+        given: "a new, empty destination address"
+        def toAddress = client.getNewAddress()
 
         when: "the amount to transfer exceeds the number owned and available by the sending address"
-            client.send_MP(addressWith1MSC, toAddress, currencyMSC, 1.00000001)
+        client.send_MP(addressWith1MSC, toAddress, currencyMSC, 1.00000001)
 
         then: "exception is thrown"
-            Exception e3 = thrown()
+        Exception e = thrown()
+    }
+
+    def "When the specified currency identifier is non-existent are rejected by the RPC"() {
+        // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
+        // treated as invalid by the Master Core parser
+
+        given: "a new, empty destination address"
+        def toAddress = client.getNewAddress()
 
         when: "the specified currency identifier is non-existent"
-            client.send_MP(richAddress, toAddress, nonExistantCurrencyID, 1.0)
+        client.send_MP(richAddress, toAddress, nonExistantCurrencyID, 1.0)
 
         then: "exception is thrown"
-            Exception e4 = thrown()
+        Exception e = thrown()
     }
 
 //    def "TODO: test currencies other than MSC - when implemented"() {}
