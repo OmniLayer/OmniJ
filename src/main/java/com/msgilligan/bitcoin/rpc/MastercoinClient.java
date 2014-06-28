@@ -18,16 +18,16 @@ public class MastercoinClient extends BitcoinClient {
         super(server, rpcuser, rpcpassword);
     }
 
-    public String sendMPsimple(String fromAddress, String toAddress, Long currencyId, BigDecimal amount) throws IOException {
+    public String send_MP(String fromAddress, String toAddress, Long currencyId, BigDecimal amount) throws IOException {
         List<Object> params = Arrays.asList((Object) fromAddress, toAddress, currencyId, amount);
-        Map<String, Object> response = send("sendMPsimple", params);
+        Map<String, Object> response = send("send_MP", params);
         String txid = (String) response.get("result");
         return txid;
     }
 
-    public BigDecimal getMPbalance(String address, Long currencyId) throws IOException {
+    public BigDecimal getbalance_MP(String address, Long currencyId) throws IOException {
         List<Object> params = Arrays.asList((Object) address, currencyId);
-        Map<String, Object> response = send("getMPbalance", params);
+        Map<String, Object> response = send("getbalance_MP", params);
         Double balanceBTCd = (Double) response.get("result");
         // Beware of the new BigDecimal(double d) constructor, it results in unexpected/undesired values.
         BigDecimal balanceBTC = BigDecimal.valueOf(balanceBTCd);

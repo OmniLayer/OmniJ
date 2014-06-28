@@ -1,7 +1,4 @@
 package com.msgilligan.bitcoin.rpc
-
-import org.junit.Ignore
-
 /**
  * User: sean
  * Date: 6/16/14
@@ -11,9 +8,9 @@ class MastercoinSpec extends BaseRPCSpec {
     Long currencyMSC = 1L
 
     def "mastercoin is present"() {
-        when: "we call getMPbalance on a newly generated address"
+        when: "we call getbalance_MP on a newly generated address"
             def destAddr = client.getNewAddress()                   // Create new Bitcoin address
-            def balance = client.getMPbalance(destAddr, currencyMSC)
+            def balance = client.getbalance_MP(destAddr, currencyMSC)
 
         then: "it should return a balance of zero"
             balance == 0
@@ -25,7 +22,7 @@ class MastercoinSpec extends BaseRPCSpec {
 
         then: "we get back some mastercoin information, too"
         info != null
-        info.mastercoreversion == 10100
+        info.mastercoreversion == 10001
     }
 
 }

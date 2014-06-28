@@ -30,14 +30,14 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
     def "Can simple send MSC from one address to another" () {
 
         when: "we send MSC"
-            def richBalance = client.getMPbalance(richAddress, currencyMSC)
+            def richBalance = client.getbalance_MP(richAddress, currencyMSC)
             def amount = 1.0
             def toAddress = client.getNewAddress()      // New address
-            client.sendMPsimple(richAddress, toAddress, currencyMSC, amount)
+            client.send_MP(richAddress, toAddress, currencyMSC, amount)
 
         and: "a block is generated"
             client.setGenerate(true, 1)                // Generate 1 block
-            def newRichBalance = client.getMPbalance(richAddress, currencyMSC)
+            def newRichBalance = client.getbalance_MP(richAddress, currencyMSC)
 
         then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
             amount == client.getbalance_MP(toAddress, currencyMSC)
@@ -52,7 +52,7 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
             def toAddress = client.getNewAddress()
 
         when: "the amount to transfer is zero"
-            client.sendMPsimple(richAddress, toAddress, currencyMSC, 0)
+            client.send_MP(richAddress, toAddress, currencyMSC, 0)
         // TODO: Test sending a negative amount of coins?
         // TODO: Check that the *right type* of exceptions are thrown
         // Currently it seems they're all 500s
