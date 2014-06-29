@@ -33,4 +33,12 @@ public class MastercoinClient extends BitcoinClient {
         BigDecimal balanceBTC = BigDecimal.valueOf(balanceBTCd);
         return balanceBTC;
     }
+
+    public List<Object> getallbalancesforid_MP(Long currencyId) throws IOException {
+        // TODO: currencyID should probably not be passed as a string
+        List<Object> params = Arrays.asList((Object) currencyId.toString());
+        Map<String, Object> response = send("getallbalancesforid_MP", params);
+        List<Object> balances = (List<Object>) response.get("result");
+        return balances;
+    }
 }
