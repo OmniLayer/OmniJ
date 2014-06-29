@@ -74,7 +74,7 @@ public class RPCClient {
 
     public Map<String, Object> send(String method, List<Object> params) throws IOException {
         Map<String, Object> request = new HashMap<>();
-        request.put("jsonrpc", "2.0");
+        request.put("jsonrpc", "1.0");
         request.put("method", method);
         request.put("id", Long.toString(requestId));
         request.put("params", params);
