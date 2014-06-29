@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,6 +90,16 @@ public class RPCClient {
         requestId++;
 
         return response;
+    }
+
+    public Object cliSend(String method, List<Object> params) throws IOException {
+        Map<String, Object> response = send(method, params);
+        return response.get("result");
+    }
+
+    public Object cliSend(String method, Object... params) throws IOException {
+        Map<String, Object> response = send(method, Arrays.asList(params));
+        return response.get("result");
     }
 
     private void openConnection() throws IOException {
