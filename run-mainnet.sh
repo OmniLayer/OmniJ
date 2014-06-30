@@ -17,10 +17,12 @@ cp -n bitcoin.conf $DATADIR
 mkdir -p logs
 #$BTCD -server -datadir=$DATADIR -debug > logs/bitcoin.log &
 $BTCD -server -debug
+BTCSTATUS=$?
 BTCPID=$!
 
 # Run consensus tests
 echo "Run consensus tests here..."
 
-exit $?
+exit $BTCSTATUS
+
 
