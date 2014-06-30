@@ -7,7 +7,7 @@ function cleanup {
 trap cleanup EXIT
 
 # Assume bitcoind built elsewhere and coied by Jenkins Copy Artifact plugin
-BTCD=../copied-artifacts/src/bitcoind
+BTCD=./copied-artifacts/src/bitcoind
 DATADIR=$HOME/.bitcoin
 chmod +x $BTCD
 
