@@ -22,7 +22,7 @@ class MastercoinSpec extends BaseRPCSpec {
 
         then: "we get back some mastercoin information, too"
         info != null
-        info.mastercoreversion == 10001
+        info.mastercoreversion >= 10003
     }
 
 }
