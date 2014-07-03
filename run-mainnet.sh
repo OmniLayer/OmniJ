@@ -21,7 +21,8 @@ BTCSTATUS=$?
 BTCPID=$!
 
 # Run consensus tests
-echo "Run consensus tests here..."
+echo "Running consensus tests..."
+./gradlew test --tests com.msgilligan.mastercoin.consensus
 
 exit $BTCSTATUS
 
