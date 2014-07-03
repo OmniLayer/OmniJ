@@ -15,8 +15,8 @@ chmod +x $BTCD
 mkdir -p $DATADIR
 cp -n bitcoin.conf $DATADIR
 mkdir -p logs
-#$BTCD -server -datadir=$DATADIR -debug > logs/bitcoin.log &
-$BTCD -server -debug
+$BTCD -server -datadir=$DATADIR -debug > logs/bitcoin.log &
+#$BTCD -server -debug
 BTCSTATUS=$?
 BTCPID=$!
 
