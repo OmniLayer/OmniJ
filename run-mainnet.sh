@@ -20,10 +20,14 @@ $BTCD -server -datadir=$DATADIR -debug > logs/bitcoin.log &
 BTCSTATUS=$?
 BTCPID=$!
 
+# Give server some time to start
+sleep 30
+
 # Run consensus tests
 echo "Running consensus tests..."
 ./gradlew test --tests com.msgilligan.mastercoin.consensus.ConsensusSpec
+GRADLESTATUS=$?
 
-exit $BTCSTATUS
+exit $GRADLESTATUS
 
 
