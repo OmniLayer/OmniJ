@@ -2,7 +2,7 @@
 set -x
 
 function cleanup {
-    kill $BTCPID
+    kill -9 $BTCPID
 }
 trap cleanup EXIT
 
