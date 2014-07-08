@@ -25,7 +25,7 @@ def roboExeName = "btcstatus"
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'GetBlockCount', 'Implementation-Version': version, 'Consensus-Class': mainClassName
+        attributes 'Implementation-Title': 'BTC/MSC Status', 'Implementation-Version': version, 'Consensus-Class': mainClassName
     }
 }
 
@@ -35,6 +35,7 @@ task startRegtest(type:Exec) {
 }
 
 def homePath = System.properties['user.home']
+def roboVMHome = "${homePath}/robovm-0.0.14"
 def roboLibPath = "robolib"
 
 task copyToRoboLib(type: Copy) {
@@ -43,10 +44,11 @@ task copyToRoboLib(type: Copy) {
 }
 
 task roboCompile(type:Exec, dependsOn: [classes, copyToRoboLib]) {
-    executable "${homePath}/robovm-0.0.11/bin/robovm"
+    executable "${roboVMHome}/bin/robovm"
     args '-verbose', '-debug',
             '-cp', "build/classes/main:${roboLibPath}/commons-cli-1.2.jar:${roboLibPath}/jackson-core-2.3.3.jar:${roboLibPath}/jackson-databind-2.3.3.jar:${roboLibPath}/jackson-annotations-2.3.0.jar",
             '-d', 'build',
+            '-forcelinkclasses', 'com.android.okhttp.HttpHandler',
             '-o', "${roboExeName}",
             "${mainClassName}"
 }
