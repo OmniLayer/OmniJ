@@ -12,6 +12,7 @@ repositories {
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.3.2'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
+    compile 'commons-cli:commons-cli:1.2'
     compile "org.codehaus.groovy:groovy-all:2.3.3"
 
     testCompile "org.codehaus.groovy:groovy-all:2.3.3"
@@ -19,11 +20,12 @@ dependencies {
 
 }
 
-mainClassName = "GetBlockCount"
+mainClassName = "com.msgilligan.bitcoin.cli.Status"
+def roboExeName = "btcstatus"
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'GetBlockCount', 'Implementation-Version': version, 'Main-Class': mainClassName
+        attributes 'Implementation-Title': 'GetBlockCount', 'Implementation-Version': version, 'Consensus-Class': mainClassName
     }
 }
 
@@ -43,12 +45,13 @@ task copyToRoboLib(type: Copy) {
 task roboCompile(type:Exec, dependsOn: [classes, copyToRoboLib]) {
     executable "${homePath}/robovm-0.0.11/bin/robovm"
     args '-verbose', '-debug',
-            '-cp', "build/classes/main:${roboLibPath}/jackson-core-2.3.3.jar:${roboLibPath}/jackson-databind-2.3.3.jar:${roboLibPath}/jackson-annotations-2.3.0.jar",
+            '-cp', "build/classes/main:${roboLibPath}/commons-cli-1.2.jar:${roboLibPath}/jackson-core-2.3.3.jar:${roboLibPath}/jackson-databind-2.3.3.jar:${roboLibPath}/jackson-annotations-2.3.0.jar",
             '-d', 'build',
-            'GetBlockCount'
+            '-o', "${roboExeName}",
+            "${mainClassName}"
 }
 
 task roboRun(type:Exec, dependsOn: roboCompile) {
-    executable "build/GetBlockCount"
+    executable "build/${roboExeName}"
     args '-rvm:log=debug'
 }

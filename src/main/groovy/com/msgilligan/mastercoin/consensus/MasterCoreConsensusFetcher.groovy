@@ -14,21 +14,38 @@ class MasterCoreConsensusFetcher implements ConsensusFetcher {
     static def rpcfile = "/"
     static def rpcuser = "bitcoinrpc"
     static def rpcpassword = "pass"
-    MastercoinClient client
+    protected MastercoinClient client
 
     MasterCoreConsensusFetcher() {
         def rpcServerURL = new URL(rpcproto, rpchost, rpcport, rpcfile)
         client = new MastercoinClient(rpcServerURL, rpcuser, rpcpassword)
     }
 
+    public static void main(String[] args) {
+        MasterCoreConsensusFetcher mscFetcher
+        Long currencyMSC = 1L
+
+        mscFetcher = new MasterCoreConsensusFetcher()
+
+        println "Block count is: " + mscFetcher.client.getBlockCount()
+
+        def mscConsensus = mscFetcher.getConsensusForCurrency(currencyMSC)
+        mscConsensus.each {  address, ConsensusBalance bal ->
+            println "${address}: ${bal.balance}"
+        }
+    }
+
     @Override
-    Map<String, Object> getConsensusForCurrency(Long currencyID) {
+    Map<String, ConsensusBalance> getConsensusForCurrency(Long currencyID) {
         def balances = client.getallbalancesforid_MP(currencyID)
 
-        Map<String, Object> map = [:]
+        TreeMap<String, ConsensusBalance> map = [:]
         balances.each { item ->
-            def balance = new ConsensusBalance(address:item.address, balance:item.balance)
-            map.put(item.address, balance)
+            String address = item.address
+            BigDecimal balance = new BigDecimal(Double.toString(item.balance))
+            if (address != "" /* && balance != 0 */) {
+                map.put(item.address, new ConsensusBalance(address: address, balance: balance))
+            }
         }
         return map;
     }

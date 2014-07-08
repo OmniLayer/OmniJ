@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,36 @@ public class BitcoinClient extends RPCClient {
         super(server, rpcuser, rpcpassword);
     }
 
+    public BitcoinClient(RPCConfig config) throws IOException {
+        super(config);
+    }
+
+    public Boolean waitForServer(Integer timeout) {
+        Map<String, Object> result;
+
+        while ( timeout-- > 0 ) {
+            try {
+                result = this.getInfo();
+                if (result != null ) {
+                    return true;
+                }
+            } catch (SocketException se) {
+                if (! ( se.getMessage().equals("Unexpected end of file from server") ||
+                        se.getMessage().equals("Connection reset"))) {
+                    se.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                System.out.println("Waiting 1 minute...");
+                Thread.sleep(60000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
     /**
      *
      * @return

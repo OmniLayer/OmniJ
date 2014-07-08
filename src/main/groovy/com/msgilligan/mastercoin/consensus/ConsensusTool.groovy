@@ -11,7 +11,7 @@ class ConsensusTool {
         OmniwalletConsensusFetcher omniFetcher;
         Long currencyMSC = 1L
 
-        def mscConsensus = omniFetcher.getConsensusForCurrency(currencyMSC)
+        def mscConsensus = mscFetcher.getConsensusForCurrency(currencyMSC)
         def omniConsensus = omniFetcher.getConsensusForCurrency(currencyMSC)
 
     }

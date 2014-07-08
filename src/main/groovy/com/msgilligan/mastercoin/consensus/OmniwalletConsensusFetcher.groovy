@@ -9,28 +9,41 @@ import groovy.json.JsonSlurper
  * Time: 12:19 PM
  */
 class OmniwalletConsensusFetcher implements ConsensusFetcher {
-    static def rpcproto = "https"
-    static def rpchost = "www.omniwallet.org"
-    static def rpcport = 443
-    static def rpcfile = "/v1/mastercoin_verify/addresses?currency_id=1"
-    static def rpcuser = "bitcoinrpc"
-    static def rpcpassword = "pass"
+    static def proto = "https"
+    static def host = "www.omniwallet.org"
+    static def port = 443
+    static def file = "/v1/mastercoin_verify/addresses?currency_id=1"
     URL consensusURL
 
     OmniwalletConsensusFetcher() {
-        consensusURL = new URL(rpcproto, rpchost, rpcport, rpcfile)
+        consensusURL = new URL(proto, host, port, file)
+    }
+
+    public static void main(String[] args) {
+        OmniwalletConsensusFetcher fetcher
+        Long currencyMSC = 1L
+
+        fetcher = new OmniwalletConsensusFetcher()
+
+        def mscConsensus = fetcher.getConsensusForCurrency(currencyMSC)
+        mscConsensus.each {  address, ConsensusBalance bal ->
+            println "${address}: ${bal.balance}"
+        }
     }
 
     @Override
-    Map<String, Object> getConsensusForCurrency(Long currencyID) {
+    Map<String, ConsensusBalance> getConsensusForCurrency(Long currencyID) {
         def slurper = new JsonSlurper()
         def balancesText =  consensusURL.getText()
         def balances = slurper.parse(consensusURL)
 
-        Map<String, Object> map = [:]
+        TreeMap<String, ConsensusBalance> map = [:]
         balances.each { item ->
-            def balance = new ConsensusBalance(address:item.address, balance:item.balance.toBigDecimal())
-            map.put(item.address, balance)
+            String address = item.address
+            BigDecimal balance = new BigDecimal(item.balance)
+            if (address != "" /* && balance != 0 */) {
+                map.put(item.address, new ConsensusBalance(address: address, balance: balance))
+            }
         }
         return map;
     }

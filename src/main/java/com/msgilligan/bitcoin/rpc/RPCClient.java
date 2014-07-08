@@ -26,6 +26,10 @@ public class RPCClient {
     private ObjectMapper mapper;
     private long requestId;
 
+    public RPCClient(RPCConfig config) throws IOException {
+        this(config.getUrl(), config.getUsername(), config.getPassword());
+    }
+
     public RPCClient(URL server, final String rpcuser, final String rpcpassword) throws IOException {
         Authenticator.setDefault(new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -43,8 +47,8 @@ public class RPCClient {
         OutputStream output = connection.getOutputStream();
         String reqString = mapper.writeValueAsString(request);
 //        System.out.println("Req json = " + reqString);
-        mapper.writeValue(output, request);
          try {
+             mapper.writeValue(output, request);
              output.close();
          }
          catch (IOException logOrIgnore) {

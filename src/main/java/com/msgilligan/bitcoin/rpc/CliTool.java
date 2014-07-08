@@ -9,10 +9,11 @@ import java.net.URL;
  * Date: 6/15/14
  * Time: 11:21 AM
  */
+@Deprecated
 public class CliTool {
     static final String rpcproto = "http";
     static final String rpchost = "127.0.0.1";
-    static final int rpcport = 28332;
+    static final int rpcport = 8332;
     static final String rpcfile = "/";
     static final String rpcuser ="bitcoinrpc";
     static final String rpcpassword ="pass";
