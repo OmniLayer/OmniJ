@@ -71,7 +71,7 @@ public abstract class CliCommand {
             System.exit(0);
         }
         if (line.hasOption("rpcwait")) {
-            Boolean available = client.waitForServer(30);   // Wait up to 30 minutes
+            Boolean available = client.waitForServer(60*60);   // Wait up to 1 hour
             if (!available) {
                 System.out.println("Timeout error.");
                 System.exit(1);

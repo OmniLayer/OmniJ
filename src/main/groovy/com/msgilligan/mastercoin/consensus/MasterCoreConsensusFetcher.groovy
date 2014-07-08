@@ -37,14 +37,18 @@ class MasterCoreConsensusFetcher implements ConsensusFetcher {
 
     @Override
     Map<String, ConsensusBalance> getConsensusForCurrency(Long currencyID) {
-        def balances = client.getallbalancesforid_MP(currencyID)
+        List<Object> balances = client.getallbalancesforid_MP(currencyID)
 
         TreeMap<String, ConsensusBalance> map = [:]
-        balances.each { item ->
+        balances.each { Object item ->
             String address = item.address
-            BigDecimal balance = new BigDecimal(Double.toString(item.balance))
-            if (address != "" /* && balance != 0 */) {
-                map.put(item.address, new ConsensusBalance(address: address, balance: balance))
+            BigDecimal balance = new BigDecimal(Double.toString(item.balance)).setScale(8)
+            BigDecimal reservedByOffer = new BigDecimal(Double.toString(item.reservedbyoffer)).setScale(8)
+            BigDecimal reservedByAccept = new BigDecimal(Double.toString(item.reservedbyoffer)).setScale(8)
+            BigDecimal reserved = reservedByOffer + reservedByAccept;
+
+            if (address != "") {
+                map.put(item.address, new ConsensusBalance(address: address, balance: balance, reserved:reserved))
             }
         }
         return map;

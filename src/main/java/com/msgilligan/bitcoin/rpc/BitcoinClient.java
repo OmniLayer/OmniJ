@@ -30,26 +30,43 @@ public class BitcoinClient extends RPCClient {
         super(config);
     }
 
+    /**
+     *
+     * @param timeout Timeout in seconds
+     * @return
+     */
     public Boolean waitForServer(Integer timeout) {
+        final Integer SECOND = 1000;
+        Integer count = 0;
+
+        System.out.println("Waiting for server RPC ready:");
+
         Map<String, Object> result;
 
-        while ( timeout-- > 0 ) {
+        while ( count < timeout ) {
             try {
                 result = this.getInfo();
                 if (result != null ) {
                     return true;
                 }
-            } catch (SocketException se) {
+            } catch (SocketException se ) {
                 if (! ( se.getMessage().equals("Unexpected end of file from server") ||
-                        se.getMessage().equals("Connection reset"))) {
+                        se.getMessage().equals("Connection reset")||
+                        se.getMessage().equals("recvfrom failed: ECONNRESET (Connection reset by peer)"))) {
                     se.printStackTrace();
                 }
-            } catch (IOException e) {
+            } catch (java.io.EOFException e) {
+                /* Android exception, ignore */
+            } catch(IOException e) {
                 e.printStackTrace();
             }
             try {
-                System.out.println("Waiting 1 minute...");
-                Thread.sleep(60000);
+                System.out.print(".");
+                count++;
+                if (count % 60 == 0) {
+                    System.out.println();
+                }
+                Thread.sleep(SECOND);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
