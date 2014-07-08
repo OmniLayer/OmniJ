@@ -34,6 +34,11 @@ task startRegtest(type:Exec) {
   args '-regtest', ' -server'
 }
 
+test {
+    // show standard out and standard error of the test JVM(s) on the console
+    testLogging.showStandardStreams = true
+}
+
 def homePath = System.properties['user.home']
 def roboVMHome = "${homePath}/robovm-0.0.14"
 def roboLibPath = "robolib"
