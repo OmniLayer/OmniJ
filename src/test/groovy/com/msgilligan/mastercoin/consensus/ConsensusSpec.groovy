@@ -29,10 +29,10 @@ class ConsensusSpec extends Specification {
     void setupSpec() {
         def rpcServerURL = new URL(rpcproto, rpchost, rpcport, rpcfile)
         client = new MastercoinClient(rpcServerURL, rpcuser, rpcpassword)
-        System.out.println("Waiting for server")
+        System.err.println("Waiting for server...")
         Boolean available = client.waitForServer(60*60)   // Wait up to 1 hour
         if (!available) {
-            System.out.println("Timeout error.")
+            System.err.println("Timeout error.")
         }
 
         mscFetcher = new MasterCoreConsensusFetcher()
