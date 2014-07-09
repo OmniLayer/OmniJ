@@ -89,7 +89,7 @@ public class BitcoinClient extends RPCClient {
     public Boolean waitForSync(Long blockCount, Integer timeout) throws IOException {
         Integer seconds = 0;
 
-        System.out.println("Waiting for server to get to block ${blockCount}...");
+        System.out.println("Waiting for server to get to block " +  blockCount);
 
         Integer block;
 
