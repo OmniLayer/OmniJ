@@ -50,14 +50,19 @@ public class BitcoinClient extends RPCClient {
                     return true;
                 }
             } catch (SocketException se ) {
+                // These are expected exceptions while waiting for a server
                 if (! ( se.getMessage().equals("Unexpected end of file from server") ||
-                        se.getMessage().equals("Connection reset")||
+                        se.getMessage().equals("Connection reset") ||
+                        se.getMessage().equals("Connection refused") ||
                         se.getMessage().equals("recvfrom failed: ECONNRESET (Connection reset by peer)"))) {
                     se.printStackTrace();
                 }
+
             } catch (java.io.EOFException e) {
                 /* Android exception, ignore */
-            } catch(IOException e) {
+                // Expected exceptions on Android, RoboVM
+            }
+            catch(IOException e) {
                 e.printStackTrace();
             }
             try {
