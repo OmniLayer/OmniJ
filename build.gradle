@@ -53,7 +53,8 @@ task roboCompile(type:Exec, dependsOn: [classes, copyToRoboLib]) {
     args '-verbose', '-debug',
             '-cp', "build/classes/main:${roboLibPath}/commons-cli-1.2.jar:${roboLibPath}/jackson-core-2.3.3.jar:${roboLibPath}/jackson-databind-2.3.3.jar:${roboLibPath}/jackson-annotations-2.3.0.jar",
             '-d', 'build',
-            '-forcelinkclasses', 'com.android.okhttp.HttpHandler',
+            '-forcelinkclasses', 'com.android.okhttp.HttpHandler:com.android.org.conscrypt.OpenSSLSocketFactoryImpl',
+
             '-o', "${roboExeName}",
             "${mainClassName}"
 }
