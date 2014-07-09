@@ -4,6 +4,7 @@ import com.msgilligan.bitcoin.rpc.MastercoinClient
 import groovy.json.JsonSlurper
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Stepwise
 
 /**
  * User: sean
@@ -25,6 +26,10 @@ class ConsensusSpec extends Specification {
     @Shared
     OmniwalletConsensusFetcher omniFetcher;
     @Shared
+    ConsensusSnapshot omniSnapshot
+    @Shared
+    ConsensusSnapshot mscSnapshot
+    @Shared
     Long currencyMSC = 1L
 
     void setupSpec() {
@@ -42,12 +47,12 @@ class ConsensusSpec extends Specification {
         //
         def curHeight = 0
         def newHeight = new JsonSlurper().parse(new URL("http://blockchain.info/latestblock")).height
-        println("Blockchain.info current height: " + newHeight)
+        println "Blockchain.info current height: ${newHeight}"
         while ( newHeight > curHeight ) {
             curHeight = newHeight
             Boolean upToDate = client.waitForSync(curHeight, 60*60)
             newHeight = new JsonSlurper().parse(new URL("http://blockchain.info/latestblock")).height
-            println("Blockchain.info current height: " + newHeight)
+            println "Blockchain.info current height: ${newHeight}"
         }
 
         mscFetcher = new MasterCoreConsensusFetcher()
@@ -55,7 +60,7 @@ class ConsensusSpec extends Specification {
     }
 
 
-    def "returns mastercoin version along with basic info" () {
+    def "Master Core RPC is working" () {
         when: "we request info"
         def info = client.getInfo()
 
@@ -64,38 +69,49 @@ class ConsensusSpec extends Specification {
         info.mastercoreversion >= 10003
     }
 
-    def "get Mastercore consensus data"() {
+    def "Can get Mastercore consensus data"() {
 
         when: "we get data"
-
-        def consensus = mscFetcher.getConsensusForCurrency(currencyMSC)
+        mscSnapshot = mscFetcher.getConsensusSnapshot(currencyMSC)
 
         then: "it is there"
-            consensus.size() >= 1
+        mscSnapshot.currencyID ==  currencyMSC
+        mscSnapshot.entries.size() >= 1
     }
 
-    def "get Omniwallet consensus data"() {
+    def "Can get Omniwallet consensus data"() {
 
         when: "we get data"
-
-        def consensus = omniFetcher.getConsensusForCurrency(currencyMSC)
+        omniSnapshot = omniFetcher.getConsensusSnapshot(currencyMSC)
 
         then: "it is there"
-
-        consensus.size() >= 1
+        omniSnapshot.currencyID == currencyMSC
+        omniSnapshot.entries.size() >= 1
     }
 
 
-    def "Compare Omni & Mastercore"() {
+    def "Compare Omni & Mastercore: Number of consensus entries"() {
 
-        when: "we get data from both sources"
+        when: "we have snapshots from both sources"
 
-        Map<String, ConsensusBalance> mscConsensus = mscFetcher.getConsensusForCurrency(currencyMSC)
-        Map<String, ConsensusBalance> omniConsensus = omniFetcher.getConsensusForCurrency(currencyMSC)
-
-        then: "it matches"
-
-        mscConsensus == omniConsensus
-        mscConsensus.size() == omniConsensus.size()         // Redundant given above test
+        then: "They both have the same number of entries"
+        mscSnapshot.entries.size() == omniSnapshot.entries.size()
     }
+
+    def "Compare Omni & Mastercore: Blockheight"() {
+
+        when: "we have snapshots from both sources"
+
+        then: "They both have the same blockHeight"
+        mscSnapshot.blockHeight == omniSnapshot.blockHeight
+    }
+
+    def "Compare Omni & Mastercore: Entry by Entry"() {
+
+        when: "we have snapshots from both sources"
+
+        then: "they match entry by entry"
+        mscSnapshot.entries == omniSnapshot.entries
+    }
+
 }

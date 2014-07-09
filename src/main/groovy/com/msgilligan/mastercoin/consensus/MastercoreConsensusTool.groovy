@@ -15,12 +15,12 @@ class MastercoreConsensusTool {
 
         mscFetcher = new MasterCoreConsensusFetcher()
 
-        def mscConsensus = mscFetcher.getConsensusForCurrency(currencyMSC)
+        def mscConsensus = mscFetcher.getConsensusSnapshot(currencyMSC)
 
         def outputFile = new File("msc_consensus.txt")
 
         outputFile.withWriter { out ->
-            mscConsensus.each { addr, cb ->
+            mscConsensus.entries.each { addr, cb ->
                 out.writeLine("${cb.address}\t${cb.balance}\t${cb.reserved}")
             }
         }

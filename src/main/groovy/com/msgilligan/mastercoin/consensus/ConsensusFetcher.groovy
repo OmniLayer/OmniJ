@@ -6,5 +6,5 @@ package com.msgilligan.mastercoin.consensus
  * Time: 11:44 AM
  */
 interface ConsensusFetcher {
-    Map<String, ConsensusBalance> getConsensusForCurrency(Long currencyID);
+    ConsensusSnapshot           getConsensusSnapshot(Long currencyID);
 }

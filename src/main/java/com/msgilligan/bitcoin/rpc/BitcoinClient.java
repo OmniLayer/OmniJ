@@ -49,6 +49,7 @@ public class BitcoinClient extends RPCClient {
             try {
                 block = this.getBlockCount();
                 if (block != null ) {
+                    System.out.println("\nRPC Ready.");
                     return true;
                 }
             } catch (SocketException se ) {

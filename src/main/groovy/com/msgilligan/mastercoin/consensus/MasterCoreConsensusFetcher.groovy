@@ -15,9 +15,10 @@ class MasterCoreConsensusFetcher implements ConsensusFetcher {
     static def rpcuser = "bitcoinrpc"
     static def rpcpassword = "pass"
     protected MastercoinClient client
+    private URL rpcServerURL
 
     MasterCoreConsensusFetcher() {
-        def rpcServerURL = new URL(rpcproto, rpchost, rpcport, rpcfile)
+        rpcServerURL = new URL(rpcproto, rpchost, rpcport, rpcfile)
         client = new MastercoinClient(rpcServerURL, rpcuser, rpcpassword)
     }
 
@@ -30,16 +31,15 @@ class MasterCoreConsensusFetcher implements ConsensusFetcher {
         println "Block count is: " + mscFetcher.client.getBlockCount()
 
         def mscConsensus = mscFetcher.getConsensusForCurrency(currencyMSC)
-        mscConsensus.each {  address, ConsensusBalance bal ->
+        mscConsensus.each {  address, ConsensusEntry bal ->
             println "${address}: ${bal.balance}"
         }
     }
 
-    @Override
-    Map<String, ConsensusBalance> getConsensusForCurrency(Long currencyID) {
+    private SortedMap<String, ConsensusEntry> getConsensusForCurrency(Long currencyID) {
         List<Object> balances = client.getallbalancesforid_MP(currencyID)
 
-        TreeMap<String, ConsensusBalance> map = [:]
+        TreeMap<String, ConsensusEntry> map = [:]
         balances.each { Object item ->
             String address = item.address
             BigDecimal balance = new BigDecimal(Double.toString(item.balance)).setScale(8)
@@ -48,9 +48,20 @@ class MasterCoreConsensusFetcher implements ConsensusFetcher {
             BigDecimal reserved = reservedByOffer + reservedByAccept;
 
             if (address != "") {
-                map.put(item.address, new ConsensusBalance(address: address, balance: balance, reserved:reserved))
+                map.put(address, new ConsensusEntry(address: address, balance: balance, reserved:reserved))
             }
         }
         return map;
     }
+
+    public ConsensusSnapshot getConsensusSnapshot(Long currencyID) {
+        def snap = new ConsensusSnapshot();
+        snap.currencyID = currencyID
+        snap.blockHeight = client.getBlockCount()
+        snap.sourceType = "Master Core"
+        snap.sourceURL = rpcServerURL
+        snap.entries = this.getConsensusForCurrency(currencyID)
+        return snap
+    }
+
 }

@@ -7,7 +7,8 @@ import groovy.transform.Canonical
  * Date: 7/3/14
  * Time: 12:46 PM
  */
-@Canonical class  ConsensusBalance {
+@Canonical
+class ConsensusEntry {
     String      address
     BigDecimal  balance
     BigDecimal  reserved

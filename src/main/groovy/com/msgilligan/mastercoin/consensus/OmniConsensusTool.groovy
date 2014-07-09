@@ -12,12 +12,12 @@ class OmniConsensusTool {
 
         fetcher = new OmniwalletConsensusFetcher()
 
-        def omniConsensus = fetcher.getConsensusForCurrency(currencyMSC)
+        def omniConsensus = fetcher.getConsensusSnapshot(currencyMSC)
 
         def outputFile = new File("omni_consensus.txt")
 
         outputFile.withWriter { out ->
-            omniConsensus.each { addr, cb ->
+            omniConsensus.entries.each { addr, cb ->
                 out.writeLine("${cb.address}\t${cb.balance}\t${cb.reserved}")
             }
         }

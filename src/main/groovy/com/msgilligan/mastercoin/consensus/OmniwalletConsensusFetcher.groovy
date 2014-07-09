@@ -1,6 +1,5 @@
 package com.msgilligan.mastercoin.consensus
 
-import com.msgilligan.bitcoin.rpc.MastercoinClient
 import groovy.json.JsonSlurper
 
 /**
@@ -24,28 +23,40 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
         fetcher = new OmniwalletConsensusFetcher()
 
         def mscConsensus = fetcher.getConsensusForCurrency(currencyMSC)
-        mscConsensus.each {  address, ConsensusBalance bal ->
+        mscConsensus.each {  address, ConsensusEntry bal ->
             println "${address}: ${bal.balance}"
         }
     }
 
-    @Override
-    Map<String, ConsensusBalance> getConsensusForCurrency(Long currencyID) {
+    private SortedMap<String, ConsensusEntry> getConsensusForCurrency(Long currencyID) {
         def slurper = new JsonSlurper()
 //        def balancesText =  consensusURL.getText()
         String httpFile = "${file}?currency_id=${currencyID}"
         def consensusURL = new URL(proto, host, port, httpFile)
         def balances = slurper.parse(consensusURL)
 
-        TreeMap<String, ConsensusBalance> map = [:]
+        TreeMap<String, ConsensusEntry> map = [:]
         balances.each { item ->
             String address = item.address
             BigDecimal balance = new BigDecimal(item.balance).setScale(8)
             BigDecimal reserved_balance = new BigDecimal(item.reserved_balance).setScale(8)
             if (address != "") {
-                map.put(item.address, new ConsensusBalance(address: address, balance: balance, reserved:reserved_balance))
+                map.put(address, new ConsensusEntry(address: address, balance: balance, reserved:reserved_balance))
             }
         }
         return map;
+    }
+
+    public ConsensusSnapshot getConsensusSnapshot(Long currencyID) {
+        String httpFile = "${file}?currency_id=${currencyID}"
+        def consensusURL = new URL(proto, host, port, httpFile)
+
+        def snap = new ConsensusSnapshot();
+        snap.currencyID = currencyID
+        snap.blockHeight = -1
+        snap.sourceType = "Omniwallet (Master tools)"
+        snap.sourceURL = consensusURL
+        snap.entries = this.getConsensusForCurrency(currencyID)
+        return snap
     }
 }
