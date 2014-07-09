@@ -13,8 +13,8 @@ class BitcoinSpec extends BaseRPCSpec {
 
         then: "we get back some basic information"
             info != null
-            info.version == 90100
-            info.protocolversion == 70002
+            info.version >= 90100
+            info.protocolversion >= 70002
     }
 
     def "can write a block"() {
