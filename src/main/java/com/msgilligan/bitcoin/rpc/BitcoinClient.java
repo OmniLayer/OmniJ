@@ -1,5 +1,7 @@
 package com.msgilligan.bitcoin.rpc;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -19,6 +21,7 @@ import java.util.Map;
  */
 public class BitcoinClient extends RPCClient {
 
+    private static final Integer SECOND = 1000;
     public static final BigInteger SATOSHIS_PER_BITCOIN = new BigInteger("100000000", 10);
     public static final BigDecimal D_SATOSHIS_PER_BITCOIN = new BigDecimal(SATOSHIS_PER_BITCOIN);
 
@@ -36,17 +39,16 @@ public class BitcoinClient extends RPCClient {
      * @return
      */
     public Boolean waitForServer(Integer timeout) {
-        final Integer SECOND = 1000;
-        Integer count = 0;
+        Integer seconds = 0;
 
-        System.out.println("Waiting for server RPC ready:");
+        System.out.println("Waiting for server RPC ready...");
 
-        Map<String, Object> result;
+        Integer block;
 
-        while ( count < timeout ) {
+        while ( seconds < timeout ) {
             try {
-                result = this.getInfo();
-                if (result != null ) {
+                block = this.getBlockCount();
+                if (block != null ) {
                     return true;
                 }
             } catch (SocketException se ) {
@@ -67,8 +69,8 @@ public class BitcoinClient extends RPCClient {
             }
             try {
                 System.out.print(".");
-                count++;
-                if (count % 60 == 0) {
+                seconds++;
+                if (seconds % 60 == 0) {
                     System.out.println();
                 }
                 Thread.sleep(SECOND);
@@ -78,6 +80,39 @@ public class BitcoinClient extends RPCClient {
         }
         return false;
     }
+
+    /**
+     *
+     * @param timeout Timeout in seconds
+     * @return
+     */
+    public Boolean waitForSync(Long blockCount, Integer timeout) throws IOException {
+        Integer seconds = 0;
+
+        System.out.println("Waiting for server to get to block ${blockCount}...");
+
+        Integer block;
+
+        while ( seconds < timeout ) {
+            block = this.getBlockCount();
+            if (block >= blockCount ) {
+                return true;
+            } else {
+                try {
+                    seconds++;
+                    if (seconds % 60 == 0) {
+                        System.out.println("block " + block);
+                    }
+                    Thread.sleep(SECOND);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+        return false;
+    }
+
     /**
      *
      * @return

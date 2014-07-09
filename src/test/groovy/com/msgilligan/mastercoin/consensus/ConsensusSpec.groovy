@@ -1,6 +1,7 @@
 package com.msgilligan.mastercoin.consensus
 
 import com.msgilligan.bitcoin.rpc.MastercoinClient
+import groovy.json.JsonSlurper
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -33,6 +34,20 @@ class ConsensusSpec extends Specification {
         Boolean available = client.waitForServer(60*60)   // Wait up to 1 hour
         if (!available) {
             System.err.println("Timeout error.")
+        }
+
+
+        //
+        // Get in sync with Blockchain.info
+        //
+        def curHeight = 0
+        def newHeight = new JsonSlurper().parse(new URL("http://blockchain.info/latestblock")).height
+        println("Blockchain.info current height: " + newHeight)
+        while ( newHeight > curHeight ) {
+            curHeight = newHeight
+            Boolean upToDate = client.waitForSync(curHeight, 60*60)
+            newHeight = new JsonSlurper().parse(new URL("http://blockchain.info/latestblock")).height
+            println("Blockchain.info current height: " + newHeight)
         }
 
         mscFetcher = new MasterCoreConsensusFetcher()
