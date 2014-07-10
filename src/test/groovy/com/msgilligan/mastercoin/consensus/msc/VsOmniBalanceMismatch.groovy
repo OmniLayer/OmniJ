@@ -1,7 +1,6 @@
 package com.msgilligan.mastercoin.consensus.msc
 
 import com.msgilligan.mastercoin.consensus.BaseConsensusSpec
-import com.sun.xml.internal.rngom.parse.host.Base
 import spock.lang.Unroll
 
 /**
