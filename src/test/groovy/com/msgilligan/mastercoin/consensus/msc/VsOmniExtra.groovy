@@ -15,6 +15,6 @@ class VsOmniExtra extends BaseConsensusSpec  {
         address == null
 
         where:
-        address << mscSnapshot.entries - omniSnapshot.entries
+        address << (mscSnapshot.entries - omniSnapshot.entries).keySet()
     }
 }

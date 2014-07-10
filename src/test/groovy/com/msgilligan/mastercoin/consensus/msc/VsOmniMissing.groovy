@@ -15,7 +15,7 @@ class VsOmniMissing extends BaseConsensusSpec  {
         address == null
 
         where:
-        address << omniSnapshot.entries - mscSnapshot.entries
+        address << (omniSnapshot.entries - mscSnapshot.entries).keySet()
     }
 
 }

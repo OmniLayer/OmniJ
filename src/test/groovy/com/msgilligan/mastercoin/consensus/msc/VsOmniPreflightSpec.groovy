@@ -58,7 +58,7 @@ class VsOmniPreflightSpec extends BaseConsensusSpec {
     def "Compare Omni & Mastercore: Omni should not have extra entries"() {
 
         when: "we have snapshots from both sources"
-        def omniExtra =  omniSnapshot.entries - mscSnapshot.entries
+        def omniExtra =  (omniSnapshot.entries - mscSnapshot.entries).keySet()
 
         then: "Omni should not have any extra entries"
         omniExtra == [:]
@@ -67,38 +67,31 @@ class VsOmniPreflightSpec extends BaseConsensusSpec {
     def "Compare Omni & Mastercore: Master Core should not have extra entries"() {
 
         when: "we have snapshots from both sources"
-        def mscExtra =  mscSnapshot.entries - omniSnapshot.entries
+        def mscExtra =  (mscSnapshot.entries - omniSnapshot.entries).keySet()
 
         then: "Master Core should not have any extra entries"
         mscExtra == [:]
     }
 
-    @Unroll
-    def "#address extra in Omni"() {
-        expect:
-        address == null
+    def "Compare Omni & Mastercore: Balances should match"() {
 
-        where:
-        address << omniSnapshot.entries - mscSnapshot.entries
+        when: "we have snapshots from both sources"
+        def intersectingAddresses = omniSnapshot.entries.intersect(mscSnapshot.entries).keySet()
+        TreeMap<String, BigDecimal> mscIntersect =  mscSnapshot.entries.subMap(intersectingAddresses).collectEntries { key, value -> [ key, value.balance ]}
+        TreeMap<String, BigDecimal> OmniIntersect =  omniSnapshot.entries.subMap(intersectingAddresses).collectEntries { key, value -> [ key, value.balance ]}
+
+        then: "All balances in both maps should match"
+        mscIntersect == OmniIntersect
     }
 
-    @Unroll
-    def "#address extra in Master"() {
-        expect:
-        address == null
+    def "Compare Omni & Mastercore: Reserved should match"() {
 
-        where:
-        address << mscSnapshot.entries - omniSnapshot.entries
-    }
+        when: "we have snapshots from both sources"
+        def intersectingAddresses = omniSnapshot.entries.intersect(mscSnapshot.entries).keySet()
+        TreeMap<String, BigDecimal> mscIntersect =  mscSnapshot.entries.subMap(intersectingAddresses).collectEntries { key, value -> [ key,  value.reserved ]}
+        TreeMap<String, BigDecimal> OmniIntersect =  omniSnapshot.entries.subMap(intersectingAddresses).collectEntries { key, value -> [ key, value.reserved ]}
 
-    @Unroll
-    def "compare #address balance msc vs omni (#mscBalance == #omniBalance)"() {
-        expect:
-        omniBalance == mscBalance
-
-        where:
-        address << omniSnapshot.entries.intersect(mscSnapshot.entries).keySet()
-        omniBalance = omniSnapshot.entries[address].balance
-        mscBalance = mscSnapshot.entries[address].balance
+        then: "All balances in both maps should match"
+        mscIntersect == OmniIntersect
     }
 }
