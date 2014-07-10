@@ -1,5 +1,6 @@
-package com.msgilligan.mastercoin.consensus
+package com.msgilligan.spock
 
+import com.msgilligan.mastercoin.consensus.ConsensusEntry
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll

@@ -1,6 +1,10 @@
-package com.msgilligan.mastercoin.consensus
+package com.msgilligan.mastercoin.consensus.msc
 
 import com.msgilligan.bitcoin.rpc.MastercoinClient
+import com.msgilligan.mastercoin.consensus.BaseConsensusSpec
+import com.msgilligan.mastercoin.consensus.ConsensusSnapshot
+import com.msgilligan.mastercoin.consensus.MasterCoreConsensusFetcher
+import com.msgilligan.mastercoin.consensus.OmniwalletConsensusFetcher
 import groovy.json.JsonSlurper
 import spock.lang.Shared
 import spock.lang.Specification
@@ -12,54 +16,7 @@ import spock.lang.Unroll
  * Date: 7/3/14
  * Time: 11:54 AM
  */
-class ConsensusSpec extends Specification {
-    static def rpcproto = "http"
-    static def rpchost = "127.0.0.1"
-    static def rpcport = 8332
-    static def rpcfile = "/"
-    static def rpcuser = "bitcoinrpc"
-    static def rpcpassword = "pass"
-
-    @Shared
-    MastercoinClient client;
-    @Shared
-    MasterCoreConsensusFetcher mscFetcher;
-    @Shared
-    OmniwalletConsensusFetcher omniFetcher;
-    @Shared
-    ConsensusSnapshot omniSnapshot
-    @Shared
-    ConsensusSnapshot mscSnapshot
-    @Shared
-    Long currencyMSC = 1L
-
-    void setupSpec() {
-        def rpcServerURL = new URL(rpcproto, rpchost, rpcport, rpcfile)
-        client = new MastercoinClient(rpcServerURL, rpcuser, rpcpassword)
-        System.err.println("Waiting for server...")
-        Boolean available = client.waitForServer(60*60)   // Wait up to 1 hour
-        if (!available) {
-            System.err.println("Timeout error.")
-        }
-
-
-        //
-        // Get in sync with Blockchain.info
-        //
-        def curHeight = 0
-        def newHeight = new JsonSlurper().parse(new URL("http://blockchain.info/latestblock")).height
-        println "Blockchain.info current height: ${newHeight}"
-        while ( newHeight > curHeight ) {
-            curHeight = newHeight
-            Boolean upToDate = client.waitForSync(curHeight, 60*60)
-            newHeight = new JsonSlurper().parse(new URL("http://blockchain.info/latestblock")).height
-            println "Blockchain.info current height: ${newHeight}"
-        }
-
-        mscFetcher = new MasterCoreConsensusFetcher()
-        omniFetcher = new OmniwalletConsensusFetcher()
-    }
-
+class VsOmniPreflightSpec extends BaseConsensusSpec {
 
     def "Master Core RPC is working" () {
         when: "we request info"
@@ -73,7 +30,6 @@ class ConsensusSpec extends Specification {
     def "Can get Mastercore consensus data"() {
 
         when: "we get data"
-        mscSnapshot = mscFetcher.getConsensusSnapshot(currencyMSC)
 
         then: "it is there"
         mscSnapshot.currencyID ==  currencyMSC
@@ -83,13 +39,11 @@ class ConsensusSpec extends Specification {
     def "Can get Omniwallet consensus data"() {
 
         when: "we get data"
-        omniSnapshot = omniFetcher.getConsensusSnapshot(currencyMSC)
 
         then: "it is there"
         omniSnapshot.currencyID == currencyMSC
         omniSnapshot.entries.size() >= 1
     }
-
 
     def "Compare Omni & Mastercore: Number of consensus entries"() {
 
@@ -120,12 +74,30 @@ class ConsensusSpec extends Specification {
     }
 
     @Unroll
+    def "#address extra in Omni"() {
+        expect:
+        address == null
+
+        where:
+        address << omniSnapshot.entries - mscSnapshot.entries
+    }
+
+    @Unroll
+    def "#address extra in Master"() {
+        expect:
+        address == null
+
+        where:
+        address << mscSnapshot.entries - omniSnapshot.entries
+    }
+
+    @Unroll
     def "compare #address balance msc vs omni (#mscBalance == #omniBalance)"() {
         expect:
         omniBalance == mscBalance
 
         where:
-        address << omniSnapshot.entries.keySet()
+        address << omniSnapshot.entries.intersect(mscSnapshot.entries).keySet()
         omniBalance = omniSnapshot.entries[address].balance
         mscBalance = mscSnapshot.entries[address].balance
     }
