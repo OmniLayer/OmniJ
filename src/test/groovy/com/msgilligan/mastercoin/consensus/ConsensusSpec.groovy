@@ -5,6 +5,7 @@ import groovy.json.JsonSlurper
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
+import spock.lang.Unroll
 
 /**
  * User: sean
@@ -92,26 +93,40 @@ class ConsensusSpec extends Specification {
 
     def "Compare Omni & Mastercore: Number of consensus entries"() {
 
-        when: "we have snapshots from both sources"
+        when: "we have snapshots from both sources, and get the sizes"
+        def mscSize = mscSnapshot.entries.size()
+        def omniSize = omniSnapshot.entries.size()
 
         then: "They both have the same number of entries"
-        mscSnapshot.entries.size() == omniSnapshot.entries.size()
+        mscSize == omniSize
     }
 
-    def "Compare Omni & Mastercore: Blockheight"() {
+    def "Compare Omni & Mastercore: Omni should not have extra entries"() {
 
         when: "we have snapshots from both sources"
+        def omniExtra =  omniSnapshot.entries - mscSnapshot.entries
 
-        then: "They both have the same blockHeight"
-        mscSnapshot.blockHeight == omniSnapshot.blockHeight
+        then: "Omni should not have any extra entries"
+        omniExtra == [:]
     }
 
-    def "Compare Omni & Mastercore: Entry by Entry"() {
+    def "Compare Omni & Mastercore: Master Core should not have extra entries"() {
 
         when: "we have snapshots from both sources"
+        def mscExtra =  mscSnapshot.entries - omniSnapshot.entries
 
-        then: "they match entry by entry"
-        mscSnapshot.entries == omniSnapshot.entries
+        then: "Master Core should not have any extra entries"
+        mscExtra == [:]
     }
 
+    @Unroll
+    def "compare #address balance msc vs omni (#mscBalance == #omniBalance)"() {
+        expect:
+        omniBalance == mscBalance
+
+        where:
+        address << omniSnapshot.entries.keySet()
+        omniBalance = omniSnapshot.entries[address].balance
+        mscBalance = mscSnapshot.entries[address].balance
+    }
 }
