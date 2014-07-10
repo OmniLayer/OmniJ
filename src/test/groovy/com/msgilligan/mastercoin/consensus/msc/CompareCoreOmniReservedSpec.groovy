@@ -8,7 +8,7 @@ import spock.lang.Unroll
  * Date: 7/10/14
  * Time: 1:26 AM
  */
-class VsOmniReservedMismatch extends BaseConsensusSpec {
+class CompareCoreOmniReservedSpec extends BaseConsensusSpec {
 
     @Unroll
     def "compare #address reserved msc vs omni (#mscReserved == #omniReserved)"() {

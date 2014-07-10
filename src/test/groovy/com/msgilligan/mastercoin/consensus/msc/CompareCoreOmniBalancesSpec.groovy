@@ -8,7 +8,7 @@ import spock.lang.Unroll
  * Date: 7/9/14
  * Time: 11:56 PM
  */
-class VsOmniBalanceMismatch extends BaseConsensusSpec {
+class CompareCoreOmniBalancesSpec extends BaseConsensusSpec {
 
     @Unroll
     def "compare #address balance msc vs omni (#mscBalance == #omniBalance)"() {

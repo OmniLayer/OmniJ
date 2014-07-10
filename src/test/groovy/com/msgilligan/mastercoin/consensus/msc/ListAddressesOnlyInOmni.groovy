@@ -8,13 +8,14 @@ import spock.lang.Unroll
  * Date: 7/9/14
  * Time: 11:55 PM
  */
-class VsOmniExtra extends BaseConsensusSpec  {
+class ListAddressesOnlyInOmni extends BaseConsensusSpec  {
     @Unroll
-    def "#address extra in Master"() {
+    def "#address extra in Omni"() {
         expect:
         address == null
 
         where:
-        address << (mscSnapshot.entries - omniSnapshot.entries).keySet()
+        address << (omniSnapshot.entries - mscSnapshot.entries).keySet()
     }
+
 }

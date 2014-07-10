@@ -16,7 +16,7 @@ import spock.lang.Unroll
  * Date: 7/3/14
  * Time: 11:54 AM
  */
-class VsOmniPreflightSpec extends BaseConsensusSpec {
+class OtherCoreVsOmniTestSpec extends BaseConsensusSpec {
 
     def "Master Core RPC is working" () {
         when: "we request info"
