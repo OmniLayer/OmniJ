@@ -10,12 +10,13 @@ abstract class ConsensusTool implements ConsensusFetcher {
 
     void run(List args) {
         Long currency = args[0] ?: currencyMSC
-        File output = args[1]
+        String fileName = args[1]
 
         def consensus = this.getConsensusSnapshot(currency)
 
-        if (output != null) {
-            this.save(new File(args[0]))
+        if (fileName != null) {
+            File output = new File(fileName)
+            this.save(consensus, output)
         } else {
             this.print(consensus)
         }

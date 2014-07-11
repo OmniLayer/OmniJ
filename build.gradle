@@ -63,3 +63,27 @@ task roboRun(type:Exec, dependsOn: roboCompile) {
     executable "build/${roboExeName}"
     args '-rvm:log=debug'
 }
+
+
+task getMasterConsensus(dependsOn: 'classes',  type: JavaExec) {
+    main = 'com.msgilligan.mastercoin.consensus.MasterCoreConsensusTool'
+    args = [1, 'build/mastercore_consensus.txt']
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task getOmniConsensus(dependsOn: 'classes',  type: JavaExec) {
+    main = 'com.msgilligan.mastercoin.consensus.OmniwalletConsensusTool'
+    args = [1, 'build/omniwallet_consensus.txt']
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+//task getChestConsensus(dependsOn: 'classes',  type: JavaExec) {
+//    main = 'com.msgilligan.mastercoin.consensus.ChestConsensusTool'
+//    args = [1, 'build/chest_consensus.txt']
+//    classpath = sourceSets.main.runtimeClasspath
+//}
+
+task getConsensus(dependsOn: ['getMasterConsensus', 'getOmniConsensus']) {
+    println "Consensus files are in build/*_consensus.txt"
+
+}
