@@ -9,7 +9,9 @@ abstract class ConsensusTool implements ConsensusFetcher {
     public static final Long currencyMSC = 1L
 
     void run(List args) {
-        Long currency = args[0] ?: currencyMSC
+        String currencyString = args[0]
+        Long currency = currencyString ? Long.parseLong(currencyString) : currencyMSC
+
         String fileName = args[1]
 
         def consensus = this.getConsensusSnapshot(currency)
