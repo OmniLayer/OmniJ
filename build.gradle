@@ -83,7 +83,6 @@ task getOmniConsensus(dependsOn: 'classes',  type: JavaExec) {
 //    classpath = sourceSets.main.runtimeClasspath
 //}
 
-task getConsensus(dependsOn: ['getMasterConsensus', 'getOmniConsensus']) {
+task getConsensus(dependsOn: ['getMasterConsensus', 'getOmniConsensus']) << {
     println "Consensus files are in build/*_consensus.txt"
-
 }
