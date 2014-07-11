@@ -8,23 +8,23 @@ trap cleanup EXIT
 
 # Assume bitcoind built elsewhere and coied by Jenkins Copy Artifact plugin
 BTCD=copied-artifacts/src/bitcoind
-DATADIR=$HOME/.bitcoin
+DATADIR=regtest-datadir
 chmod +x $BTCD
 
-# Run Bitcoin on main net mode
+# Run Bitcoin in regtest mode
 mkdir -p $DATADIR
-cp -n bitcoin.conf $DATADIR
+cp bitcoin.conf $DATADIR
 mkdir -p logs
-$BTCD -server -datadir=$DATADIR -debug > logs/bitcoin.log &
+$BTCD -server -regtest -datadir=$DATADIR -debug > logs/bitcoin.log &
 BTCSTATUS=$?
 BTCPID=$!
 
 # Give server some time to start
 sleep 30
 
-# Run consensus tests
-echo "Running consensus tests..."
-./gradlew test --tests com.msgilligan.mastercoin.consensus.msc.*
+# Run integration tests
+echo "Running integration tests in regtest mode..."
+./gradlew test --tests com.msgilligan.bitcoin.rpc*
 GRADLESTATUS=$?
 
 exit $GRADLESTATUS
