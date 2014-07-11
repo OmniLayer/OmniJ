@@ -2,8 +2,8 @@ package com.msgilligan.mastercoin.consensus.tmsc
 
 import com.msgilligan.bitcoin.rpc.MastercoinClient
 import com.msgilligan.mastercoin.consensus.ConsensusSnapshot
-import com.msgilligan.mastercoin.consensus.MasterCoreConsensusFetcher
-import com.msgilligan.mastercoin.consensus.OmniwalletConsensusFetcher
+import com.msgilligan.mastercoin.consensus.MasterCoreConsensusTool
+import com.msgilligan.mastercoin.consensus.OmniwalletConsensusTool
 import groovy.json.JsonSlurper
 import spock.lang.Shared
 import spock.lang.Specification
@@ -24,9 +24,9 @@ class TMSCVsOmniPreflightSpec extends Specification {
     @Shared
     MastercoinClient client;
     @Shared
-    MasterCoreConsensusFetcher mscFetcher;
+    MasterCoreConsensusTool mscFetcher;
     @Shared
-    OmniwalletConsensusFetcher omniFetcher;
+    OmniwalletConsensusTool omniFetcher;
     @Shared
     ConsensusSnapshot omniSnapshot
     @Shared
@@ -58,10 +58,10 @@ class TMSCVsOmniPreflightSpec extends Specification {
             println "Blockchain.info current height: ${newHeight}"
         }
 
-        mscFetcher = new MasterCoreConsensusFetcher()
+        mscFetcher = new MasterCoreConsensusTool()
         mscSnapshot = mscFetcher.getConsensusSnapshot(currencyID)
 
-        omniFetcher = new OmniwalletConsensusFetcher()
+        omniFetcher = new OmniwalletConsensusTool()
         omniSnapshot = omniFetcher.getConsensusSnapshot(currencyID)
     }
 

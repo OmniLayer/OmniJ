@@ -7,7 +7,7 @@ import com.msgilligan.bitcoin.rpc.MastercoinClient
  * Date: 7/3/14
  * Time: 11:45 AM
  */
-class MasterCoreConsensusFetcher implements ConsensusFetcher {
+class MasterCoreConsensusTool extends ConsensusTool {
     static def rpcproto = "http"
     static def rpchost = "127.0.0.1"
     static def rpcport = 8332
@@ -17,23 +17,14 @@ class MasterCoreConsensusFetcher implements ConsensusFetcher {
     protected MastercoinClient client
     private URL rpcServerURL
 
-    MasterCoreConsensusFetcher() {
+    MasterCoreConsensusTool() {
         rpcServerURL = new URL(rpcproto, rpchost, rpcport, rpcfile)
         client = new MastercoinClient(rpcServerURL, rpcuser, rpcpassword)
     }
 
     public static void main(String[] args) {
-        MasterCoreConsensusFetcher mscFetcher
-        Long currencyMSC = 1L
-
-        mscFetcher = new MasterCoreConsensusFetcher()
-
-        println "Block count is: " + mscFetcher.client.getBlockCount()
-
-        def mscConsensus = mscFetcher.getConsensusForCurrency(currencyMSC)
-        mscConsensus.each {  address, ConsensusEntry bal ->
-            println "${address}: ${bal.balance}"
-        }
+        MasterCoreConsensusTool tool = new MasterCoreConsensusTool()
+        tool.run(args.toList())
     }
 
     private SortedMap<String, ConsensusEntry> getConsensusForCurrency(Long currencyID) {

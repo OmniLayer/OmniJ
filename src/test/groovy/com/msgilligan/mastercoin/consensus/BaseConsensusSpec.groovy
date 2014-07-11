@@ -21,9 +21,9 @@ abstract class  BaseConsensusSpec extends Specification {
     @Shared
     MastercoinClient client;
     @Shared
-    MasterCoreConsensusFetcher mscFetcher;
+    MasterCoreConsensusTool mscFetcher;
     @Shared
-    OmniwalletConsensusFetcher omniFetcher;
+    OmniwalletConsensusTool omniFetcher;
     @Shared
     ConsensusSnapshot omniSnapshot
     @Shared
@@ -53,10 +53,10 @@ abstract class  BaseConsensusSpec extends Specification {
             println "Blockchain.info current height: ${newHeight}"
         }
 
-        mscFetcher = new MasterCoreConsensusFetcher()
+        mscFetcher = new MasterCoreConsensusTool()
         mscSnapshot = mscFetcher.getConsensusSnapshot(currencyMSC)
 
-        omniFetcher = new OmniwalletConsensusFetcher()
+        omniFetcher = new OmniwalletConsensusTool()
         omniSnapshot = omniFetcher.getConsensusSnapshot(currencyMSC)
     }
 }

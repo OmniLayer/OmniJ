@@ -1,15 +1,6 @@
 package com.msgilligan.mastercoin.consensus.msc
 
-import com.msgilligan.bitcoin.rpc.MastercoinClient
 import com.msgilligan.mastercoin.consensus.BaseConsensusSpec
-import com.msgilligan.mastercoin.consensus.ConsensusSnapshot
-import com.msgilligan.mastercoin.consensus.MasterCoreConsensusFetcher
-import com.msgilligan.mastercoin.consensus.OmniwalletConsensusFetcher
-import groovy.json.JsonSlurper
-import spock.lang.Shared
-import spock.lang.Specification
-import spock.lang.Stepwise
-import spock.lang.Unroll
 
 /**
  * User: sean
