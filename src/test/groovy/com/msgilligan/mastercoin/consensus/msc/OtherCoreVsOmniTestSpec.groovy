@@ -49,19 +49,30 @@ class OtherCoreVsOmniTestSpec extends BaseConsensusSpec {
     def "Compare Omni & Mastercore: Omni should not have extra entries"() {
 
         when: "we have snapshots from both sources"
-        def omniExtra =  (omniSnapshot.entries - mscSnapshot.entries).keySet()
+        def omniExtra =  omniSnapshot.entries.keySet() - mscSnapshot.entries.keySet()
 
         then: "Omni should not have any extra entries"
-        omniExtra == [:]
+        omniExtra.size() == 0
     }
 
     def "Compare Omni & Mastercore: Master Core should not have extra entries"() {
 
         when: "we have snapshots from both sources"
-        def mscExtra =  (mscSnapshot.entries - omniSnapshot.entries).keySet()
+//        def mscExtraMap =  mscSnapshot.entries - omniSnapshot.entries
+        def mscExtra =  mscSnapshot.entries.keySet() - omniSnapshot.entries.keySet()
 
         then: "Master Core should not have any extra entries"
-        mscExtra == [:]
+        mscExtra.size() == 0
+    }
+
+    def "Compare Omni & Mastercore: Extra entries should match"() {
+
+        when: "we have snapshots from both sources"
+        def mscExtra =  (mscSnapshot.entries - omniSnapshot.entries).keySet()
+        def omniExtra =  (omniSnapshot.entries - mscSnapshot.entries).keySet()
+
+        then: "keysets should be the same"
+        mscExtra == omniExtra
     }
 
     def "Compare Omni & Mastercore: Balances should match"() {

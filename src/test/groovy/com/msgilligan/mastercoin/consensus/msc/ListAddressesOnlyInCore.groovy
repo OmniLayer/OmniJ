@@ -1,6 +1,7 @@
 package com.msgilligan.mastercoin.consensus.msc
 
 import com.msgilligan.mastercoin.consensus.BaseConsensusSpec
+import spock.lang.Ignore
 import spock.lang.Unroll
 
 /**
@@ -9,12 +10,22 @@ import spock.lang.Unroll
  * Time: 11:55 PM
  */
 class ListAddressesOnlyInCore extends BaseConsensusSpec  {
-    @Unroll
-    def "#address extra in Master"() {
-        expect:
-        address == null
 
-        where:
-        address << (mscSnapshot.entries - omniSnapshot.entries).keySet()
+    def "there should be no extra entries" () {
+        when:
+        def extra = mscSnapshot.entries.keySet() - omniSnapshot.entries.keySet()
+
+        then:
+        extra.size() == 0
     }
+
+//    @Ignore
+//    @Unroll
+//    def "#address extra in Master"() {
+//        expect:
+//        address == null
+//
+//        where:
+//        address << mscSnapshot.entries.keySet() - omniSnapshot.entries.keySet()
+//    }
 }
