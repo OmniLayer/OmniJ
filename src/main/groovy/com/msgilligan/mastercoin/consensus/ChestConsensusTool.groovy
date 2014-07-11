@@ -23,16 +23,16 @@ class ChestConsensusTool extends ConsensusTool {
 
     private SortedMap<String, ConsensusEntry> getConsensusForCurrency(Long currencyID) {
         def slurper = new JsonSlurper()
-//        def balancesText =  consensusURL.getText()
         String httpFile = "${file}?currencyid=${currencyID}"
         def consensusURL = new URL(proto, host, port, httpFile)
+//        def balancesText =  consensusURL.getText()
         def balances = slurper.parse(consensusURL)
 
         TreeMap<String, ConsensusEntry> map = [:]
         balances.each { item ->
             String address = item.address
             BigDecimal balance = new BigDecimal(item.balance).setScale(8)
-            if (address != "") {
+            if (address != "" && balance > 0) {
                 map.put(item.address, new ConsensusEntry(address: address, balance: balance))
             }
         }

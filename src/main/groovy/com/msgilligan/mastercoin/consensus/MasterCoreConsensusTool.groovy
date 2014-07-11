@@ -38,7 +38,7 @@ class MasterCoreConsensusTool extends ConsensusTool {
             BigDecimal reservedByAccept = new BigDecimal(Double.toString(item.reservedbyoffer)).setScale(8)
             BigDecimal reserved = reservedByOffer + reservedByAccept;
 
-            if (address != "") {
+            if (address != "" && balance > 0) {
                 map.put(address, new ConsensusEntry(address: address, balance: balance, reserved:reserved))
             }
         }
