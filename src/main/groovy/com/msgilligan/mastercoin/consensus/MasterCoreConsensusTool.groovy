@@ -35,7 +35,7 @@ class MasterCoreConsensusTool extends ConsensusTool {
             String address = item.address
             BigDecimal balance = new BigDecimal(Double.toString(item.balance)).setScale(8)
             BigDecimal reservedByOffer = new BigDecimal(Double.toString(item.reservedbyoffer)).setScale(8)
-            BigDecimal reservedByAccept = new BigDecimal(Double.toString(item.reservedbyoffer)).setScale(8)
+            BigDecimal reservedByAccept = new BigDecimal(Double.toString(item.reservedbyaccept)).setScale(8)
             BigDecimal reserved = reservedByOffer + reservedByAccept;
 
             if (address != "" && balance > 0) {
