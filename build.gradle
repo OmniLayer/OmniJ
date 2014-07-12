@@ -17,7 +17,6 @@ dependencies {
 
     testCompile "org.codehaus.groovy:groovy-all:2.3.3"
     testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
-
 }
 
 mainClassName = "com.msgilligan.bitcoin.cli.Status"
@@ -64,6 +63,28 @@ task roboRun(type:Exec, dependsOn: roboCompile) {
     args '-rvm:log=debug'
 }
 
+// Test Structure
+sourceSets {
+    integrationTest {
+        compileClasspath = sourceSets.main.output + configurations.testRuntime
+        runtimeClasspath = output + sourceSets.main.output + configurations.testRuntime
+        java {
+            srcDir 'src/integ/java'
+        }
+        groovy {
+            srcDir 'src/integ/groovy'
+        }
+        resources {
+            srcDir 'src/integ/resources'
+        }
+    }
+}
+
+task integrationTest(type: Test) {
+    outputs.upToDateWhen { false }
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
 
 task getMasterConsensus(dependsOn: 'classes',  type: JavaExec) {
     main = 'com.msgilligan.mastercoin.consensus.MasterCoreConsensusTool'
