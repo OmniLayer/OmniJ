@@ -81,9 +81,10 @@ sourceSets {
 }
 
 task integrationTest(type: Test) {
-    outputs.upToDateWhen { false }
     testClassesDir = sourceSets.integrationTest.output.classesDir
     classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+    testLogging.showStandardStreams = true
 }
 
 task getMasterConsensus(dependsOn: 'classes',  type: JavaExec) {
