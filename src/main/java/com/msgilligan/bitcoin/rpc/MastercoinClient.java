@@ -38,6 +38,7 @@ public class MastercoinClient extends BitcoinClient {
         // TODO: currencyID should probably not be passed as a string
         List<Object> params = Arrays.asList((Object) currencyId);
         Map<String, Object> response = send("getallbalancesforid_MP", params);
+        @SuppressWarnings("unchecked")
         List<Object> balances = (List<Object>) response.get("result");
         return balances;
     }

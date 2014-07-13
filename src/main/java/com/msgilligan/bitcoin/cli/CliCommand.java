@@ -1,7 +1,5 @@
 package com.msgilligan.bitcoin.cli;
 
-import com.msgilligan.bitcoin.rpc.BitcoinClient;
-import com.msgilligan.bitcoin.rpc.RPCConfig;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -11,7 +9,9 @@ import org.apache.commons.cli.ParseException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
+
+import com.msgilligan.bitcoin.rpc.BitcoinClient;
+import com.msgilligan.bitcoin.rpc.RPCConfig;
 
 /**
  * User: sean
@@ -71,7 +71,7 @@ public abstract class CliCommand {
             System.exit(0);
         }
         if (line.hasOption("rpcwait")) {
-            Boolean available = client.waitForServer(60*60);   // Wait up to 1 hour
+            boolean available = client.waitForServer(60*60);   // Wait up to 1 hour
             if (!available) {
                 System.out.println("Timeout error.");
                 System.exit(1);

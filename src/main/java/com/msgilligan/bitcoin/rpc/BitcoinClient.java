@@ -1,16 +1,12 @@
 package com.msgilligan.bitcoin.rpc;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.SocketException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -163,6 +159,7 @@ public class BitcoinClient extends RPCClient {
 
         Map<String, Object> response = send("listreceivedbyaddress", params);
 
+        @SuppressWarnings("unchecked")
         List<Object> addresses = (List<Object>) response.get("result");
         return addresses;
     }
@@ -192,6 +189,7 @@ public class BitcoinClient extends RPCClient {
         List<Object> params = Arrays.asList((Object) txid);
         Map<String, Object> response = send("gettransaction", params);
 
+        @SuppressWarnings("unchecked")
         Map<String, Object> transaction = (Map<String, Object>) response.get("result");
         return transaction;
     }
@@ -199,6 +197,7 @@ public class BitcoinClient extends RPCClient {
     public Map<String, Object> getInfo() throws IOException {
         Map<String, Object> response = send("getinfo", null);
 
+        @SuppressWarnings("unchecked")
         Map<String, Object> result = (Map<String, Object>) response.get("result");
         return result;
     }

@@ -70,14 +70,16 @@ public class RPCClient {
 
         Map<String, Object> responseMap = null;
         if (responseStream != null) {
-            responseMap = mapper.readValue(responseStream, Map.class);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> r = mapper.readValue(responseStream, Map.class);
+            responseMap = r;
         }
         closeConnection();
         return responseMap;
     }
 
     public Map<String, Object> send(String method, List<Object> params) throws IOException {
-        Map<String, Object> request = new HashMap<>();
+        Map<String, Object> request = new HashMap<String, Object>();
         request.put("jsonrpc", "1.0");
         request.put("method", method);
         request.put("id", Long.toString(requestId));
