@@ -1,16 +1,16 @@
 package com.msgilligan.mastercoin.consensus
 
+import org.mastercoin.CurrencyID
+
 /**
  * User: sean
  * Date: 7/11/14
  * Time: 12:35 PM
  */
 abstract class ConsensusTool implements ConsensusFetcher {
-    public static final Long currencyMSC = 1L
-
     void run(List args) {
         String currencyString = args[0]
-        Long currency = currencyString ? Long.parseLong(currencyString) : currencyMSC
+        Long currency = currencyString ? Long.parseLong(currencyString) : CurrencyID.MSC_VALUE
 
         String fileName = args[1]
 

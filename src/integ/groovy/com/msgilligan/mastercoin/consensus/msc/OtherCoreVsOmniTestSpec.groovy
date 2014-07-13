@@ -1,6 +1,7 @@
 package com.msgilligan.mastercoin.consensus.msc
 
 import com.msgilligan.mastercoin.consensus.BaseConsensusSpec
+import org.mastercoin.CurrencyID
 
 /**
  * User: sean
@@ -23,7 +24,7 @@ class OtherCoreVsOmniTestSpec extends BaseConsensusSpec {
         when: "we get data"
 
         then: "it is there"
-        mscSnapshot.currencyID ==  currencyMSC
+        mscSnapshot.currencyID ==  CurrencyID.MSC_VALUE
         mscSnapshot.entries.size() >= 1
     }
 
@@ -32,7 +33,7 @@ class OtherCoreVsOmniTestSpec extends BaseConsensusSpec {
         when: "we get data"
 
         then: "it is there"
-        omniSnapshot.currencyID == currencyMSC
+        omniSnapshot.currencyID == CurrencyID.MSC_VALUE
         omniSnapshot.entries.size() >= 1
     }
 
@@ -78,7 +79,7 @@ class OtherCoreVsOmniTestSpec extends BaseConsensusSpec {
     def "Compare Omni & Mastercore: Balances should match"() {
 
         when: "we have snapshots from both sources"
-        def intersectingAddresses = omniSnapshot.entries.intersect(mscSnapshot.entries).keySet()
+        def intersectingAddresses = comparison.addressIntersection()
         TreeMap<String, BigDecimal> mscIntersect =  mscSnapshot.entries.subMap(intersectingAddresses).collectEntries { key, value -> [ key, value.balance ]}
         TreeMap<String, BigDecimal> OmniIntersect =  omniSnapshot.entries.subMap(intersectingAddresses).collectEntries { key, value -> [ key, value.balance ]}
 
@@ -89,7 +90,7 @@ class OtherCoreVsOmniTestSpec extends BaseConsensusSpec {
     def "Compare Omni & Mastercore: Reserved should match"() {
 
         when: "we have snapshots from both sources"
-        def intersectingAddresses = omniSnapshot.entries.intersect(mscSnapshot.entries).keySet()
+        def intersectingAddresses = comparison.addressIntersection()
         TreeMap<String, BigDecimal> mscIntersect =  mscSnapshot.entries.subMap(intersectingAddresses).collectEntries { key, value -> [ key,  value.reserved ]}
         TreeMap<String, BigDecimal> OmniIntersect =  omniSnapshot.entries.subMap(intersectingAddresses).collectEntries { key, value -> [ key, value.reserved ]}
 

@@ -1,5 +1,6 @@
 package com.msgilligan.bitcoin.rpc
 
+import org.mastercoin.CurrencyID
 import spock.lang.Shared
 
 /**
@@ -8,8 +9,6 @@ import spock.lang.Shared
  * Time: 4:11 PM
  */
 class MSCSimpleSendSpec extends BaseRPCSpec {
-    @Shared
-    Long currencyMSC = 1L
     // Need to make sure these variables are set up with values that match their names
     Long nonExistantCurrencyID = 293487L
     def emptyAddress = client.getNewAddress()
@@ -30,17 +29,17 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
     def "Can simple send MSC from one address to another" () {
 
         when: "we send MSC"
-            def richBalance = client.getbalance_MP(richAddress, currencyMSC)
+            def richBalance = client.getbalance_MP(richAddress, CurrencyID.MSC_VALUE)
             def amount = 1.0
             def toAddress = client.getNewAddress()      // New address
-            client.send_MP(richAddress, toAddress, currencyMSC, amount)
+            client.send_MP(richAddress, toAddress, CurrencyID.MSC_VALUE, amount)
 
         and: "a block is generated"
             client.setGenerate(true, 1)                // Generate 1 block
-            def newRichBalance = client.getbalance_MP(richAddress, currencyMSC)
+            def newRichBalance = client.getbalance_MP(richAddress, CurrencyID.MSC_VALUE)
 
         then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
-            amount == client.getbalance_MP(toAddress, currencyMSC)
+            amount == client.getbalance_MP(toAddress, CurrencyID.MSC_VALUE)
             newRichBalance == richBalance - amount
     }
 
@@ -52,7 +51,7 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
             def toAddress = client.getNewAddress()
 
         when: "the amount to transfer is zero"
-            client.send_MP(richAddress, toAddress, currencyMSC, 0)
+            client.send_MP(richAddress, toAddress, CurrencyID.MSC_VALUE, 0)
         // TODO: Test sending a negative amount of coins?
         // TODO: Check that the *right type* of exceptions are thrown
         // Currently it seems they're all 500s
@@ -69,7 +68,7 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
         def toAddress = client.getNewAddress()
 
         when: "the sending address has zero coins in its available balance for the specified currency identifier"
-        client.send_MP(emptyAddress, toAddress, currencyMSC, 1.0)
+        client.send_MP(emptyAddress, toAddress, CurrencyID.MSC_VALUE, 1.0)
 
         then: "exception is thrown"
         Exception e = thrown()
@@ -83,7 +82,7 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
         def toAddress = client.getNewAddress()
 
         when: "the amount to transfer exceeds the number owned and available by the sending address"
-        client.send_MP(addressWith1MSC, toAddress, currencyMSC, 1.00000001)
+        client.send_MP(addressWith1MSC, toAddress, CurrencyID.MSC_VALUE, 1.00000001)
 
         then: "exception is thrown"
         Exception e = thrown()

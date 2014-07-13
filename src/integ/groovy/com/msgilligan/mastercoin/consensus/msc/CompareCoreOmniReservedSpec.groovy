@@ -16,7 +16,7 @@ class CompareCoreOmniReservedSpec extends BaseConsensusSpec {
         omniReserved == mscReserved
 
         where:
-        address << omniSnapshot.entries.intersect(mscSnapshot.entries).keySet()
+        address << comparison.addressIntersection()
         omniReserved = omniSnapshot.entries[address].reserved
         mscReserved = mscSnapshot.entries[address].reserved
     }

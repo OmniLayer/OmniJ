@@ -1,16 +1,17 @@
 package com.msgilligan.bitcoin.rpc
+
+import org.mastercoin.CurrencyID
+
 /**
  * User: sean
  * Date: 6/16/14
  * Time: 5:32 PM
  */
 class MastercoinSpec extends BaseRPCSpec {
-    Long currencyMSC = 1L
-
     def "mastercoin is present"() {
         when: "we call getbalance_MP on a newly generated address"
             def destAddr = client.getNewAddress()                   // Create new Bitcoin address
-            def balance = client.getbalance_MP(destAddr, currencyMSC)
+            def balance = client.getbalance_MP(destAddr, CurrencyID.MSC_VALUE)
 
         then: "it should return a balance of zero"
             balance == 0

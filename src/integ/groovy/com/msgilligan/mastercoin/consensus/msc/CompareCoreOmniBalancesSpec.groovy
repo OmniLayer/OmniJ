@@ -16,7 +16,7 @@ class CompareCoreOmniBalancesSpec extends BaseConsensusSpec {
         omniBalance == mscBalance
 
         where:
-        address << omniSnapshot.entries.intersect(mscSnapshot.entries).keySet()
+        address << comparison.addressIntersection()
         omniBalance = omniSnapshot.entries[address].balance
         mscBalance = mscSnapshot.entries[address].balance
     }

@@ -13,7 +13,7 @@ class ListAddressesOnlyInCore extends BaseConsensusSpec  {
 
     def "there should be no extra entries" () {
         when:
-        def extra = mscSnapshot.entries.keySet() - omniSnapshot.entries.keySet()
+        def extra = comparison.extraAddressesInFirst()
 
         then:
         extra.size() == 0

@@ -1,6 +1,7 @@
 package com.msgilligan.mastercoin.consensus
 
 import groovy.transform.Canonical
+import org.mastercoin.CurrencyID
 
 /**
  * User: sean

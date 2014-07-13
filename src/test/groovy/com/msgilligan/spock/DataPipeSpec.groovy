@@ -18,8 +18,8 @@ class DataPipeSpec extends Specification  {
     Map<String, Integer> mscBalances
 
     void setupSpec() {
-        omniBalances = [a: new ConsensusEntry(address:"a", balance: 0), b: new ConsensusEntry(address:"b", balance: 1)]
-        mscBalances = [a: new ConsensusEntry(address:"a", balance: 0), b: new ConsensusEntry(address:"b", balance: 1)]
+        omniBalances = [a: new ConsensusEntry(address:"a", balance: 0), b: new ConsensusEntry(address:"b", balance: 1.5G)]
+        mscBalances = [a: new ConsensusEntry(address:"a", balance: 0), b: new ConsensusEntry(address:"b", balance: 1G)]
     }
 
     @Unroll

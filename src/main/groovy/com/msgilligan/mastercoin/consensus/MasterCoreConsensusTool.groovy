@@ -1,6 +1,7 @@
 package com.msgilligan.mastercoin.consensus
 
 import com.msgilligan.bitcoin.rpc.MastercoinClient
+import org.mastercoin.CurrencyID
 
 /**
  * User: sean

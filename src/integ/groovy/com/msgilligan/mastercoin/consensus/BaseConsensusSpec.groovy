@@ -2,6 +2,7 @@ package com.msgilligan.mastercoin.consensus
 
 import com.msgilligan.bitcoin.rpc.MastercoinClient
 import groovy.json.JsonSlurper
+import org.mastercoin.CurrencyID
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -29,7 +30,7 @@ abstract class  BaseConsensusSpec extends Specification {
     @Shared
     ConsensusSnapshot mscSnapshot
     @Shared
-    Long currencyMSC = 1L
+    ConsensusComparison comparison
 
     void setupSpec() {
         def rpcServerURL = new URL(rpcproto, rpchost, rpcport, rpcfile)
@@ -54,9 +55,11 @@ abstract class  BaseConsensusSpec extends Specification {
         }
 
         mscFetcher = new MasterCoreConsensusTool()
-        mscSnapshot = mscFetcher.getConsensusSnapshot(currencyMSC)
+        mscSnapshot = mscFetcher.getConsensusSnapshot(CurrencyID.MSC_VALUE)
 
         omniFetcher = new OmniwalletConsensusTool()
-        omniSnapshot = omniFetcher.getConsensusSnapshot(currencyMSC)
+        omniSnapshot = omniFetcher.getConsensusSnapshot(CurrencyID.MSC_VALUE)
+
+        comparison = new ConsensusComparison(c1: mscSnapshot, c2: omniSnapshot)
     }
 }
