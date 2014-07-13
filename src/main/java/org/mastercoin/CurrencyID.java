@@ -63,6 +63,11 @@ public class CurrencyID extends Number {
     }
 
     @Override
+    public int hashCode() {
+        return Long.valueOf(value).hashCode();
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof CurrencyID)) {
             return false;

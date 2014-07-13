@@ -52,6 +52,11 @@ public class Ecosystem extends Number {
     }
 
     @Override
+    public int hashCode() {
+        return Short.valueOf(value).hashCode();
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Ecosystem)) {
             return false;
