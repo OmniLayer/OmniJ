@@ -4,19 +4,25 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
-import com.msgilligan.bitcoin.rpc.BitcoinClient;
-import com.msgilligan.bitcoin.rpc.CliTool;
+import com.msgilligan.bitcoin.cli.CliCommand;
+import com.msgilligan.bitcoin.cli.CliOptions;
 
-public class GetBlockCount extends CliTool {
+public class GetBlockCount extends CliCommand {
+    public final static String commandName = "getblockcount_needs_rename";
 
     public GetBlockCount(String[] args) {
-        super(args);
+        super(commandName, new CliOptions(), args);
     }
 
     public static void main(String[] args) {
         GetBlockCount tool = new GetBlockCount(args);
-        tool.count();
-        tool.incrementAndCount(2);
+    }
+
+    public void run() throws IOException {
+        preflight();
+        this.count();
+        this.incrementAndCount(2);
+        System.exit(0);
     }
 
     public void count() {
