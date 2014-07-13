@@ -99,12 +99,12 @@ task getOmniConsensus(dependsOn: 'classes',  type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
-//task getChestConsensus(dependsOn: 'classes',  type: JavaExec) {
-//    main = 'com.msgilligan.mastercoin.consensus.ChestConsensusTool'
-//    args = [1, 'build/chest_consensus.txt']
-//    classpath = sourceSets.main.runtimeClasspath
-//}
+task getChestConsensus(dependsOn: 'classes',  type: JavaExec) {
+    main = 'com.msgilligan.mastercoin.consensus.ChestConsensusTool'
+    args = [1, 'build/chest_consensus.txt']
+    classpath = sourceSets.main.runtimeClasspath
+}
 
-task getConsensus(dependsOn: ['getMasterConsensus', 'getOmniConsensus']) << {
+task getConsensus(dependsOn: ['getMasterConsensus', 'getOmniConsensus', 'getChestConsensus']) << {
     println "Consensus files are in build/*_consensus.txt"
 }
