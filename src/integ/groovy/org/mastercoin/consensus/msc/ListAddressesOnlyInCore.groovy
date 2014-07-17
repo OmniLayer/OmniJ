@@ -1,8 +1,6 @@
-package com.msgilligan.mastercoin.consensus.msc
+package org.mastercoin.consensus.msc
 
-import com.msgilligan.mastercoin.consensus.BaseConsensusSpec
-import spock.lang.Ignore
-import spock.lang.Unroll
+import org.mastercoin.consensus.BaseConsensusSpec
 
 /**
  * User: sean

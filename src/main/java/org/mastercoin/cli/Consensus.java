@@ -1,4 +1,4 @@
-package com.msgilligan.mastercoin.cli;
+package org.mastercoin.cli;
 
 
 import com.msgilligan.bitcoin.cli.CliCommand;

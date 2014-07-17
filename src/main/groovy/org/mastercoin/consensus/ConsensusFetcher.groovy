@@ -1,4 +1,4 @@
-package com.msgilligan.mastercoin.consensus
+package org.mastercoin.consensus
 
 /**
  * User: sean

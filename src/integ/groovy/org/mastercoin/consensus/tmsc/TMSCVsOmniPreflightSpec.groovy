@@ -1,9 +1,9 @@
-package com.msgilligan.mastercoin.consensus.tmsc
+package org.mastercoin.consensus.tmsc
 
 import com.msgilligan.bitcoin.rpc.MastercoinClient
-import com.msgilligan.mastercoin.consensus.ConsensusSnapshot
-import com.msgilligan.mastercoin.consensus.MasterCoreConsensusTool
-import com.msgilligan.mastercoin.consensus.OmniwalletConsensusTool
+import org.mastercoin.consensus.ConsensusSnapshot
+import org.mastercoin.consensus.MasterCoreConsensusTool
+import org.mastercoin.consensus.OmniwalletConsensusTool
 import groovy.json.JsonSlurper
 import spock.lang.Shared
 import spock.lang.Specification

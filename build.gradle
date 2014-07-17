@@ -89,19 +89,19 @@ task integrationTest(type: Test) {
 }
 
 task getMasterConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'com.msgilligan.mastercoin.consensus.MasterCoreConsensusTool'
+    main = 'org.mastercoin.consensus.MasterCoreConsensusTool'
     args = [1, 'build/mastercore_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task getOmniConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'com.msgilligan.mastercoin.consensus.OmniwalletConsensusTool'
+    main = 'org.mastercoin.consensus.OmniwalletConsensusTool'
     args = [1, 'build/omniwallet_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task getChestConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'com.msgilligan.mastercoin.consensus.ChestConsensusTool'
+    main = 'org.mastercoin.consensus.ChestConsensusTool'
     args = [1, 'build/chest_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }

@@ -1,11 +1,9 @@
+package com.msgilligan.bitcoin.cli;
+
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
-
-import com.msgilligan.bitcoin.cli.CliCommand;
-import com.msgilligan.bitcoin.cli.CliOptions;
 
 public class GetBlockCount extends CliCommand {
     public final static String commandName = "getblockcount_needs_rename";
