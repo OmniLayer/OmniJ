@@ -38,4 +38,12 @@ class BitcoinSpec extends BaseRPCSpec {
             testAmount == client.getReceivedByAddress(destAddr, 1)  // Verify destAddr balance
         // TODO: check balance
     }
+
+    def "can get a list of unspent Transactions"() {
+        when: "we request unpsent Transactions"
+        def unspent = client.listUnspent(null, null);
+
+        then: "there is at least 1"
+        unspent.size() >= 1
+    }
 }

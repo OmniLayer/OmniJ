@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.SocketException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -146,6 +147,21 @@ public class BitcoinClient extends RPCClient {
         return address;
     }
 
+    public Object getRawTransaction(String txid, Boolean verbose) throws IOException {
+        List<Object> params = new ArrayList<Object>();
+        params.add(txid);
+        if (verbose != null) {
+            params.add(verbose);
+        }
+        Map<String, Object> response = send("getrawtransaction", params);
+
+        @SuppressWarnings("unchecked")
+        String hexEncoded = (String) response.get("result");
+        byte[] raw = BitcoinClient.hexStringToByteArray(hexEncoded);
+        return raw;
+
+    }
+
     public BigDecimal getReceivedByAddress(String address, Integer minConf) throws IOException {
         if (minConf == null) minConf = 1;
         List<Object> params = Arrays.asList((Object) address, minConf);
@@ -162,6 +178,21 @@ public class BitcoinClient extends RPCClient {
         @SuppressWarnings("unchecked")
         List<Object> addresses = (List<Object>) response.get("result");
         return addresses;
+    }
+
+    public List<Object> listUnspent(Integer minConf, Integer maxConf) throws IOException {
+        List<Object> params = new ArrayList<Object>();
+        if (minConf != null) {
+            params.add(minConf);
+            if (maxConf != null) {
+                params.add(maxConf);
+            }
+        }
+        Map<String, Object> response = send("listunspent", params);
+
+        @SuppressWarnings("unchecked")
+        List<Object> unspent = (List<Object>) response.get("result");
+        return unspent;
     }
 
     public BigDecimal getBalance(String account, Long minConf ) throws IOException {
@@ -202,6 +233,14 @@ public class BitcoinClient extends RPCClient {
         return result;
     }
 
-
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
 
 }
