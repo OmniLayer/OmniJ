@@ -19,9 +19,11 @@ class ConsensusComparison {
 
     List<String> extraAddressesInFirst() {
         List<String> extra =  (c1.entries.keySet() - c2.entries.keySet()).toList()
+        return extra
     }
 
     List<String> extraAddressesInSecond() {
         List<String> extra =  (c2.entries.keySet() - c1.entries.keySet()).toList()
+        return extra
     }
 }
