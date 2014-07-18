@@ -6,15 +6,27 @@ function cleanup {
 }
 trap cleanup EXIT
 
-# Assume bitcoind built elsewhere and coied by Jenkins Copy Artifact plugin
 BTCD=copied-artifacts/src/bitcoind
-DATADIR=regtest-datadir
+DATADIR=$HOME/.bitcoin
+MSCLOG=/tmp/mastercore.log
+
+# Assume bitcoind built elsewhere and coied by Jenkins Copy Artifact plugin
 chmod +x $BTCD
 
-# Run Bitcoin in regtest mode
+# Set up bitcoin conf and data dir
 mkdir -p $DATADIR
-cp bitcoin.conf $DATADIR
+cp -n bitcoin.conf $DATADIR
+
+# setup logging
 mkdir -p logs
+#rm -f $MSCLOG 
+touch $MSCLOG
+ln -sf $MSCLOG logs/mastercore.log
+
+# remove persistence files since 
+rm -rf $DATADIR/MP_{persist,spinfo,txlist}
+
+# Run Bitcoin in regtest mode
 $BTCD -server -regtest -datadir=$DATADIR -debug > logs/bitcoin.log &
 BTCSTATUS=$?
 BTCPID=$!
