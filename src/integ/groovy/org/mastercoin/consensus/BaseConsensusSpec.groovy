@@ -32,7 +32,7 @@ abstract class  BaseConsensusSpec extends Specification {
         def rpcServerURL = new URL(rpcproto, rpchost, rpcport, rpcfile)
         client = new MastercoinClient(rpcServerURL, rpcuser, rpcpassword)
         System.err.println("Waiting for server...")
-        Boolean available = client.waitForServer(60*60)   // Wait up to 1 hour
+        Boolean available = client.waitForServer(3*60*60)   // Wait up to 3 hours
         if (!available) {
             System.err.println("Timeout error.")
         }
