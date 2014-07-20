@@ -88,21 +88,23 @@ task integrationTest(type: Test) {
     testLogging.showStandardStreams = true
 }
 
+def currencyID = 1
+
 task getMasterConsensus(dependsOn: 'classes',  type: JavaExec) {
     main = 'org.mastercoin.consensus.MasterCoreConsensusTool'
-    args = [1, 'build/mastercore_consensus.txt']
+    args = [currencyID, 'build/mastercore_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task getOmniConsensus(dependsOn: 'classes',  type: JavaExec) {
     main = 'org.mastercoin.consensus.OmniwalletConsensusTool'
-    args = [1, 'build/omniwallet_consensus.txt']
+    args = [currencyID, 'build/omniwallet_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task getChestConsensus(dependsOn: 'classes',  type: JavaExec) {
     main = 'org.mastercoin.consensus.ChestConsensusTool'
-    args = [1, 'build/chest_consensus.txt']
+    args = [currencyID, 'build/chest_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
