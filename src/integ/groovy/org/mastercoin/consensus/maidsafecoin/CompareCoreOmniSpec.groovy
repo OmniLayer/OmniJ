@@ -1,16 +1,16 @@
-package org.mastercoin.consensus.msc
+package org.mastercoin.consensus.maidsafecoin
 
 import org.mastercoin.CurrencyID
 import org.mastercoin.consensus.BaseConsensusSpec
 
 /**
  * User: sean
- * Date: 7/9/14
- * Time: 11:56 PM
+ * Date: 7/20/14
+ * Time: 1:50 AM
  */
 class CompareCoreOmniSpec extends BaseConsensusSpec {
 
     void setupSpec() {
-        setupComparisonForCurrency(CurrencyID.MSC)
+        setupComparisonForCurrency(CurrencyID.MaidSafeCoin)
     }
 }

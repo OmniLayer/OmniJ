@@ -16,9 +16,11 @@ public class CurrencyID extends Number {
 
     public static final long    MSC_VALUE = 1;
     public static final long    TMSC_VALUE = 2;
+    public static final long    MaidSafeCoin_VALUE = 3;
 
-    public static final CurrencyID   MSC = new CurrencyID(MSC_VALUE);
-    public static final CurrencyID   TMSC = new CurrencyID(TMSC_VALUE);
+    public static final CurrencyID  MSC = new CurrencyID(MSC_VALUE);
+    public static final CurrencyID  TMSC = new CurrencyID(TMSC_VALUE);
+    public static final CurrencyID  MaidSafeCoin = new CurrencyID(MaidSafeCoin_VALUE);
 
     public CurrencyID(Long value) {
         if (value < MIN_VALUE) {

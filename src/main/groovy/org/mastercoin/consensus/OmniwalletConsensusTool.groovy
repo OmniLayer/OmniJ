@@ -31,8 +31,8 @@ class OmniwalletConsensusTool extends ConsensusTool {
         TreeMap<String, ConsensusEntry> map = [:]
         balances.each { item ->
             String address = item.address
-            BigDecimal balance = new BigDecimal(item.balance).setScale(8)
-            BigDecimal reserved_balance = new BigDecimal(item.reserved_balance).setScale(8)
+            BigDecimal balance = new BigDecimal(item.balance).setScale(12)
+            BigDecimal reserved_balance = new BigDecimal(item.reserved_balance).setScale(12)
             if (address != "" && balance > 0) {
                 map.put(address, new ConsensusEntry(balance: balance, reserved:reserved_balance))
             }

@@ -33,9 +33,9 @@ class MasterCoreConsensusTool extends ConsensusTool {
         TreeMap<String, ConsensusEntry> map = [:]
         balances.each { Object item ->
             String address = item.address
-            BigDecimal balance = new BigDecimal(Double.toString(item.balance)).setScale(8)
-            BigDecimal reservedByOffer = new BigDecimal(Double.toString(item.reservedbyoffer)).setScale(8)
-            BigDecimal reservedByAccept = new BigDecimal(Double.toString(item.reservedbyaccept)).setScale(8)
+            BigDecimal balance = new BigDecimal(Double.toString(item.balance)).setScale(12)
+            BigDecimal reservedByOffer = new BigDecimal(Double.toString(item.reservedbyoffer)).setScale(12)
+            BigDecimal reservedByAccept = item.reservedbyaccept ? new BigDecimal(Double.toString(item.reservedbyaccept)).setScale(12) : new BigDecimal("0")
             BigDecimal reserved = reservedByOffer + reservedByAccept;
 
             if (address != "" && balance > 0) {
