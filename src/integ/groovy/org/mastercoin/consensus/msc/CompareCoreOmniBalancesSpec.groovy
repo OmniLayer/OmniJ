@@ -13,12 +13,12 @@ class CompareCoreOmniBalancesSpec extends BaseConsensusSpec {
     @Unroll
     def "compare #address balance msc vs omni (#mscBalance == #omniBalance)"() {
         expect:
-        omniBalance == mscBalance
+        mscBalance == omniBalance
 
         where:
-        address << comparison.addressIntersection()
-        omniBalance = omniSnapshot.entries[address].balance
-        mscBalance = mscSnapshot.entries[address].balance
+        [address, entry1, entry2] << comparison.intersection()
+        mscBalance = entry1.balance
+        omniBalance = entry2.balance
     }
 
 }

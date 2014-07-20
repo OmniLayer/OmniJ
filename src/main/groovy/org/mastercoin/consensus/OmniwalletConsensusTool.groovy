@@ -34,7 +34,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
             BigDecimal balance = new BigDecimal(item.balance).setScale(8)
             BigDecimal reserved_balance = new BigDecimal(item.reserved_balance).setScale(8)
             if (address != "" && balance > 0) {
-                map.put(address, new ConsensusEntry(address: address, balance: balance, reserved:reserved_balance))
+                map.put(address, new ConsensusEntry(balance: balance, reserved:reserved_balance))
             }
         }
         return map;

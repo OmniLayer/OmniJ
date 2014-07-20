@@ -1,6 +1,6 @@
 package org.mastercoin.consensus
 
-import org.mastercoin.consensus.ConsensusEntry
+import org.mastercoin.CurrencyID
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -12,25 +12,25 @@ import spock.lang.Unroll
  */
 class DataPipeSpec extends Specification  {
 
-    @Shared
-    Map<String, Integer> omniBalances
-    @Shared
-    Map<String, Integer> mscBalances
+    static ConsensusComparison compareSmall1 = new ConsensusComparison(SnapshotData.small1(), SnapshotData.small1())
+    static ConsensusComparison compareSmall2 = new ConsensusComparison(SnapshotData.small2(), SnapshotData.small2())
 
-    void setupSpec() {
-        omniBalances = [a: new ConsensusEntry(address:"a", balance: 0), b: new ConsensusEntry(address:"b", balance: 1.5G)]
-        mscBalances = [a: new ConsensusEntry(address:"a", balance: 0), b: new ConsensusEntry(address:"b", balance: 1G)]
+    @Unroll
+    def "small1 #address #entry1 == #entry2"() {
+        expect:
+        entry1 == entry2
+
+        where:
+        [address, entry1, entry2] <<  compareSmall1
     }
 
     @Unroll
-    def "#address balances compare (#omniBalance == #mscBalance)"() {
+    def "small2 #address #entry1 == #entry2"() {
         expect:
-        omniBalance == mscBalance
+        entry1 == entry2
 
         where:
-        address << omniBalances.keySet()
-        omniBalance = omniBalances[address].balance
-        mscBalance = mscBalances[address].balance
+        [address, entry1, entry2] <<  compareSmall2
     }
 
 }

@@ -39,7 +39,7 @@ class MasterCoreConsensusTool extends ConsensusTool {
             BigDecimal reserved = reservedByOffer + reservedByAccept;
 
             if (address != "" && balance > 0) {
-                map.put(address, new ConsensusEntry(address: address, balance: balance, reserved:reserved))
+                map.put(address, new ConsensusEntry(balance: balance, reserved:reserved))
             }
         }
         return map;

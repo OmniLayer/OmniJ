@@ -56,6 +56,6 @@ abstract class  BaseConsensusSpec extends Specification {
         OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool()
         omniSnapshot = omniFetcher.getConsensusSnapshot(CurrencyID.MSC_VALUE)
 
-        comparison = new ConsensusComparison(c1: mscSnapshot, c2: omniSnapshot)
+        comparison = new ConsensusComparison(mscSnapshot, omniSnapshot)
     }
 }

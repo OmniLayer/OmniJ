@@ -13,12 +13,12 @@ class CompareCoreOmniReservedSpec extends BaseConsensusSpec {
     @Unroll
     def "compare #address reserved msc vs omni (#mscReserved == #omniReserved)"() {
         expect:
-        omniReserved == mscReserved
+        mscReserved == omniReserved
 
         where:
-        address << comparison.addressIntersection()
-        omniReserved = omniSnapshot.entries[address].reserved
-        mscReserved = mscSnapshot.entries[address].reserved
+        [address, entry1, entry2] << comparison.intersection()
+        mscReserved = entry1.reserved
+        omniReserved = entry2.reserved
     }
 
 }
