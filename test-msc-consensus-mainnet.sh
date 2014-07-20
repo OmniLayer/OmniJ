@@ -36,7 +36,7 @@ sleep 30
 
 # Run consensus tests
 echo "Running consensus tests..."
-./gradlew integrationTest --tests org.mastercoin.consensus.msc.*
+./gradlew integrationTest --tests org.mastercoin.consensus.*
 GRADLESTATUS=$?
 
 exit $GRADLESTATUS

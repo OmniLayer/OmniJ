@@ -36,7 +36,7 @@ sleep 30
 
 # Run integration tests
 echo "Running integration tests in regtest mode..."
-./gradlew integrationTest --tests com.msgilligan.bitcoin.rpc*
+./gradlew integrationTest --tests com.msgilligan.*
 GRADLESTATUS=$?
 
 exit $GRADLESTATUS
