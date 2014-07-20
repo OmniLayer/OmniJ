@@ -27,7 +27,7 @@ abstract class ConsensusTool implements ConsensusFetcher {
     void save(ConsensusSnapshot snap, File file) {
         file.withWriter { out ->
             snap.entries.each { addr, cb ->
-                out.writeLine("${cb.address}\t${cb.balance}\t${cb.reserved}")
+                out.writeLine("${addr}\t${cb.balance}\t${cb.reserved}")
             }
         }
 

@@ -34,7 +34,7 @@ class ChestConsensusTool extends ConsensusTool {
             BigDecimal balance = new BigDecimal(item.balance).setScale(8)
             BigDecimal reserved = new BigDecimal(0).setScale(8)
             if (address != "" && balance > 0) {
-                map.put(item.address, new ConsensusEntry(address: address, balance: balance, reserved: reserved))
+                map.put(item.address, new ConsensusEntry(balance: balance, reserved: reserved))
             }
         }
         return map;
