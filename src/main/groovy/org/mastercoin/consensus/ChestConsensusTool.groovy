@@ -30,14 +30,27 @@ class ChestConsensusTool extends ConsensusTool {
 
         TreeMap<String, ConsensusEntry> map = [:]
         balances.each { item ->
+
             String address = item.address
-            BigDecimal balance = new BigDecimal(item.balance).setScale(8)
-            BigDecimal reserved = new BigDecimal(0).setScale(8)
-            if (address != "" && balance > 0) {
-                map.put(item.address, new ConsensusEntry(balance: balance, reserved: reserved))
+            ConsensusEntry entry = itemToEntry(item)
+
+            if (address != "" && entry.balance > 0) {
+                map.put(address, entry)
             }
         }
         return map;
+    }
+
+    private ConsensusEntry itemToEntry(Object item) {
+        BigDecimal balance = jsonToBigDecimal(item.balance)
+        BigDecimal reserved = jsonToBigDecimal("0")
+        return new ConsensusEntry(balance: balance, reserved:reserved)
+    }
+
+    /* We're expecting input type String here */
+    private BigDecimal jsonToBigDecimal(Object balanceIn) {
+        BigDecimal balanceOut = new BigDecimal(balanceIn).setScale(12)
+        return balanceOut
     }
 
     public ConsensusSnapshot getConsensusSnapshot(Long currencyID) {

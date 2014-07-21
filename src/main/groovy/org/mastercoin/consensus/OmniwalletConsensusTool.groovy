@@ -29,15 +29,29 @@ class OmniwalletConsensusTool extends ConsensusTool {
         def balances = slurper.parse(consensusURL)
 
         TreeMap<String, ConsensusEntry> map = [:]
+
         balances.each { item ->
+
             String address = item.address
-            BigDecimal balance = new BigDecimal(item.balance).setScale(12)
-            BigDecimal reserved_balance = new BigDecimal(item.reserved_balance).setScale(12)
-            if (address != "" && balance > 0) {
-                map.put(address, new ConsensusEntry(balance: balance, reserved:reserved_balance))
+            ConsensusEntry entry = itemToEntry(item)
+
+            if (address != "" && entry.balance > 0) {
+                map.put(address, entry)
             }
         }
         return map;
+    }
+
+    private ConsensusEntry itemToEntry(Object item) {
+        BigDecimal balance = jsonToBigDecimal(item.balance)
+        BigDecimal reserved = jsonToBigDecimal(item.reserved_balance)
+        return new ConsensusEntry(balance: balance, reserved:reserved)
+    }
+
+    /* We're expecting input type String here */
+    private BigDecimal jsonToBigDecimal(Object balanceIn) {
+        BigDecimal balanceOut =  new BigDecimal(balanceIn).setScale(12)
+        return balanceOut
     }
 
     public ConsensusSnapshot getConsensusSnapshot(Long currencyID) {

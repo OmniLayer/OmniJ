@@ -31,18 +31,31 @@ class MasterCoreConsensusTool extends ConsensusTool {
         List<Object> balances = client.getallbalancesforid_MP(currencyID)
 
         TreeMap<String, ConsensusEntry> map = [:]
-        balances.each { Object item ->
-            String address = item.address
-            BigDecimal balance = new BigDecimal(Double.toString(item.balance)).setScale(12)
-            BigDecimal reservedByOffer = new BigDecimal(Double.toString(item.reservedbyoffer)).setScale(12)
-            BigDecimal reservedByAccept = item.reservedbyaccept ? new BigDecimal(Double.toString(item.reservedbyaccept)).setScale(12) : new BigDecimal("0")
-            BigDecimal reserved = reservedByOffer + reservedByAccept;
 
-            if (address != "" && balance > 0) {
-                map.put(address, new ConsensusEntry(balance: balance, reserved:reserved))
+        balances.each { Object item ->
+
+            String address = item.address
+            ConsensusEntry entry = itemToEntry(item)
+
+            if (address != "" && entry.balance > 0) {
+                map.put(address, entry)
             }
         }
         return map;
+    }
+
+    private ConsensusEntry itemToEntry(Object item) {
+        BigDecimal balance = jsonToBigDecimal(item.balance)
+        BigDecimal reservedByOffer = jsonToBigDecimal(item.reservedbyoffer)
+        BigDecimal reservedByAccept = item.reservedbyaccept ? jsonToBigDecimal(item.reservedbyaccept) : new BigDecimal("0")
+        BigDecimal reserved = reservedByOffer + reservedByAccept
+        return new ConsensusEntry(balance: balance, reserved:reserved)
+    }
+
+    /* We're expecting input type Double here */
+    private BigDecimal jsonToBigDecimal(Object balanceIn) {
+        BigDecimal balanceOut = new BigDecimal(Double.toString(balanceIn)).setScale(12)
+        return balanceOut
     }
 
     public ConsensusSnapshot getConsensusSnapshot(Long currencyID) {
