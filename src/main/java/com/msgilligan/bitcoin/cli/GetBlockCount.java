@@ -64,7 +64,6 @@ public class GetBlockCount extends CliCommand {
             System.out.println("balances: " + balances);
 
             blockCount = client.getBlockCount();
-
         } catch (IOException e) {
             e.printStackTrace();
         }

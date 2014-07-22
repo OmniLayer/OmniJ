@@ -1,5 +1,6 @@
 package org.mastercoin.consensus
 
+import org.mastercoin.MPMainNetParams
 import org.mastercoin.Mastercoin
 
 /**
@@ -25,7 +26,7 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
 //        extraInFirst = c1Keys - c2Keys
 //        extraInSecond = c2Keys - c1Keys
         unionAddresses = c1Keys + c2Keys
-        unionAddresses.remove(Mastercoin.ExodusAddress)
+        unionAddresses.remove(MPMainNetParams.ExodusAddress)
     }
 
 //    List<String> addressIntersection() {
