@@ -31,6 +31,7 @@ class ExodusFundraiserSpec extends BaseMainNetSpec {
     String     masterCoinAddress
 
     void setupSpec() {
+        mpNetParams = MPRegTestParams.get()
         fundraiserAmountBTC = 5000.0
         extraBTCForTxFees = 1.0
         // We can start this test 1 blocks before the exodus

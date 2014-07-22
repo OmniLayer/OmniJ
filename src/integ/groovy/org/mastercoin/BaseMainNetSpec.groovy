@@ -13,7 +13,7 @@ import spock.lang.Specification
  * Date: 7/20/14
  * Time: 12:53 AM
  */
-class BaseMainNetSpec extends Specification {
+abstract class BaseMainNetSpec extends Specification {
     static def rpcproto = "http"
     static def rpchost = "127.0.0.1"
     static def rpcport = 8332
