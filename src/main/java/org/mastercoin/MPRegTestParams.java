@@ -9,7 +9,7 @@ public class MPRegTestParams extends MPNetworkParameters {
 
     private MPRegTestParams() {
         super();
-        exodusAddress =MPMainNetParams.ExodusAddress;
+        exodusAddress = MPMainNetParams.ExodusAddress;
         /* Use MPMainNetParams for magic block numbers */
         firstExodusBlock = MPMainNetParams.FIRST_EXODUS_BLOCK;
         lastExodusBlock = MPMainNetParams.LAST_EXODUS_BLOCK;
