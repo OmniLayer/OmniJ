@@ -78,7 +78,8 @@ class ExodusFundraiserSpec extends BaseMainNetSpec {
         when: "we send coins to the Exodus address"
         client.sendToAddress(mpNetParams.exodusAddress, fundraiserAmountBTC,
                 "Buy some MSC", "Exodus address")
-        client.setGenerate(true, 1)                             // Generate 1 block
+        def blocksToWrite = mpNetParams.postExodusBlock - mpNetParams.firstExodusBlock
+        client.setGenerate(true, blocksToWrite)                             // Close the fundraiser
         def mscBalance = client.getbalance_MP(masterCoinAddress, CurrencyID.MSC_VALUE)
 
         then: "the Exodus address has the correct balance"
