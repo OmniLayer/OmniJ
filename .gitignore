@@ -4,4 +4,7 @@
 build/
 robolib/
 regtest-datadir/
+logs/
+copied-artifacts/
+
 
