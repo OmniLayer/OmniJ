@@ -1,8 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'application'
+apply plugin: 'maven'
 
 sourceCompatibility = 1.7
+group = 'com.msgilligan'
 version = '0.1'
 
 repositories {
