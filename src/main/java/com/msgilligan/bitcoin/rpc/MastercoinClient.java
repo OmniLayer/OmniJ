@@ -1,5 +1,7 @@
 package com.msgilligan.bitcoin.rpc;
 
+import org.mastercoin.CurrencyID;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -18,15 +20,15 @@ public class MastercoinClient extends BitcoinClient {
         super(server, rpcuser, rpcpassword);
     }
 
-    public String send_MP(String fromAddress, String toAddress, Long currencyId, BigDecimal amount) throws IOException {
-        List<Object> params = Arrays.asList((Object) fromAddress, toAddress, currencyId, amount);
+    public String send_MP(String fromAddress, String toAddress, CurrencyID currency, BigDecimal amount) throws IOException {
+        List<Object> params = Arrays.asList((Object) fromAddress, toAddress, currency, amount);
         Map<String, Object> response = send("send_MP", params);
         String txid = (String) response.get("result");
         return txid;
     }
 
-    public BigDecimal getbalance_MP(String address, Long currencyId) throws IOException {
-        List<Object> params = Arrays.asList((Object) address, currencyId);
+    public BigDecimal getbalance_MP(String address, CurrencyID currency) throws IOException {
+        List<Object> params = Arrays.asList((Object) address, currency);
         Map<String, Object> response = send("getbalance_MP", params);
         Double balanceBTCd = (Double) response.get("result");
         // Beware of the new BigDecimal(double d) constructor, it results in unexpected/undesired values.
@@ -34,9 +36,9 @@ public class MastercoinClient extends BitcoinClient {
         return balanceBTC;
     }
 
-    public List<Object> getallbalancesforid_MP(Long currencyId) throws IOException {
+    public List<Object> getallbalancesforid_MP(CurrencyID currency) throws IOException {
         // TODO: currencyID should probably not be passed as a string
-        List<Object> params = Arrays.asList((Object) currencyId);
+        List<Object> params = Arrays.asList((Object) currency);
         Map<String, Object> response = send("getallbalancesforid_MP", params);
         @SuppressWarnings("unchecked")
         List<Object> balances = (List<Object>) response.get("result");

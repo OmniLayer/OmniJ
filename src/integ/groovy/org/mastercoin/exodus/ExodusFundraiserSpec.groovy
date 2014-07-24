@@ -1,7 +1,7 @@
 package org.mastercoin.exodus
 
 import org.mastercoin.BaseMainNetSpec
-import org.mastercoin.CurrencyID
+import static org.mastercoin.CurrencyID.*
 import org.mastercoin.MPNetworkParameters
 import org.mastercoin.MPRegTestParams
 import spock.lang.Shared
@@ -92,7 +92,7 @@ class ExodusFundraiserSpec extends BaseMainNetSpec {
                 "Buy some MSC", "Exodus address")
         def blocksToGen = mpNetParams.postExodusBlock - mpNetParams.firstExodusBlock
         client.generateBlocks(blocksToGen)          // Close the fundraiser
-        def mscBalance = client.getbalance_MP(participatingAddress, CurrencyID.MSC_VALUE)
+        def mscBalance = client.getbalance_MP(participatingAddress, MSC)
 
         then: "we are at the 'Post Exodus' Block"
         mpNetParams.postExodusBlock == client.blockCount
