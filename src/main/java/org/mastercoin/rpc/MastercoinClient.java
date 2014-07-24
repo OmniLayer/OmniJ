@@ -1,5 +1,6 @@
-package com.msgilligan.bitcoin.rpc;
+package org.mastercoin.rpc;
 
+import com.msgilligan.bitcoin.rpc.BitcoinClient;
 import org.mastercoin.CurrencyID;
 
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class MastercoinClient extends BitcoinClient {
 
     public List<Object> getallbalancesforid_MP(CurrencyID currency) throws IOException {
         // TODO: currencyID should probably not be passed as a string
-        List<Object> params = Arrays.asList((Object) currency);
+        List<Object> params = Arrays.asList((Object) new Integer(currency.intValue()));
         Map<String, Object> response = send("getallbalancesforid_MP", params);
         @SuppressWarnings("unchecked")
         List<Object> balances = (List<Object>) response.get("result");

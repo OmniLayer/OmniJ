@@ -18,6 +18,8 @@ import com.msgilligan.bitcoin.rpc.BaseRPCSpec
 import spock.lang.Shared
 import spock.lang.Stepwise
 
+import java.lang.Void as Should
+
 /**
  * User: sean
  * Date: 7/15/14
@@ -56,7 +58,7 @@ class WalletSendSpec extends BaseRPCSpec {
         peerGroup.startAndWait()
     }
 
-    def "can send mined coins to fund a new BitcoinJ wallet"() {
+    Should "Send mined coins to fund a new BitcoinJ wallet"() {
         when: "we send coins to the wallet and write a block"
         BigDecimal amount = 20.0
         String txid = client.sendToAddress(walletAddr.toString(), amount, "fund BitcoinJ wallet", "first BitcoinJ wallet addr")
@@ -74,23 +76,23 @@ class WalletSendSpec extends BaseRPCSpec {
         wallet.balance == BTC.btcToSatoshis(amount)
     }
 
-    def "can send from BitcoinJ wallet to the RPC wallet"() {
+    Should "Send from BitcoinJ wallet to the RPC wallet"() {
         when: "we send coins from BitcoinJ and write a block"
         BigDecimal amount = 1.0
-        String rpcAddressStr = client.getNewAddress()
+        String rpcAddressStr = getNewAddress()
         Address rpcAddress = new Address(params,rpcAddressStr)
         wallet.sendCoins(peerGroup,rpcAddress,BTC.btcToSatoshis(amount))
         Thread.sleep(100)            // Give BitcoinJ time to send Tx to bitcoind
-        client.setGenerate(true, 1)  // Generate 1 block
+        generateBlocks(1)
 
         then: "the new address has a balance of amount"
-        client.getReceivedByAddress(rpcAddressStr, 1) == amount  // Verify rpcAddress balance
+        getReceivedByAddress(rpcAddressStr) == amount
     }
 
-    def "create and send a transaction from BitcoinJ using wallet.completeTx"() {
+    Should "create and send a transaction from BitcoinJ using wallet.completeTx"() {
         when:
         BigDecimal amount = 1.0
-        String rpcAddressStr = client.getNewAddress()
+        String rpcAddressStr = getNewAddress()
         Address rpcAddress = new Address(params,rpcAddressStr)
         Transaction tx = new Transaction(params)
         tx.addOutput(BTC.btcToSatoshis(amount), rpcAddress)
@@ -99,9 +101,9 @@ class WalletSendSpec extends BaseRPCSpec {
         wallet.commitTx(request.tx)
         peerGroup.broadcastTransaction(request.tx).get();
         Thread.sleep(100)            // Give bitcoind a little time to receive the Tx
-        client.setGenerate(true, 1)  // Generate 1 block
+        generateBlocks(1)
 
         then: "the new address has a balance of amount"
-        client.getReceivedByAddress(rpcAddressStr, 1) == amount  // Verify rpcAddress balance
+        getReceivedByAddress(rpcAddressStr) == amount  // Verify rpcAddress balance
     }
 }

@@ -1,6 +1,7 @@
 package org.mastercoin.consensus
 
-import com.msgilligan.bitcoin.rpc.MastercoinClient
+import org.mastercoin.CurrencyID
+import org.mastercoin.rpc.MastercoinClient
 
 /**
  * User: sean
@@ -27,7 +28,7 @@ class MasterCoreConsensusTool extends ConsensusTool {
         tool.run(args.toList())
     }
 
-    private SortedMap<String, ConsensusEntry> getConsensusForCurrency(Long currencyID) {
+    private SortedMap<String, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
         List<Object> balances = client.getallbalancesforid_MP(currencyID)
 
         TreeMap<String, ConsensusEntry> map = [:]
@@ -58,7 +59,7 @@ class MasterCoreConsensusTool extends ConsensusTool {
         return balanceOut
     }
 
-    public ConsensusSnapshot getConsensusSnapshot(Long currencyID) {
+    public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
         def snap = new ConsensusSnapshot();
         snap.currencyID = currencyID
         snap.blockHeight = client.getBlockCount()

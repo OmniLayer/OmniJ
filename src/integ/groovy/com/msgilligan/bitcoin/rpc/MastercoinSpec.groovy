@@ -1,6 +1,7 @@
 package com.msgilligan.bitcoin.rpc
 
-import org.mastercoin.CurrencyID
+import static org.mastercoin.CurrencyID.*
+import java.lang.Void as Should
 
 /**
  * User: sean
@@ -8,20 +9,21 @@ import org.mastercoin.CurrencyID
  * Time: 5:32 PM
  */
 class MastercoinSpec extends BaseRPCSpec {
-    def "mastercoin is present"() {
+
+    Should "Implement getbalance_MP"() {
         when: "we call getbalance_MP on a newly generated address"
-            def destAddr = client.getNewAddress()                   // Create new Bitcoin address
-            def balance = client.getbalance_MP(destAddr, CurrencyID.MSC_VALUE)
+        def destAddr = getNewAddress()                   // Create new Bitcoin address
+        def balance = getbalance_MP(destAddr, MSC)
 
         then: "it should return a balance of zero"
-            balance == 0
+        balance == 0
     }
 
-    def "returns mastercoin version along with basic info" () {
+    Should "Return Mastercoin version field along with Bitcoin info fields" () {
         when: "we request info"
-        def info = client.getInfo()
+        def info = getInfo()
 
-        then: "we get back some mastercoin information, too"
+        then: "we get back a Mastercoin version, too"
         info != null
         info.mastercoreversion >= 10003
     }

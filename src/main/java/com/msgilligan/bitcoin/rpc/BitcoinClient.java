@@ -19,8 +19,6 @@ import java.util.Map;
 public class BitcoinClient extends RPCClient {
 
     private static final Integer SECOND = 1000;
-    public static final BigInteger SATOSHIS_PER_BITCOIN = new BigInteger("100000000", 10);
-    public static final BigDecimal D_SATOSHIS_PER_BITCOIN = new BigDecimal(SATOSHIS_PER_BITCOIN);
 
     public BitcoinClient(URL server, String rpcuser, String rpcpassword) throws IOException {
         super(server, rpcuser, rpcpassword);
@@ -185,6 +183,10 @@ public class BitcoinClient extends RPCClient {
         @SuppressWarnings("unchecked")
         List<Object> addresses = (List<Object>) response.get("result");
         return addresses;
+    }
+
+    public List<Object> listUnspent() throws IOException {
+        return listUnspent(null, null);
     }
 
     public List<Object> listUnspent(Integer minConf, Integer maxConf) throws IOException {

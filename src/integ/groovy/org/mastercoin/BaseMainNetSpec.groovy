@@ -1,10 +1,7 @@
 package org.mastercoin
 
-import com.msgilligan.bitcoin.rpc.MastercoinClient
+import org.mastercoin.rpc.MastercoinClient
 import groovy.json.JsonSlurper
-import org.mastercoin.consensus.ConsensusComparison
-import org.mastercoin.consensus.MasterCoreConsensusTool
-import org.mastercoin.consensus.OmniwalletConsensusTool
 import spock.lang.Shared
 import spock.lang.Specification
 

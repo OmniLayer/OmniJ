@@ -6,6 +6,7 @@ import com.google.bitcoin.core.Transaction
 import com.google.bitcoin.params.RegTestParams
 import com.msgilligan.bitcoin.rpc.BaseRPCSpec
 import spock.lang.Shared
+import java.lang.Void as Should
 
 /**
  * User: sean
@@ -20,7 +21,7 @@ class RawSendSpec extends BaseRPCSpec {
         params = RegTestParams.get()
     }
 
-    def "can send a coin to newly created address"() {
+    Should "Be able to send a coin to newly created address"() {
         when: "we create a new address and send testAmount to it"
         def destAddr = client.getNewAddress()                   // Create new Bitcoin address
         def txid = client.sendToAddress(destAddr, testAmount,
@@ -33,7 +34,7 @@ class RawSendSpec extends BaseRPCSpec {
         // TODO: check balance
     }
 
-    def "send 1 coin to new address"() {
+    Should "send 1 coin to new address"() {
         when: "we create a raw transaction that sends a coin to a new address"
         String addrStr = client.getNewAddress()                   // Create new Bitcoin address
         Address destAddr = new Address(params, addrStr)

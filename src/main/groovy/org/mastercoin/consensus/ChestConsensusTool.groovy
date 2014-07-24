@@ -1,6 +1,7 @@
 package org.mastercoin.consensus
 
 import groovy.json.JsonSlurper
+import org.mastercoin.CurrencyID
 
 /**
  * User: sean
@@ -21,9 +22,9 @@ class ChestConsensusTool extends ConsensusTool {
         tool.run(args.toList())
     }
 
-    private SortedMap<String, ConsensusEntry> getConsensusForCurrency(Long currencyID) {
+    private SortedMap<String, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
         def slurper = new JsonSlurper()
-        String httpFile = "${file}?currencyid=${currencyID}"
+        String httpFile = "${file}?currencyid=${currencyID as Integer}"
         def consensusURL = new URL(proto, host, port, httpFile)
 //        def balancesText =  consensusURL.getText()
         def balances = slurper.parse(consensusURL)
@@ -53,8 +54,8 @@ class ChestConsensusTool extends ConsensusTool {
         return balanceOut
     }
 
-    public ConsensusSnapshot getConsensusSnapshot(Long currencyID) {
-        String httpFile = "${file}?currencyid=${currencyID}"
+    public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
+        String httpFile = "${file}?currencyid=${currencyID as Integer}"
         def consensusURL = new URL(proto, host, port, httpFile)
 
         def snap = new ConsensusSnapshot();

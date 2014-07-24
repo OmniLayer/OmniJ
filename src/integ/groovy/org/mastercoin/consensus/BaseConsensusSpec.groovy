@@ -1,11 +1,8 @@
 package org.mastercoin.consensus
 
-import com.msgilligan.bitcoin.rpc.MastercoinClient
-import groovy.json.JsonSlurper
 import org.mastercoin.BaseMainNetSpec
 import org.mastercoin.CurrencyID
 import spock.lang.Shared
-import spock.lang.Specification
 import spock.lang.Unroll
 
 /**
@@ -19,10 +16,10 @@ abstract class  BaseConsensusSpec extends BaseMainNetSpec {
 
     void setupComparisonForCurrency(CurrencyID id) {
         def mscFetcher = new MasterCoreConsensusTool()
-        def mscSnapshot = mscFetcher.getConsensusSnapshot(id.value)
+        def mscSnapshot = mscFetcher.getConsensusSnapshot(id)
 
         def omniFetcher = new OmniwalletConsensusTool()
-        def omniSnapshot = omniFetcher.getConsensusSnapshot(id.value)
+        def omniSnapshot = omniFetcher.getConsensusSnapshot(id)
 
         comparison = new ConsensusComparison(mscSnapshot, omniSnapshot)
     }

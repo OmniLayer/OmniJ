@@ -1,6 +1,6 @@
 package org.mastercoin.consensus
 
-import org.mastercoin.CurrencyID
+import static org.mastercoin.CurrencyID.*
 import spock.lang.Specification
 
 /**
@@ -14,10 +14,10 @@ class OmniwalletServerSpec extends Specification {
         OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool()
 
         when: "we get data"
-        def omniSnapshot = omniFetcher.getConsensusSnapshot(CurrencyID.MSC_VALUE)
+        def omniSnapshot = omniFetcher.getConsensusSnapshot(MSC)
 
         then: "it is there"
-        omniSnapshot.currencyID == CurrencyID.MSC_VALUE
+        omniSnapshot.currencyID == MSC
         omniSnapshot.entries.size() >= 1
     }
 }

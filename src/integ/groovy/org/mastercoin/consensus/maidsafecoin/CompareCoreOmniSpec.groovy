@@ -1,6 +1,6 @@
 package org.mastercoin.consensus.maidsafecoin
 
-import org.mastercoin.CurrencyID
+import static org.mastercoin.CurrencyID.*
 import org.mastercoin.consensus.BaseConsensusSpec
 
 /**
@@ -11,6 +11,6 @@ import org.mastercoin.consensus.BaseConsensusSpec
 class CompareCoreOmniSpec extends BaseConsensusSpec {
 
     void setupSpec() {
-        setupComparisonForCurrency(CurrencyID.MaidSafeCoin)
+        setupComparisonForCurrency(MaidSafeCoin)
     }
 }

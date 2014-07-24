@@ -1,6 +1,7 @@
 package com.msgilligan.bitcoin.rpc
 
-import spock.lang.Shared
+import org.mastercoin.rpc.MastercoinClient
+import org.mastercoin.rpc.MastercoinClientDelegate
 import spock.lang.Specification
 
 /**
@@ -8,7 +9,7 @@ import spock.lang.Specification
  * Date: 6/16/14
  * Time: 3:57 PM
  */
-abstract class BaseRPCSpec extends Specification {
+abstract class BaseRPCSpec extends Specification implements MastercoinClientDelegate {
     static def rpcproto = "http"
     static def rpchost = "127.0.0.1"
     static def rpcport = 18332
@@ -18,19 +19,16 @@ abstract class BaseRPCSpec extends Specification {
     static BigDecimal minSatoshisForTest = 5.0
     static BigDecimal testAmount = 2.0
 
-    @Shared
-    MastercoinClient client;
-
     void setupSpec() {
         // Instantiate a Bitcoin RPC Client
         def rpcServerURL = new URL(rpcproto, rpchost, rpcport, rpcfile)
         client = new MastercoinClient(rpcServerURL, rpcuser, rpcpassword)
 
         // Make sure we have enough test coins
-        def balance = client.getBalance(null, null);
+        def balance = getBalance(null, null);
         if (balance < minSatoshisForTest) {
             // Mine 101 blocks so we have some coins to spend
-            client.setGenerate(true, 101)
+            generateBlocks(101)
         }
     }
 

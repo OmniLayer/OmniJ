@@ -10,11 +10,11 @@ import org.mastercoin.CurrencyID
 abstract class ConsensusTool implements ConsensusFetcher {
     void run(List args) {
         String currencyString = args[0]
-        Long currency = currencyString ? Long.parseLong(currencyString) : CurrencyID.MSC_VALUE
+        CurrencyID currencyID = currencyString ? new CurrencyID(currencyString) : CurrencyID.MSC
 
         String fileName = args[1]
 
-        def consensus = this.getConsensusSnapshot(currency)
+        def consensus = this.getConsensusSnapshot(currencyID)
 
         if (fileName != null) {
             File output = new File(fileName)

@@ -1,5 +1,7 @@
 package com.msgilligan.bitcoin.rpc
 
+import java.lang.Void as Should
+
 /**
  * User: sean
  * Date: 6/16/14
@@ -7,9 +9,9 @@ package com.msgilligan.bitcoin.rpc
  */
 class BitcoinSpec extends BaseRPCSpec {
 
-    def "returns basic info" () {
+    Should "return basic info" () {
         when: "we request info"
-            def info = client.getInfo()
+            def info = getInfo()
 
         then: "we get back some basic information"
             info != null
@@ -17,31 +19,32 @@ class BitcoinSpec extends BaseRPCSpec {
             info.protocolversion >= 70002
     }
 
-    def "can write a block"() {
+    Should "Generate a block upon request"() {
+        given: "a certain starting count"
+        def startCount = blockCount
+
         when: "we generate 1 new block"
-            def startCount = client.getBlockCount()                 // Get starting block count
-            client.setGenerate(true, 1)                             // Generate 1 block
+        generateBlocks(1)
 
         then: "the block count is 1 higher"
-            client.getBlockCount() == startCount + 1                // Verify block count
+        blockCount == startCount + 1
 
     }
 
-    def "can send a coin to newly created address"() {
+    Should "Send an amount to a newly created address"() {
         when: "we create a new address and send testAmount to it"
-            def destAddr = client.getNewAddress()                   // Create new Bitcoin address
-            client.sendToAddress(destAddr, testAmount,
-                    "comment", "comment-to")                        // Send a coin
-            client.setGenerate(true, 1)                             // Generate 1 block
+        def destinationAddress = getNewAddress()
+        sendToAddress(destinationAddress, testAmount, "comment", "comment-to")
+        generateBlocks(1)
 
         then: "the new address has a balance of testAmount"
-            testAmount == client.getReceivedByAddress(destAddr, 1)  // Verify destAddr balance
-        // TODO: check balance
+        testAmount == getReceivedByAddress(destinationAddress)
+        // TODO: check balance of source address/wallet
     }
 
-    def "can get a list of unspent Transactions"() {
-        when: "we request unpsent Transactions"
-        def unspent = client.listUnspent(null, null);
+    Should "Get a list of unspent Transactions"() {
+        when: "we request unspent Transactions"
+        def unspent = listUnspent()
 
         then: "there is at least 1"
         unspent.size() >= 1

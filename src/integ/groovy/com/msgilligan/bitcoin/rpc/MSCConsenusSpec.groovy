@@ -1,6 +1,6 @@
 package com.msgilligan.bitcoin.rpc
 
-import org.mastercoin.CurrencyID
+import static org.mastercoin.CurrencyID.*
 import spock.lang.Shared
 
 /**
@@ -12,7 +12,7 @@ class MSCConsenusSpec extends BaseRPCSpec {
 
     def "Can check all balances"() {
         when: "we check mastercoin balances"
-            def balances = client.getallbalancesforid_MP(CurrencyID.MSC_VALUE)
+            def balances = getallbalancesforid_MP(MSC)
 
         then: "we get a list of size <= 1"
             balances.size() <= 1
@@ -28,7 +28,7 @@ class MSCConsenusSpec extends BaseRPCSpec {
 
     def "Check all balances, raw CLI, type integer"() {
         when: "we check mastercoin balances"
-        def balances = client.cliSend("getallbalancesforid_MP", CurrencyID.MSC_VALUE)
+        def balances = (List) cliSend("getallbalancesforid_MP", MSC)
 
         then: "we get a list of size <= 1"
         balances.size() <= 1

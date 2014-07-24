@@ -1,7 +1,6 @@
 package com.msgilligan.bitcoin.rpc
 
 import static org.mastercoin.CurrencyID.*
-import spock.lang.Shared
 
 /**
  * User: sean
@@ -11,9 +10,9 @@ import spock.lang.Shared
 class MSCSimpleSendSpec extends BaseRPCSpec {
     // Need to make sure these variables are set up with values that match their names
     Long nonExistantCurrencyID = 293487L
-    def emptyAddress = client.getNewAddress()
-    def addressWith1MSC = client.getNewAddress() // Get an address with a balance of 1 MSC
-    def richAddress = client.getNewAddress()  // Should be an address we know has a > 0 balance,
+    def emptyAddress = getNewAddress()
+    def addressWith1MSC = getNewAddress() // Get an address with a balance of 1 MSC
+    def richAddress = getNewAddress()  // Should be an address we know has a > 0 balance,
                                               //      ... otherwise it will fail
                                               // We need to seed the address with coins
 
@@ -29,17 +28,17 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
     def "Can simple send MSC from one address to another" () {
 
         when: "we send MSC"
-            def richBalance = client.getbalance_MP(richAddress, MSC)
+            def richBalance = getbalance_MP(richAddress, MSC)
             def amount = 1.0
-            def toAddress = client.getNewAddress()      // New address
-            client.send_MP(richAddress, toAddress, MSC, amount)
+            def toAddress = getNewAddress()      // New address
+            send_MP(richAddress, toAddress, MSC, amount)
 
         and: "a block is generated"
-            client.setGenerate(true, 1)                // Generate 1 block
-            def newRichBalance = client.getbalance_MP(richAddress, MSC)
+            generateBlocks(1)                // Generate 1 block
+            def newRichBalance = getbalance_MP(richAddress, MSC)
 
         then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
-            amount == client.getbalance_MP(toAddress, MSC)
+            amount == getbalance_MP(toAddress, MSC)
             newRichBalance == richBalance - amount
     }
 
@@ -48,10 +47,10 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
         // treated as invalid by the Master Core parser
 
         given: "a new, empty destination address"
-            def toAddress = client.getNewAddress()
+            def toAddress = getNewAddress()
 
         when: "the amount to transfer is zero"
-            client.send_MP(richAddress, toAddress, MSC, 0)
+            send_MP(richAddress, toAddress, MSC, 0)
         // TODO: Test sending a negative amount of coins?
         // TODO: Check that the *right type* of exceptions are thrown
         // Currently it seems they're all 500s
@@ -65,10 +64,10 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
         // treated as invalid by the Master Core parser
 
         given: "a new, empty destination address"
-        def toAddress = client.getNewAddress()
+        def toAddress = getNewAddress()
 
         when: "the sending address has zero coins in its available balance for the specified currency identifier"
-        client.send_MP(emptyAddress, toAddress, MSC, 1.0)
+        send_MP(emptyAddress, toAddress, MSC, 1.0)
 
         then: "exception is thrown"
         Exception e = thrown()
@@ -79,10 +78,10 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
         // treated as invalid by the Master Core parser
 
         given: "a new, empty destination address"
-        def toAddress = client.getNewAddress()
+        def toAddress = getNewAddress()
 
         when: "the amount to transfer exceeds the number owned and available by the sending address"
-        client.send_MP(addressWith1MSC, toAddress, MSC, 1.00000001)
+        send_MP(addressWith1MSC, toAddress, MSC, 1.00000001)
 
         then: "exception is thrown"
         Exception e = thrown()
@@ -93,10 +92,10 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
         // treated as invalid by the Master Core parser
 
         given: "a new, empty destination address"
-        def toAddress = client.getNewAddress()
+        def toAddress = getNewAddress()
 
         when: "the specified currency identifier is non-existent"
-        client.send_MP(richAddress, toAddress, nonExistantCurrencyID, 1.0)
+        send_MP(richAddress, toAddress, nonExistantCurrencyID, 1.0)
 
         then: "exception is thrown"
         Exception e = thrown()
