@@ -140,6 +140,10 @@ public class BitcoinClient extends RPCClient {
         assert result == null;
     }
 
+    public void generateBlocks(Long blocks) throws IOException {
+        setGenerate(true, blocks);
+    }
+
     public String getNewAddress() throws IOException {
         Map<String, Object> response = send("getnewaddress", null);
 
@@ -162,8 +166,11 @@ public class BitcoinClient extends RPCClient {
 
     }
 
+    public BigDecimal getReceivedByAddress(String address) throws IOException {
+        return getReceivedByAddress(address, 1);   // Default to 1 or more confirmations
+    }
+
     public BigDecimal getReceivedByAddress(String address, Integer minConf) throws IOException {
-        if (minConf == null) minConf = 1;
         List<Object> params = Arrays.asList((Object) address, minConf);
         Map<String, Object> response = send("getreceivedbyaddress", params);
         BigDecimal balance = new BigDecimal((Double) response.get("result"));

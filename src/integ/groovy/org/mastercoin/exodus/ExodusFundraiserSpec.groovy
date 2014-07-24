@@ -43,25 +43,25 @@ class ExodusFundraiserSpec extends BaseMainNetSpec {
 
     Should "Be at a block height before Exodus period starts"() {
         when:
-        def curHeight = client.getBlockCount()
+        def curHeight = client.blockCount
         println "Current blockheight: ${curHeight}"
 
         then:
         curHeight <= startHeight
 
         and: "the Exodus address should have a zero balance"
-        0.0 == client.getReceivedByAddress(mpNetParams.exodusAddress, 1)
+        0.0 == client.getReceivedByAddress(mpNetParams.exodusAddress)
 
     }
 
     Should "Generate blocks to just before Exodus start"() {
 
         when: "we tell Master Core to mine enough blocks to bring us just before Exodus"
-        def curHeight = client.getBlockCount()
-        client.setGenerate(true, startHeight-curHeight)
+        def curHeight = client.blockCount
+        client.generateBlocks(startHeight-curHeight)
 
         then: "we are at the expected block"
-        startHeight == client.getBlockCount()
+        startHeight == client.blockCount
 
     }
 
@@ -70,11 +70,11 @@ class ExodusFundraiserSpec extends BaseMainNetSpec {
         participatingAddress = client.getNewAddress()    // Create new Bitcoin/Mastercoin address
         client.sendToAddress(participatingAddress, fundraiserAmountBTC+extraBTCForTxFees,
                 "Put some mined coins into an address for the fundraiser", "Initial Mastercoin address")
-        client.setGenerate(true, 1)                     // Generate 1 block
-        def curHeight = client.getBlockCount()
+        client.generateBlocks(1)                     // Generate 1 block
+        def curHeight = client.blockCount
 
         then: "the new address has the correct balance in BTC"
-        fundraiserAmountBTC+extraBTCForTxFees == client.getReceivedByAddress(participatingAddress, 1)
+        fundraiserAmountBTC+extraBTCForTxFees == client.getReceivedByAddress(participatingAddress)
 
         and: "we've entered the fundraiser period"
         curHeight == startHeight + 1
@@ -90,18 +90,18 @@ class ExodusFundraiserSpec extends BaseMainNetSpec {
         // TODO: #4 Ensure we're getting at least one time quantum (second?) between blocks
         client.sendToAddress(mpNetParams.exodusAddress, fundraiserAmountBTC,
                 "Buy some MSC", "Exodus address")
-        def blocksToWrite = mpNetParams.postExodusBlock - mpNetParams.firstExodusBlock
-        client.setGenerate(true, blocksToWrite)          // Close the fundraiser
+        def blocksToGen = mpNetParams.postExodusBlock - mpNetParams.firstExodusBlock
+        client.generateBlocks(blocksToGen)          // Close the fundraiser
         def mscBalance = client.getbalance_MP(participatingAddress, CurrencyID.MSC_VALUE)
 
         then: "we are at the 'Post Exodus' Block"
-        mpNetParams.postExodusBlock == client.getBlockCount()
+        mpNetParams.postExodusBlock == client.blockCount
 
         and: "the Exodus address has the correct balance"
-        fundraiserAmountBTC == client.getReceivedByAddress(mpNetParams.exodusAddress, 1)
+        fundraiserAmountBTC == client.getReceivedByAddress(mpNetParams.exodusAddress)
 
         and: "our BTC/MSC address money leftover for Tx fees"
-        extraBTCForTxFees == client.getReceivedByAddress(participatingAddress, 1)
+        extraBTCForTxFees == client.getReceivedByAddress(participatingAddress)
 
         and: "our BTC/MSC address has the correct amount MSC"
         mscBalance >= 100 * fundraiserAmountBTC // need calculation for proper amount
