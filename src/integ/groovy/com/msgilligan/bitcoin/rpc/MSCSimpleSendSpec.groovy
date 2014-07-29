@@ -5,28 +5,13 @@ import spock.lang.Ignore
 
 import static org.mastercoin.CurrencyID.*
 
-/**
- * User: sean
- * Date: 6/17/14
- * Time: 4:11 PM
- */
 class MSCSimpleSendSpec extends BaseRegTestSpec {
     // Need to make sure these variables are set up with values that match their names
-    Long nonExistantCurrencyID = 293487L
-    def emptyAddress = getNewAddress()
+    static final Long nonExistentCurrencyID = 293487L
     def addressWith1MSC = getNewAddress() // Get an address with a balance of 1 MSC
     def richAddress = getNewAddress()  // Should be an address we know has a > 0 balance,
                                               //      ... otherwise it will fail
                                               // We need to seed the address with coins
-
-//    def "Can generate 255365 blocks"() {
-//        when: "we generate 255365 blocks"
-//            def startCount = client.getBlockCount()         // Get starting block count
-//            client.setGenerate(true, 255365)                // Generate blocks
-//
-//        then: "the block count is 255365 higher"
-//            client.getBlockCount() == startCount+ 255365                // Verify block count
-//    }
 
     @Ignore
     def "Can simple send MSC from one address to another" () {
@@ -67,7 +52,8 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
         // treated as invalid by the Master Core parser
 
-        given: "a new, empty destination address"
+        given: "an empty source address and a new, empty destination address"
+        def emptyAddress = getNewAddress()
         def toAddress = getNewAddress()
 
         when: "the sending address has zero coins in its available balance for the specified currency identifier"
@@ -99,7 +85,7 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         def toAddress = getNewAddress()
 
         when: "the specified currency identifier is non-existent"
-        send_MP(richAddress, toAddress, nonExistantCurrencyID, 1.0)
+        send_MP(richAddress, toAddress, nonExistentCurrencyID, 1.0)
 
         then: "exception is thrown"
         Exception e = thrown()

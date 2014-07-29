@@ -22,7 +22,7 @@ public class MastercoinClient extends BitcoinClient {
     }
 
     public String send_MP(String fromAddress, String toAddress, CurrencyID currency, BigDecimal amount) throws IOException {
-        List<Object> params = Arrays.asList((Object) fromAddress, toAddress, currency, amount);
+        List<Object> params = Arrays.asList((Object) fromAddress, toAddress, currency.intValue(), amount);
         Map<String, Object> response = send("send_MP", params);
         String txid = (String) response.get("result");
         return txid;

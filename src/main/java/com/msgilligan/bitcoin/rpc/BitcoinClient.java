@@ -236,6 +236,10 @@ public class BitcoinClient extends RPCClient {
         return getBalance(null, null);
     }
 
+    public BigDecimal getBalance(String account) throws IOException {
+        return getBalance(account, null);
+    }
+
     public BigDecimal getBalance(String account, Integer minConf) throws IOException {
         List<Object> params = null;
         if (account != null) {

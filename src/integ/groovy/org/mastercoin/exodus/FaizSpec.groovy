@@ -23,10 +23,8 @@ import static org.mastercoin.CurrencyID.*
  * Time: 7:00 PM
  */
 class FaizSpec extends BaseRegTestSpec {
-
-    final static String moneyManAddress = "moneyqMan7uh8FqdCA2BV5yZ8qVrc9ikLP"
-    final static String exodusAddress = "mpexoDuSkGGqvqrkrjiFng38QPkJQVFyqv"
     final static BigDecimal sendAmount = 0.5
+    final static BigDecimal extraAmount = 0.1
 
     @Shared
     ConsensusTool consensusFetcher
@@ -39,33 +37,29 @@ class FaizSpec extends BaseRegTestSpec {
     }
 
     def "Faiz's test"() {
-        when: "we create a new wallet for mastercoins and move some BTC into it"
+        setup: "Create a new, unique address in a dedicated account"
         def accountname = "msc"
-        def accountAddress = client.getAccountAddress(accountname)
-        client.sendToAddress(accountAddress, 2*sendAmount + 0.1)
-        client.generateBlock()
+        def accountAddress = getAccountAddress(accountname)
 
-        then: "we have some BTC there"
-        client.getBalance(accountname, null) >= 2*sendAmount + 0.1
+        when: "we create a new account for Mastercoins and send some BTC to it"
+        sendToAddress(accountAddress, 2*sendAmount + extraAmount)
+        generateBlock()
 
-        when: "We send some BTC to the moneyManAddress and generate a block"
-        Map<String, BigDecimal> amounts = [(moneyManAddress): sendAmount, (exodusAddress): sendAmount]
-        def txid1 = client.sendMany(accountname, amounts)
-        client.generateBlock()
-        def tx1 = client.getTransaction(txid1)
+        then: "we have the correct amount of BTC there"
+        getBalance(accountname) >= 2*sendAmount + extraAmount
+
+        when: "We send the BTC to the moneyManAddress and generate a block"
+        def amounts = [(MPRegTestParams.MoneyManAddress): sendAmount, (MPRegTestParams.ExodusAddress): sendAmount]
+        def txid = sendMany(accountname, amounts)
+        generateBlock()
+        def tx = getTransaction(txid)
 
         then: "transaction was confirmed"
-        tx1.confirmations == 1
+        tx.confirmations == 1
 
-        when: "we check balances"
-        def balances = client.getallbalancesforid_MP(MSC)
-        def mscBalance = balances.find{it.address == accountAddress}.balance
-
-        then: "We get some addresses with MSC balances (at least test address + exodus)"
-        balances.size() >= 2
-
-        and: "The balance for the account we just sent MSC to is correct"
-        mscBalance == 100 * sendAmount
+        and: "The balances for the account we just sent MSC to is correct"
+        getbalance_MP(accountAddress, MSC) == 100 * sendAmount
+        getbalance_MP(accountAddress, TMSC) == 100 * sendAmount
     }
 
     @Unroll

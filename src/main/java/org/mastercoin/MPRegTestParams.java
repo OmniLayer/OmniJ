@@ -6,10 +6,12 @@ package org.mastercoin;
  * Time: 1:22 AM
  */
 public class MPRegTestParams extends MPNetworkParameters {
+    public final static String ExodusAddress = "mpexoDuSkGGqvqrkrjiFng38QPkJQVFyqv";
+    public final static String MoneyManAddress = "moneyqMan7uh8FqdCA2BV5yZ8qVrc9ikLP";
 
     private MPRegTestParams() {
         super();
-        exodusAddress = MPMainNetParams.ExodusAddress;
+        exodusAddress = ExodusAddress;
         /* Use MPMainNetParams for magic block numbers */
         firstExodusBlock = 5;
         lastExodusBlock = MPMainNetParams.LAST_EXODUS_BLOCK;
