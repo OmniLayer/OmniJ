@@ -14,4 +14,10 @@ class ConsensusSnapshot {
     URL         sourceURL
 
     SortedMap<String, ConsensusEntry> entries
+
+    SortedMap<String, ConsensusEntry> getEntriesExcluding(String address) {
+        SortedMap<String, ConsensusEntry> temp = new TreeMap<String, ConsensusEntry>(entries)
+        temp.remove(address)
+        return temp
+    }
 }

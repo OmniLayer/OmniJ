@@ -8,6 +8,7 @@ import java.net.URL;
  * Time: 12:21 PM
  */
 public class RPCConfig {
+
     public URL      url;
     public String   username;
     public String   password;

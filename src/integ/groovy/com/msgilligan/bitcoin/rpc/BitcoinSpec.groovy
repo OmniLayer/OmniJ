@@ -1,13 +1,11 @@
 package com.msgilligan.bitcoin.rpc
 
+import org.mastercoin.BaseRegTestSpec
+
 import java.lang.Void as Should
 
-/**
- * User: sean
- * Date: 6/16/14
- * Time: 12:30 PM
- */
-class BitcoinSpec extends BaseRPCSpec {
+class BitcoinSpec extends BaseRegTestSpec {
+    static final BigDecimal testAmount = 2.0
 
     Should "return basic info" () {
         when: "we request info"
@@ -21,7 +19,7 @@ class BitcoinSpec extends BaseRPCSpec {
 
     Should "Generate a block upon request"() {
         given: "a certain starting count"
-        def startCount = blockCount
+        def startCount = client.blockCount
 
         when: "we generate 1 new block"
         generateBlocks(1)

@@ -29,7 +29,7 @@ public class MastercoinClient extends BitcoinClient {
     }
 
     public BigDecimal getbalance_MP(String address, CurrencyID currency) throws IOException {
-        List<Object> params = Arrays.asList((Object) address, currency);
+        List<Object> params = Arrays.asList((Object) address, currency.intValue());
         Map<String, Object> response = send("getbalance_MP", params);
         Double balanceBTCd = (Double) response.get("result");
         // Beware of the new BigDecimal(double d) constructor, it results in unexpected/undesired values.
@@ -38,8 +38,7 @@ public class MastercoinClient extends BitcoinClient {
     }
 
     public List<Object> getallbalancesforid_MP(CurrencyID currency) throws IOException {
-        // TODO: currencyID should probably not be passed as a string
-        List<Object> params = Arrays.asList((Object) new Integer(currency.intValue()));
+        List<Object> params = Arrays.asList((Object) currency.intValue());
         Map<String, Object> response = send("getallbalancesforid_MP", params);
         @SuppressWarnings("unchecked")
         List<Object> balances = (List<Object>) response.get("result");

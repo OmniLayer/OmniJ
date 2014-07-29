@@ -36,10 +36,10 @@ public class GetBlockCount extends CliCommand {
     public void incrementAndCount(long blocksToGen) {
         Integer blockCount = -1;
         try {
-            BigDecimal balance = client.getBalance(null, null);
+            BigDecimal balance = client.getBalance();
             System.out.println("Starting balance: " + balance);
             client.setGenerate(true, 101L);
-            balance = client.getBalance(null, null);
+            balance = client.getBalance();
             System.out.println("Balance after mining 101 blocks: " + balance);
 
             List<Object> balances = client.listReceivedByAddress(1, false);
@@ -57,7 +57,7 @@ public class GetBlockCount extends CliCommand {
             Map<String, Object> transaction = client.getTransaction(txid);
             System.out.println("transaction: " + transaction);
 
-            balance = client.getBalance(null, null);
+            balance = client.getBalance();
             System.out.println("Ending balance: " + balance);
 
             balances = client.listReceivedByAddress(0, true);

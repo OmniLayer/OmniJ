@@ -8,19 +8,26 @@ group = 'com.msgilligan'
 version = '0.1'
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.3.2'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
     compile 'commons-cli:commons-cli:1.2'
-    compile "org.codehaus.groovy:groovy-all:2.3.3"
+    compile "org.codehaus.groovy:groovy-all:2.3.4"
 
     testCompile "com.google:bitcoinj:0.11.3"
-    testCompile "org.codehaus.groovy:groovy-all:2.3.3"
-    testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
+    testCompile "org.codehaus.groovy:groovy-all:2.3.4"
+//    testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
+    testCompile("org.spockframework:spock-core:0.7-groovy-2.0") {
+        exclude module: "groovy-all"
+    }
 }
+
+//compileJava {
+//    options.compilerArgs << '-Xlint:unchecked'
+//}
 
 mainClassName = "com.msgilligan.bitcoin.cli.Status"
 def roboExeName = "btcstatus"
@@ -29,11 +36,6 @@ jar {
     manifest {
         attributes 'Implementation-Title': 'BTC/MSC Status', 'Implementation-Version': version, 'Consensus-Class': mainClassName
     }
-}
-
-task startRegtest(type:Exec) {
-  executable 'bitcoind'
-  args '-regtest', ' -server'
 }
 
 test {

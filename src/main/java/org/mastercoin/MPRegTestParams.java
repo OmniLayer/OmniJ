@@ -11,7 +11,7 @@ public class MPRegTestParams extends MPNetworkParameters {
         super();
         exodusAddress = MPMainNetParams.ExodusAddress;
         /* Use MPMainNetParams for magic block numbers */
-        firstExodusBlock = MPMainNetParams.FIRST_EXODUS_BLOCK;
+        firstExodusBlock = 5;
         lastExodusBlock = MPMainNetParams.LAST_EXODUS_BLOCK;
         postExodusBlock = MPMainNetParams.POST_EXODUS_BLOCK;
         mscDEXBlock = MPMainNetParams.MSC_DEX_BLOCK;

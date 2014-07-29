@@ -3,7 +3,7 @@
 .gradle
 build/
 robolib/
-regtest-datadir/
+bitcoin-datadir/
 logs/
 copied-artifacts/
 

@@ -10,7 +10,13 @@ import groovy.transform.ToString
  */
 @Immutable
 @ToString(includePackage=false, includeNames=true)
-class ConsensusEntry {
+class ConsensusEntry implements Iterable<BigDecimal>  {
     BigDecimal  balance
     BigDecimal  reserved
+
+    @Override
+    Iterator<BigDecimal> iterator() {
+        return [balance, reserved].iterator()
+    }
+
 }

@@ -138,6 +138,10 @@ public class BitcoinClient extends RPCClient {
         assert result == null;
     }
 
+    public void generateBlock() throws IOException {
+        generateBlocks(1L);
+    }
+
     public void generateBlocks(Long blocks) throws IOException {
         setGenerate(true, blocks);
     }
@@ -149,8 +153,24 @@ public class BitcoinClient extends RPCClient {
         return address;
     }
 
+    public String getAccountAddress(String account) throws IOException {
+        List<Object> params = Arrays.asList((Object) account);
+        Map<String, Object> response = send("getaccountaddress", params);
+        @SuppressWarnings("unchecked")
+        String address = (String) response.get("result");
+        return address;
+    }
+
+    public Boolean move(String fromaccount, String toaccount, BigDecimal amount) throws IOException {
+        List<Object> params = Arrays.asList((Object) fromaccount, toaccount, amount);
+        Map<String, Object> response = send("move", params);
+        @SuppressWarnings("unchecked")
+        Boolean result = (Boolean) response.get("result");
+        return result;
+    }
+
     public Object getRawTransaction(String txid, Boolean verbose) throws IOException {
-        List<Object> params = new ArrayList<Object>();
+        List<Object> params = new ArrayList<>();
         params.add(txid);
         if (verbose != null) {
             params.add(verbose);
@@ -162,6 +182,15 @@ public class BitcoinClient extends RPCClient {
         byte[] raw = BitcoinClient.hexStringToByteArray(hexEncoded);
         return raw;
 
+    }
+
+    public Map<String, Object> getRawTransactionVerbose(String txid) throws IOException {
+        List<Object> params = Arrays.asList((Object) txid, 1);
+        Map<String, Object> response = send("getrawtransaction", params);
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> json = (Map<String, Object>) response.get("result");
+        return json;
     }
 
     public BigDecimal getReceivedByAddress(String address) throws IOException {
@@ -190,7 +219,7 @@ public class BitcoinClient extends RPCClient {
     }
 
     public List<Object> listUnspent(Integer minConf, Integer maxConf) throws IOException {
-        List<Object> params = new ArrayList<Object>();
+        List<Object> params = new ArrayList<>();
         if (minConf != null) {
             params.add(minConf);
             if (maxConf != null) {
@@ -203,16 +232,29 @@ public class BitcoinClient extends RPCClient {
         List<Object> unspent = (List<Object>) response.get("result");
         return unspent;
     }
+    public BigDecimal getBalance() throws IOException {
+        return getBalance(null, null);
+    }
 
-    public BigDecimal getBalance(String account, Long minConf ) throws IOException {
-//        List<Object> params = Arrays.asList((Object) account, minConf);
+    public BigDecimal getBalance(String account, Integer minConf) throws IOException {
+        List<Object> params = null;
+        if (account != null) {
+            params = new ArrayList<>();
+            params.add(account);
+            if (minConf != null) {
+                params.add(minConf);
+            }
+        }
 
-        Map<String, Object> response = send("getbalance", null);
+        Map<String, Object> response = send("getbalance", params);
         Double balanceBTCd = (Double) response.get("result");
         // Beware of the new BigDecimal(double d) constructor, it results in unexpected/undesired values.
         BigDecimal balanceBTC = BigDecimal.valueOf(balanceBTCd);
-//        BigInteger balanceSatoshis = balanceBTC.multiply(D_SATOSHIS_PER_BITCOIN).toBigInteger();;
         return balanceBTC;
+    }
+
+    public String sendToAddress(String address, BigDecimal amount) throws IOException {
+        return sendToAddress(address, amount, "", "");
     }
 
     public String sendToAddress(String address, BigDecimal amount, String comment, String commentTo) throws IOException {
@@ -222,7 +264,24 @@ public class BitcoinClient extends RPCClient {
 
         String txid = (String) response.get("result");
         return txid;
+    }
 
+    public String sendFrom(String account, String address, BigDecimal amount) throws IOException {
+        List<Object> params = Arrays.asList((Object) account, address, amount);
+
+        Map<String, Object> response = send("sendfrom", params);
+
+        String txid = (String) response.get("result");
+        return txid;
+    }
+
+    public String sendMany(String account, Map<String, BigDecimal> amounts) throws IOException {
+        List<Object> params = Arrays.asList(account, amounts);
+
+        Map<String, Object> response = send("sendmany", params);
+
+        String txid = (String) response.get("result");
+        return txid;
     }
 
     public Map<String, Object> getTransaction(String txid) throws IOException {

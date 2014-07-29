@@ -1,5 +1,8 @@
 package com.msgilligan.bitcoin.rpc
 
+import org.mastercoin.BaseRegTestSpec
+import spock.lang.Ignore
+
 import static org.mastercoin.CurrencyID.*
 
 /**
@@ -7,7 +10,7 @@ import static org.mastercoin.CurrencyID.*
  * Date: 6/17/14
  * Time: 4:11 PM
  */
-class MSCSimpleSendSpec extends BaseRPCSpec {
+class MSCSimpleSendSpec extends BaseRegTestSpec {
     // Need to make sure these variables are set up with values that match their names
     Long nonExistantCurrencyID = 293487L
     def emptyAddress = getNewAddress()
@@ -25,6 +28,7 @@ class MSCSimpleSendSpec extends BaseRPCSpec {
 //            client.getBlockCount() == startCount+ 255365                // Verify block count
 //    }
 
+    @Ignore
     def "Can simple send MSC from one address to another" () {
 
         when: "we send MSC"

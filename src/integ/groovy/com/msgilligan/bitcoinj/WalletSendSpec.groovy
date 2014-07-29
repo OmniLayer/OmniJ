@@ -14,7 +14,7 @@ import com.google.bitcoin.store.MemoryBlockStore
 import com.google.bitcoin.utils.BriefLogFormatter
 import com.google.bitcoin.utils.Threading
 import com.msgilligan.bitcoin.BTC
-import com.msgilligan.bitcoin.rpc.BaseRPCSpec
+import org.mastercoin.BaseRegTestSpec
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -26,7 +26,7 @@ import java.lang.Void as Should
  * Time: 9:48 PM
  */
 @Stepwise
-class WalletSendSpec extends BaseRPCSpec {
+class WalletSendSpec extends BaseRegTestSpec {
     @Shared
     NetworkParameters params
     @Shared
@@ -66,7 +66,7 @@ class WalletSendSpec extends BaseRPCSpec {
 //        Transaction tx = new Transaction(params, rawTx)
         Integer lastHeight = wallet.getLastBlockSeenHeight()
         client.setGenerate(true, 1)                             // Generate 1 block
-        while(wallet.getLastBlockSeenHeight() == lastHeight) {
+        while (wallet.lastBlockSeenHeight == lastHeight) {
             println "Waiting..."
             Thread.sleep(100)
         }

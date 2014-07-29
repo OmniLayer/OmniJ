@@ -4,7 +4,7 @@ import com.google.bitcoin.core.Address
 import com.google.bitcoin.core.NetworkParameters
 import com.google.bitcoin.core.Transaction
 import com.google.bitcoin.params.RegTestParams
-import com.msgilligan.bitcoin.rpc.BaseRPCSpec
+import org.mastercoin.BaseRegTestSpec
 import spock.lang.Shared
 import java.lang.Void as Should
 
@@ -13,12 +13,15 @@ import java.lang.Void as Should
  * Date: 7/15/14
  * Time: 2:44 PM
  */
-class RawSendSpec extends BaseRPCSpec {
-    @Shared
-    NetworkParameters params
+class RawSendSpec extends BaseRegTestSpec {
+    static final BigDecimal testAmount = 2.0
+    static final NetworkParameters params = RegTestParams.get()
+
+//    @Shared
+//    NetworkParameters params
 
     void setupSpec() {
-        params = RegTestParams.get()
+//        params = RegTestParams.get()
     }
 
     Should "Be able to send a coin to newly created address"() {

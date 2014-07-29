@@ -1,5 +1,6 @@
 package org.mastercoin.consensus
 
+import com.msgilligan.bitcoin.rpc.RPCURL
 import org.mastercoin.CurrencyID
 import org.mastercoin.rpc.MastercoinClient
 
@@ -9,18 +10,17 @@ import org.mastercoin.rpc.MastercoinClient
  * Time: 11:45 AM
  */
 class MasterCoreConsensusTool extends ConsensusTool {
-    static def rpcproto = "http"
-    static def rpchost = "127.0.0.1"
-    static def rpcport = 8332
-    static def rpcfile = "/"
     static def rpcuser = "bitcoinrpc"
     static def rpcpassword = "pass"
     protected MastercoinClient client
-    private URL rpcServerURL
 
     MasterCoreConsensusTool() {
-        rpcServerURL = new URL(rpcproto, rpchost, rpcport, rpcfile)
-        client = new MastercoinClient(rpcServerURL, rpcuser, rpcpassword)
+        client = new MastercoinClient(RPCURL.defaultMainNetURL, rpcuser, rpcpassword)
+    }
+
+    MasterCoreConsensusTool(MastercoinClient client)
+    {
+        this.client = client
     }
 
     public static void main(String[] args) {
@@ -62,9 +62,9 @@ class MasterCoreConsensusTool extends ConsensusTool {
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
         def snap = new ConsensusSnapshot();
         snap.currencyID = currencyID
-        snap.blockHeight = client.getBlockCount()
+        snap.blockHeight = client.blockCount
         snap.sourceType = "Master Core"
-        snap.sourceURL = rpcServerURL
+        snap.sourceURL = client.serverURL
         snap.entries = this.getConsensusForCurrency(currencyID)
         return snap
     }

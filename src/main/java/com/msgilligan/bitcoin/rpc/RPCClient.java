@@ -42,6 +42,10 @@ public class RPCClient {
         mapper = new ObjectMapper();
     }
 
+    public URL getServerURL() {
+        return serverURL;
+    }
+
     public Map<String, Object> send(Map<String, Object> request) throws IOException {
         openConnection();
         OutputStream output = connection.getOutputStream();

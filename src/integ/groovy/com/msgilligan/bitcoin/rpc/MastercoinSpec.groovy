@@ -1,5 +1,7 @@
 package com.msgilligan.bitcoin.rpc
 
+import org.mastercoin.BaseRegTestSpec
+
 import static org.mastercoin.CurrencyID.*
 import java.lang.Void as Should
 
@@ -8,7 +10,7 @@ import java.lang.Void as Should
  * Date: 6/16/14
  * Time: 5:32 PM
  */
-class MastercoinSpec extends BaseRPCSpec {
+class MastercoinSpec extends BaseRegTestSpec {
 
     Should "Implement getbalance_MP"() {
         when: "we call getbalance_MP on a newly generated address"

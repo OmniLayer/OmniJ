@@ -1,6 +1,9 @@
 package org.mastercoin.exodus
 
 import org.mastercoin.BaseMainNetSpec
+import org.mastercoin.BaseRegTestSpec
+import spock.lang.Ignore
+
 import static org.mastercoin.CurrencyID.*
 import org.mastercoin.MPNetworkParameters
 import org.mastercoin.MPRegTestParams
@@ -20,8 +23,9 @@ import java.lang.Void as Should
  * Date: 7/22/14
  * Time: 9:02 AM
  */
+@Ignore
 @Stepwise
-class ExodusFundraiserSpec extends BaseMainNetSpec {
+class ExodusFundraiserSpec extends BaseRegTestSpec {
     @Shared
     MPNetworkParameters mpNetParams
     @Shared
@@ -42,16 +46,11 @@ class ExodusFundraiserSpec extends BaseMainNetSpec {
     }
 
     Should "Be at a block height before Exodus period starts"() {
-        when:
-        def curHeight = client.blockCount
-        println "Current blockheight: ${curHeight}"
-
-        then:
-        curHeight <= startHeight
+        expect:
+        client.blockCount <= startHeight
 
         and: "the Exodus address should have a zero balance"
         0.0 == client.getReceivedByAddress(mpNetParams.exodusAddress)
-
     }
 
     Should "Generate blocks to just before Exodus start"() {
@@ -70,11 +69,11 @@ class ExodusFundraiserSpec extends BaseMainNetSpec {
         participatingAddress = client.getNewAddress()    // Create new Bitcoin/Mastercoin address
         client.sendToAddress(participatingAddress, fundraiserAmountBTC+extraBTCForTxFees,
                 "Put some mined coins into an address for the fundraiser", "Initial Mastercoin address")
-        client.generateBlocks(1)                     // Generate 1 block
+        client.generateBlocks(1)
         def curHeight = client.blockCount
 
         then: "the new address has the correct balance in BTC"
-        fundraiserAmountBTC+extraBTCForTxFees == client.getReceivedByAddress(participatingAddress)
+        fundraiserAmountBTC+extraBTCForTxFees == getReceivedByAddress(participatingAddress)
 
         and: "we've entered the fundraiser period"
         curHeight == startHeight + 1
@@ -95,7 +94,7 @@ class ExodusFundraiserSpec extends BaseMainNetSpec {
         def mscBalance = client.getbalance_MP(participatingAddress, MSC)
 
         then: "we are at the 'Post Exodus' Block"
-        mpNetParams.postExodusBlock == client.blockCount
+        mpNetParams.postExodusBlock == blockCount
 
         and: "the Exodus address has the correct balance"
         fundraiserAmountBTC == client.getReceivedByAddress(mpNetParams.exodusAddress)
