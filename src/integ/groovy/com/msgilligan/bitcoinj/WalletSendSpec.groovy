@@ -61,7 +61,7 @@ class WalletSendSpec extends BaseRegTestSpec {
     Should "Send mined coins to fund a new BitcoinJ wallet"() {
         when: "we send coins to the wallet and write a block"
         BigDecimal amount = 20.0
-        String txid = client.sendToAddress(walletAddr.toString(), amount, "fund BitcoinJ wallet", "first BitcoinJ wallet addr")
+        String txid = client.sendToAddress(walletAddr, amount, "fund BitcoinJ wallet", "first BitcoinJ wallet addr")
 //        byte[] rawTx = client.getRawTransaction(txid, null)
 //        Transaction tx = new Transaction(params, rawTx)
         Integer lastHeight = wallet.getLastBlockSeenHeight()
@@ -76,24 +76,22 @@ class WalletSendSpec extends BaseRegTestSpec {
         wallet.balance == BTC.btcToSatoshis(amount)
     }
 
-    Should "Send from BitcoinJ wallet to the RPC wallet"() {
+    Should "Send from BitcoinJ wallet to the Bitcoind/Mastercore wallet"() {
         when: "we send coins from BitcoinJ and write a block"
         BigDecimal amount = 1.0
-        String rpcAddressStr = getNewAddress()
-        Address rpcAddress = new Address(params,rpcAddressStr)
+        def rpcAddress = getNewAddress()
         wallet.sendCoins(peerGroup,rpcAddress,BTC.btcToSatoshis(amount))
         Thread.sleep(100)            // Give BitcoinJ time to send Tx to bitcoind
         generateBlocks(1)
 
         then: "the new address has a balance of amount"
-        getReceivedByAddress(rpcAddressStr) == amount
+        getReceivedByAddress(rpcAddress) == amount
     }
 
     Should "create and send a transaction from BitcoinJ using wallet.completeTx"() {
         when:
         BigDecimal amount = 1.0
-        String rpcAddressStr = getNewAddress()
-        Address rpcAddress = new Address(params,rpcAddressStr)
+        def rpcAddress = getNewAddress()
         Transaction tx = new Transaction(params)
         tx.addOutput(BTC.btcToSatoshis(amount), rpcAddress)
         Wallet.SendRequest request = Wallet.SendRequest.forTx(tx)
@@ -104,6 +102,6 @@ class WalletSendSpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then: "the new address has a balance of amount"
-        getReceivedByAddress(rpcAddressStr) == amount  // Verify rpcAddress balance
+        getReceivedByAddress(rpcAddress) == amount  // Verify rpcAddress balance
     }
 }

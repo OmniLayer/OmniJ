@@ -5,6 +5,7 @@ import org.mastercoin.MPRegTestParams
 import org.mastercoin.consensus.ConsensusComparison
 import org.mastercoin.consensus.ConsensusTool
 import org.mastercoin.consensus.MasterCoreConsensusTool
+import org.mastercoin.rpc.MastercoinClient
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise
@@ -13,7 +14,6 @@ import java.security.SecureRandom
 
 import static org.mastercoin.CurrencyID.MSC
 import static org.mastercoin.CurrencyID.TMSC
-import java.lang.Void as Should
 
 @Stepwise
 class MoneyManSpec extends BaseRegTestSpec {
@@ -30,21 +30,26 @@ class MoneyManSpec extends BaseRegTestSpec {
     def setupSpec() {
         // Create a new, unique address in a dedicated account
         def random = new SecureRandom();
-        accountname = "msc" + new BigInteger(130, random).toString(32)
+        accountname = "msc-" + new BigInteger(130, random).toString(32)
         wealthyAddress = getAccountAddress(accountname)
     }
 
-    Should "Fund some MSC and TMSC"() {
+    def "Send BTC to an address to get MSC and TMSC"() {
         when: "we create a new account for Mastercoins and send some BTC to it"
-        sendToAddress(wealthyAddress, 2*sendAmount + extraAmount)
-        generateBlock()
+        def txid = client.sendToAddress(wealthyAddress, 2*sendAmount + extraAmount)
+
+        then: "we got a non-zero transaction id"
+        txid != MastercoinClient.zeroHash
+
+        when: "we generate a block"
+        generateBlocks(1)
 
         then: "we have the correct amount of BTC there"
         getBalance(accountname) >= 2*sendAmount + extraAmount
 
         when: "We send the BTC to the moneyManAddress and generate a block"
         def amounts = [(MPRegTestParams.MoneyManAddress): sendAmount, (MPRegTestParams.ExodusAddress): sendAmount]
-        def txid = sendMany(accountname, amounts)
+        txid = sendMany(accountname, amounts)
         generateBlock()
         def tx = getTransaction(txid)
 
@@ -56,26 +61,34 @@ class MoneyManSpec extends BaseRegTestSpec {
         getbalance_MP(wealthyAddress, TMSC) == 100 * sendAmount
     }
 
-    @Ignore
-    Should "Simple send TMSC from one address to another" () {
+    def "Simple send MSC from one address to another" () {
 
         when: "we send MSC"
+        // TODO: Find the change address or send change back to original address
         def senderBalance = getbalance_MP(wealthyAddress, MSC)
         def amount = 1.0
         def toAddress = getNewAddress()
-        client.send_MP(wealthyAddress, toAddress, TMSC, amount)
+        def txid = client.send_MP(wealthyAddress, toAddress, MSC, amount)
 
-        and: "a block is generated"
-        generateBlocks(1)
-        def newSenderBalance = getbalance_MP(wealthyAddress, TMSC)
+        then: "we got a non-zero transaction id"
+        txid != MastercoinClient.zeroHash
+
+        when: "a block is generated"
+        generateBlocks(10)
+        def newSenderBalance = getbalance_MP(wealthyAddress, MSC)
+        def receiverBalance = getbalance_MP(toAddress, MSC)
+//        def tx = client.getTransaction(txid)
+
+//        then: "the transaction is confirmed and valid"
+//        tx.confirmations == 10
 
         then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
         newSenderBalance == senderBalance - amount
-        getbalance_MP(toAddress, TMSC) == amount
+        receiverBalance == amount
     }
 
     @Ignore
-    Should "Be able to send to owners (pay a dividend)"() {
+    def "Be able to send to owners (pay a dividend)"() {
         when: "We Send to Owners"
         cliSend("sendtoowners_MP", wealthyAddress, MSC as Integer, 1.0)
 

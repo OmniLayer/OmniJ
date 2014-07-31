@@ -1,6 +1,10 @@
 package com.msgilligan.bitcoin.rpc;
 
 
+import com.google.bitcoin.core.Address;
+import com.google.bitcoin.core.AddressFormatException;
+import com.google.bitcoin.core.Sha256Hash;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -146,18 +150,30 @@ public class BitcoinClient extends RPCClient {
         setGenerate(true, blocks);
     }
 
-    public String getNewAddress() throws IOException {
+    public Address getNewAddress() throws IOException {
         Map<String, Object> response = send("getnewaddress", null);
 
-        String address = (String) response.get("result");
+        String addr = (String) response.get("result");
+        Address address = null;
+        try {
+            address = new Address(null, addr);
+        } catch (AddressFormatException e) {
+            throw new RuntimeException(e);
+        }
         return address;
     }
 
-    public String getAccountAddress(String account) throws IOException {
+    public Address getAccountAddress(String account) throws IOException {
         List<Object> params = Arrays.asList((Object) account);
         Map<String, Object> response = send("getaccountaddress", params);
         @SuppressWarnings("unchecked")
-        String address = (String) response.get("result");
+        String addr = (String) response.get("result");
+        Address address = null;
+        try {
+            address = new Address(null, addr);
+        } catch (AddressFormatException e) {
+            throw new RuntimeException(e);
+        }
         return address;
     }
 
@@ -169,9 +185,9 @@ public class BitcoinClient extends RPCClient {
         return result;
     }
 
-    public Object getRawTransaction(String txid, Boolean verbose) throws IOException {
+    public Object getRawTransaction(Sha256Hash txid, Boolean verbose) throws IOException {
         List<Object> params = new ArrayList<>();
-        params.add(txid);
+        params.add(txid.toString());
         if (verbose != null) {
             params.add(verbose);
         }
@@ -184,7 +200,7 @@ public class BitcoinClient extends RPCClient {
 
     }
 
-    public Map<String, Object> getRawTransactionVerbose(String txid) throws IOException {
+    public Map<String, Object> getRawTransactionVerbose(Sha256Hash txid) throws IOException {
         List<Object> params = Arrays.asList((Object) txid, 1);
         Map<String, Object> response = send("getrawtransaction", params);
 
@@ -193,12 +209,12 @@ public class BitcoinClient extends RPCClient {
         return json;
     }
 
-    public BigDecimal getReceivedByAddress(String address) throws IOException {
+    public BigDecimal getReceivedByAddress(Address address) throws IOException {
         return getReceivedByAddress(address, 1);   // Default to 1 or more confirmations
     }
 
-    public BigDecimal getReceivedByAddress(String address, Integer minConf) throws IOException {
-        List<Object> params = Arrays.asList((Object) address, minConf);
+    public BigDecimal getReceivedByAddress(Address address, Integer minConf) throws IOException {
+        List<Object> params = Arrays.asList((Object) address.toString(), minConf);
         Map<String, Object> response = send("getreceivedbyaddress", params);
         BigDecimal balance = new BigDecimal((Double) response.get("result"));
         return balance;
@@ -257,39 +273,42 @@ public class BitcoinClient extends RPCClient {
         return balanceBTC;
     }
 
-    public String sendToAddress(String address, BigDecimal amount) throws IOException {
+    public Sha256Hash sendToAddress(Address address, BigDecimal amount) throws IOException {
         return sendToAddress(address, amount, "", "");
     }
 
-    public String sendToAddress(String address, BigDecimal amount, String comment, String commentTo) throws IOException {
-        List<Object> params = Arrays.asList((Object) address, amount, comment, commentTo);
+    public Sha256Hash sendToAddress(Address address, BigDecimal amount, String comment, String commentTo) throws IOException {
+        List<Object> params = Arrays.asList((Object) address.toString(), amount, comment, commentTo);
 
         Map<String, Object> response = send("sendtoaddress", params);
 
         String txid = (String) response.get("result");
-        return txid;
+        Sha256Hash hash = new Sha256Hash(txid);
+        return hash;
     }
 
-    public String sendFrom(String account, String address, BigDecimal amount) throws IOException {
-        List<Object> params = Arrays.asList((Object) account, address, amount);
+    public Sha256Hash sendFrom(String account, Address address, BigDecimal amount) throws IOException {
+        List<Object> params = Arrays.asList((Object) account, address.toString(), amount);
 
         Map<String, Object> response = send("sendfrom", params);
 
         String txid = (String) response.get("result");
-        return txid;
+        Sha256Hash hash = new Sha256Hash(txid);
+        return hash;
     }
 
-    public String sendMany(String account, Map<String, BigDecimal> amounts) throws IOException {
+    public Sha256Hash sendMany(String account, Map<Address, BigDecimal> amounts) throws IOException {
         List<Object> params = Arrays.asList(account, amounts);
 
         Map<String, Object> response = send("sendmany", params);
 
         String txid = (String) response.get("result");
-        return txid;
+        Sha256Hash hash = new Sha256Hash(txid);
+        return hash;
     }
 
-    public Map<String, Object> getTransaction(String txid) throws IOException {
-        List<Object> params = Arrays.asList((Object) txid);
+    public Map<String, Object> getTransaction(Sha256Hash txid) throws IOException {
+        List<Object> params = Arrays.asList((Object) txid.toString());
         Map<String, Object> response = send("gettransaction", params);
 
         @SuppressWarnings("unchecked")

@@ -45,7 +45,7 @@ class ExodusFundraiserSpec extends BaseRegTestSpec {
         startHeight = mpNetParams.firstExodusBlock - 1
     }
 
-    Should "Be at a block height before Exodus period starts"() {
+    Should "Be at a block height before Exodus crowdsale starts"() {
         expect:
         client.blockCount <= startHeight
 
@@ -53,7 +53,7 @@ class ExodusFundraiserSpec extends BaseRegTestSpec {
         0.0 == client.getReceivedByAddress(mpNetParams.exodusAddress)
     }
 
-    Should "Generate blocks to just before Exodus start"() {
+    Should "Generate blocks to just before Exodus crowdsale start"() {
 
         when: "we tell Master Core to mine enough blocks to bring us just before Exodus"
         def curHeight = client.blockCount

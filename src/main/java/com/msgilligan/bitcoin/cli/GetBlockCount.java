@@ -1,5 +1,8 @@
 package com.msgilligan.bitcoin.cli;
 
+import com.google.bitcoin.core.Address;
+import com.google.bitcoin.core.Sha256Hash;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -47,11 +50,11 @@ public class GetBlockCount extends CliCommand {
 
             client.setGenerate(true, blocksToGen);
             blockCount = client.getBlockCount();
-            String address1 = client.getNewAddress();
-            String address2 = client.getNewAddress();
+            Address address1 = client.getNewAddress();
+            Address address2 = client.getNewAddress();
             System.out.println("Address: " + address1);
             System.out.println("Address: " + address2);
-            String txid = client.sendToAddress(address2, BigDecimal.valueOf(1), "comment", "comment-to");
+            Sha256Hash txid = client.sendToAddress(address2, BigDecimal.valueOf(1), "comment", "comment-to");
             System.out.println("txid: " + txid);
             client.setGenerate(true, 6L);
             Map<String, Object> transaction = client.getTransaction(txid);

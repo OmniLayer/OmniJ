@@ -36,7 +36,7 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         // treated as invalid by the Master Core parser
 
         given: "a new, empty destination address"
-            def toAddress = getNewAddress()
+        def toAddress = getNewAddress()
 
         when: "the amount to transfer is zero"
             send_MP(richAddress, toAddress, MSC, 0)
@@ -57,7 +57,7 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         def toAddress = getNewAddress()
 
         when: "the sending address has zero coins in its available balance for the specified currency identifier"
-        send_MP(emptyAddress, toAddress, MSC, 1.0)
+        def txid = client.send_MP(emptyAddress, toAddress, MSC, 1.0)
 
         then: "exception is thrown"
         Exception e = thrown()
