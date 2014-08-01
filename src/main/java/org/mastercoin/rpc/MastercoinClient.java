@@ -49,4 +49,22 @@ public class MastercoinClient extends BitcoinClient {
         List<Object> balances = (List<Object>) response.get("result");
         return balances;
     }
+
+    public Map<String, Object> getTransactionMP(Sha256Hash txid) throws IOException {
+        List<Object> params = Arrays.asList((Object) txid.toString());
+        Map<String, Object> response = send("gettransaction_MP", params);
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> transaction = (Map<String, Object>) response.get("result");
+        return transaction;
+    }
+
+    public Sha256Hash sendToOwnersMP(Address fromAddress, CurrencyID currency, BigDecimal amount) throws IOException {
+        List<Object> params = Arrays.asList((Object) fromAddress.toString(), currency.intValue(), amount);
+        Map<String, Object> response = send("sendtoowners_MP", params);
+        String txid = (String) response.get("result");
+        Sha256Hash hash = new Sha256Hash(txid);
+        return hash;
+    }
+
 }
