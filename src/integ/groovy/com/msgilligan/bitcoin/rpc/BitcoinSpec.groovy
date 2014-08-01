@@ -23,7 +23,7 @@ class BitcoinSpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then: "the block height is 1 higher"
-        blockCount == startCount + 1
+        blockCount == startHeight + 1
 
     }
 
