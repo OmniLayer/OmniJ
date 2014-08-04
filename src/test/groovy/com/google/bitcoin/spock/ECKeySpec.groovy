@@ -4,6 +4,7 @@ import com.google.bitcoin.core.ECKey
 import com.google.bitcoin.params.MainNetParams
 import com.google.bitcoin.params.RegTestParams
 import com.google.bitcoin.params.TestNet3Params
+import org.spongycastle.util.encoders.Hex
 import spock.lang.Specification
 
 
@@ -11,6 +12,7 @@ class ECKeySpec extends Specification {
     static final mainNetParams = MainNetParams.get()
     static final testNetParams = TestNet3Params.get()
     static final regTestParams = RegTestParams.get()
+    final static BigInteger NotSoPrivatePrivateKey = new BigInteger(1, Hex.decode("180cb41c7c600be951b5d3d0a7334acc7506173875834f7a6c4c786a28fcbb19"));
 
     def "Generate a new, random valid Elliptic Curve Keypair"() {
         when: "We randomly generate a 256-bit private key and paired public key"
@@ -35,7 +37,13 @@ class ECKeySpec extends Specification {
     }
 
     def "Import a constant, publicly-known private key "() {
-        // TBD
+        when: "We import a constant, publicly known public key"
+        def key = new ECKey(NotSoPrivatePrivateKey)
+
+        then:
+        key.toString() == "pub:0401de173aa944eacf7e44e5073baca93fb34fe4b7897a1c82c92dfdc8a1f75ef58cd1b06e8052096980cb6e1ad6d3df143c34b3d7394bae2782a4df570554c2fb"
+        key.pubKey.encodeHex().toString() == "0401de173aa944eacf7e44e5073baca93fb34fe4b7897a1c82c92dfdc8a1f75ef58cd1b06e8052096980cb6e1ad6d3df143c34b3d7394bae2782a4df570554c2fb"
+        key.pubKey.encodeBase64().toString() == "BAHeFzqpROrPfkTlBzusqT+zT+S3iXocgskt/cih9171jNGwboBSCWmAy24a1tPfFDw0s9c5S64ngqTfVwVUwvs="
     }
 
     def "Use a key for signing and verifying messages"() {
