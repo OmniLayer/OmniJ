@@ -63,7 +63,7 @@ class WalletSendSpec extends BaseRegTestSpec {
 //        byte[] rawTx = client.getRawTransaction(txid, null)
 //        Transaction tx = new Transaction(params, rawTx)
         Integer lastHeight = wallet.getLastBlockSeenHeight()
-        client.setGenerate(true, 1)                             // Generate 1 block
+        client.generateBlock()
         while (wallet.lastBlockSeenHeight == lastHeight) {
             println "Waiting..."
             Thread.sleep(100)
@@ -80,13 +80,17 @@ class WalletSendSpec extends BaseRegTestSpec {
         def rpcAddress = getNewAddress()
         wallet.sendCoins(peerGroup,rpcAddress,BTC.btcToSatoshis(amount))
         Thread.sleep(100)            // Give BitcoinJ time to send Tx to bitcoind
-        generateBlocks(1)
+        generateBlocks(2)
 
         then: "the new address has a balance of amount"
         getReceivedByAddress(rpcAddress) == amount
+        wallet.getBalance() == BTC.btcToSatoshis(20.0) - BTC.btcToSatoshis(1.0) - Transaction.REFERENCE_DEFAULT_MIN_TX_FEE
     }
 
     def "create and send a transaction from BitcoinJ using wallet.completeTx"() {
+        given:
+        wallet.getBalance() == BTC.btcToSatoshis(20.0) - BTC.btcToSatoshis(1.0) - Transaction.REFERENCE_DEFAULT_MIN_TX_FEE
+
         when:
         BigDecimal amount = 1.0
         def rpcAddress = getNewAddress()
