@@ -6,17 +6,18 @@ package org.mastercoin.rpc
  * Time: 10:54 PM
  */
 trait MastercoinClientDelegate {
+    @Delegate
     MastercoinClient client
 
-    def methodMissing(String name, args) {
-        client."$name"(*args)
-    }
-
-    def propertyMissing(String name) {
-        client."$name"
-    }
-
-    def propertyMissing(String name, value) {
-        client."$name" = value
-    }
+//    def methodMissing(String name, args) {
+//        client."$name"(*args)
+//    }
+//
+//    def propertyMissing(String name) {
+//        client."$name"
+//    }
+//
+//    def propertyMissing(String name, value) {
+//        client."$name" = value
+//    }
 }

@@ -26,11 +26,11 @@ public class RPCClient {
     private ObjectMapper mapper;
     private long requestId;
 
-    public RPCClient(RPCConfig config) throws IOException {
+    public RPCClient(RPCConfig config) {
         this(config.getUrl(), config.getUsername(), config.getPassword());
     }
 
-    public RPCClient(URL server, final String rpcuser, final String rpcpassword) throws IOException {
+    public RPCClient(URL server, final String rpcuser, final String rpcpassword) {
         Authenticator.setDefault(new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(rpcuser, rpcpassword.toCharArray());

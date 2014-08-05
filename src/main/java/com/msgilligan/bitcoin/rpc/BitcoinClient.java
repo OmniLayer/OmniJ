@@ -24,7 +24,7 @@ public class BitcoinClient extends RPCClient {
 
     private static final Integer SECOND = 1000;
 
-    public BitcoinClient(URL server, String rpcuser, String rpcpassword) throws IOException {
+    public BitcoinClient(URL server, String rpcuser, String rpcpassword) {
         super(server, rpcuser, rpcpassword);
     }
 

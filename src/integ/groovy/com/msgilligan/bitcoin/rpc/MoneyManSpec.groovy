@@ -5,15 +5,11 @@ import com.google.bitcoin.core.Transaction
 import com.msgilligan.bitcoin.BTC
 import org.mastercoin.BaseRegTestSpec
 import org.mastercoin.MPRegTestParams
-import org.mastercoin.consensus.ConsensusComparison
-import org.mastercoin.consensus.ConsensusTool
 import org.mastercoin.consensus.MasterCoreConsensusTool
 import org.mastercoin.rpc.MastercoinClient
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise
-
-import java.security.SecureRandom
 
 import static org.mastercoin.CurrencyID.MSC
 import static org.mastercoin.CurrencyID.TMSC
@@ -23,38 +19,46 @@ class MoneyManSpec extends BaseRegTestSpec {
 
     final static BigDecimal sendAmount = 10.0
     final static BigDecimal extraAmount = 0.10
+    final static BigDecimal faucetBTC = 10.0
+    final static BigDecimal faucetMSC = 1000.0
     final static BigDecimal initalMSCPerBTC = 100.0
     final static BigDecimal simpleSendAmount = 1.0
-    final static BigDecimal stdTxFee = BTC.satoshisToBTC(Transaction.REFERENCE_DEFAULT_MIN_TX_FEE)
+
 
     @Shared
-    String accountname
+    String faucetAccount
 
     @Shared
-    Address wealthyAddress
+    Address faucetAddress
+
+    @Shared
+    def consensusTool
+
+    @Shared
+    def consensusComparison
+
 
     def setupSpec() {
-        // Create a new, unique address in a dedicated account
-        def random = new SecureRandom();
-        accountname = "msc-" + new BigInteger(130, random).toString(32)
-        wealthyAddress = getAccountAddress(accountname)
+        faucetAccount = createNewAccount()
+        faucetAddress = createFaucetAddress(faucetAccount, faucetBTC, faucetMSC)
+        consensusTool = new MasterCoreConsensusTool(client)
     }
 
+    @Ignore
     def "Send BTC to an address to get MSC and TMSC"() {
         when: "we create a new account for Mastercoins and send some BTC to it"
-        def txid = sendToAddress(wealthyAddress, 2*sendAmount + extraAmount)
+        def txid = sendToAddress(faucetAddress, sendAmount + extraAmount)
 
         and: "we generate a block"
-        generateBlocks(1)
+        generateBlock()
 
-        then: "we have the correct amount of BTC there"
-        getBalance(accountname) == 2*sendAmount + extraAmount
+        then: "we have the correct amount of BTC in faucetAddress's account"
+        getBalance(faucetAccount) == sendAmount + extraAmount
 
         when: "We send the BTC to the moneyManAddress and generate a block"
         def amounts = [(MPRegTestParams.MoneyManAddress): sendAmount,
-                       (MPRegTestParams.ExodusAddress): sendAmount,
-                       (wealthyAddress): extraAmount - stdTxFee ]
-        txid = sendMany(accountname, amounts)
+                       (faucetAddress): extraAmount - stdTxFee ]
+        txid = sendMany(faucetAccount, amounts)
         generateBlock()
         def tx = client.getTransaction(txid)
 //        def txmp = client.getTransactionMP(txid)
@@ -64,16 +68,24 @@ class MoneyManSpec extends BaseRegTestSpec {
 //        txmp.confirmations == 1
 
         and: "The balances for the account we just sent MSC to is correct"
-        getbalance_MP(wealthyAddress, MSC) == initalMSCPerBTC * sendAmount
-        getbalance_MP(wealthyAddress, TMSC) == initalMSCPerBTC * sendAmount
+//        getBalance(faucetAccount) == extraAmount - stdTxFee
+        getbalance_MP(faucetAddress, MSC) == initalMSCPerBTC * sendAmount
+        getbalance_MP(faucetAddress, TMSC) == initalMSCPerBTC * sendAmount
+    }
+
+    def "check Spec setup"() {
+        expect:
+        getBalance(faucetAccount) == faucetBTC
+        getbalance_MP(faucetAddress, MSC) == initalMSCPerBTC * sendAmount
+        getbalance_MP(faucetAddress, TMSC) == initalMSCPerBTC * sendAmount
     }
 
     def "Simple send MSC from one address to another" () {
 
         when: "we send MSC"
-        def senderBalance = getbalance_MP(wealthyAddress, MSC)
+        def senderBalance = getbalance_MP(faucetAddress, MSC)
         def toAddress = getNewAddress()
-        def txid = client.send_MP(wealthyAddress, toAddress, MSC, simpleSendAmount)
+        def txid = client.send_MP(faucetAddress, toAddress, MSC, simpleSendAmount)
         def tx = client.getTransaction(txid)
 
         then: "we got a non-zero transaction id"
@@ -82,7 +94,7 @@ class MoneyManSpec extends BaseRegTestSpec {
 
         when: "a block is generated"
         generateBlocks(1)
-        def newSenderBalance = client.getbalance_MP(wealthyAddress, MSC)
+        def newSenderBalance = client.getbalance_MP(faucetAddress, MSC)
         def receiverBalance = client.getbalance_MP(toAddress, MSC)
 //        def tx = client.getTransaction(txid)
 
@@ -94,15 +106,46 @@ class MoneyManSpec extends BaseRegTestSpec {
         newSenderBalance == senderBalance - simpleSendAmount
     }
 
-    @Ignore
-    def "Be able to send to owners"() {
-        when: "We Send to Owners"
-        def senderBalance = getbalance_MP(wealthyAddress, MSC)
-        sendToOwnersMP(wealthyAddress, MSC, 500.00)
+    def "Send MSC back to same adddress" () {
 
-        then: "Our balance is a little lower since we're not getting back all coins we sent"
-        getbalance_MP(wealthyAddress, MSC) < senderBalance
+        when: "we send MSC"
+        def wealthyBalance = getbalance_MP(faucetAddress, MSC)
+        def txid = send_MP(faucetAddress, faucetAddress, MSC, 10.12345678)
+
+        then: "we got a non-zero transaction id"
+        txid != MastercoinClient.zeroHash
+
+        when: "a block is generated"
+        generateBlock()
+        def newWealthyBalance = getbalance_MP(faucetAddress, MSC)
+
+        then: "balance is unchanged"
+        newWealthyBalance == wealthyBalance
     }
 
+    def "Be able to send to owners"() {
+        when: "We Send to Owners"
+        def senderBalance = getbalance_MP(faucetAddress, TMSC)
+//        ConsensusSnapshot snap1 = consensusTool.getConsensusSnapshot(TMSC)
+        def txid = sendToOwnersMP(faucetAddress, TMSC, 100.00)
+        generateBlock()
+        def tx = client.getTransaction(txid)
+        def balances = getallbalancesforid_MP(TMSC)
+        def numberDest = balances.size() - 1
+        def sendToOwnersFee = numberDest * 0.00000001
+//        ConsensusSnapshot snap2 = consensusTool.getConsensusSnapshot(TMSC)
+//        consensusComparison = new ConsensusComparison(snap1, snap2)
 
+        then: "Our balance is a little lower since we're not getting back all coins we sent"
+        getbalance_MP(faucetAddress, TMSC) == senderBalance - 100.0 - sendToOwnersFee
+    }
+
+//    @Unroll
+//    def "#address #entry1 == #entry2"() {
+//        expect:
+//        entry1 == entry2
+//
+//        where:
+//        [address, entry1, entry2] << consensusComparison
+//    }
 }

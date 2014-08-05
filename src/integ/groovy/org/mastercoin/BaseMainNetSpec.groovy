@@ -3,6 +3,7 @@ package org.mastercoin
 import com.msgilligan.bitcoin.rpc.RPCURL
 import org.mastercoin.rpc.MastercoinClient
 import groovy.json.JsonSlurper
+import org.mastercoin.rpc.MastercoinClientDelegate
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -11,16 +12,19 @@ import spock.lang.Specification
  * Date: 7/20/14
  * Time: 12:53 AM
  */
-abstract class BaseMainNetSpec extends Specification {
+abstract class BaseMainNetSpec extends Specification implements MastercoinClientDelegate {
+    {
+        client = new MastercoinClient(RPCURL.defaultMainNetURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
+    }
 //abstract class BaseMainNetSpec extends Specification  {
     static final String rpcuser = "bitcoinrpc"
     static final String rpcpassword = "pass"
 
-    @Shared
-    MastercoinClient client;
+//    @Shared
+//    MastercoinClient client;
 
     void setupSpec() {
-        client = new MastercoinClient(RPCURL.defaultMainNetURL, rpcuser, rpcpassword)
+//        client = new MastercoinClient(RPCURL.defaultMainNetURL, rpcuser, rpcpassword)
         System.err.println("Waiting for server...")
         Boolean available = client.waitForServer(3*60*60)   // Wait up to 3 hours
         if (!available) {
@@ -41,16 +45,16 @@ abstract class BaseMainNetSpec extends Specification {
         }
     }
 
-    def methodMissing(String name, args) {
-        client."$name"(*args)
-    }
-
-    def propertyMissing(String name) {
-        client."$name"
-    }
-
-    def propertyMissing(String name, value) {
-        client."$name" = value
-    }
+//    def methodMissing(String name, args) {
+//        client."$name"(*args)
+//    }
+//
+//    def propertyMissing(String name) {
+//        client."$name"
+//    }
+//
+//    def propertyMissing(String name, value) {
+//        client."$name" = value
+//    }
 
 }

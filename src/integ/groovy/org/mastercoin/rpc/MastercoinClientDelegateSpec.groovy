@@ -11,17 +11,20 @@ import spock.lang.Specification
  * Date: 7/24/14
  * Time: 8:16 AM
  */
-@Ignore
 class MastercoinClientDelegateSpec extends Specification implements MastercoinClientDelegate {
 
-    void setupSpec() {
-        this.setClient(new MastercoinClient(RPCURL.defaultMainNetURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword))
-        assert client != null
+    {
+        client = new MastercoinClient(RPCURL.defaultRegTestURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
     }
+
+//    void setupSpec() {
+//        this.setClient(new MastercoinClient(RPCURL.defaultMainNetURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword))
+//        assert client != null
+//    }
 
     def "get block count"() {
         expect:
-        this.getClient() != null
-        client.getBlockCount() > 0
+        client != null
+        blockCount > 0
     }
 }
