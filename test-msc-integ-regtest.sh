@@ -26,9 +26,6 @@ ln -sf $MSCLOG logs/mastercore.log
 # remove all regtest data
 rm -rf $DATADIR/regtest
 
-# remove persistence files since 
-rm -rf $DATADIR/MP_{persist,spinfo,txlist}
-
 # Run Bitcoin in regtest mode
 $BTCD -server -regtest -datadir=$DATADIR -debug > logs/bitcoin.log &
 BTCSTATUS=$?
