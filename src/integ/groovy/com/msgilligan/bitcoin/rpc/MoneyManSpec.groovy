@@ -133,11 +133,12 @@ class MoneyManSpec extends BaseRegTestSpec {
         def balances = getallbalancesforid_MP(TMSC)
         def numberDest = balances.size() - 1
         def sendToOwnersFee = numberDest * 0.00000001
+        def expectedBalance = (numberDest == 0) ? senderBalance : senderBalance - 100.0 - sendToOwnersFee
 //        ConsensusSnapshot snap2 = consensusTool.getConsensusSnapshot(TMSC)
 //        consensusComparison = new ConsensusComparison(snap1, snap2)
 
         then: "Our balance is a little lower since we're not getting back all coins we sent"
-        getbalance_MP(faucetAddress, TMSC) == senderBalance - 100.0 - sendToOwnersFee
+        getbalance_MP(faucetAddress, TMSC) == expectedBalance
     }
 
 //    @Unroll
