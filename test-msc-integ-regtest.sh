@@ -10,7 +10,7 @@ BTCD=copied-artifacts/src/bitcoind
 DATADIR=$HOME/.bitcoin
 MSCLOG=/tmp/mastercore.log
 
-# Assume bitcoind built elsewhere and coied by Jenkins Copy Artifact plugin
+# Assume bitcoind built elsewhere and copied by Jenkins Copy Artifact plugin
 chmod +x $BTCD
 
 # Set up bitcoin conf and data dir
@@ -22,6 +22,9 @@ mkdir -p logs
 #rm -f $MSCLOG 
 touch $MSCLOG
 ln -sf $MSCLOG logs/mastercore.log
+
+# remove all regtest data
+rm -rf $DATADIR/regtest
 
 # remove persistence files since 
 rm -rf $DATADIR/MP_{persist,spinfo,txlist}
@@ -36,7 +39,7 @@ sleep 30
 
 # Run integration tests
 echo "Running integration tests in regtest mode..."
-./gradlew integrationTest --tests com.msgilligan.*
+./gradlew integrationTest --tests com.msgilligan.rpc.*
 GRADLESTATUS=$?
 
 exit $GRADLESTATUS
