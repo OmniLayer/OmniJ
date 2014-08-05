@@ -1,6 +1,5 @@
-package org.mastercoin.exodus
+package org.mastercoin.test.exodus
 
-import org.mastercoin.BaseMainNetSpec
 import org.mastercoin.BaseRegTestSpec
 import spock.lang.Ignore
 

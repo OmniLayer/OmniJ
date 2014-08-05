@@ -1,7 +1,9 @@
-package org.mastercoin.rpc
+package org.mastercoin.test.test
 
 import com.msgilligan.bitcoin.rpc.RPCURL
 import org.mastercoin.BaseMainNetSpec
+import org.mastercoin.rpc.MastercoinClient
+import org.mastercoin.rpc.MastercoinClientDelegate
 import spock.lang.Ignore
 import spock.lang.Specification
 

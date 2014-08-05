@@ -1,7 +1,10 @@
-package org.mastercoin.consensus
+package org.mastercoin.test.consensus
 
 import org.mastercoin.BaseMainNetSpec
 import org.mastercoin.CurrencyID
+import org.mastercoin.consensus.ConsensusComparison
+import org.mastercoin.consensus.MasterCoreConsensusTool
+import org.mastercoin.consensus.OmniwalletConsensusTool
 import spock.lang.Shared
 import spock.lang.Unroll
 

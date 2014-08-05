@@ -1,8 +1,6 @@
-package com.msgilligan.bitcoin.rpc
+package org.mastercoin.test.rpc
 
 import com.google.bitcoin.core.Address
-import com.google.bitcoin.core.Transaction
-import com.msgilligan.bitcoin.BTC
 import org.mastercoin.BaseRegTestSpec
 import org.mastercoin.MPRegTestParams
 import org.mastercoin.consensus.MasterCoreConsensusTool

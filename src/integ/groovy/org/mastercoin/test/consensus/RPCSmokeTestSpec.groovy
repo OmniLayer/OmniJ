@@ -1,4 +1,4 @@
-package org.mastercoin.rpc
+package org.mastercoin.test.consensus
 
 import groovy.json.JsonSlurper
 import org.mastercoin.BaseMainNetSpec

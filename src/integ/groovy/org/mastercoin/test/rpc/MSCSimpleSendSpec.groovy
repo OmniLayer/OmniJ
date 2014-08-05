@@ -1,9 +1,7 @@
-package com.msgilligan.bitcoin.rpc
+package org.mastercoin.test.rpc
 
 import com.google.bitcoin.core.Address
 import org.mastercoin.BaseRegTestSpec
-import org.mastercoin.consensus.MasterCoreConsensusTool
-import spock.lang.Ignore
 import spock.lang.Shared
 
 import static org.mastercoin.CurrencyID.*

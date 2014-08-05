@@ -1,4 +1,6 @@
-package org.mastercoin.consensus
+package org.mastercoin.test.consensus
+
+import org.mastercoin.consensus.OmniwalletConsensusTool
 
 import static org.mastercoin.CurrencyID.*
 import spock.lang.Specification

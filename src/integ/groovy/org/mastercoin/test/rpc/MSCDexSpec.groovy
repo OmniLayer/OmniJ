@@ -1,7 +1,6 @@
-package com.msgilligan.bitcoin.rpc
+package org.mastercoin.test.rpc
 
 import org.mastercoin.BaseRegTestSpec
-import spock.lang.Ignore
 
 /**
  * User: sean

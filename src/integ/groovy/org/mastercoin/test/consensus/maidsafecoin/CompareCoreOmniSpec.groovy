@@ -1,7 +1,7 @@
-package org.mastercoin.consensus.maidsafecoin
+package org.mastercoin.test.consensus.maidsafecoin
 
 import static org.mastercoin.CurrencyID.*
-import org.mastercoin.consensus.BaseConsensusSpec
+import org.mastercoin.test.consensus.BaseConsensusSpec
 
 /**
  * User: sean

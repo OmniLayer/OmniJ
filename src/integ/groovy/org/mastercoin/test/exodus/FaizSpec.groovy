@@ -1,9 +1,6 @@
-package org.mastercoin.exodus
+package org.mastercoin.test.exodus
 
-import com.msgilligan.bitcoin.rpc.RPCURL
 import org.mastercoin.BaseRegTestSpec
-import org.mastercoin.CurrencyID
-import org.mastercoin.MPNetworkParameters
 import org.mastercoin.MPRegTestParams
 import org.mastercoin.consensus.ConsensusComparison
 import org.mastercoin.consensus.ConsensusEntry
@@ -12,7 +9,6 @@ import org.mastercoin.consensus.ConsensusTool
 import org.mastercoin.consensus.MasterCoreConsensusTool
 import spock.lang.Ignore
 import spock.lang.Shared
-import spock.lang.Stepwise
 import spock.lang.Unroll
 
 import static org.mastercoin.CurrencyID.*

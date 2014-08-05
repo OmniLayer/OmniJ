@@ -1,4 +1,4 @@
-package com.msgilligan.bitcoin.rpc
+package org.mastercoin.test.rpc
 
 /**
  * User: sean

@@ -1,9 +1,9 @@
-package com.msgilligan.bitcoin.rpc
+package org.mastercoin.test.rpc
 
 import org.mastercoin.BaseRegTestSpec
 
 import static org.mastercoin.CurrencyID.*
-import spock.lang.Shared
+
 import java.lang.Void as Should
 
 class MSCConsensusSpec extends BaseRegTestSpec {

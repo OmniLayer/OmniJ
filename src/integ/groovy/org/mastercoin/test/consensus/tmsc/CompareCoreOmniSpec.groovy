@@ -1,9 +1,9 @@
-package org.mastercoin.consensus.tmsc
+package org.mastercoin.test.consensus.tmsc
 
 import spock.lang.Ignore
 
 import static org.mastercoin.CurrencyID.*
-import org.mastercoin.consensus.BaseConsensusSpec
+import org.mastercoin.test.consensus.BaseConsensusSpec
 
 /**
  * User: sean
