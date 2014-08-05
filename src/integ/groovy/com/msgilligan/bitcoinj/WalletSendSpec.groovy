@@ -18,8 +18,6 @@ import org.mastercoin.BaseRegTestSpec
 import spock.lang.Shared
 import spock.lang.Stepwise
 
-import java.lang.Void as Should
-
 /**
  * User: sean
  * Date: 7/15/14
@@ -58,7 +56,7 @@ class WalletSendSpec extends BaseRegTestSpec {
         peerGroup.startAndWait()
     }
 
-    Should "Send mined coins to fund a new BitcoinJ wallet"() {
+    def "Send mined coins to fund a new BitcoinJ wallet"() {
         when: "we send coins to the wallet and write a block"
         BigDecimal amount = 20.0
         String txid = client.sendToAddress(walletAddr, amount, "fund BitcoinJ wallet", "first BitcoinJ wallet addr")
@@ -76,7 +74,7 @@ class WalletSendSpec extends BaseRegTestSpec {
         wallet.balance == BTC.btcToSatoshis(amount)
     }
 
-    Should "Send from BitcoinJ wallet to the Bitcoind/Mastercore wallet"() {
+    def "Send from BitcoinJ wallet to the Bitcoind/Mastercore wallet"() {
         when: "we send coins from BitcoinJ and write a block"
         BigDecimal amount = 1.0
         def rpcAddress = getNewAddress()
@@ -88,7 +86,7 @@ class WalletSendSpec extends BaseRegTestSpec {
         getReceivedByAddress(rpcAddress) == amount
     }
 
-    Should "create and send a transaction from BitcoinJ using wallet.completeTx"() {
+    def "create and send a transaction from BitcoinJ using wallet.completeTx"() {
         when:
         BigDecimal amount = 1.0
         def rpcAddress = getNewAddress()
