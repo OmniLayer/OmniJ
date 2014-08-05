@@ -92,6 +92,26 @@ task integrationTest(type: Test) {
     testLogging.showStandardStreams = true
 }
 
+task regTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+    testLogging.showStandardStreams = true
+
+    systemProperty 'regtest', true
+    include 'org/mastercoin/test/rpc/**', 'com/msgilligan/bitcoin/rpc/**', 'com/msgilligan/bitcoinj/**'
+}
+
+task consensusTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+    testLogging.showStandardStreams = true
+
+    systemProperty 'regtest', false
+    include 'org/mastercoin/test/consensus/**'
+}
+
 def currencyID = 1
 
 task getMasterConsensus(dependsOn: 'classes',  type: JavaExec) {
