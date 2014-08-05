@@ -19,6 +19,25 @@ trait TestSupport implements MastercoinClientDelegate {
         return accountName
     }
 
+    Address createFaucetAddress(String account, BigDecimal requestedBTC) {
+        while (getBalance() < requestedBTC) {
+            generateBlock()
+        }
+        // Create a BTC address to hold the requested BTC
+        Address address = getAccountAddress(account)
+        // and send it BTC
+        Sha256Hash txid = sendToAddress(address, requestedBTC)
+        generateBlock()
+        def tx = getTransaction(txid)
+        assert tx.confirmations == 1
+
+        // Make sure we got the correct amount of BTC
+        BigDecimal btcBalance = getBalance(account)
+        assert btcBalance == requestedBTC
+
+        return address
+    }
+
     Address createFaucetAddress(String account, BigDecimal requestedBTC, BigDecimal requestedMSC) {
         def btcForMSC = requestedMSC / 100
         def startBTC = requestedBTC + btcForMSC + stdTxFee
