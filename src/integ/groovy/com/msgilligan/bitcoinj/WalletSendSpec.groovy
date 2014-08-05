@@ -79,7 +79,7 @@ class WalletSendSpec extends BaseRegTestSpec {
         BigDecimal amount = 1.0
         def rpcAddress = getNewAddress()
         wallet.sendCoins(peerGroup,rpcAddress,BTC.btcToSatoshis(amount))
-        Thread.sleep(100)            // Give BitcoinJ time to send Tx to bitcoind
+        Thread.sleep(400)            // Give BitcoinJ time to send Tx to bitcoind
         generateBlocks(2)
 
         then: "the new address has a balance of amount"
