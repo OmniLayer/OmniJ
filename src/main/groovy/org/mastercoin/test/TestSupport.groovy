@@ -3,7 +3,9 @@ package org.mastercoin.test
 import com.google.bitcoin.core.Address
 import com.google.bitcoin.core.Sha256Hash
 import com.google.bitcoin.core.Transaction
+import com.google.bitcoin.params.RegTestParams
 import com.msgilligan.bitcoin.BTC
+import org.mastercoin.MPNetworkParameters
 import org.mastercoin.MPRegTestParams
 import org.mastercoin.rpc.MastercoinClientDelegate
 import static org.mastercoin.CurrencyID.*
@@ -39,6 +41,7 @@ trait TestSupport implements MastercoinClientDelegate {
     }
 
     Address createFaucetAddress(String account, BigDecimal requestedBTC, BigDecimal requestedMSC) {
+        final MPNetworkParameters params = MPRegTestParams.get()  // Hardcoded for RegTest for now
         def btcForMSC = requestedMSC / 100
         def startBTC = requestedBTC + btcForMSC + stdTxFee
 
@@ -61,7 +64,7 @@ trait TestSupport implements MastercoinClientDelegate {
         assert btcBalance == startBTC
 
         // Send BTC to get MSC (and TMSC)
-        def amounts = [(MPRegTestParams.MoneyManAddress): btcForMSC,
+        def amounts = [(params.moneyManAddress): btcForMSC,
                        (address): startBTC - btcForMSC ]
         txid = sendMany(account, amounts)
 
