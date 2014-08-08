@@ -8,6 +8,9 @@ import org.mastercoin.CurrencyID;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +23,17 @@ import java.util.Map;
 public class MastercoinClient extends BitcoinClient {
 
     public static Sha256Hash zeroHash = new Sha256Hash("0000000000000000000000000000000000000000000000000000000000000000");
+    private DecimalFormat jsonDecimalFormat;
 
     public MastercoinClient(URL server, String rpcuser, String rpcpassword) throws IOException {
         super(server, rpcuser, rpcpassword);
+        // Create a DecimalFormat that fits our requirements
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator(',');
+        symbols.setDecimalSeparator('.');
+        String pattern = "#,##0.0#";
+        jsonDecimalFormat = new DecimalFormat(pattern, symbols);
+        jsonDecimalFormat.setParseBigDecimal(true);
     }
 
     public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount) throws IOException {
@@ -33,12 +44,19 @@ public class MastercoinClient extends BitcoinClient {
         return hash;
     }
 
-    public BigDecimal getbalance_MP(Address address, CurrencyID currency) throws IOException {
+    public BigDecimal getbalance_MP(Address address, CurrencyID currency) throws IOException, ParseException {
+        boolean expectString = true;
         List<Object> params = Arrays.asList((Object) address.toString(), currency.intValue());
         Map<String, Object> response = send("getbalance_MP", params);
-        Double balanceBTCd = (Double) response.get("result");
-        // Beware of the new BigDecimal(double d) constructor, it results in unexpected/undesired values.
-        BigDecimal balanceBTC = BigDecimal.valueOf(balanceBTCd);
+        BigDecimal balanceBTC;
+        if (expectString) {
+            String balanceBTCd = (String) response.get("result");
+            balanceBTC = (BigDecimal) jsonDecimalFormat.parse(balanceBTCd);
+        } else {
+            Double balanceBTCd = (Double) response.get("result");
+            // Beware of the new BigDecimal(double d) constructor, it results in unexpected/undesired values.
+            balanceBTC = BigDecimal.valueOf(balanceBTCd);
+        }
         return balanceBTC;
     }
 

@@ -7,7 +7,6 @@ import com.google.bitcoin.core.Sha256Hash;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class BitcoinClient extends RPCClient {
     }
 
     public BitcoinClient(RPCConfig config) throws IOException {
-        super(config);
+        this(config.getUrl(), config.getUsername(), config.getPassword());
     }
 
     /**
