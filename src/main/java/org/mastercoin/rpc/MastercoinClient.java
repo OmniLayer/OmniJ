@@ -23,7 +23,7 @@ import java.util.Map;
 public class MastercoinClient extends BitcoinClient {
 
     public static Sha256Hash zeroHash = new Sha256Hash("0000000000000000000000000000000000000000000000000000000000000000");
-    private DecimalFormat jsonDecimalFormat;
+    public DecimalFormat jsonDecimalFormat;
 
     public MastercoinClient(URL server, String rpcuser, String rpcpassword) throws IOException {
         super(server, rpcuser, rpcpassword);

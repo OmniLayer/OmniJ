@@ -55,7 +55,7 @@ class MasterCoreConsensusTool extends ConsensusTool {
 
     /* We're expecting input type Double here */
     private BigDecimal jsonToBigDecimal(Object balanceIn) {
-        BigDecimal balanceOut = new BigDecimal(Double.toString(balanceIn)).setScale(12)
+        BigDecimal balanceOut = new BigDecimal(client.jsonDecimalFormat.parse(balanceIn)).setScale(12)
         return balanceOut
     }
 
