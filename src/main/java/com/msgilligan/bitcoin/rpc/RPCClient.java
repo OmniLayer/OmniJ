@@ -85,11 +85,13 @@ public class RPCClient {
 
     public Map<String, Object> send(String method, List<Object> params) throws IOException {
         Map<String, Object> request = new HashMap<String, Object>();
-        params.removeAll(Collections.singleton(null));  // Remove null entries (should only be at end)
         request.put("jsonrpc", "1.0");
         request.put("method", method);
         request.put("id", Long.toString(requestId));
 
+        if (params != null) {
+            params.removeAll(Collections.singleton(null));  // Remove null entries (should only be at end)
+        }
         request.put("params", params);
 
         Map<String, Object> response = send(request);
