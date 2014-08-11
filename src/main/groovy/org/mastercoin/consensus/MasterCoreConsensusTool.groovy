@@ -44,17 +44,8 @@ class MasterCoreConsensusTool extends ConsensusTool {
     }
 
     private ConsensusEntry itemToEntry(MPBalanceEntry item) {
-//        BigDecimal balance = jsonToBigDecimal(item.balance)
-//        BigDecimal reservedByOffer = jsonToBigDecimal(item.reservedbyoffer)
-//        BigDecimal reservedByAccept = item.reservedbyaccept ? jsonToBigDecimal(item.reservedbyaccept) : new BigDecimal("0")
-        BigDecimal reserved = item.reservedByOffer + item.reservedByAccept
+        BigDecimal reserved = item.reservedByOffer + (item.reservedByAccept ?: 0)
         return new ConsensusEntry(balance: item.balance, reserved:reserved)
-    }
-
-    /* We're expecting input type Double here */
-    private BigDecimal jsonToBigDecimal(Object balanceIn) {
-        BigDecimal balanceOut = new BigDecimal(client.jsonDecimalFormat.parse(balanceIn)).setScale(12)
-        return balanceOut
     }
 
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {

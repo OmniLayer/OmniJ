@@ -25,7 +25,7 @@ import java.util.Map;
 public class MastercoinClient extends BitcoinClient {
 
     public static Sha256Hash zeroHash = new Sha256Hash("0000000000000000000000000000000000000000000000000000000000000000");
-    public DecimalFormat jsonDecimalFormat;
+    private DecimalFormat jsonDecimalFormat;
 
     public MastercoinClient(URL server, String rpcuser, String rpcpassword) throws IOException {
         super(server, rpcuser, rpcpassword);
@@ -76,18 +76,17 @@ public class MastercoinClient extends BitcoinClient {
             Address address = new Address(null, addressString);
             Object balanceJson = map.get("balance");
             Object reservedByOfferJson = map.get("reservedbyoffer");
-//            Object reservedByAcceptJson = map.get("reservedByAccept");
+            Object reservedByAcceptJson = map.get("reservedByAccept");
+            /* Assume that if balanceJson field is of type Integer, all three are */
             if (balanceJson instanceof Integer) {
                 balance = new BigDecimal((Integer) balanceJson);
                 reservedByOffer = new BigDecimal((Integer) reservedByOfferJson);
-                reservedByAccept = new BigDecimal(0);
-//                reservedByAccept = new BigDecimal((Integer) reservedByAcceptJson);
+                reservedByAccept = (reservedByAcceptJson != null) ? new BigDecimal((Integer) reservedByAcceptJson) : null;
 
             } else {
                 balance = (BigDecimal) jsonDecimalFormat.parse((String) balanceJson);
                 reservedByOffer = (BigDecimal) jsonDecimalFormat.parse((String) reservedByOfferJson);
-                reservedByAccept = new BigDecimal(0);
-//                reservedByAccept = (BigDecimal) jsonDecimalFormat.parse((String) reservedByAcceptJson);
+                reservedByAccept = (reservedByAcceptJson != null) ? (BigDecimal) jsonDecimalFormat.parse((String) reservedByAcceptJson) : null;
             }
             MPBalanceEntry balanceEntry = new MPBalanceEntry(address, balance, reservedByOffer, reservedByAccept);
             balances.add(balanceEntry);
