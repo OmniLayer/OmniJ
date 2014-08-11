@@ -2,6 +2,7 @@ package org.mastercoin.consensus
 
 import com.msgilligan.bitcoin.rpc.RPCURL
 import org.mastercoin.CurrencyID
+import org.mastercoin.rpc.MPBalanceEntry
 import org.mastercoin.rpc.MastercoinClient
 
 /**
@@ -14,26 +15,23 @@ class MasterCoreConsensusTool extends ConsensusTool {
     static def rpcpassword = "pass"
     protected MastercoinClient client
 
-    MasterCoreConsensusTool() {
-        client = new MastercoinClient(RPCURL.defaultMainNetURL, rpcuser, rpcpassword)
-    }
-
     MasterCoreConsensusTool(MastercoinClient client)
     {
         this.client = client
     }
 
     public static void main(String[] args) {
-        MasterCoreConsensusTool tool = new MasterCoreConsensusTool()
+        MastercoinClient client = new MastercoinClient(RPCURL.defaultMainNetURL, rpcuser, rpcpassword)
+        MasterCoreConsensusTool tool = new MasterCoreConsensusTool(client)
         tool.run(args.toList())
     }
 
     private SortedMap<String, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
-        List<Object> balances = client.getallbalancesforid_MP(currencyID)
+        List<MPBalanceEntry> balances = client.getallbalancesforid_MP(currencyID)
 
         TreeMap<String, ConsensusEntry> map = [:]
 
-        balances.each { Object item ->
+        balances.each { MPBalanceEntry item ->
 
             String address = item.address
             ConsensusEntry entry = itemToEntry(item)
@@ -45,12 +43,12 @@ class MasterCoreConsensusTool extends ConsensusTool {
         return map;
     }
 
-    private ConsensusEntry itemToEntry(Object item) {
-        BigDecimal balance = jsonToBigDecimal(item.balance)
-        BigDecimal reservedByOffer = jsonToBigDecimal(item.reservedbyoffer)
-        BigDecimal reservedByAccept = item.reservedbyaccept ? jsonToBigDecimal(item.reservedbyaccept) : new BigDecimal("0")
-        BigDecimal reserved = reservedByOffer + reservedByAccept
-        return new ConsensusEntry(balance: balance, reserved:reserved)
+    private ConsensusEntry itemToEntry(MPBalanceEntry item) {
+//        BigDecimal balance = jsonToBigDecimal(item.balance)
+//        BigDecimal reservedByOffer = jsonToBigDecimal(item.reservedbyoffer)
+//        BigDecimal reservedByAccept = item.reservedbyaccept ? jsonToBigDecimal(item.reservedbyaccept) : new BigDecimal("0")
+        BigDecimal reserved = item.reservedByOffer + item.reservedByAccept
+        return new ConsensusEntry(balance: item.balance, reserved:reserved)
     }
 
     /* We're expecting input type Double here */

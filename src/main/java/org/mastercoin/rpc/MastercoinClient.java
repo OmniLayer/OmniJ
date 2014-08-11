@@ -1,6 +1,7 @@
 package org.mastercoin.rpc;
 
 import com.google.bitcoin.core.Address;
+import com.google.bitcoin.core.AddressFormatException;
 import com.google.bitcoin.core.Sha256Hash;
 import com.msgilligan.bitcoin.rpc.BitcoinClient;
 import org.mastercoin.CurrencyID;
@@ -11,6 +12,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -60,11 +62,36 @@ public class MastercoinClient extends BitcoinClient {
         return balanceBTC;
     }
 
-    public List<Object> getallbalancesforid_MP(CurrencyID currency) throws IOException {
+    public List<MPBalanceEntry> getallbalancesforid_MP(CurrencyID currency) throws IOException, ParseException, AddressFormatException {
         List<Object> params = Arrays.asList((Object) currency.intValue());
         Map<String, Object> response = send("getallbalancesforid_MP", params);
         @SuppressWarnings("unchecked")
-        List<Object> balances = (List<Object>) response.get("result");
+        List<Map<String, Object>> untypedBalances = (List<Map<String, Object>>) response.get("result");
+        List<MPBalanceEntry> balances = new ArrayList<>(untypedBalances.size());
+        for (Map map : untypedBalances) {
+            BigDecimal balance;
+            BigDecimal reservedByOffer;
+            BigDecimal reservedByAccept;
+            String addressString = (String) map.get("address");
+            Address address = new Address(null, addressString);
+            Object balanceJson = map.get("balance");
+            Object reservedByOfferJson = map.get("reservedbyoffer");
+//            Object reservedByAcceptJson = map.get("reservedByAccept");
+            if (balanceJson instanceof Integer) {
+                balance = new BigDecimal((Integer) balanceJson);
+                reservedByOffer = new BigDecimal((Integer) reservedByOfferJson);
+                reservedByAccept = new BigDecimal(0);
+//                reservedByAccept = new BigDecimal((Integer) reservedByAcceptJson);
+
+            } else {
+                balance = (BigDecimal) jsonDecimalFormat.parse((String) balanceJson);
+                reservedByOffer = (BigDecimal) jsonDecimalFormat.parse((String) reservedByOfferJson);
+                reservedByAccept = new BigDecimal(0);
+//                reservedByAccept = (BigDecimal) jsonDecimalFormat.parse((String) reservedByAcceptJson);
+            }
+            MPBalanceEntry balanceEntry = new MPBalanceEntry(address, balance, reservedByOffer, reservedByAccept);
+            balances.add(balanceEntry);
+        }
         return balances;
     }
 
