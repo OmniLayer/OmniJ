@@ -18,13 +18,18 @@ abstract class  BaseConsensusSpec extends BaseMainNetSpec {
     ConsensusComparison comparison
 
     void setupComparisonForCurrency(CurrencyID id) {
-        def mscFetcher = new MasterCoreConsensusTool()
+        def mscFetcher = new MasterCoreConsensusTool(client)
         def mscSnapshot = mscFetcher.getConsensusSnapshot(id)
 
         def omniFetcher = new OmniwalletConsensusTool()
         def omniSnapshot = omniFetcher.getConsensusSnapshot(id)
 
         comparison = new ConsensusComparison(mscSnapshot, omniSnapshot)
+    }
+
+    def "block height is the same in both snapshots"() {
+        expect:
+        comparison.c1.blockHeight == comparison.c2.blockHeight
     }
 
     @Unroll

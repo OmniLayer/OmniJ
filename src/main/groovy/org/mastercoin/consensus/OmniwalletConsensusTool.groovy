@@ -13,6 +13,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
     static def host = "www.omniwallet.org"
     static def port = 443
     static def file = "/v1/mastercoin_verify/addresses"
+    static def revisionFile = "/v1/system/revision.json"
 
     OmniwalletConsensusTool() {
     }
@@ -22,11 +23,8 @@ class OmniwalletConsensusTool extends ConsensusTool {
         tool.run(args.toList())
     }
 
-    private SortedMap<String, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
+    private SortedMap<String, ConsensusEntry> getConsensusForCurrency(URL consensusURL) {
         def slurper = new JsonSlurper()
-//        def balancesText =  consensusURL.getText()
-        String httpFile = "${file}?currency_id=${currencyID as Integer}"
-        def consensusURL = new URL(proto, host, port, httpFile)
         def balances = slurper.parse(consensusURL)
 
         TreeMap<String, ConsensusEntry> map = [:]
@@ -55,16 +53,40 @@ class OmniwalletConsensusTool extends ConsensusTool {
         return balanceOut
     }
 
+    private Integer currentBlockHeight() {
+        def revisionURL = new URL(proto, host, port, revisionFile)
+        def slurper = new JsonSlurper()
+        def revisionInfo = slurper.parse(revisionURL)
+        return revisionInfo.last_block
+    }
+
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
         String httpFile = "${file}?currency_id=${currencyID as Integer}"
         def consensusURL = new URL(proto, host, port, httpFile)
 
         def snap = new ConsensusSnapshot();
         snap.currencyID = currencyID
-        snap.blockHeight = -1
         snap.sourceType = "Omniwallet (Master tools)"
         snap.sourceURL = consensusURL
-        snap.entries = this.getConsensusForCurrency(currencyID)
+
+        /* Since getallbalancesforid_MP doesn't return the blockHeight, we have to check
+         * blockHeight before and after the call to make sure it didn't change.
+         *
+         * Note: Omni blockheight lags behind Blockchain.info and Master Core and this
+         * loop does not resolve that issue, it only makes sure the reported block height
+         * matches the data returned.
+         */
+        Integer beforeBlockHeight = currentBlockHeight()
+        while (true) {
+            snap.entries = this.getConsensusForCurrency(consensusURL)
+            snap.blockHeight = currentBlockHeight()
+            if (snap.blockHeight == beforeBlockHeight) {
+                // If blockHeight didn't change, we're done
+                break;
+            }
+            // Otherwise we have to try again
+            beforeBlockHeight = snap.blockHeight
+        }
         return snap
     }
 }
