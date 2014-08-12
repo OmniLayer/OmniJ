@@ -3,7 +3,10 @@ package com.msgilligan.bitcoin.rpc;
 
 import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.AddressFormatException;
+import com.google.bitcoin.core.NetworkParameters;
 import com.google.bitcoin.core.Sha256Hash;
+import com.google.bitcoin.core.Transaction;
+import com.google.bitcoin.params.RegTestParams;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -194,9 +197,17 @@ public class BitcoinClient extends RPCClient {
         return result;
     }
 
-    /* TODO: Return a BitcoinJ Transaction type? */
+    /* Return a BitcoinJ Transaction type */
+    public Transaction getRawTransaction(Sha256Hash txid) throws IOException {
+        byte[] raw = getRawTransactionBytes(txid);
+        // Hard-code RegTest for now
+        // TODO: All RPC client connections should have a BitcoinJ params object?
+        Transaction tx = new Transaction(RegTestParams.get(), raw);
+        return tx;
+    }
+
     public byte[] getRawTransactionBytes(Sha256Hash txid) throws IOException {
-        List<Object> params = createParamList(txid);
+        List<Object> params = createParamList(txid.toString());
         Map<String, Object> response = send("getrawtransaction", params);
 
         @SuppressWarnings("unchecked")
