@@ -222,7 +222,7 @@ public class BitcoinClient extends RPCClient {
     public BigDecimal getReceivedByAddress(Address address, Integer minConf) throws IOException {
         List<Object> params = createParamList(address.toString(), minConf);
         Map<String, Object> response = send("getreceivedbyaddress", params);
-        BigDecimal balance = new BigDecimal((Double) response.get("result"));
+        BigDecimal balance = BigDecimal.valueOf((Double) response.get("result"));
         return balance;
     }
 
