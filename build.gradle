@@ -99,7 +99,8 @@ task regTest(type: Test) {
     testLogging.showStandardStreams = true
 
     systemProperty 'regtest', true
-    include 'org/mastercoin/test/rpc/**', 'com/msgilligan/bitcoin/rpc/**', 'com/msgilligan/bitcoinj/**'
+//    include 'org/mastercoin/test/rpc/**', 'com/msgilligan/bitcoin/rpc/**', 'com/msgilligan/bitcoinj/**'
+    include 'org/mastercoin/test/rpc/**', 'com/msgilligan/bitcoin/rpc/**'
 }
 
 task consensusTest(type: Test) {
