@@ -8,12 +8,14 @@ import com.google.bitcoin.core.Sha256Hash;
 import com.google.bitcoin.core.Transaction;
 import com.google.bitcoin.params.RegTestParams;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
 
@@ -226,6 +228,20 @@ public class BitcoinClient extends RPCClient {
         return json;
     }
 
+    public Sha256Hash sendRawTransaction(Transaction tx) throws IOException {
+        return sendRawTransaction(tx, null);
+    }
+
+    public Sha256Hash sendRawTransaction(Transaction tx, Boolean allowHighFees) throws IOException {
+        String hexTx = transactionToHex(tx);
+        List<Object> params = createParamList(hexTx, allowHighFees);
+        Map<String, Object> response = send("sendrawtransaction", params);
+
+        String txid = (String) response.get("result");
+        Sha256Hash hash = new Sha256Hash(txid);
+        return hash;
+    }
+
     public BigDecimal getReceivedByAddress(Address address) throws IOException {
         return getReceivedByAddress(address, 1);   // Default to 1 or more confirmations
     }
@@ -343,6 +359,26 @@ public class BitcoinClient extends RPCClient {
     private List<Object> createParamList(Object... parameters) {
         List<Object> paramList = new ArrayList<>(Arrays.asList(parameters));
         return paramList;
+    }
+
+    private String transactionToHex(Transaction tx) {
+        // From: http://bitcoin.stackexchange.com/questions/8475/how-to-get-hex-string-from-transaction-in-bitcoinj
+        final StringBuilder sb = new StringBuilder();
+        Formatter formatter = new Formatter(sb);
+        try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            tx.bitcoinSerialize(os);
+            byte[] bytes = os.toByteArray();
+            for (byte b : bytes) {
+                formatter.format("%02x", b);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Can't convert Transaction to Hex String", e);
+        } finally {
+            formatter.close();
+        }
+        return sb.toString();
     }
 
 }

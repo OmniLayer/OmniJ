@@ -106,4 +106,28 @@ class WalletSendSpec extends BaseRegTestSpec {
         then: "the new address has a balance of amount"
         getReceivedByAddress(rpcAddress) == amount  // Verify rpcAddress balance
     }
+
+    def "create a raw transaction using BitcoinJ but send with an RPC"() {
+        given:
+        wallet.getBalance() == BTC.btcToSatoshis(20.0) - BTC.btcToSatoshis(1.0) - BTC.btcToSatoshis(1.0) - 2 * Transaction.REFERENCE_DEFAULT_MIN_TX_FEE
+
+        when:
+        BigDecimal amount = 1.0
+        def rpcAddress = getNewAddress()
+        Transaction tx = new Transaction(params)
+        tx.addOutput(BTC.btcToSatoshis(amount), rpcAddress)
+        Wallet.SendRequest request = Wallet.SendRequest.forTx(tx)
+        wallet.completeTx(request)  // Find an appropriate input, calculate fees, etc.
+        wallet.commitTx(request.tx)
+        def txid = client.sendRawTransaction(tx)
+        generateBlocks(1)
+        def confirmedTx = getTransaction(txid)
+
+        then: "the transaction is confirmed"
+        confirmedTx.confirmations == 1
+
+        then: "the new address has a balance of amount"
+        getReceivedByAddress(rpcAddress) == amount  // Verify rpcAddress balance
+    }
+
 }
