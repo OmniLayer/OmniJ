@@ -8,16 +8,4 @@ package org.mastercoin.rpc
 trait MastercoinClientDelegate {
     @Delegate
     MastercoinClient client
-
-//    def methodMissing(String name, args) {
-//        client."$name"(*args)
-//    }
-//
-//    def propertyMissing(String name) {
-//        client."$name"
-//    }
-//
-//    def propertyMissing(String name, value) {
-//        client."$name" = value
-//    }
 }

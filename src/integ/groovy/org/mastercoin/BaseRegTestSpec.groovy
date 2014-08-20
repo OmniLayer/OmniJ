@@ -18,7 +18,7 @@ class BaseRegTestSpec extends Specification implements MastercoinClientDelegate,
 //    static final File dataDir = new File("bitcoin-datadir")
 //    static final String executable = "copied-artifacts/src/bitcoind"
 
-    static final BigDecimal minBTCForTests = 200.0;
+    static final BigDecimal minBTCForTests = 50.0;
 
 //    @Shared
 //    private BitcoinDaemon daemon
