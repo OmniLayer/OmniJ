@@ -103,6 +103,16 @@ task regTest(type: Test) {
     include 'org/mastercoin/test/rpc/**', 'com/msgilligan/bitcoin/rpc/**'
 }
 
+task regTestBTC(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+    testLogging.showStandardStreams = true
+
+    systemProperty 'regtest', true
+    include 'org/mastercoin/test/rpc/**'
+}
+
 task consensusTest(type: Test) {
     testClassesDir = sourceSets.integrationTest.output.classesDir
     classpath = sourceSets.integrationTest.runtimeClasspath
