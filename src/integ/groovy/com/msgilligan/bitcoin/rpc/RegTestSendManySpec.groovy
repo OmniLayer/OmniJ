@@ -64,12 +64,11 @@ class RegTestSendManySpec extends BaseRegTestSpec {
         then: "transaction was confirmed"
         tx.confirmations == 1
 
-        and: "The balance in named account is as expected"
-        btcBalance == extraAmount
-
         and: "The transaction source address was newAddress, the only address in namedAccount"
         sourceAddr == newAddress
 
+        and: "The balance in named account is as expected"
+        btcBalance == extraAmount
     }
 
 }
