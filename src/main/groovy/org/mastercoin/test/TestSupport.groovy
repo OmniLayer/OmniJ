@@ -12,6 +12,9 @@ import static org.mastercoin.CurrencyID.*
 
 import java.security.SecureRandom
 
+/**
+ * Test support functions intended to be mixed-in to Spock test specs
+ */
 trait TestSupport implements MastercoinClientDelegate {
     final BigDecimal stdTxFee = BTC.satoshisToBTC(Transaction.REFERENCE_DEFAULT_MIN_TX_FEE)
 

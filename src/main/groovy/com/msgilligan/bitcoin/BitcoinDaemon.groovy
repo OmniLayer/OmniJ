@@ -1,9 +1,7 @@
 package com.msgilligan.bitcoin
 
 /**
- * User: sean
- * Date: 7/27/14
- * Time: 12:47 AM
+ * Wrapper class for starting and stopping bitcoind
  */
 class BitcoinDaemon {
     Process process

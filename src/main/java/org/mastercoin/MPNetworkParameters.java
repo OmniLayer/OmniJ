@@ -4,9 +4,7 @@ import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.NetworkParameters;
 
 /**
- * User: sean
- * Date: 7/22/14
- * Time: 1:07 AM
+ * Base class for Master Protocol network parameters
  */
 public abstract class MPNetworkParameters {
     protected NetworkParameters params;

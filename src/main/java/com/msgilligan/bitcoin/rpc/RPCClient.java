@@ -17,9 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * User: sean
- * Date: 4/25/14
- * Time: 10:29 AM
+ * JSON-RPC Client
  */
 public class RPCClient {
     private URL serverURL;

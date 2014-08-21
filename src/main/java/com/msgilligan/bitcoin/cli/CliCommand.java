@@ -14,9 +14,7 @@ import com.msgilligan.bitcoin.rpc.BitcoinClient;
 import com.msgilligan.bitcoin.rpc.RPCConfig;
 
 /**
- * User: sean
- * Date: 7/7/14
- * Time: 9:01 AM
+ * Base class for CLI commands that use Bitcoin RPC
  */
 public abstract class CliCommand {
     static final String defaultproto = "http";

@@ -13,9 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * User: sean
- * Date: 7/5/14
- * Time: 7:59 PM
+ * Command-line options for tools that communicate with Bitcoin RPC
  */
 public class CliOptions extends Options {
 

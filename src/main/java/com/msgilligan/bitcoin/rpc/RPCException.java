@@ -1,9 +1,7 @@
 package com.msgilligan.bitcoin.rpc;
 
 /**
- * User: sean
- * Date: 6/16/14
- * Time: 6:28 PM
+ * Exception to throw upon RPC API error (needs work)
  */
 public class RPCException extends Exception {
 

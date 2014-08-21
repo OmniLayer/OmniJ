@@ -20,9 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * User: sean
- * Date: 6/15/14
- * Time: 10:03 AM
+ * JSON-RPC Client for bitcoind
  */
 public class BitcoinClient extends RPCClient {
 

@@ -4,7 +4,9 @@ import com.google.bitcoin.core.Address
 import com.google.bitcoin.core.Sha256Hash
 import groovy.transform.CompileStatic
 
-/*
+/**
+ * Bitcoin JSON-RPC client with method names that exactly match wire and CLI names.
+ *
  * A version of the BitcoinClient with JVM method names that match
  * the RPC method names and bitcoin-cli method names exactly.
  * (in other words, all lowercase and underscores)

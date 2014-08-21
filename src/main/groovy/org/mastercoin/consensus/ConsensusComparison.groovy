@@ -52,19 +52,22 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
         return new PairIterator(unionAddresses.iterator())
     }
 
-    class IterablePairs implements Iterable<ConsensusEntryPair> {
-        private Iterable<String> keys
+//    class IterablePairs implements Iterable<ConsensusEntryPair> {
+//        private Iterable<String> keys
+//
+//        IterablePairs(Iterable<String> keys) {
+//            this.keys = keys
+//        }
+//
+//        @Override
+//        Iterator<ConsensusEntryPair> iterator() {
+//            return new PairIterator(keys.iterator())
+//        }
+//    }
 
-        IterablePairs(Iterable<String> keys) {
-            this.keys = keys
-        }
-
-        @Override
-        Iterator<ConsensusEntryPair> iterator() {
-            return new PairIterator(keys.iterator())
-        }
-    }
-
+    /**
+     * Iterates a ConsensusComparison pair-by-pair
+     */
     class PairIterator implements Iterator<ConsensusEntryPair> {
         java.util.Iterator<String> keyIterator
 

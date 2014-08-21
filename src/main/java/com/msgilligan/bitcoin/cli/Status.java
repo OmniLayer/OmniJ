@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * User: sean
- * Date: 7/5/14
- * Time: 7:55 PM
+ * A command-line client that prints some basic information retrieved via RPC
  */
 public class Status extends CliCommand {
     public final static String commandName = "btcstatus";

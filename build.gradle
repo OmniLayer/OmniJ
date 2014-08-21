@@ -126,6 +126,7 @@ task consensusTest(type: Test) {
 groovydoc {
     // Create GroovyDoc for Groovy + Java classes
     source = sourceSets.main.groovy + sourceSets.main.java
+    overview = "src/main/java/overview.html"
 }
 
 def currencyID = 1

@@ -1,9 +1,7 @@
 package org.mastercoin;
 
 /**
- * User: sean
- * Date: 7/12/14
- * Time: 4:44 PM
+ * Number type to represent a Master Protocol Ecosystem
  */
 public class Ecosystem extends Number {
     private final short value;

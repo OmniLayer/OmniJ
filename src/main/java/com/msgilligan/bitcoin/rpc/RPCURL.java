@@ -4,9 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * User: sean
- * Date: 7/26/14
- * Time: 7:15 PM
+ * Utility class with default connection information for Bitcoin/Mastercoin JSON-RPC
  */
 public class RPCURL {
     public static final String rpcproto = "http";

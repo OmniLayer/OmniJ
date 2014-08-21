@@ -8,9 +8,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * User: sean
- * Date: 7/5/14
- * Time: 6:29 PM
+ *
  */
 public class Consensus extends CliCommand {
     public final static String commandName = "msc-consensus";

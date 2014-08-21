@@ -4,6 +4,9 @@ import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.AddressFormatException;
 import com.google.bitcoin.params.MainNetParams;
 
+/**
+ * Master Protocol parameters for Bitcoin MainNet
+ */
 public class MPMainNetParams extends MPNetworkParameters {
     private static final String ExodusAddress = "1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P";
     public static final Integer FIRST_EXODUS_BLOCK = 249498;

@@ -3,9 +3,10 @@ package com.msgilligan.bitcoin.rpc;
 import java.net.URL;
 
 /**
- * User: sean
- * Date: 7/6/14
- * Time: 12:21 PM
+ * Configuration class for JSON-RPC client
+ *
+ * Contains complete URL, username, and password.
+ *
  */
 public class RPCConfig {
 

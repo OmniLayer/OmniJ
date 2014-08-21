@@ -1,9 +1,7 @@
 package org.mastercoin.rpc
 
 /**
- * User: sean
- * Date: 7/23/14
- * Time: 10:54 PM
+ * Groovy trait for adding a MastercoinClient delegate to any class
  */
 trait MastercoinClientDelegate {
     @Delegate

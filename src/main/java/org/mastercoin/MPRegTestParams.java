@@ -6,9 +6,7 @@ import com.google.bitcoin.params.MainNetParams;
 import com.google.bitcoin.params.RegTestParams;
 
 /**
- * User: sean
- * Date: 7/22/14
- * Time: 1:22 AM
+ * Master Protocol parameters for Bitcoin MainNet
  */
 public class MPRegTestParams extends MPNetworkParameters {
     private final static String ExodusAddress = "mpexoDuSkGGqvqrkrjiFng38QPkJQVFyqv";

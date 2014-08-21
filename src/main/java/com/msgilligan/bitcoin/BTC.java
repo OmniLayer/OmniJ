@@ -5,9 +5,7 @@ import java.math.BigInteger;
 import java.math.MathContext;
 
 /**
- * User: sean
- * Date: 7/16/14
- * Time: 11:12 AM
+ * Utility class for converting from satoshis (BigInteger) to bitcoins (BigDecimal) and vice-versa
  */
 public class BTC  {
     public static final long satoshisPerBitcoin = 100000000;

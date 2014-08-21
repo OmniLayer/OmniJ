@@ -1,9 +1,7 @@
 package org.mastercoin;
 
 /**
- * User: sean
- * Date: 7/22/14
- * Time: 8:25 AM
+ * Master Protocol parameters for Bitcoin MainNet
  */
 public class MPTestNetParams extends MPNetworkParameters {
     /* TestNet not supported yet */

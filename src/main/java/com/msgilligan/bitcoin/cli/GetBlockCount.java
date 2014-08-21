@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A test CLI client that grew beyond just getting the blockCount
+ */
 public class GetBlockCount extends CliCommand {
     public final static String commandName = "getblockcount_needs_rename";
 
