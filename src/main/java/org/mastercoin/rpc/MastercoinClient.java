@@ -67,7 +67,7 @@ public class MastercoinClient extends BitcoinClient {
         Map<String, Object> response = send("getallbalancesforid_MP", params);
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> untypedBalances = (List<Map<String, Object>>) response.get("result");
-        List<MPBalanceEntry> balances = new ArrayList<>(untypedBalances.size());
+        List<MPBalanceEntry> balances = new ArrayList<MPBalanceEntry>(untypedBalances.size());
         for (Map map : untypedBalances) {
             BigDecimal balance;
             BigDecimal reservedByOffer;

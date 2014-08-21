@@ -123,6 +123,11 @@ task consensusTest(type: Test) {
     include 'org/mastercoin/test/consensus/**'
 }
 
+groovydoc {
+    // Create docs for Groovy + Java + the source for unit and integration tests
+    source = sourceSets.main.groovy + sourceSets.main.java + sourceSets.test.groovy + sourceSets.integrationTest.groovy
+}
+
 def currencyID = 1
 
 task getMasterConsensus(dependsOn: 'classes',  type: JavaExec) {

@@ -357,7 +357,7 @@ public class BitcoinClient extends RPCClient {
      * Create a mutable param list (so send() can remove null parameters)
      */
     private List<Object> createParamList(Object... parameters) {
-        List<Object> paramList = new ArrayList<>(Arrays.asList(parameters));
+        List<Object> paramList = new ArrayList<Object>(Arrays.asList(parameters));
         return paramList;
     }
 
