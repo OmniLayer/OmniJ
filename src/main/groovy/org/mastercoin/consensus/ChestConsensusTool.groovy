@@ -4,9 +4,7 @@ import groovy.json.JsonSlurper
 import org.mastercoin.CurrencyID
 
 /**
- * User: sean
- * Date: 7/8/14
- * Time: 4:29 PM
+ * Command-line tool and class for fetching Master Chest consensus data
  */
 class ChestConsensusTool extends ConsensusTool {
     static def proto = "https"

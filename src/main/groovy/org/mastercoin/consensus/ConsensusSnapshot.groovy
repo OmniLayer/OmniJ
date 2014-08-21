@@ -3,9 +3,9 @@ package org.mastercoin.consensus
 import org.mastercoin.CurrencyID
 
 /**
- * User: sean
- * Date: 7/9/14
- * Time: 1:12 PM
+ *
+ * Consensus data for a specified CurrencyID at a given blockHeight.
+ *
  */
 class ConsensusSnapshot {
     CurrencyID  currencyID

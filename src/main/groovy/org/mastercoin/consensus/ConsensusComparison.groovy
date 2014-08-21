@@ -4,9 +4,7 @@ import org.mastercoin.MPMainNetParams
 import org.mastercoin.Mastercoin
 
 /**
- * User: sean
- * Date: 7/12/14
- * Time: 3:40 PM
+ * A pair of ConsensusSnapshots with comparison iterators for Spock tests
  */
 class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
     final ConsensusSnapshot c1

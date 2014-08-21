@@ -3,9 +3,7 @@ package org.mastercoin.consensus
 import org.mastercoin.CurrencyID
 
 /**
- * User: sean
- * Date: 7/19/14
- * Time: 7:39 PM
+ * ConsensusSnapshot test data
  */
 class SnapshotData {
 

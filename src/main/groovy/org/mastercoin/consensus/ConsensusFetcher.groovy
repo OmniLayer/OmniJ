@@ -3,9 +3,7 @@ package org.mastercoin.consensus
 import org.mastercoin.CurrencyID
 
 /**
- * User: sean
- * Date: 7/3/14
- * Time: 11:44 AM
+ * Interface implemented by all consensus fetching tools.
  */
 interface ConsensusFetcher {
     ConsensusSnapshot           getConsensusSnapshot(CurrencyID currencyID);

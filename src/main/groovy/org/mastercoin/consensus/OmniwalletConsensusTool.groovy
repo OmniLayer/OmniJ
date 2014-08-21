@@ -4,9 +4,7 @@ import groovy.json.JsonSlurper
 import org.mastercoin.CurrencyID
 
 /**
- * User: sean
- * Date: 7/3/14
- * Time: 12:19 PM
+ * Command-line tool and class for fetching OmniWallet consensus data
  */
 class OmniwalletConsensusTool extends ConsensusTool {
     static def proto = "https"

@@ -1,9 +1,7 @@
 package org.mastercoin.consensus
 
 /**
- * User: sean
- * Date: 7/19/14
- * Time: 1:58 PM
+ * A pair of ConsensusEntries, with their Address with iteration support for Spock tests
  */
 class ConsensusEntryPair implements Iterable<Object> {
     final String         address

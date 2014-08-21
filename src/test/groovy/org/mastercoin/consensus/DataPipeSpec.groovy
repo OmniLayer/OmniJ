@@ -6,9 +6,7 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 /**
- * User: sean
- * Date: 7/9/14
- * Time: 4:40 PM
+ * Test specification for ConsensusComparison as used in a Spock Spec
  */
 class DataPipeSpec extends Specification  {
 

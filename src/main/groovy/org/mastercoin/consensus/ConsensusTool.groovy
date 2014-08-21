@@ -3,10 +3,9 @@ package org.mastercoin.consensus
 import org.mastercoin.CurrencyID
 
 /**
- * User: sean
- * Date: 7/11/14
- * Time: 12:35 PM
+ * Base class for fetching Master Protocol consensus data
  */
+
 abstract class ConsensusTool implements ConsensusFetcher {
     void run(List args) {
         String currencyString = args[0]

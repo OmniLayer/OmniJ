@@ -3,9 +3,9 @@ package org.mastercoin.consensus
 import groovy.json.JsonSlurper
 
 /**
- * User: sean
- * Date: 7/8/14
- * Time: 1:56 PM
+ * Command-line tool to fetch a list of all Master Protocol properties
+ *
+ * Prints list size (for now)
  */
 class OmniListProperties {
     public static void main(String[] args) {

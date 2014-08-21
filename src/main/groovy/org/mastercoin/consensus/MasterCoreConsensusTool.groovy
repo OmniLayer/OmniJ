@@ -6,9 +6,7 @@ import org.mastercoin.rpc.MPBalanceEntry
 import org.mastercoin.rpc.MastercoinClient
 
 /**
- * User: sean
- * Date: 7/3/14
- * Time: 11:45 AM
+ * Command-line tool and class for fetching Master Core consensus data
  */
 class MasterCoreConsensusTool extends ConsensusTool {
     static def rpcuser = "bitcoinrpc"
