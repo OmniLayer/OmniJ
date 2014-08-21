@@ -124,8 +124,8 @@ task consensusTest(type: Test) {
 }
 
 groovydoc {
-    // Create docs for Groovy + Java + the source for unit and integration tests
-    source = sourceSets.main.groovy + sourceSets.main.java + sourceSets.test.groovy + sourceSets.integrationTest.groovy
+    // Create GroovyDoc for Groovy + Java classes
+    source = sourceSets.main.groovy + sourceSets.main.java
 }
 
 def currencyID = 1
