@@ -36,7 +36,7 @@ sleep 30
 
 # Run integration tests
 echo "Running integration tests in regtest mode..."
-./gradlew regTest
+./gradlew groovydoc regTest
 GRADLESTATUS=$?
 
 exit $GRADLESTATUS
