@@ -17,6 +17,10 @@ Should "Send an amount to a newly created address"() {
 }
 ----
 
+== Supporting Libraries
+
+This project includes a variety of supporting classes necessary to implement the functional/integration tests. For an quick overview of these classes look at their http://ci.mastercoin.info/job/msc-integ-regtest/javadoc/[API documentation] (GroovyDoc).
+
 == Regression Test Mode
 
 Bitcoin 0.9 and later include support for Regression Test Mode (aka Regtest mode). RegTest mode creates a single node Bitcoin "network" that can confirm blocks upon command.
