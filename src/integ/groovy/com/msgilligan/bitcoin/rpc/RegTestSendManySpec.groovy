@@ -27,18 +27,18 @@ class RegTestSendManySpec extends BaseRegTestSpec {
     def "Send BTC from a newly created address and wallet and make sure sending address is correct"() {
         given: "A newly created RPC account and a newly created BTC address"
         String namedAccount = new BigInteger(130, new SecureRandom()).toString(32)
-        Address newAddress = getAccountAddress(namedAccount)
+        Address newAddress = getaccountaddress(namedAccount)
         NetworkParameters params = RegTestParams.get()
         Address externalAddress = new ECKey().toAddress(params)
 
 
         when: "we send some BTC to new address from default account to newAccount/newAddress"
-        def txid = sendToAddress(newAddress, sendAmount + extraAmount + stdTxFee)
+        def txid = sendtoaddress(newAddress, sendAmount + extraAmount + stdTxFee)
 
         and: "we generate a block"
-        generateBlock()
+        setgenerate(true, 1)
         def tx = client.getTransaction(txid)
-        def namedAccountBalance = getBalance(namedAccount)
+        def namedAccountBalance = getbalance(namedAccount)
 
         then: "transaction is confirmed"
         tx.confirmations == 1
@@ -49,17 +49,17 @@ class RegTestSendManySpec extends BaseRegTestSpec {
         when: "We send BTC to the externalAddress from the named account"
         def amounts = [(externalAddress): sendAmount,
                        (newAddress): extraAmount ]  // Send change back to ourselves
-        txid = sendMany(namedAccount, amounts)
+        txid = sendmany(namedAccount, amounts)
 
         and: "We generate a block"
         generateBlock()
-        tx = client.getTransaction(txid)
-        def jtx = client.getRawTransaction(txid)
+        tx = getTransaction(txid)
+        def jtx = getRawTransaction(txid)
 
         def sourceAddr = jtx.getInput(0).getFromAddress()
 //        def inputConnectedOutput = jtx.getInput(0).getConnectedOutput()
-        def btcBalance = getBalance(namedAccount)
-        def btcReceived = getReceivedByAddress(newAddress)
+        def btcBalance = getbalance(namedAccount)
+        def btcReceived = getreceivedbyaddress(newAddress)
 
         then: "transaction was confirmed"
         tx.confirmations == 1
