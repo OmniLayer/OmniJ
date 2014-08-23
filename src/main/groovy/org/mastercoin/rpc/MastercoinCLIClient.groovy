@@ -86,6 +86,16 @@ class MastercoinCLIClient extends MastercoinClient {
     }
 
     /**
+     * Get detailed information about an in-wallet transaction.
+     *
+     * @param txid a transaction identifier (hash) for the transaction to get information about.
+     * @return a Map (JSON object) describing the transaction
+     */
+    Map<String, Object> gettransaction(Sha256Hash txid) {
+        return getTransaction(txid)
+    }
+
+    /**
      * Get the rawtransaction-format data for a transaction.
      *
      * By default, bitcoind only stores complete transaction data for UTXOs and your own transactions,
@@ -102,7 +112,6 @@ class MastercoinCLIClient extends MastercoinClient {
     Transaction getrawtransaction(Sha256Hash txid) {
         return getRawTransaction(txid)
     }
-
 
     /* TODO: Others still needing typed return values are omitted for now */
 
