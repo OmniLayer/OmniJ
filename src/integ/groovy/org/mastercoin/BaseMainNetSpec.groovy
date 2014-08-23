@@ -1,6 +1,7 @@
 package org.mastercoin
 
 import com.msgilligan.bitcoin.rpc.RPCURL
+import org.mastercoin.rpc.MastercoinCLIClient
 import org.mastercoin.rpc.MastercoinClient
 import groovy.json.JsonSlurper
 import org.mastercoin.rpc.MastercoinClientDelegate
@@ -14,7 +15,7 @@ import spock.lang.Specification
  */
 abstract class BaseMainNetSpec extends Specification implements MastercoinClientDelegate {
     {
-        client = new MastercoinClient(RPCURL.defaultMainNetURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
+        client = new MastercoinCLIClient(RPCURL.defaultMainNetURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
     }
 //abstract class BaseMainNetSpec extends Specification  {
     static final String rpcuser = "bitcoinrpc"
