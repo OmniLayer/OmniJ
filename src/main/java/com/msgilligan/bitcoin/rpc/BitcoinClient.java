@@ -153,6 +153,11 @@ public class BitcoinClient extends RPCClient {
     }
 
     public Address getNewAddress() throws IOException {
+        return getNewAddress(null);
+    }
+
+    public Address getNewAddress(String account) throws IOException {
+        List<Object> params = createParamList(account);
         Map<String, Object> response = send("getnewaddress", null);
 
         String addr = (String) response.get("result");
@@ -179,8 +184,8 @@ public class BitcoinClient extends RPCClient {
         return address;
     }
 
-    public Boolean move(Address fromaccount, Address toaccount, BigDecimal amount) throws IOException {
-        List<Object> params = createParamList(fromaccount, toaccount, amount);
+    public Boolean moveFunds(Address fromaccount, Address toaccount, BigDecimal amount, Integer minconf, String comment) throws IOException {
+        List<Object> params = createParamList(fromaccount, toaccount, amount, minconf, comment);
         Map<String, Object> response = send("move", params);
         @SuppressWarnings("unchecked")
         Boolean result = (Boolean) response.get("result");

@@ -5,5 +5,5 @@ package org.mastercoin.rpc
  */
 trait MastercoinClientDelegate {
     @Delegate
-    MastercoinClient client
+    MastercoinCLIClient client
 }
