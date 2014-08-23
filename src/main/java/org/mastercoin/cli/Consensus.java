@@ -8,7 +8,10 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- *
+ *  Unfinished command-line Master Core consensus tool.
+ *  <p>
+ *      TODO: Merge code from MasterCoreConsensusTool
+ *  </p>
  */
 public class Consensus extends CliCommand {
     public final static String commandName = "msc-consensus";

@@ -18,9 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * User: sean
- * Date: 6/16/14
- * Time: 5:34 PM
+ * Pure Java Bitcoin and Mastercoin JSON-RPC client with camelCase method names.
  */
 public class MastercoinClient extends BitcoinClient {
 

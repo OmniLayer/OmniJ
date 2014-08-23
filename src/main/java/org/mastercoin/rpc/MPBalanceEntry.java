@@ -5,9 +5,9 @@ import com.google.bitcoin.core.Address;
 import java.math.BigDecimal;
 
 /**
- * User: sean
- * Date: 8/10/14
- * Time: 11:35 AM
+ * Balance data for a specific Mastercoin CurrencyID in a single Bitcoin address
+ *
+ * A Java representation of the JSON entry returned by getallbalancesforid_MP
  */
 public class MPBalanceEntry {
     private Address address;

@@ -8,16 +8,19 @@ import com.msgilligan.bitcoin.rpc.RPCConfig
 import groovy.transform.CompileStatic
 
 /**
- * Bitcoin and Mastercoin JSON-RPC client with method names that exactly match wire and CLI names.
+ * Bitcoin and Mastercoin JSON-RPC client that closely mirrors JSON-RPC API.
  *
- * A version of the BitcoinClient with JVM method names that match
+ * <p>
+ * A JSON-RPC client for Bitcoin/Mastercoin with JVM method names that match
  * the RPC method names and bitcoin-cli method names exactly.
  * (in other words, all lowercase and underscores)
  *
- * Uses Groovy defaults to set automatic parameters to null. This is better
- * than using Java varargs because it allows us to specify type information.
- * We set parameters to null, not the default values in the Bitcoin RPC API
- * because we want the server to choose the defaults, not our client.
+ * <p>
+ * We use Groovy defaults to set automatic parameters to <code>null</code>. This is better
+ * than using Java varargs because it allows us to specify a unique type for each parameter.
+ * We set parameters to <code>null</code>, not the default values in the RPC API
+ * because we want the server to choose the defaults, not our client. A <code>null</code>
+ * parameter is not sent in the RPC request.
  *
  */
 @CompileStatic
@@ -38,10 +41,10 @@ class MastercoinCLIClient extends MastercoinClient {
 
     /**
      * Enable or disable hashing to attempt to find the next block
-     *
-     * In RegTest mode setgenerate is used to mine 1 or more blocks
+     * <p>
+     * In RegTest mode <code>setgenerate</code> is used to mine 1 or more blocks
      * on command.
-     *
+     * <p>
      * @param generate to enable generation, true; to disable, false.
      * @param genproclimit (optional) the number of logical processors to use. Defaults to 1; use -1 to use all available processors.
      */
@@ -51,7 +54,7 @@ class MastercoinCLIClient extends MastercoinClient {
 
     /**
      * Returns a new Bitcoin address for receiving payments.
-     *
+     * <p>
      * @param account (optional) If account is specified, payments received with the address will be credited to that account.
      * @return A Bitcoin Address
      */
@@ -61,7 +64,7 @@ class MastercoinCLIClient extends MastercoinClient {
 
     /**
      * Returns the current Bitcoin address for receiving payments to this account.
-     *
+     * <p>
      * If the account doesn’t exist, it creates both the account and a new address for receiving payment.
      *
      * @param account
@@ -77,8 +80,8 @@ class MastercoinCLIClient extends MastercoinClient {
      * @param fromaccount the name of the account from which to move the funds. Use “” for the default account.
      * @param toaccount the name of the account to which the funds should be moved. Use “” for the default account.
      * @param amount the amount to move in decimal bitcoins.
-     * @param minconf the minimum number of confirmations
-     * @param comment a comment to associate with this transaction.
+     * @param minconf (optional) the minimum number of confirmations
+     * @param comment (optional) a comment to associate with this transaction.
      * @return
      */
     Boolean move(Address fromaccount, Address toaccount, BigDecimal amount, Integer minconf=null, String comment=null) {
@@ -97,16 +100,16 @@ class MastercoinCLIClient extends MastercoinClient {
 
     /**
      * Get the rawtransaction-format data for a transaction.
-     *
+     * <p>
      * By default, bitcoind only stores complete transaction data for UTXOs and your own transactions,
      * so the RPC may fail on historic transactions unless you use the non-default txindex=1 in your
      * bitcoind startup settings.
-     *
+     * <p>
      * Note: The verbose param is not supported in this method since we're returning a strongly-typed
      * Transaction object which (in theory) offers the functionality of both the raw bytes and the JSON object
      * that would be returned by the lower-level JSON-RPC API.
-     *
-     * @param txid the txid (hash) of the transaction to get.
+     * <p>
+     * @param txid the transaction identifier (hash) of the transaction to get.
      * @return
      */
     Transaction getrawtransaction(Sha256Hash txid) {
@@ -115,26 +118,69 @@ class MastercoinCLIClient extends MastercoinClient {
 
     /* TODO: Others still needing typed return values are omitted for now */
 
-    BigDecimal getreceivedbyaddress(Address address, Integer minConf=null) {
-        return getReceivedByAddress(address, minConf)
+    /**
+     * Returns the total amount received by the specified address in transactions with at least the indicated number of confirmations.
+     *
+     * @param address a Bitcoin address to check. Must be an address belonging to the wallet.
+     * @param minconf (optional) the minimum number of confirmations a transaction must have before it is counted towards the total. 1 is the default; use 0 to also count unconfirmed transactions.
+     * @return the total amount received
+     */
+    BigDecimal getreceivedbyaddress(Address address, Integer minconf=null) {
+        return getReceivedByAddress(address, minconf)
     }
 
-    BigDecimal getbalance(String account, Integer minConf=null) {
-        return getBalance(account,minConf)
+    /**
+     * Get the balance in decimal bitcoins across all accounts or for a particular account.
+     *
+     * @param account  the name of the account to get a balance for or “*” to get the balance for all accounts (the default). The default (primary) account can be specified using “”, which is not the same as specifying “*” for all accounts.
+     * @param minconf (optional) the minimum number of confirmations an incoming transaction must have before it is counted towards the balance.
+     * @return
+     */
+    BigDecimal getbalance(String account, Integer minconf=null) {
+        return getBalance(account,minconf)
     }
 
+    /**
+     * Spend an amount to a given address. Encrypted wallets must be unlocked first.
+     * @param address
+     * @param amount
+     * @param comment
+     * @param commentTo
+     * @return
+     */
     Sha256Hash sendtoaddress(Address address, BigDecimal amount, String comment = null, String commentTo = null) {
         return sendToAddress(address,amount,comment,commentTo)
     }
 
+    /**
+     * Spend an amount from an account to a bitcoin address.
+     *
+     * @param account
+     * @param address
+     * @param amount
+     * @return
+     */
     Sha256Hash sendfrom(String account, Address address, BigDecimal amount) {
         return sendFrom(account, address, amount)
     }
 
+    /**
+     * Create and broadcast a transaction which spends outputs to multiple addresses.
+     *
+     * @param account
+     * @param amounts
+     * @return
+     */
     Sha256Hash sendmany(String account, Map<Address, BigDecimal> amounts) {
         return sendMany(account, amounts)
     }
 
+    /**
+     * Get various information about the node and the network.
+     * Warning: getinfo will be removed in a later version of Bitcoin Core. Use getblockchaininfo, getnetworkinfo, or getwalletinfo instead.
+     *
+     * @return A Map (JSON object) containing the information.
+     */
     Map<String, Object> getinfo() {
         return getInfo()
     }
