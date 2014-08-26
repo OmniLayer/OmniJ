@@ -4,7 +4,6 @@ import org.mastercoin.BaseRegTestSpec
 import org.mastercoin.MPRegTestParams
 import org.mastercoin.consensus.ConsensusComparison
 import org.mastercoin.consensus.ConsensusEntry
-import org.mastercoin.consensus.ConsensusSnapshot
 import org.mastercoin.consensus.ConsensusTool
 import org.mastercoin.consensus.MasterCoreConsensusTool
 import spock.lang.Ignore
@@ -69,21 +68,5 @@ class FaizSpec extends BaseRegTestSpec {
         address = kv.key
         entry = kv.value
         expected = sendAmount * 100
-    }
-
-    @Ignore
-    @Unroll
-    def "#address #entry1 == #entry2"() {
-        setup:
-        TreeMap<String, ConsensusEntry> expected = [moneyManAddress:new ConsensusEntry(0,0), exodusAddress: new ConsensusEntry(0,0)]
-        def expectedSnap = new ConsensusSnapshot()
-        expectedSnap.entries = expected
-
-        when:
-        def actualSnap = consensusFetcher.getConsensusSnapshot(MSC)
-        def comparison = new ConsensusComparison(expectedSnap, actualSnap)
-
-        then:
-        expectedSnap.entries == actualSnap.entries
     }
 }

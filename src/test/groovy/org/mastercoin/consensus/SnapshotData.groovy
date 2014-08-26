@@ -7,6 +7,8 @@ import org.mastercoin.CurrencyID
  */
 class SnapshotData {
 
+    static String TestDataConsensusSource = "TEST DATA";
+
     static TreeMap<String, ConsensusEntry> empty = [:]
     static TreeMap<String, ConsensusEntry> small1 = [a: new ConsensusEntry(balance: 0, reserved: 0),
                                                        b: new ConsensusEntry(balance: 1.5G, reserved: 1.5G),
@@ -27,12 +29,11 @@ class SnapshotData {
     }
 
     static ConsensusSnapshot createSnapshot(String name, SortedMap<String, ConsensusEntry> entries) {
-        def snap = new ConsensusSnapshot()
-        snap.sourceURL = "http://dummy.com/${name}".toURL()
-        snap.entries = entries
-        snap.blockHeight = -1
-        snap.currencyID = CurrencyID.MSC
-        snap.sourceType = "TEST DATA"
+        def snap = new ConsensusSnapshot(CurrencyID.MSC, -1, TestDataConsensusSource, testDataURI(name), entries)
         return snap
+    }
+
+    static URI testDataURI(String name) {
+        return "http://dummy.com/${name}".toURL().toURI();
     }
 }

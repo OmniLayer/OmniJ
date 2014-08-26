@@ -1,12 +1,12 @@
 package org.mastercoin.consensus
 
+import groovy.transform.Immutable
 import org.mastercoin.CurrencyID
 
 /**
- *
  * Consensus data for a specified CurrencyID at a given blockHeight.
- *
  */
+@Immutable
 class ConsensusSnapshot {
     /**
      * The currency ID
@@ -21,9 +21,9 @@ class ConsensusSnapshot {
      */
     String      sourceType
     /**
-     * The URL of the server returning the consensus data
+     * The URI of the server returning the consensus data
      */
-    URL         sourceURL
+    URI         sourceURI
 
     /**
      * Consensus entries for all addresses, sorted by address

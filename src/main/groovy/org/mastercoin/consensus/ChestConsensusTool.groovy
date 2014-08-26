@@ -55,13 +55,9 @@ class ChestConsensusTool extends ConsensusTool {
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
         String httpFile = "${file}?currencyid=${currencyID as Integer}"
         def consensusURL = new URL(proto, host, port, httpFile)
+        SortedMap<String, ConsensusEntry> entries = this.getConsensusForCurrency(currencyID)
 
-        def snap = new ConsensusSnapshot();
-        snap.currencyID = currencyID
-        snap.blockHeight = -1
-        snap.sourceType = "MasterChest"
-        snap.sourceURL = consensusURL
-        snap.entries = this.getConsensusForCurrency(currencyID)
+        def snap = new ConsensusSnapshot(currencyID, -1, "MasterChest", consensusURL.toURI(), entries);
         return snap
     }
 }

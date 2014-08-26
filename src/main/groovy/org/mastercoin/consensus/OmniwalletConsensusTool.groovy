@@ -62,11 +62,6 @@ class OmniwalletConsensusTool extends ConsensusTool {
         String httpFile = "${file}?currency_id=${currencyID as Integer}"
         def consensusURL = new URL(proto, host, port, httpFile)
 
-        def snap = new ConsensusSnapshot();
-        snap.currencyID = currencyID
-        snap.sourceType = "Omniwallet (Master tools)"
-        snap.sourceURL = consensusURL
-
         /* Since getallbalancesforid_MP doesn't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
          *
@@ -75,16 +70,19 @@ class OmniwalletConsensusTool extends ConsensusTool {
          * matches the data returned.
          */
         Integer beforeBlockHeight = currentBlockHeight()
+        Integer curBlockHeight
+        SortedMap<String, ConsensusEntry> entries
         while (true) {
-            snap.entries = this.getConsensusForCurrency(consensusURL)
-            snap.blockHeight = currentBlockHeight()
-            if (snap.blockHeight == beforeBlockHeight) {
+            entries = this.getConsensusForCurrency(consensusURL)
+            curBlockHeight = currentBlockHeight()
+            if (curBlockHeight == beforeBlockHeight) {
                 // If blockHeight didn't change, we're done
                 break;
             }
             // Otherwise we have to try again
-            beforeBlockHeight = snap.blockHeight
+            beforeBlockHeight = curBlockHeight
         }
+        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "Omniwallet (Master tools)", consensusURL.toURI(), entries);
         return snap
     }
 }

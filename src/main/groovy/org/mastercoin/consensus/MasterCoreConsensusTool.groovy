@@ -47,25 +47,23 @@ class MasterCoreConsensusTool extends ConsensusTool {
     }
 
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
-        def snap = new ConsensusSnapshot();
-        snap.currencyID = currencyID
-        snap.sourceType = "Master Core"
-        snap.sourceURL = client.serverURL
-
         /* Since getallbalancesforid_MP doesn't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
          */
         Integer beforeBlockHeight = client.blockCount
+        Integer curBlockHeight
+        SortedMap<String, ConsensusEntry> entries
         while (true) {
-            snap.entries = this.getConsensusForCurrency(currencyID)
-            snap.blockHeight = client.blockCount
-            if (snap.blockHeight == beforeBlockHeight) {
+            entries = this.getConsensusForCurrency(currencyID)
+            curBlockHeight = client.blockCount
+            if (curBlockHeight == beforeBlockHeight) {
                 // If blockHeight didn't change, we're done
                 break;
             }
             // Otherwise we have to try again
-            beforeBlockHeight = snap.blockHeight
+            beforeBlockHeight = curBlockHeight
         }
+        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "Master Core", client.serverURL.toURI(), entries);
         return snap
     }
 

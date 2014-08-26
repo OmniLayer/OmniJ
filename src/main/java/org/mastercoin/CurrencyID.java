@@ -3,7 +3,7 @@ package org.mastercoin;
 /**
  * Number type to represent a Master Protocol Currency ID
  */
-public class CurrencyID extends Number {
+public final class CurrencyID extends Number implements Cloneable {
     private final long value;
 
     public static final long   MIN_VALUE = 1;
