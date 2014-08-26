@@ -11,6 +11,11 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
     final ConsensusSnapshot c2
     private TreeSet<String> unionAddresses
 
+    /**
+     * Constructs a ConsensusComparison from two ConsensusSnapshot objects
+     * @param c1 Snapshot from source #1
+     * @param c2 Snapshot from source #2
+     */
     ConsensusComparison(ConsensusSnapshot c1, ConsensusSnapshot c2) {
         this.c1 = c1
         this.c2 = c2
@@ -20,7 +25,11 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
         unionAddresses.remove(MPMainNetParams.ExodusAddress)
     }
 
-
+    /**
+     * Return an iterator that will iterate through the union of addresses
+     * from the two ConsensusSnapshot objects, sorted by address
+     * @return the iterator
+     */
     @Override
     Iterator<ConsensusEntryPair> iterator() {
         return new PairIterator(unionAddresses.iterator())

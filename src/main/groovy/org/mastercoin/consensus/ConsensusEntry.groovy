@@ -9,7 +9,13 @@ import groovy.transform.ToString
 @Immutable
 @ToString(includePackage=false, includeNames=true)
 class ConsensusEntry implements Iterable<BigDecimal>  {
+    /**
+     * total balance
+     */
     BigDecimal  balance
+    /**
+     * reserved funds (forOffer + forAccept)
+     */
     BigDecimal  reserved
 
     /**
