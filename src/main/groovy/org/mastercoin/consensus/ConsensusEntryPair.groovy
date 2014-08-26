@@ -1,8 +1,11 @@
 package org.mastercoin.consensus
 
+import groovy.transform.Immutable
+
 /**
  * A pair of ConsensusEntries, with their Address with iteration support for Spock tests
  */
+@Immutable
 class ConsensusEntryPair implements Iterable<Object> {
     /**
      * Bitcoin Address
@@ -16,18 +19,6 @@ class ConsensusEntryPair implements Iterable<Object> {
      * Consensus Entry from second source
      */
     final ConsensusEntry entry2
-
-    /**
-     *
-     * @param address Bitcoin address shared by both pairs
-     * @param entry1 Balance from source 1
-     * @param entry2 Balance from source 2
-     */
-    ConsensusEntryPair(String address, ConsensusEntry entry1, ConsensusEntry entry2) {
-        this.address = address
-        this.entry1 = entry1
-        this.entry2 = entry2
-    }
 
     /**
      * Useful for Spock tests

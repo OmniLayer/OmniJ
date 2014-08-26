@@ -1,29 +1,17 @@
 package org.mastercoin.consensus
 
+import groovy.transform.Immutable
 import org.mastercoin.MPMainNetParams
 import org.mastercoin.Mastercoin
 
 /**
  * A pair of ConsensusSnapshots with comparison iterators for Spock tests
  */
+@Immutable
 class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
     final ConsensusSnapshot c1
     final ConsensusSnapshot c2
-    private TreeSet<String> unionAddresses
-
-    /**
-     * Constructs a ConsensusComparison from two ConsensusSnapshot objects
-     * @param c1 Snapshot from source #1
-     * @param c2 Snapshot from source #2
-     */
-    ConsensusComparison(ConsensusSnapshot c1, ConsensusSnapshot c2) {
-        this.c1 = c1
-        this.c2 = c2
-        def c1Keys = c1.entries.keySet()
-        def c2Keys = c2.entries.keySet()
-        unionAddresses = c1Keys + c2Keys
-        unionAddresses.remove(MPMainNetParams.ExodusAddress)
-    }
+    private TreeSet<String> unionAddresses = null
 
     /**
      * Return an iterator that will iterate through the union of addresses
@@ -32,9 +20,14 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
      */
     @Override
     Iterator<ConsensusEntryPair> iterator() {
+        if (unionAddresses == null) {
+            def c1Keys = c1.entries.keySet()
+            def c2Keys = c2.entries.keySet()
+            unionAddresses = c1Keys + c2Keys
+            unionAddresses.remove(MPMainNetParams.ExodusAddress)
+        }
         return new PairIterator(unionAddresses.iterator())
     }
-
 
     /**
      * Iterates a ConsensusComparison pair-by-pair
