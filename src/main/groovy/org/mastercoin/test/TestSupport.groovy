@@ -77,8 +77,8 @@ trait TestSupport implements MastercoinClientDelegate {
 
         // Verify correct amounts received
         btcBalance = getBalance(account)
-        BigDecimal mscBalance = getbalance_MP(address, MSC)
-        BigDecimal tmscBalance = getbalance_MP(address, TMSC)
+        BigDecimal mscBalance = getbalance_MP(address, MSC).balance
+        BigDecimal tmscBalance = getbalance_MP(address, TMSC).balance
 
         assert btcBalance == requestedBTC
         assert mscBalance == requestedMSC
