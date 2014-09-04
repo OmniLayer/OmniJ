@@ -15,10 +15,10 @@ class MastercoinSpec extends BaseRegTestSpec {
     Should "Implement getbalance_MP"() {
         when: "we call getbalance_MP on a newly generated address"
         def destAddr = getNewAddress()                   // Create new Bitcoin address
-        def balance = getbalance_MP(destAddr, MSC)
+        def entry = getbalance_MP(destAddr, MSC)
 
         then: "it should return a balance of zero"
-        balance == 0
+        entry.balance == 0
     }
 
     Should "Return Mastercoin version field along with Bitcoin info fields" () {

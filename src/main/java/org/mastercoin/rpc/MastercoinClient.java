@@ -37,27 +37,21 @@ public class MastercoinClient extends BitcoinClient {
     }
 
     public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount) throws IOException {
-        List<Object> params = Arrays.asList((Object) fromAddress.toString(), toAddress.toString(), currency.intValue(), amount);
+        List<Object> params = Arrays.asList((Object) fromAddress.toString(), toAddress.toString(), currency.intValue(), amount.toString());
         Map<String, Object> response = send("send_MP", params);
         String txid = (String) response.get("result");
         Sha256Hash hash = new Sha256Hash(txid);
         return hash;
     }
 
-    public BigDecimal getbalance_MP(Address address, CurrencyID currency) throws IOException, ParseException {
-        boolean expectString = true;
+    public MPBalanceEntry getbalance_MP(Address address, CurrencyID currency) throws IOException, ParseException {
         List<Object> params = Arrays.asList((Object) address.toString(), currency.intValue());
         Map<String, Object> response = send("getbalance_MP", params);
-        BigDecimal balanceBTC;
-        if (expectString) {
-            String balanceBTCd = (String) response.get("result");
-            balanceBTC = (BigDecimal) jsonDecimalFormat.parse(balanceBTCd);
-        } else {
-            Double balanceBTCd = (Double) response.get("result");
-            // Beware of the new BigDecimal(double d) constructor, it results in unexpected/undesired values.
-            balanceBTC = BigDecimal.valueOf(balanceBTCd);
-        }
-        return balanceBTC;
+        Map<String, String> result = (Map<String, String>) response.get("result");
+        BigDecimal balanceBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("balance"));
+        BigDecimal reservedBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("reserved"));
+        MPBalanceEntry entry = new MPBalanceEntry(address, balanceBTC, reservedBTC);
+        return entry;
     }
 
     public List<MPBalanceEntry> getallbalancesforid_MP(CurrencyID currency) throws IOException, ParseException, AddressFormatException {
@@ -68,25 +62,24 @@ public class MastercoinClient extends BitcoinClient {
         List<MPBalanceEntry> balances = new ArrayList<MPBalanceEntry>(untypedBalances.size());
         for (Map map : untypedBalances) {
             BigDecimal balance;
-            BigDecimal reservedByOffer;
-            BigDecimal reservedByAccept;
+            BigDecimal reserved;
             String addressString = (String) map.get("address");
             Address address = new Address(null, addressString);
             Object balanceJson = map.get("balance");
-            Object reservedByOfferJson = map.get("reservedbyoffer");
-            Object reservedByAcceptJson = map.get("reservedByAccept");
-            /* Assume that if balanceJson field is of type Integer, all three are */
-            if (balanceJson instanceof Integer) {
+            Object reservedJson = map.get("reserved");
+            /* Assume that if balanceJson field is of type String, so is reserved */
+            /* The RPCs have been changing here, but currently they should be using Strings */
+            if (balanceJson instanceof String) {
+                balance = (BigDecimal) jsonDecimalFormat.parse((String) balanceJson);
+                reserved = (BigDecimal) jsonDecimalFormat.parse((String) reservedJson);
+            } else if (balanceJson instanceof Integer) {
                 balance = new BigDecimal((Integer) balanceJson);
-                reservedByOffer = new BigDecimal((Integer) reservedByOfferJson);
-                reservedByAccept = (reservedByAcceptJson != null) ? new BigDecimal((Integer) reservedByAcceptJson) : null;
+                reserved = new BigDecimal((Integer) reservedJson);
 
             } else {
-                balance = (BigDecimal) jsonDecimalFormat.parse((String) balanceJson);
-                reservedByOffer = (BigDecimal) jsonDecimalFormat.parse((String) reservedByOfferJson);
-                reservedByAccept = (reservedByAcceptJson != null) ? (BigDecimal) jsonDecimalFormat.parse((String) reservedByAcceptJson) : null;
+                throw new RuntimeException("unexpected data type");
             }
-            MPBalanceEntry balanceEntry = new MPBalanceEntry(address, balance, reservedByOffer, reservedByAccept);
+            MPBalanceEntry balanceEntry = new MPBalanceEntry(address, balance, reserved);
             balances.add(balanceEntry);
         }
         return balances;
@@ -102,7 +95,7 @@ public class MastercoinClient extends BitcoinClient {
     }
 
     public Sha256Hash sendToOwnersMP(Address fromAddress, CurrencyID currency, BigDecimal amount) throws IOException {
-        List<Object> params = Arrays.asList((Object) fromAddress.toString(), currency.intValue(), amount);
+        List<Object> params = Arrays.asList((Object) fromAddress.toString(), currency.intValue(), amount.toString());
         Map<String, Object> response = send("sendtoowners_MP", params);
         String txid = (String) response.get("result");
         Sha256Hash hash = new Sha256Hash(txid);

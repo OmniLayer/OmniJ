@@ -42,8 +42,7 @@ class MasterCoreConsensusTool extends ConsensusTool {
     }
 
     private ConsensusEntry itemToEntry(MPBalanceEntry item) {
-        BigDecimal reserved = item.reservedByOffer + (item.reservedByAccept ?: 0)
-        return new ConsensusEntry(balance: item.balance, reserved:reserved)
+        return new ConsensusEntry(balance: item.balance, reserved:item.reserved)
     }
 
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {

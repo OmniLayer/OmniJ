@@ -5,6 +5,9 @@ import groovy.transform.ToString
 
 /**
  * Consensus data for a particular address at a given blockHeight for a particular CurrencyID.
+ *
+ * Note: Due to changes in the RPCs this structure is now very similar to MPBalanceEntry and the
+ * two should probably be combined.
  */
 @Immutable
 @ToString(includePackage=false, includeNames=true)

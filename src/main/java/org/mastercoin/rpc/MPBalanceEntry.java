@@ -12,14 +12,12 @@ import java.math.BigDecimal;
 public class MPBalanceEntry {
     private Address address;
     private BigDecimal balance;
-    private BigDecimal reservedByOffer;
-    private BigDecimal reservedByAccept;
+    private BigDecimal reserved;
 
-    public MPBalanceEntry(Address address, BigDecimal balance, BigDecimal reservedByOffer, BigDecimal reservedByAccept) {
+    public MPBalanceEntry(Address address, BigDecimal balance, BigDecimal reserved) {
         this.address = address;
         this.balance = balance;
-        this.reservedByOffer = reservedByOffer;
-        this.reservedByAccept = reservedByAccept;
+        this.reserved = reserved;
     }
 
     public Address getAddress() {
@@ -30,11 +28,7 @@ public class MPBalanceEntry {
         return balance;
     }
 
-    public BigDecimal getReservedByOffer() {
-        return reservedByOffer;
-    }
-
-    public BigDecimal getReservedByAccept() {
-        return reservedByAccept;
+    public BigDecimal getReserved() {
+        return reserved;
     }
 }
