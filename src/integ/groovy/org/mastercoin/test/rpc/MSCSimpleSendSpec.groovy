@@ -1,7 +1,12 @@
 package org.mastercoin.test.rpc
 
 import com.google.bitcoin.core.Address
+import com.google.bitcoin.core.Sha256Hash
+import com.google.bitcoin.core.Transaction
 import org.mastercoin.BaseRegTestSpec
+import org.mastercoin.MPNetworkParameters
+import org.mastercoin.MPRegTestParams
+import org.mastercoin.rpc.MPBalanceEntry
 import spock.lang.Shared
 
 import static org.mastercoin.CurrencyID.*
@@ -30,17 +35,17 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
     def "Can simple send MSC from one address to another" () {
 
         when: "we send MSC"
-        def startBalance = getbalance_MP(faucetAddress, MSC)
+        def startBalance = getbalance_MP(faucetAddress, MSC).balance
         def amount = 1.0
         def toAddress = getNewAddress()
         send_MP(faucetAddress, toAddress, MSC, amount)
 
         and: "a block is generated"
         generateBlock()
-        def endBalance = getbalance_MP(faucetAddress, MSC)
+        def endBalance = getbalance_MP(faucetAddress, MSC).balance
 
         then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
-        amount == getbalance_MP(toAddress, MSC)
+        amount == getbalance_MP(toAddress, MSC).balance
         endBalance == startBalance - amount
     }
 
