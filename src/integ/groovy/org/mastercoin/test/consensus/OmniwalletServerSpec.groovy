@@ -6,15 +6,13 @@ import static org.mastercoin.CurrencyID.*
 import spock.lang.Specification
 
 /**
- * User: sean
- * Date: 7/20/14
- * Time: 1:08 AM
+ * Functional test for getting consensus data from Omni API
  */
 class OmniwalletServerSpec extends Specification {
 
     def "Can get Omniwallet block height"() {
         setup:
-        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool()
+        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_DBDev)
 
         when: "we get a block height"
         /* Private method, but we can still call it with Groovy for a test */
@@ -27,7 +25,7 @@ class OmniwalletServerSpec extends Specification {
 
     def "Can get Omniwallet consensus data"() {
         setup:
-        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool()
+        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_DBDev)
 
         when: "we get data"
         def omniSnapshot = omniFetcher.getConsensusSnapshot(MSC)

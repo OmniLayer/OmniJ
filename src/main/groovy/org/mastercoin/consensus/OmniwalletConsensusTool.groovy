@@ -7,13 +7,18 @@ import org.mastercoin.CurrencyID
  * Command-line tool and class for fetching OmniWallet consensus data
  */
 class OmniwalletConsensusTool extends ConsensusTool {
-    static def proto = "https"
-    static def host = "www.omniwallet.org"
-    static def port = 443
-    static def file = "/v1/mastercoin_verify/addresses"
-    static def revisionFile = "/v1/system/revision.json"
+    static URI OmniHost_Live = new URI("https://www.omniwallet.org");
+    static URI OmniHost_DBDev = new URI("https://dbdev.omniwallet.org");
+    private def proto
+    private def host
+    private def port
+    static String file = "/v1/mastercoin_verify/addresses"
+    static String revisionFile = "/v1/system/revision.json"
 
-    OmniwalletConsensusTool() {
+    OmniwalletConsensusTool(URI hostURI) {
+        proto = "https"
+        port = 443;
+        host = hostURI.host;
     }
 
     public static void main(String[] args) {

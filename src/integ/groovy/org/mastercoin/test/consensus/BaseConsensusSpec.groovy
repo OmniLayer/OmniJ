@@ -21,7 +21,7 @@ abstract class  BaseConsensusSpec extends BaseMainNetSpec {
         def mscFetcher = new MasterCoreConsensusTool(client)
         def mscSnapshot = mscFetcher.getConsensusSnapshot(id)
 
-        def omniFetcher = new OmniwalletConsensusTool()
+        def omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_DBDev)
         def omniSnapshot = omniFetcher.getConsensusSnapshot(id)
 
         comparison = new ConsensusComparison(mscSnapshot, omniSnapshot)
