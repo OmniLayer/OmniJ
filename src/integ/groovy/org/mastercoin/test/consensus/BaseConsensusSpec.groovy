@@ -29,8 +29,8 @@ abstract class  BaseConsensusSpec extends BaseMainNetSpec {
 
     def "block height is the same in both snapshots"() {
         given:
-        def blockHeight1 = comparison.c1.blockheight
-        def blockHeight2 = comparison.c2.blockheight
+        def blockHeight1 = comparison.c1.blockHeight
+        def blockHeight2 = comparison.c2.blockHeight
 
         expect:
         blockHeight1 == blockHeight2
