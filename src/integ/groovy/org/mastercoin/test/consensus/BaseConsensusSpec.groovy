@@ -3,26 +3,31 @@ package org.mastercoin.test.consensus
 import org.mastercoin.BaseMainNetSpec
 import org.mastercoin.CurrencyID
 import org.mastercoin.consensus.ConsensusComparison
+import org.mastercoin.consensus.ConsensusFetcher
 import org.mastercoin.consensus.MasterCoreConsensusTool
 import org.mastercoin.consensus.OmniwalletConsensusTool
 import spock.lang.Shared
 import spock.lang.Unroll
 
 /**
- * User: sean
- * Date: 7/9/14
- * Time: 11:31 PM
+ * Base class for Consensus Comparisons
+ * Makes sure the block height of both snapshots matches and
+ * also compares the balance of every address in the <b>union</b> of the two snapshots.
  */
 abstract class  BaseConsensusSpec extends BaseMainNetSpec {
     @Shared
     ConsensusComparison comparison
 
-    void setupComparisonForCurrency(CurrencyID id) {
+    /**
+     * Set up a ConsensusComparison for a particular currency
+     * @param referenceFetcher ConsensusFetcher for a (remote) reference server
+     * @param id CurrencyID to compare
+     */
+    void setupComparisonForCurrency(ConsensusFetcher referenceFetcher, CurrencyID id) {
         def mscFetcher = new MasterCoreConsensusTool(client)
         def mscSnapshot = mscFetcher.getConsensusSnapshot(id)
 
-        def omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_DBDev)
-        def omniSnapshot = omniFetcher.getConsensusSnapshot(id)
+        def omniSnapshot = referenceFetcher.getConsensusSnapshot(id)
 
         comparison = new ConsensusComparison(mscSnapshot, omniSnapshot)
     }
