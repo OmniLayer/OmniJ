@@ -8,6 +8,7 @@ import static org.mastercoin.CurrencyID.TMSC
 
 /**
  */
+@Ignore
 class CompareCoreOmniSpec extends BaseConsensusSpec {
 
     void setupSpec() {
