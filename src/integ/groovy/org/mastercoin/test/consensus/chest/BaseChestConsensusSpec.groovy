@@ -1,21 +1,21 @@
-package org.mastercoin.test.consensus
+package org.mastercoin.test.consensus.chest
 
 import org.mastercoin.BaseMainNetSpec
 import org.mastercoin.CurrencyID
 import org.mastercoin.consensus.ConsensusComparison
 import org.mastercoin.consensus.ConsensusFetcher
 import org.mastercoin.consensus.MasterCoreConsensusTool
-import org.mastercoin.consensus.OmniwalletConsensusTool
 import spock.lang.Shared
 import spock.lang.Subject
 import spock.lang.Unroll
 
+
 /**
- * Base class for Consensus Comparisons
- * Makes sure the block height of both snapshots matches and
- * also compares the balance of every address in the <b>union</b> of the two snapshots.
+ * Special case base class for Chest comparison tests
+ * No blockHeight comparison for now
+ * Only compare balance, since current Chest API doesn't return reserved.
  */
-abstract class  BaseConsensusSpec extends BaseMainNetSpec {
+abstract class BaseChestConsensusSpec extends BaseMainNetSpec {
     @Shared @Subject
     ConsensusComparison comparison
 
@@ -33,19 +33,10 @@ abstract class  BaseConsensusSpec extends BaseMainNetSpec {
         comparison = new ConsensusComparison(mscSnapshot, omniSnapshot)
     }
 
-    def "block height is the same in both snapshots"() {
-        given:
-        def blockHeight1 = comparison.c1.blockHeight
-        def blockHeight2 = comparison.c2.blockHeight
-
-        expect:
-        blockHeight1 == blockHeight2
-    }
-
     @Unroll
     def "#address #entry1 == #entry2"() {
         expect:
-        entry1 == entry2
+        entry1.balance == entry2.balance
 
         where:
         [address, entry1, entry2] << comparison
