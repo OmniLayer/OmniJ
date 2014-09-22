@@ -78,4 +78,9 @@ public final class CurrencyID extends Number implements Cloneable {
         return this.value == ((CurrencyID)obj).value;
     }
 
+    @Override
+    public String toString() {
+        return "CurrencyID:" + Integer.toString(this.intValue());
+    }
+
 }

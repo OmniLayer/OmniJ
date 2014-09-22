@@ -31,4 +31,15 @@ class DataPipeSpec extends Specification  {
         [address, entry1, entry2] <<  compareSmall2
     }
 
+    @Unroll
+    def "blockHeight #leftHeight == #rightHeight (#currency)"() {
+        expect:
+        leftHeight == rightHeight
+
+        where:
+        currency = compareSmall1.c1.currencyID
+        leftHeight = compareSmall1.c1.blockHeight
+        rightHeight = compareSmall1.c2.blockHeight
+    }
+
 }

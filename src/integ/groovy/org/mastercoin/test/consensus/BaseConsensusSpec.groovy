@@ -33,13 +33,15 @@ abstract class  BaseConsensusSpec extends BaseMainNetSpec {
         comparison = new ConsensusComparison(mscSnapshot, omniSnapshot)
     }
 
-    def "block height is the same in both snapshots"() {
-        given:
-        def blockHeight1 = comparison.c1.blockHeight
-        def blockHeight2 = comparison.c2.blockHeight
-
+    @Unroll
+    def "blockHeight #leftHeight == #rightHeight (#currency)"() {
         expect:
-        blockHeight1 == blockHeight2
+        leftHeight == rightHeight
+
+        where:
+        currency = comparison.c1.currencyID
+        leftHeight = comparison.c1.blockHeight
+        rightHeight = comparison.c2.blockHeight
     }
 
     @Unroll
