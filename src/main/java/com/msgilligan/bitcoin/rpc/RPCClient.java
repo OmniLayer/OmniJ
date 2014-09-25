@@ -62,7 +62,7 @@ public class RPCClient {
         InputStream responseStream = null;
         int code = connection.getResponseCode();
         String message = connection.getResponseMessage();
-        System.out.println("Response code: " + code);
+//        System.out.println("Response code: " + code);
         if (code == 200) {
             try {
                 responseStream = connection.getInputStream();
