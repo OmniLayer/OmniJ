@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * JSON-RPC Client
@@ -45,7 +46,7 @@ public class RPCClient {
         return serverURL;
     }
 
-    public Map<String, Object> send(Map<String, Object> request) throws IOException {
+    public Map<String, Object> send(Map<String, Object> request) throws IOException, JsonRPCException {
         openConnection();
         OutputStream output = connection.getOutputStream();
         String reqString = mapper.writeValueAsString(request);
@@ -58,30 +59,43 @@ public class RPCClient {
              System.out.println("Exception: " + logOrIgnore);
          }
 
-        int code = connection.getResponseCode();
-        if (code != 200) {
-            System.out.println("Response code: " + code);
-            // Should probably throw exception based upon response code right here
-        }
         InputStream responseStream = null;
-        try {
-            responseStream = connection.getInputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
+        int code = connection.getResponseCode();
+        String message = connection.getResponseMessage();
+        System.out.println("Response code: " + code);
+        if (code == 200) {
+            try {
+                responseStream = connection.getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new JsonRPCException("IOException reading response stream", e);
+            }
+        } else {
+            responseStream = connection.getErrorStream();
         }
 
-        Map<String, Object> responseMap = null;
-        if (responseStream != null) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> r = mapper.readValue(responseStream, Map.class);
-            responseMap = r;
+        String responseString = new Scanner(responseStream,"UTF-8").useDelimiter("\\A").next();
+        @SuppressWarnings("unchecked")
+        Map<String, Object> responseMap = mapper.readValue(responseString, Map.class);
+
+        if (code != 200) {
+            String exceptionMessage = message; // Default to HTTP result message
+
+            if (responseMap != null) {
+                Map <String, Object> error = (Map <String, Object>) responseMap.get("error");
+                if (error != null) {
+                    // If there's a more specific message in the JSON use it instead.
+                    exceptionMessage = (String) error.get("message");
+                }
+            }
+            throw new JsonRPCStatusException(exceptionMessage, code, message, responseString, responseMap);
         }
+
         closeConnection();
         return responseMap;
     }
 
-    public Map<String, Object> send(String method, List<Object> params) throws IOException {
+    public Map<String, Object> send(String method, List<Object> params) throws IOException, JsonRPCException  {
         Map<String, Object> request = new HashMap<String, Object>();
         request.put("jsonrpc", "1.0");
         request.put("method", method);
@@ -105,12 +119,12 @@ public class RPCClient {
         return response;
     }
 
-    public Object cliSend(String method, List<Object> params) throws IOException {
+    public Object cliSend(String method, List<Object> params) throws IOException, JsonRPCException {
         Map<String, Object> response = send(method, params);
         return response.get("result");
     }
 
-    public Object cliSend(String method, Object... params) throws IOException {
+    public Object cliSend(String method, Object... params) throws IOException, JsonRPCException {
         Map<String, Object> response = send(method, Arrays.asList(params));
         return response.get("result");
     }

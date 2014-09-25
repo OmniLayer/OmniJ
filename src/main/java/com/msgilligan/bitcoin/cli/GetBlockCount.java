@@ -2,6 +2,7 @@ package com.msgilligan.bitcoin.cli;
 
 import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.Sha256Hash;
+import com.msgilligan.bitcoin.rpc.JsonRPCException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -33,7 +34,7 @@ public class GetBlockCount extends CliCommand {
         Integer blockCount = -1;
         try {
             blockCount = client.getBlockCount();
-        } catch (IOException e) {
+        } catch (JsonRPCException | IOException e) {
             e.printStackTrace();
         }
         System.out.println("Starting Block count is: " + blockCount);
@@ -70,7 +71,7 @@ public class GetBlockCount extends CliCommand {
             System.out.println("balances: " + balances);
 
             blockCount = client.getBlockCount();
-        } catch (IOException e) {
+        } catch (JsonRPCException | IOException e) {
             e.printStackTrace();
         }
         System.out.println("Block count is: " + blockCount);

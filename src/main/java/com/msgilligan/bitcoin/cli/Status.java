@@ -1,6 +1,7 @@
 package com.msgilligan.bitcoin.cli;
 
 import com.msgilligan.bitcoin.rpc.BitcoinClient;
+import com.msgilligan.bitcoin.rpc.JsonRPCException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -15,12 +16,12 @@ public class Status extends CliCommand {
         super(commandName, new CliOptions(), args);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws JsonRPCException, IOException {
         Status command = new Status(args);
         command.run();
     }
 
-    public void run() throws IOException {
+    public void run() throws JsonRPCException, IOException {
         preflight();
         Map<String, Object> info = client.getInfo();
 

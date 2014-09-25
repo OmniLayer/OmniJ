@@ -66,7 +66,7 @@ public class BitcoinClient extends RPCClient {
                 /* Android exception, ignore */
                 // Expected exceptions on Android, RoboVM
             }
-            catch(IOException e) {
+            catch(JsonRPCException | IOException e) {
                 e.printStackTrace();
             }
             try {
@@ -88,7 +88,7 @@ public class BitcoinClient extends RPCClient {
      * @param timeout Timeout in seconds
      * @return
      */
-    public Boolean waitForSync(Long blockCount, Integer timeout) throws IOException {
+    public Boolean waitForSync(Long blockCount, Integer timeout) throws JsonRPCException, IOException {
         Integer seconds = 0;
 
         System.out.println("Waiting for server to get to block " +  blockCount);
@@ -120,7 +120,7 @@ public class BitcoinClient extends RPCClient {
      * @return
      * @throws IOException
      */
-    public Integer getBlockCount() throws IOException {
+    public Integer getBlockCount() throws JsonRPCException, IOException {
         Map<String, Object> response = send("getblockcount", null);
 
         Integer blockCount = (Integer) response.get("result");
@@ -134,7 +134,7 @@ public class BitcoinClient extends RPCClient {
      *                        in regtest mode genproclimit is number of blocks to generate immediately
      * @throws IOException
      */
-    public void setGenerate(Boolean generate, Long genproclimit) throws IOException {
+    public void setGenerate(Boolean generate, Long genproclimit) throws JsonRPCException, IOException {
         List<Object> params = createParamList(generate, genproclimit);
 
         Map<String, Object> response = send("setgenerate", params);
@@ -144,19 +144,19 @@ public class BitcoinClient extends RPCClient {
         assert result == null;
     }
 
-    public void generateBlock() throws IOException {
+    public void generateBlock() throws JsonRPCException, IOException {
         generateBlocks(1L);
     }
 
-    public void generateBlocks(Long blocks) throws IOException {
+    public void generateBlocks(Long blocks) throws JsonRPCException, IOException {
         setGenerate(true, blocks);
     }
 
-    public Address getNewAddress() throws IOException {
+    public Address getNewAddress() throws JsonRPCException, IOException {
         return getNewAddress(null);
     }
 
-    public Address getNewAddress(String account) throws IOException {
+    public Address getNewAddress(String account) throws JsonRPCException, IOException {
         List<Object> params = createParamList(account);
         Map<String, Object> response = send("getnewaddress", null);
 
@@ -170,7 +170,7 @@ public class BitcoinClient extends RPCClient {
         return address;
     }
 
-    public Address getAccountAddress(String account) throws IOException {
+    public Address getAccountAddress(String account) throws JsonRPCException, IOException {
         List<Object> params = createParamList(account);
         Map<String, Object> response = send("getaccountaddress", params);
         @SuppressWarnings("unchecked")
@@ -184,7 +184,7 @@ public class BitcoinClient extends RPCClient {
         return address;
     }
 
-    public Boolean moveFunds(Address fromaccount, Address toaccount, BigDecimal amount, Integer minconf, String comment) throws IOException {
+    public Boolean moveFunds(Address fromaccount, Address toaccount, BigDecimal amount, Integer minconf, String comment) throws JsonRPCException, IOException {
         List<Object> params = createParamList(fromaccount, toaccount, amount, minconf, comment);
         Map<String, Object> response = send("move", params);
         @SuppressWarnings("unchecked")
@@ -192,7 +192,7 @@ public class BitcoinClient extends RPCClient {
         return result;
     }
 
-    public Object getRawTransaction(Sha256Hash txid, Boolean verbose) throws IOException {
+    public Object getRawTransaction(Sha256Hash txid, Boolean verbose) throws JsonRPCException, IOException {
         Object result;
         if (verbose) {
             result = getRawTransactionMap(txid);    // Verbose means JSON
@@ -203,7 +203,7 @@ public class BitcoinClient extends RPCClient {
     }
 
     /* Return a BitcoinJ Transaction type */
-    public Transaction getRawTransaction(Sha256Hash txid) throws IOException {
+    public Transaction getRawTransaction(Sha256Hash txid) throws JsonRPCException, IOException {
         byte[] raw = getRawTransactionBytes(txid);
         // Hard-code RegTest for now
         // TODO: All RPC client connections should have a BitcoinJ params object?
@@ -211,7 +211,7 @@ public class BitcoinClient extends RPCClient {
         return tx;
     }
 
-    public byte[] getRawTransactionBytes(Sha256Hash txid) throws IOException {
+    public byte[] getRawTransactionBytes(Sha256Hash txid) throws JsonRPCException, IOException {
         List<Object> params = createParamList(txid.toString());
         Map<String, Object> response = send("getrawtransaction", params);
 
@@ -222,7 +222,7 @@ public class BitcoinClient extends RPCClient {
     }
 
     /* TODO: Return a stronger type than an a Map? */
-    public Map<String, Object> getRawTransactionMap(Sha256Hash txid) throws IOException {
+    public Map<String, Object> getRawTransactionMap(Sha256Hash txid) throws JsonRPCException, IOException {
         List<Object> params = createParamList(txid, 1);
         Map<String, Object> response = send("getrawtransaction", params);
 
@@ -231,11 +231,11 @@ public class BitcoinClient extends RPCClient {
         return json;
     }
 
-    public Sha256Hash sendRawTransaction(Transaction tx) throws IOException {
+    public Sha256Hash sendRawTransaction(Transaction tx) throws JsonRPCException, IOException {
         return sendRawTransaction(tx, null);
     }
 
-    public Sha256Hash sendRawTransaction(Transaction tx, Boolean allowHighFees) throws IOException {
+    public Sha256Hash sendRawTransaction(Transaction tx, Boolean allowHighFees) throws JsonRPCException, IOException {
         String hexTx = transactionToHex(tx);
         List<Object> params = createParamList(hexTx, allowHighFees);
         Map<String, Object> response = send("sendrawtransaction", params);
@@ -245,18 +245,18 @@ public class BitcoinClient extends RPCClient {
         return hash;
     }
 
-    public BigDecimal getReceivedByAddress(Address address) throws IOException {
+    public BigDecimal getReceivedByAddress(Address address) throws JsonRPCException, IOException {
         return getReceivedByAddress(address, 1);   // Default to 1 or more confirmations
     }
 
-    public BigDecimal getReceivedByAddress(Address address, Integer minConf) throws IOException {
+    public BigDecimal getReceivedByAddress(Address address, Integer minConf) throws JsonRPCException, IOException {
         List<Object> params = createParamList(address.toString(), minConf);
         Map<String, Object> response = send("getreceivedbyaddress", params);
         BigDecimal balance = BigDecimal.valueOf((Double) response.get("result"));
         return balance;
     }
 
-    public List<Object> listReceivedByAddress(Integer minConf, Boolean includeEmpty ) throws IOException {
+    public List<Object> listReceivedByAddress(Integer minConf, Boolean includeEmpty ) throws JsonRPCException, IOException {
         List<Object> params = createParamList(minConf, includeEmpty);
 
         Map<String, Object> response = send("listreceivedbyaddress", params);
@@ -266,11 +266,11 @@ public class BitcoinClient extends RPCClient {
         return addresses;
     }
 
-    public List<Object> listUnspent() throws IOException {
+    public List<Object> listUnspent() throws JsonRPCException, IOException {
         return listUnspent(null, null);
     }
 
-    public List<Object> listUnspent(Integer minConf, Integer maxConf) throws IOException {
+    public List<Object> listUnspent(Integer minConf, Integer maxConf) throws JsonRPCException, IOException {
         List<Object> params = createParamList(minConf, maxConf);
         Map<String, Object> response = send("listunspent", params);
 
@@ -278,15 +278,15 @@ public class BitcoinClient extends RPCClient {
         List<Object> unspent = (List<Object>) response.get("result");
         return unspent;
     }
-    public BigDecimal getBalance() throws IOException {
+    public BigDecimal getBalance() throws JsonRPCException, IOException {
         return getBalance(null, null);
     }
 
-    public BigDecimal getBalance(String account) throws IOException {
+    public BigDecimal getBalance(String account) throws JsonRPCException, IOException {
         return getBalance(account, null);
     }
 
-    public BigDecimal getBalance(String account, Integer minConf) throws IOException {
+    public BigDecimal getBalance(String account, Integer minConf) throws JsonRPCException, IOException {
         List<Object> params = createParamList(account, minConf);
         Map<String, Object> response = send("getbalance", params);
         Double balanceBTCd = (Double) response.get("result");
@@ -295,11 +295,11 @@ public class BitcoinClient extends RPCClient {
         return balanceBTC;
     }
 
-    public Sha256Hash sendToAddress(Address address, BigDecimal amount) throws IOException {
+    public Sha256Hash sendToAddress(Address address, BigDecimal amount) throws JsonRPCException, IOException {
         return sendToAddress(address, amount, null, null);
     }
 
-    public Sha256Hash sendToAddress(Address address, BigDecimal amount, String comment, String commentTo) throws IOException {
+    public Sha256Hash sendToAddress(Address address, BigDecimal amount, String comment, String commentTo) throws JsonRPCException, IOException {
         List<Object> params = createParamList(address.toString(), amount, comment, commentTo);
 
         Map<String, Object> response = send("sendtoaddress", params);
@@ -309,7 +309,7 @@ public class BitcoinClient extends RPCClient {
         return hash;
     }
 
-    public Sha256Hash sendFrom(String account, Address address, BigDecimal amount) throws IOException {
+    public Sha256Hash sendFrom(String account, Address address, BigDecimal amount) throws JsonRPCException, IOException {
         List<Object> params = createParamList(account, address.toString(), amount);
 
         Map<String, Object> response = send("sendfrom", params);
@@ -319,7 +319,7 @@ public class BitcoinClient extends RPCClient {
         return hash;
     }
 
-    public Sha256Hash sendMany(String account, Map<Address, BigDecimal> amounts) throws IOException {
+    public Sha256Hash sendMany(String account, Map<Address, BigDecimal> amounts) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList(account, amounts);
 
         Map<String, Object> response = send("sendmany", params);
@@ -329,7 +329,7 @@ public class BitcoinClient extends RPCClient {
         return hash;
     }
 
-    public Map<String, Object> getTransaction(Sha256Hash txid) throws IOException {
+    public Map<String, Object> getTransaction(Sha256Hash txid) throws JsonRPCException, IOException {
         List<Object> params = createParamList(txid.toString());
         Map<String, Object> response = send("gettransaction", params);
 
@@ -338,7 +338,7 @@ public class BitcoinClient extends RPCClient {
         return transaction;
     }
 
-    public Map<String, Object> getInfo() throws IOException {
+    public Map<String, Object> getInfo() throws JsonRPCException, IOException {
         Map<String, Object> response = send("getinfo", null);
 
         @SuppressWarnings("unchecked")
