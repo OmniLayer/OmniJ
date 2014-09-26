@@ -34,7 +34,9 @@ public class GetBlockCount extends CliCommand {
         Integer blockCount = -1;
         try {
             blockCount = client.getBlockCount();
-        } catch (JsonRPCException | IOException e) {
+        } catch (JsonRPCException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("Starting Block count is: " + blockCount);
@@ -71,7 +73,9 @@ public class GetBlockCount extends CliCommand {
             System.out.println("balances: " + balances);
 
             blockCount = client.getBlockCount();
-        } catch (JsonRPCException | IOException e) {
+        } catch (JsonRPCException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("Block count is: " + blockCount);

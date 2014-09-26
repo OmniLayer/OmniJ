@@ -65,8 +65,9 @@ public class BitcoinClient extends RPCClient {
             } catch (java.io.EOFException e) {
                 /* Android exception, ignore */
                 // Expected exceptions on Android, RoboVM
-            }
-            catch(JsonRPCException | IOException e) {
+            } catch (JsonRPCException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             try {
