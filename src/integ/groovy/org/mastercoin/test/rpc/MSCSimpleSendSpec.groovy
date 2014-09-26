@@ -3,7 +3,9 @@ package org.mastercoin.test.rpc
 import com.google.bitcoin.core.Address
 import com.google.bitcoin.core.Sha256Hash
 import com.google.bitcoin.core.Transaction
+import com.msgilligan.bitcoin.rpc.JsonRPCStatusException
 import org.mastercoin.BaseRegTestSpec
+import org.mastercoin.CurrencyID
 import org.mastercoin.MPNetworkParameters
 import org.mastercoin.MPRegTestParams
 import org.mastercoin.rpc.MPBalanceEntry
@@ -13,7 +15,7 @@ import static org.mastercoin.CurrencyID.*
 
 class MSCSimpleSendSpec extends BaseRegTestSpec {
     // Need to make sure these variables are set up with values that match their names
-    static final Long nonExistentCurrencyID = 293487L
+    static final CurrencyID nonExistentCurrencyID = new CurrencyID(293487L)
     def addressWith1MSC = getNewAddress() // Get an address with a balance of 1 MSC
     def richAddress = getNewAddress()  // Should be an address we know has a > 0 balance,
                                               //      ... otherwise it will fail
@@ -63,7 +65,9 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         // Currently it seems they're all 500s
 
         then: "exception is thrown"
-        Exception e = thrown()
+        JsonRPCStatusException e = thrown()
+        e.message == "Invalid amount"
+        e.responseJson.error.code == -3
         // TODO: Verify that blockchain state didn't change
     }
 
@@ -81,7 +85,9 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         // Currently it seems they're all 500s
 
         then: "exception is thrown"
-        Exception e = thrown()
+        JsonRPCStatusException e = thrown()
+        e.message == "Invalid amount"
+        e.responseJson.error.code == -3
         // TODO: Verify that blockchain state didn't change
     }
 
@@ -97,7 +103,9 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         def txid = client.send_MP(emptyAddress, toAddress, MSC, 1.0)
 
         then: "exception is thrown"
-        Exception e = thrown()
+        JsonRPCStatusException e = thrown()
+        e.message == "error code= -1"
+        e.responseJson.error.code == -8
     }
 
     def "When the amount to transfer exceeds the number owned and available by the sending address are rejected by the RPC"() {
@@ -111,7 +119,9 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         send_MP(addressWith1MSC, toAddress, MSC, 1.00000001)
 
         then: "exception is thrown"
-        Exception e = thrown()
+        JsonRPCStatusException e = thrown()
+        e.message == "error code= -1"
+        e.responseJson.error.code == -8
     }
 
     def "When the specified currency identifier is non-existent are rejected by the RPC"() {
@@ -125,7 +135,9 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         send_MP(richAddress, toAddress, nonExistentCurrencyID, 1.0)
 
         then: "exception is thrown"
-        Exception e = thrown()
+        JsonRPCStatusException e = thrown()
+        e.message == "Property ID does not exist"
+        e.responseJson.error.code == -8
     }
 
 //    def "TODO: test currencies other than MSC - when implemented"() {}
