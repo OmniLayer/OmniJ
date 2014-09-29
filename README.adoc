@@ -2,6 +2,65 @@
 
 Integration testing for https://bitcoin.org[Bitcoin] and http://www.mastercoin.org[Mastercoin] using the https://github.com/spockframework/spock[Spock Framework].
 
+There are currently three test suites contained in this project.
+
+Bitcoin RegTest Tests::
+Test Bitcoin RPC calls against an instance of `bitcoind` running in RegTest mode.
+
+Mastercoin RegTest Tests::
+Test Bitcoin and Mastercoin RPC calls against an instance of `mastercored` running in RegTest mode.
+
+Mastercoin Consensus Tests::
+Use the `getallbalancesforid_MP` RPC to get balances for multiple Mastercoin currencies and compare them against balance information from several well-known public Mastercoin servers with consensus-checking Web APIs.
+
+== Installing pre-requisites
+
+The only prerequisite for running these tests is an installed Java Runtime Environment. Either an Oracle or OpenJDK VM will work. Java 7 or later is recommended.
+
+All other dependencies are automatically downloaded and cached by the test startup script.
+
+== Running the tests manually
+
+. Check out this project using Git
+
+    $ git clone https://github.com/msgilligan/bitcoin-spock.git
+
+. Start Master Core (or bitciond) on MainNet listening on the standard RPC port on `localhost`. The tests are configured to use the following username and password:
+
+    rpcuser=bitcoinrpc
+    rpcpassword=pass
+
+. Open a shell and set the current working directory
+
+    cd bitcoin-spock
+
+. Run the tests with the provided Gradle wrapper scripts. For Unix/Mac:
+
+    ./gradlew consensusTest
++
+or for Windows:
+
+    ./gradlew.bat consensusTest
++
+The above exampels are for the Consensus Test, to run the other test suites replace `consensusTest` with `regTest` for the Mastercoin RegTests or with `regTestBTC` for the Bitcoin RegTests.
+. 
+
+== Running the tests from Jenkins
+
+To run the test from Jenkins you can use on of the following (UNIX) shell scripts:
+
+test-btc-integ-regtest.sh::
+Runs BTC RPC RegTest tests against a built executable of `bitcoind` in `copied-artifacts/src` directory.
+
+test-msc-integ-regtest.sh::
+Runs Mastercoin RPC regtest test against a built executable of `bitcoind` in `copied-artifacts/src` directory.
+
+test-msc-consensus-mainnet.sh::
+Runs consensus tests against a built executable of `bitcoind` in `copied-artifacts/src` directory.
+
+[NOTE]
+Read the scripts carefully to make sure you understand how they work.
+
 == Sample Test
 
 [source,groovy]
@@ -23,7 +82,7 @@ This project includes a variety of supporting classes necessary to implement the
 
 == Regression Test Mode
 
-Bitcoin 0.9 and later include support for Regression Test Mode (aka Regtest mode). RegTest mode creates a single node Bitcoin "network" that can confirm blocks upon command.
+Bitcoin 0.9 and later include support for Regression Test Mode (aka RegTest mode). RegTest mode creates a single node Bitcoin "network" that can confirm blocks upon command.
 
 For example the following command will generate 101 blocks
 
