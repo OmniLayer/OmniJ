@@ -6,11 +6,11 @@ function cleanup {
 }
 trap cleanup EXIT
 
-BTCD=copied-artifacts/src/bitcoind
+BTCD=copied-artifacts/src/mastercored
 DATADIR=$HOME/.bitcoin
 MSCLOG=/tmp/mastercore.log
 
-# Assume bitcoind built elsewhere and copied by Jenkins Copy Artifact plugin
+# Assume mastercored built elsewhere and copied by Jenkins Copy Artifact plugin
 chmod +x $BTCD
 
 # Set up bitcoin conf and data dir
