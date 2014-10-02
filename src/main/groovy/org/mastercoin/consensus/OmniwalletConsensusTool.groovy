@@ -8,7 +8,7 @@ import org.mastercoin.CurrencyID
  */
 class OmniwalletConsensusTool extends ConsensusTool {
     static URI OmniHost_Live = new URI("https://www.omniwallet.org");
-    static URI OmniHost_DBDev = new URI("https://dbdev.omniwallet.org");
+//    static URI OmniHost_DBDev = new URI("https://dbdev.omniwallet.org");
     private def proto
     private def host
     private def port

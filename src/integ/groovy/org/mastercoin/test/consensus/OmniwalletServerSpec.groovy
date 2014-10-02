@@ -12,7 +12,7 @@ class OmniwalletServerSpec extends Specification {
 
     def "Can get Omniwallet block height"() {
         setup:
-        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_DBDev)
+        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_Live)
 
         when: "we get a block height"
         /* Private method, but we can still call it with Groovy for a test */
@@ -25,7 +25,7 @@ class OmniwalletServerSpec extends Specification {
 
     def "Can get Omniwallet consensus data"() {
         setup:
-        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_DBDev)
+        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_Live)
 
         when: "we get data"
         def omniSnapshot = omniFetcher.getConsensusSnapshot(MSC)
