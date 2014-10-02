@@ -9,7 +9,6 @@ import static org.mastercoin.CurrencyID.TMSC
 
 /**
  */
-@Ignore
 @Title("Compare Master Core vs. Omniwallet www host API for TMSC currency")
 class CompareCoreOmniSpec extends BaseConsensusSpec {
 
