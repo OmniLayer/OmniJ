@@ -23,8 +23,8 @@ mkdir -p logs
 touch $MSCLOG
 ln -sf $MSCLOG logs/mastercore.log
 
-# remove persistence files since 
-rm -rf $DATADIR/MP_{persist,spinfo,txlist}
+# remove Master Protocol persistence directories/files
+rm -rf $DATADIR/MP_*
 
 # Run Bitcoin on main net mode
 $BTCD -server -datadir=$DATADIR -debug > logs/bitcoin.log &
