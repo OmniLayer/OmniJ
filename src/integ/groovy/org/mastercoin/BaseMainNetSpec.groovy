@@ -2,60 +2,58 @@ package org.mastercoin
 
 import com.msgilligan.bitcoin.rpc.RPCURL
 import org.mastercoin.rpc.MastercoinCLIClient
-import org.mastercoin.rpc.MastercoinClient
 import groovy.json.JsonSlurper
 import org.mastercoin.rpc.MastercoinClientDelegate
-import spock.lang.Shared
 import spock.lang.Specification
 
 /**
- * User: sean
- * Date: 7/20/14
- * Time: 12:53 AM
+ * Base specification for tests on Main net
+ *
+ * Creates an RPC client (currently <code>MastercoinCLIClient</code>), waits for
+ * RPC server to be responding (typical integration/functional requests require starting
+ * an RPC server which can take minutes or even hours) and to be in sync with the main
+ * Bitcoin Blockchain.
+ *
  */
 abstract class BaseMainNetSpec extends Specification implements MastercoinClientDelegate {
     {
         client = new MastercoinCLIClient(RPCURL.defaultMainNetURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
     }
-//abstract class BaseMainNetSpec extends Specification  {
     static final String rpcuser = "bitcoinrpc"
     static final String rpcpassword = "pass"
+    static final Integer rpcWaitTimeoutSeconds = 3*60*60  // Wait up to 3 hours for RPC response
 
-//    @Shared
-//    MastercoinClient client;
-
+    /**
+     * Wait for RPC server to be responding and to be in sync with the Bitcoin Blockchain
+     */
     void setupSpec() {
-//        client = new MastercoinClient(RPCURL.defaultMainNetURL, rpcuser, rpcpassword)
-        System.err.println("Waiting for server...")
-        Boolean available = client.waitForServer(3*60*60)   // Wait up to 3 hours
+        println "Waiting for server..."
+        Boolean available = client.waitForServer(rpcWaitTimeoutSeconds)
         if (!available) {
-            System.err.println("Timeout error.")
+            println "Timeout error."
         }
 
         //
-        // Get in sync with Blockchain.info
+        // Get in sync with the Blockchain
         //
         def curHeight = 0
-        def newHeight = new JsonSlurper().parse(new URL("http://blockchain.info/latestblock")).height
+        def newHeight = getReferenceBlockHeight()
         println "Blockchain.info current height: ${newHeight}"
         while ( newHeight > curHeight ) {
             curHeight = newHeight
             Boolean upToDate = client.waitForSync(curHeight, 60*60)
-            newHeight = new JsonSlurper().parse(new URL("http://blockchain.info/latestblock")).height
-            println "Blockchain.info current height: ${newHeight}"
+            newHeight = getReferenceBlockHeight()
+            println "Current reference block height: ${newHeight}"
         }
     }
 
-//    def methodMissing(String name, args) {
-//        client."$name"(*args)
-//    }
-//
-//    def propertyMissing(String name) {
-//        client."$name"
-//    }
-//
-//    def propertyMissing(String name, value) {
-//        client."$name" = value
-//    }
-
+    /**
+     * Use an external service to get the current block height
+     * Currently uses blockchain.info
+     */
+    def getReferenceBlockHeight() {
+        // Use Blockchain.info to get the current block height
+        def height = new JsonSlurper().parse(new URL("http://blockchain.info/latestblock")).height
+        return height
+    }
 }
