@@ -16,7 +16,7 @@ import static org.mastercoin.CurrencyID.TMSC
 class CompareCoreChestSpec extends BaseChestConsensusSpec {
 
     void setupSpec() {
-        setupComparisonForCurrency(new ChestConsensusTool(),
+        setupComparisonForCurrency(new ChestConsensusTool(ChestConsensusTool.ChestHost_Live),
                 TMSC)
     }
 }

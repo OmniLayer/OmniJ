@@ -30,9 +30,9 @@ class OmniwalletServerSpec extends Specification {
         when: "we get data"
         def omniSnapshot = omniFetcher.getConsensusSnapshot(MSC)
 
-        then: "it is there"
+        then: "something is there"
         omniSnapshot.currencyID == MSC
-        omniSnapshot.blockHeight >= 315121
+        omniSnapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
         omniSnapshot.entries.size() >= 1
     }
 

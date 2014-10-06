@@ -28,9 +28,9 @@ abstract class BaseChestConsensusSpec extends BaseMainNetSpec {
         def mscFetcher = new MasterCoreConsensusTool(client)
         def mscSnapshot = mscFetcher.getConsensusSnapshot(id)
 
-        def omniSnapshot = referenceFetcher.getConsensusSnapshot(id)
+        def referenceSnapshot = referenceFetcher.getConsensusSnapshot(id)
 
-        comparison = new ConsensusComparison(mscSnapshot, omniSnapshot)
+        comparison = new ConsensusComparison(mscSnapshot, referenceSnapshot)
     }
 
     @Unroll

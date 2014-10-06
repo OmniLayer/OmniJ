@@ -22,7 +22,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
     }
 
     public static void main(String[] args) {
-        OmniwalletConsensusTool tool = new OmniwalletConsensusTool()
+        OmniwalletConsensusTool tool = new OmniwalletConsensusTool(OmniHost_Live)
         tool.run(args.toList())
     }
 

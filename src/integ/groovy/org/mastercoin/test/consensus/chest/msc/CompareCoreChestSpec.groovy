@@ -14,7 +14,7 @@ import static org.mastercoin.CurrencyID.MSC
 class CompareCoreChestSpec extends BaseChestConsensusSpec {
 
     void setupSpec() {
-        setupComparisonForCurrency(new ChestConsensusTool(),
+        setupComparisonForCurrency(new ChestConsensusTool(ChestConsensusTool.ChestHost_Live),
                 MSC)
     }
 }

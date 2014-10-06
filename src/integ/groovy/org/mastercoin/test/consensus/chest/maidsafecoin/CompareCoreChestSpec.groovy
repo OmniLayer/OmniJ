@@ -14,7 +14,7 @@ import static org.mastercoin.CurrencyID.MaidSafeCoin
 class CompareCoreChestSpec extends BaseChestConsensusSpec {
 
     void setupSpec() {
-        setupComparisonForCurrency(new ChestConsensusTool(),
+        setupComparisonForCurrency(new ChestConsensusTool(ChestConsensusTool.ChestHost_Live),
                 MaidSafeCoin)
     }
 }
