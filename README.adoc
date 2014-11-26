@@ -42,8 +42,8 @@ or for Windows:
 
     ./gradlew.bat consensusTest
 +
-The above exampels are for the Consensus Test, to run the other test suites replace `consensusTest` with `regTest` for the Mastercoin RegTests or with `regTestBTC` for the Bitcoin RegTests.
-. 
+The above examples are for the Consensus Test, to run the other test suites replace the `consensusTest` Gradle target with `regTest` for the Mastercoin RegTests or with `regTestBTC` for the Bitcoin RegTests.
+
 
 == Running the tests from Jenkins
 
