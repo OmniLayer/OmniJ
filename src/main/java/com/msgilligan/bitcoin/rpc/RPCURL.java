@@ -8,8 +8,10 @@ import java.net.URL;
  */
 public class RPCURL {
     public static final String rpcproto = "http";
+    public static final String rpcssl = "https";
     public static final String rpchost = "127.0.0.1";
     public static final String rpcfile = "/";
+    public static final String stableMscRpcHost = "core.stage.merchantcoin.net";
 
     public static final int RPCPORT_MAINNET = 8332;
     public static final int RPCPORT_TESTNET = 18332;
@@ -34,6 +36,14 @@ public class RPCURL {
     public static URL getDefaultRegTestURL() {
         try {
             return new URL(rpcproto, rpchost, RPCPORT_REGTEST, rpcfile);
+        } catch (MalformedURLException e) {
+            return null;
+        }
+    }
+
+    public static URL getStablePublicMainNetURL() {
+        try {
+            return new URL(rpcssl, stableMscRpcHost, RPCPORT_MAINNET, rpcfile);
         } catch (MalformedURLException e) {
             return null;
         }
