@@ -21,9 +21,9 @@ class RPCSmokeTestSpec extends BaseMainNetSpec {
         when: "we request info"
         def info = getInfo()
 
-        then: "we get back some mastercoin information, too"
+        then: "we get back some version information, too"
         info != null
-        info.mastercoreversion >= 10003
+        info.version >= 90000
     }
 
     def "Can get Mastercore consensus data"() {
