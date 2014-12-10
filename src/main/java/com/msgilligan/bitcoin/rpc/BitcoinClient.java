@@ -99,12 +99,13 @@ public class BitcoinClient extends RPCClient {
         while ( seconds < timeout ) {
             block = this.getBlockCount();
             if (block >= blockCount ) {
+                System.out.println("Server is at block " +  block + " returning 'true'.");
                 return true;
             } else {
                 try {
                     seconds++;
                     if (seconds % 60 == 0) {
-                        System.out.println("block " + block);
+                        System.out.println("Server at block " + block);
                     }
                     Thread.sleep(SECOND);
                 } catch (InterruptedException e) {

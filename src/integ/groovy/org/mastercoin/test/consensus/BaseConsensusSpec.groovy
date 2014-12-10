@@ -31,6 +31,7 @@ abstract class  BaseConsensusSpec extends BaseMainNetSpec {
         def referenceSnapshot = referenceFetcher.getConsensusSnapshot(id)
 
         comparison = new ConsensusComparison(mscSnapshot, referenceSnapshot)
+        println "Setup comparison height1 = ${comparison.c1.blockHeight}, height2 = ${comparison.c2.blockHeight}"
     }
 
     @Unroll
