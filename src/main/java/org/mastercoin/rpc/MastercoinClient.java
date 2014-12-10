@@ -37,6 +37,14 @@ public class MastercoinClient extends BitcoinClient {
         jsonDecimalFormat.setParseBigDecimal(true);
     }
 
+    public Map<String, Object> getinfo_MP() throws JsonRPCException, IOException {
+        Map<String, Object> response = send("getinfo_MP", null);
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> result = (Map<String, Object>) response.get("result");
+        return result;
+    }
+
     public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList((Object) fromAddress.toString(), toAddress.toString(), currency.intValue(), amount.toString());
         Map<String, Object> response = send("send_MP", params);

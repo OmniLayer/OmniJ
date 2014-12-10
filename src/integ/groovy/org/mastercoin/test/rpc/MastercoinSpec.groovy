@@ -21,13 +21,14 @@ class MastercoinSpec extends BaseRegTestSpec {
         entry.balance == 0
     }
 
-    Should "Return Mastercoin version field along with Bitcoin info fields" () {
+    Should "Return Master Core version field using getinfo_MP" () {
         when: "we request info"
-        def info = getInfo()
+        def mpInfo = getinfo_MP()
 
         then: "we get back a Mastercoin version, too"
-        info != null
-        info.mastercoreversion >= 10003
+        mpInfo != null
+        mpInfo.mastercoreversion != null
+        mpInfo.mastercoreversion != ""
     }
 
 }

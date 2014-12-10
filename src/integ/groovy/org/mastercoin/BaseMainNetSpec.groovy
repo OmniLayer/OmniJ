@@ -1,5 +1,6 @@
 package org.mastercoin
 
+import com.msgilligan.bitcoin.rpc.JsonRPCStatusException
 import com.msgilligan.bitcoin.rpc.RPCURL
 import org.mastercoin.rpc.MastercoinCLIClient
 import groovy.json.JsonSlurper
@@ -45,6 +46,22 @@ abstract class BaseMainNetSpec extends Specification implements MastercoinClient
             newHeight = getReferenceBlockHeight()
             println "Current reference block height: ${newHeight}"
         }
+        def info = client.getinfo()
+
+        def mscVersion
+        def infoMP
+        try {
+            infoMP = client.getinfo_MP()
+        } catch (JsonRPCStatusException e) {
+            /* swallow */
+        }
+        if (infoMP?.mastercoreversion) {
+            mscVersion = infoMP.mastercoreversion.toString()
+        } else {
+            mscVersion = info.mastercoreversion
+        }
+        println "Bitcoin version: ${info.version}"
+        println "Mastercore version: ${mscVersion}"
     }
 
     /**
