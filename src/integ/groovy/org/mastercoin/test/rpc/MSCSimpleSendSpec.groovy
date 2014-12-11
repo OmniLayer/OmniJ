@@ -104,7 +104,7 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
-        e.message == "error code= -1"
+        e.message == "Not enough funds in user address"
         e.responseJson.error.code == -8
     }
 
@@ -120,7 +120,7 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
-        e.message == "error code= -1"
+        e.message == "Not enough funds in user address"
         e.responseJson.error.code == -8
     }
 
@@ -136,7 +136,7 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
-        e.message == "Property ID does not exist"
+        e.message == "Property identifier does not exist"
         e.responseJson.error.code == -8
     }
 
