@@ -105,7 +105,7 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
         e.message == "Not enough funds in user address"
-        e.responseJson.error.code == -8
+        e.responseJson.error.code == -1
     }
 
     def "When the amount to transfer exceeds the number owned and available by the sending address are rejected by the RPC"() {
@@ -121,7 +121,7 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
         e.message == "Not enough funds in user address"
-        e.responseJson.error.code == -8
+        e.responseJson.error.code == -1
     }
 
     def "When the specified currency identifier is non-existent are rejected by the RPC"() {
