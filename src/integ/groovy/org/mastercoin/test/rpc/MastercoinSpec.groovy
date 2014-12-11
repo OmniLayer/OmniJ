@@ -1,6 +1,7 @@
 package org.mastercoin.test.rpc
 
 import org.mastercoin.BaseRegTestSpec
+import spock.lang.Ignore
 
 import static org.mastercoin.CurrencyID.*
 import java.lang.Void as Should
@@ -21,6 +22,7 @@ class MastercoinSpec extends BaseRegTestSpec {
         entry.balance == 0
     }
 
+    @Ignore // This RPC is not implemented in mastercore 0.0.8
     Should "Return Master Core version field using getinfo_MP" () {
         when: "we request info"
         def mpInfo = getinfo_MP()
