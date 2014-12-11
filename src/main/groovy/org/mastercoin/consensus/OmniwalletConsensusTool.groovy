@@ -52,7 +52,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
 
     /* We're expecting input type String here */
     private BigDecimal jsonToBigDecimal(Object balanceIn) {
-        BigDecimal balanceOut =  new BigDecimal(balanceIn).setScale(12)
+        BigDecimal balanceOut =  new BigDecimal(balanceIn).setScale(8)
         return balanceOut
     }
 
