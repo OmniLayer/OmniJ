@@ -19,7 +19,7 @@ class ConsensusComparisonSpec extends Specification {
     }
 
     def "allows enumeration and comparison of all entries via an iterator"() {
-        setup: "init vars to verify all entries compared with no mismatches"
+        setup:
         def foundMismatch = false;
         def compareCount = 0
 
