@@ -17,4 +17,24 @@ class ConsensusComparisonSpec extends Specification {
         then: "an exception is thrown and value isn't changed"
         ReadOnlyPropertyException e = thrown()
     }
+
+    def "allows enumeration and comparison of all entries via an iterator"() {
+        setup: "init vars to verify all entries compared with no mismatches"
+        def foundMismatch = false;
+        def compareCount = 0
+
+        when: "we compare each entry in identical Snapshots"
+        for (pair in compareSmall1) {
+            compareCount++
+            if (pair.entry1 != pair.entry2) {
+                foundMismatch = true;
+            }
+        }
+
+        then: "we find no differences"
+        foundMismatch == false
+        compareCount == compareSmall1.c1.entries.size()
+        compareCount == compareSmall1.c2.entries.size()
+    }
+
 }
