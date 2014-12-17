@@ -31,7 +31,7 @@ class WaitForBlockchainSync {
      */
     static def getReferenceBlockHeight() {
         // Use Blockchain.info to get the current block height
-        def height = new JsonSlurper().parse(new URL("http://blockchain.info/latestblock")).height
+        def height = new JsonSlurper().parse(new URL("https://blockchain.info/latestblock")).height
         return height
     }
 
