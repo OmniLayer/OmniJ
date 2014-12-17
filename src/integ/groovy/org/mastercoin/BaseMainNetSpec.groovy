@@ -2,6 +2,7 @@ package org.mastercoin
 
 import com.msgilligan.bitcoin.rpc.JsonRPCStatusException
 import com.msgilligan.bitcoin.rpc.RPCURL
+import org.mastercoin.consensus.WaitForBlockchainSync
 import org.mastercoin.rpc.MastercoinCLIClient
 import groovy.json.JsonSlurper
 import org.mastercoin.rpc.MastercoinClientDelegate
@@ -37,15 +38,8 @@ abstract class BaseMainNetSpec extends Specification implements MastercoinClient
         //
         // Get in sync with the Blockchain
         //
-        def curHeight = 0
-        def newHeight = getReferenceBlockHeight()
-        println "Blockchain.info current height: ${newHeight}"
-        while ( newHeight > curHeight ) {
-            curHeight = newHeight
-            Boolean upToDate = client.waitForSync(curHeight, 60*60)
-            newHeight = getReferenceBlockHeight()
-            println "Current reference block height: ${newHeight}"
-        }
+        WaitForBlockchainSync.waitForSync(client);
+
         def info = client.getinfo()
 
         def mscVersion
@@ -62,15 +56,5 @@ abstract class BaseMainNetSpec extends Specification implements MastercoinClient
         }
         println "Bitcoin version: ${info.version}"
         println "Mastercore version: ${mscVersion}"
-    }
-
-    /**
-     * Use an external service to get the current block height
-     * Currently uses blockchain.info
-     */
-    def getReferenceBlockHeight() {
-        // Use Blockchain.info to get the current block height
-        def height = new JsonSlurper().parse(new URL("http://blockchain.info/latestblock")).height
-        return height
     }
 }
