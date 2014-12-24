@@ -5,18 +5,25 @@ apply plugin: 'maven'
 
 sourceCompatibility = 1.7
 group = 'com.msgilligan'
-version = '0.1'
+version = '0.2'
 
 repositories {
     jcenter()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/'}
 }
 
+configurations {
+    robovm
+}
+
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.3.2'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
     compile 'commons-cli:commons-cli:1.2'
-    compile 'org.codehaus.groovy:groovy-all:2.3.6'
+    robovm  'org.codehaus.groovy:groovy:2.4.0-rc-1:grooid'
+    compile 'org.codehaus.groovy:groovy:2.4.0-rc-1'
+    compile 'org.codehaus.groovy:groovy-json:2.4.0-rc-1'
+    compile 'org.codehaus.groovy:groovy-sql:2.4.0-rc-1'
     compile 'com.google:bitcoinj:0.11.3'
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
 
