@@ -1,4 +1,4 @@
-package com.google.bitcoin.spock
+package org.bitcoinj.spock
 
 import com.google.bitcoin.core.ECKey
 import com.google.bitcoin.params.MainNetParams
