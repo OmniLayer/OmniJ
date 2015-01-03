@@ -5,8 +5,6 @@ import com.google.bitcoin.core.NetworkParameters
 import com.google.bitcoin.core.Transaction
 import com.google.bitcoin.params.RegTestParams
 import org.mastercoin.BaseRegTestSpec
-import spock.lang.Shared
-import java.lang.Void as Should
 
 /**
  * User: sean
@@ -17,14 +15,7 @@ class RawSendSpec extends BaseRegTestSpec {
     static final BigDecimal testAmount = 2.0
     static final NetworkParameters params = RegTestParams.get()
 
-//    @Shared
-//    NetworkParameters params
-
-    void setupSpec() {
-//        params = RegTestParams.get()
-    }
-
-    Should "Be able to send a coin to newly created address"() {
+    def "Be able to send a coin to newly created address"() {
         when: "we create a new address and send testAmount to it"
         def destAddr = client.getNewAddress()                   // Create new Bitcoin address
         def txid = client.sendToAddress(destAddr, testAmount,
@@ -37,7 +28,7 @@ class RawSendSpec extends BaseRegTestSpec {
         // TODO: check balance
     }
 
-    Should "send 1 coin to new address"() {
+    def "send 1 coin to new address"() {
         when: "we create a raw transaction that sends a coin to a new address"
         String addrStr = client.getNewAddress()                   // Create new Bitcoin address
         Address destAddr = new Address(params, addrStr)

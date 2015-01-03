@@ -3,7 +3,6 @@ package com.msgilligan.bitcoin.rpc
 import org.mastercoin.BaseRegTestSpec
 import spock.lang.Shared
 
-import java.lang.Void as Should
 import java.security.SecureRandom
 
 class BitcoinStepwiseSpec extends BaseRegTestSpec {
@@ -24,7 +23,7 @@ class BitcoinStepwiseSpec extends BaseRegTestSpec {
     }
 
 
-    void "Be able to fund wealthy account from mining profits"() {
+    def "Be able to fund wealthy account from mining profits"() {
         when: "we create a new account for Mastercoins and send some BTC to it"
         sendToAddress(wealthyAddress, 2*sendAmount + extraAmount)
         generateBlock()
@@ -33,7 +32,7 @@ class BitcoinStepwiseSpec extends BaseRegTestSpec {
         getBalance(accountname) >= 2*sendAmount + extraAmount
     }
 
-    void "Send an amount to a newly created address"() {
+    def "Send an amount to a newly created address"() {
         setup: "initial balance"
         def wealthyStartBalance = client.getBalance(accountname)
         def testAmount = 1.0

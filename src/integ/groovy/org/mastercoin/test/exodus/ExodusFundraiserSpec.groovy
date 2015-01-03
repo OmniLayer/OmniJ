@@ -9,8 +9,6 @@ import org.mastercoin.MPRegTestParams
 import spock.lang.Shared
 import spock.lang.Stepwise
 
-import java.lang.Void as Should
-
 /**
  *
  * Test Specification for Initial Exodus Fundraiser
@@ -44,7 +42,7 @@ class ExodusFundraiserSpec extends BaseRegTestSpec {
         startHeight = mpNetParams.firstExodusBlock - 1
     }
 
-    Should "Be at a block height before Exodus crowdsale starts"() {
+    def "Be at a block height before Exodus crowdsale starts"() {
         expect:
         client.blockCount <= startHeight
 
@@ -52,7 +50,7 @@ class ExodusFundraiserSpec extends BaseRegTestSpec {
         0.0 == client.getReceivedByAddress(mpNetParams.exodusAddress)
     }
 
-    Should "Generate blocks to just before Exodus crowdsale start"() {
+    def "Generate blocks to just before Exodus crowdsale start"() {
 
         when: "we tell Master Core to mine enough blocks to bring us just before Exodus"
         def curHeight = client.blockCount
@@ -63,7 +61,7 @@ class ExodusFundraiserSpec extends BaseRegTestSpec {
 
     }
 
-    Should "Fund an address with BTC for sending BTC to Exodus address"() {
+    def "Fund an address with BTC for sending BTC to Exodus address"() {
         when: "we create a new address and send a some mined coins to it"
         participatingAddress = client.getNewAddress()    // Create new Bitcoin/Mastercoin address
         client.sendToAddress(participatingAddress, fundraiserAmountBTC+extraBTCForTxFees,
@@ -80,7 +78,7 @@ class ExodusFundraiserSpec extends BaseRegTestSpec {
         curHeight <= mpNetParams.lastExodusBlock
     }
 
-    Should "Buy some Mastercoins by sending BTC to Exodus address"() {
+    def "Buy some Mastercoins by sending BTC to Exodus address"() {
         when: "we send coins to the Exodus address"
         // TODO: #1 Use an RPC method that allows us to specify participatingAddress as sending address
         // TODO: #2 We need to somehow set participatingAddress as the change address

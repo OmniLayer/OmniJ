@@ -4,11 +4,9 @@ import org.mastercoin.BaseRegTestSpec
 
 import static org.mastercoin.CurrencyID.*
 
-import java.lang.Void as Should
-
 class MSCConsensusSpec extends BaseRegTestSpec {
 
-    Should "Check all balances"() {
+    def "Check all balances"() {
         when: "we check Mastercoin balances"
         def balances = getallbalancesforid_MP(MSC)
 
@@ -17,7 +15,7 @@ class MSCConsensusSpec extends BaseRegTestSpec {
         balances.size() >= 0
     }
 
-    Should "Check all balances, raw CLI, type integer"() {
+    def "Check all balances, raw CLI, type integer"() {
         when: "we check Mastercoin balances"
         def balances = cliSend("getallbalancesforid_MP", MSC as Integer)
 
@@ -26,7 +24,7 @@ class MSCConsensusSpec extends BaseRegTestSpec {
         balances.size() >= 0
     }
 
-    Should "Throw exception checking all balances, raw CLI, type String"() {
+    def "Throw exception checking all balances, raw CLI, type String"() {
         when: "we check Mastercoin balances"
         cliSend("getallbalancesforid_MP", "1")
 

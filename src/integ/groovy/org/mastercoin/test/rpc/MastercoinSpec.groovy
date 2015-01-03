@@ -3,7 +3,6 @@ package org.mastercoin.test.rpc
 import org.mastercoin.BaseRegTestSpec
 
 import static org.mastercoin.CurrencyID.*
-import java.lang.Void as Should
 
 /**
  * User: sean
@@ -12,7 +11,7 @@ import java.lang.Void as Should
  */
 class MastercoinSpec extends BaseRegTestSpec {
 
-    Should "Implement getbalance_MP"() {
+    def "Implement getbalance_MP"() {
         when: "we call getbalance_MP on a newly generated address"
         def destAddr = getNewAddress()                   // Create new Bitcoin address
         def entry = getbalance_MP(destAddr, MSC)
@@ -21,7 +20,7 @@ class MastercoinSpec extends BaseRegTestSpec {
         entry.balance == 0
     }
 
-    Should "Return Master Core version field using getinfo_MP" () {
+    def "Return Master Core version field using getinfo_MP" () {
         when: "we request info"
         def mpInfo = getinfo_MP()
 
