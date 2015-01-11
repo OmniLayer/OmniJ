@@ -268,18 +268,56 @@ public class BitcoinClient extends RPCClient {
         return addresses;
     }
 
-    public List<Object> listUnspent() throws JsonRPCException, IOException {
-        return listUnspent(null, null);
+    /**
+     * Returns a list of unspent transaction outputs with at least one confirmation.
+     *
+     * @return The unspent transaction outputs
+     * @throws JsonRPCException
+     * @throws IOException
+     */
+    public List<Map<String, Object>> listUnspent() throws JsonRPCException, IOException {
+        return listUnspent(null, null, null);
     }
 
-    public List<Object> listUnspent(Integer minConf, Integer maxConf) throws JsonRPCException, IOException {
-        List<Object> params = createParamList(minConf, maxConf);
+    /**
+     * Returns a list of unspent transaction outputs with at least {@code minConf} and not more than {@code maxConf}
+     * confirmations.
+     *
+     * @param minConf The minimum confirmations to filter
+     * @param maxConf The maximum confirmations to filter
+     * @return The unspent transaction outputs
+     * @throws JsonRPCException
+     * @throws IOException
+     */
+    public List<Map<String, Object>> listUnspent(Integer minConf, Integer maxConf)
+            throws JsonRPCException, IOException {
+        return listUnspent(minConf, maxConf, null);
+    }
+
+    /**
+     * Returns a list of unspent transaction outputs with at least {@code minConf} and not more than {@code maxConf}
+     * confirmations, filtered by a list of addresses.
+     *
+     * @param minConf The minimum confirmations to filter
+     * @param maxConf The maximum confirmations to filter
+     * @param filter  Include only transaction outputs to the specified addresses
+     * @return The unspent transaction outputs
+     * @throws JsonRPCException
+     * @throws IOException
+     */
+    public List<Map<String, Object>> listUnspent(Integer minConf, Integer maxConf, Iterable<Address> filter)
+            throws JsonRPCException, IOException {
+        List<String> addressFilter = null;
+        if (null != filter) addressFilter = applyToString(filter);
+
+        List<Object> params = createParamList(minConf, maxConf, addressFilter);
         Map<String, Object> response = send("listunspent", params);
 
         @SuppressWarnings("unchecked")
-        List<Object> unspent = (List<Object>) response.get("result");
+        List<Map<String, Object>> unspent = (List<Map<String, Object>>) response.get("result");
         return unspent;
     }
+
     public BigDecimal getBalance() throws JsonRPCException, IOException {
         return getBalance(null, null);
     }
@@ -384,6 +422,21 @@ public class BitcoinClient extends RPCClient {
             formatter.close();
         }
         return sb.toString();
+    }
+
+    /**
+     * Applies toString() to every element of {@code elements} and returns a list of the results.
+     *
+     * @param elements The elements
+     * @return The list of strings
+     */
+    private <T> List<String> applyToString(Iterable<T> elements) {
+        List<String> stringList = new ArrayList<>();
+        for (T element : elements) {
+            String elementAsString = element.toString();
+            stringList.add(elementAsString);
+        }
+        return stringList;
     }
 
 }
