@@ -38,11 +38,29 @@ class BitcoinSpec extends BaseRegTestSpec {
         // TODO: check balance of source address/wallet
     }
 
-    def "Get a list of unspent Transactions"() {
-        when: "we request unspent Transactions"
+    def "Get a list of unspent transaction outputs"() {
+        when: "we request unspent transaction outputs"
         def unspent = listUnspent()
 
         then: "there is at least 1"
         unspent.size() >= 1
+    }
+
+    def "Get a filtered list of unconfirmed transaction outputs"() {
+        when: "we create a new address and send #testAmount to it"
+        def destinationAddress = getNewAddress()
+        sendToAddress(destinationAddress, testAmount, "comment", "comment-to")
+
+        and: "we request unconfirmed unspent outputs for #destinationAddress"
+        def unspent = listUnspent(0, 0, [destinationAddress])
+
+        then: "there is at least 1"
+        unspent.size() >= 1
+
+        and: "they have 0 confirmations"
+        unspent.every { output -> output.confirmations == 0 }
+
+        and: "they are associated with #destinationAddress"
+        unspent.every { output -> output.address == destinationAddress.toString() }
     }
 }
