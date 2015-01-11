@@ -1,0 +1,80 @@
+package com.msgilligan.bitcoin.rpc
+
+import org.mastercoin.BaseRegTestSpec
+import spock.lang.Shared
+import spock.lang.Stepwise
+
+@Stepwise
+class BitcoinRawTransactionSpec extends BaseRegTestSpec {
+    final static BigDecimal fundingAmount = 10.0
+    final static BigDecimal sendingAmount = 1.0
+
+    @Shared
+    def fundingAddress
+
+    @Shared
+    def destinationAddress
+
+    @Shared
+    def rawTransactionHex
+
+    def "Fund address as intermediate"() {
+        when: "a new address is created"
+        fundingAddress = getNewAddress()
+
+        and: "coins are sent to the new address from a random source"
+        sendToAddress(fundingAddress, fundingAmount)
+
+        and: "a new block is mined"
+        generateBlock()
+
+        then: "the address should have that balance"
+        def balance = getBitcoinBalance(fundingAddress)
+        balance == fundingAmount
+    }
+
+    def "Create unsigned raw transaction"() {
+        given: "a newly created address as destination"
+        destinationAddress = getNewAddress("destinationAddress")
+
+        when: "we create a transaction, spending from #fundingAddress to #destinationAddress"
+        rawTransactionHex = createRawTransaction(fundingAddress, destinationAddress, sendingAmount)
+
+        then: "there should be a raw transaction"
+        rawTransactionHex != null
+        rawTransactionHex.size() > 0
+    }
+
+    def "Sign unsigned raw transaction"() {
+        when: "the transaction is sigend"
+        def result = signRawTransaction(rawTransactionHex)
+        rawTransactionHex = result["hex"]
+
+        then: "all inputs should be signed"
+        result["complete"] == true
+    }
+
+    def "Broadcast signed raw transaction"() {
+        when: "the transaction is sent"
+        def txid = sendRawTransaction(rawTransactionHex)
+
+        then: "there should be a transaction hash"
+        txid != null
+
+        when: "a new block is mined"
+        generateBlock()
+
+        then: "the transaction should have 1 confirmation"
+        def broadcastedTransaction = getRawTransaction(txid, true)
+        def confirmations = broadcastedTransaction["confirmations"]
+        confirmations == 1
+
+        and: "#fundingAddress has a remainder of coins minus transaction fees"
+        def balanceRemaining = getBitcoinBalance(fundingAddress)
+        balanceRemaining == fundingAmount - sendingAmount - stdTxFee
+
+        and: "#destinationAddress has a balance matching the spent amount"
+        def balanceDestination = getBitcoinBalance(destinationAddress)
+        balanceDestination == sendingAmount
+    }
+}
