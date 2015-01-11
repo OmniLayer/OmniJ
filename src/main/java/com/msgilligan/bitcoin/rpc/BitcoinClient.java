@@ -194,6 +194,44 @@ public class BitcoinClient extends RPCClient {
         return result;
     }
 
+    /**
+     * Creates a raw transaction spending the given inputs to the given destinations.
+     *
+     * Note: the transaction inputs are not signed, and the transaction is not stored in the wallet or transmitted to
+     * the network.
+     *
+     * @param inputs  The outpoints to spent
+     * @param outputs The destinations and amounts to transfer
+     * @return The hex-encoded raw transaction
+     * @throws JsonRPCException
+     * @throws IOException
+     */
+    public String createRawTransaction(List<Object> inputs, Map<Address, BigDecimal> outputs)
+            throws JsonRPCException, IOException {
+        List<Object> params = Arrays.asList(inputs, outputs);
+        Map<String, Object> response = send("createrawtransaction", params);
+
+        String transactionHex = (String) response.get("result");
+        return transactionHex;
+    }
+
+    /**
+     * Signs inputs of a raw transaction.
+     *
+     * @param unsignedTransaction The hex-encoded raw transaction
+     * @return The signed transaction and information whether it has a complete set of signature
+     * @throws IOException
+     * @throws JsonRPCException
+     */
+    public Map<String, Object> signRawTransaction(String unsignedTransaction) throws IOException, JsonRPCException {
+        List<Object> params = createParamList(unsignedTransaction);
+        Map<String, Object> response = send("signrawtransaction", params);
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> signedTransaction = (Map<String, Object>) response.get("result");
+        return signedTransaction;
+    }
+
     public Object getRawTransaction(Sha256Hash txid, Boolean verbose) throws JsonRPCException, IOException {
         Object result;
         if (verbose) {
@@ -225,7 +263,7 @@ public class BitcoinClient extends RPCClient {
 
     /* TODO: Return a stronger type than an a Map? */
     public Map<String, Object> getRawTransactionMap(Sha256Hash txid) throws JsonRPCException, IOException {
-        List<Object> params = createParamList(txid, 1);
+        List<Object> params = createParamList(txid.toString(), 1);
         Map<String, Object> response = send("getrawtransaction", params);
 
         @SuppressWarnings("unchecked")
@@ -237,8 +275,16 @@ public class BitcoinClient extends RPCClient {
         return sendRawTransaction(tx, null);
     }
 
+    public Sha256Hash sendRawTransaction(String hexTx) throws JsonRPCException, IOException {
+        return sendRawTransaction(hexTx, null);
+    }
+
     public Sha256Hash sendRawTransaction(Transaction tx, Boolean allowHighFees) throws JsonRPCException, IOException {
         String hexTx = transactionToHex(tx);
+        return sendRawTransaction(hexTx, allowHighFees);
+    }
+
+    public Sha256Hash sendRawTransaction(String hexTx, Boolean allowHighFees) throws JsonRPCException, IOException {
         List<Object> params = createParamList(hexTx, allowHighFees);
         Map<String, Object> response = send("sendrawtransaction", params);
 
@@ -268,18 +314,56 @@ public class BitcoinClient extends RPCClient {
         return addresses;
     }
 
-    public List<Object> listUnspent() throws JsonRPCException, IOException {
-        return listUnspent(null, null);
+    /**
+     * Returns a list of unspent transaction outputs with at least one confirmation.
+     *
+     * @return The unspent transaction outputs
+     * @throws JsonRPCException
+     * @throws IOException
+     */
+    public List<Map<String, Object>> listUnspent() throws JsonRPCException, IOException {
+        return listUnspent(null, null, null);
     }
 
-    public List<Object> listUnspent(Integer minConf, Integer maxConf) throws JsonRPCException, IOException {
-        List<Object> params = createParamList(minConf, maxConf);
+    /**
+     * Returns a list of unspent transaction outputs with at least {@code minConf} and not more than {@code maxConf}
+     * confirmations.
+     *
+     * @param minConf The minimum confirmations to filter
+     * @param maxConf The maximum confirmations to filter
+     * @return The unspent transaction outputs
+     * @throws JsonRPCException
+     * @throws IOException
+     */
+    public List<Map<String, Object>> listUnspent(Integer minConf, Integer maxConf)
+            throws JsonRPCException, IOException {
+        return listUnspent(minConf, maxConf, null);
+    }
+
+    /**
+     * Returns a list of unspent transaction outputs with at least {@code minConf} and not more than {@code maxConf}
+     * confirmations, filtered by a list of addresses.
+     *
+     * @param minConf The minimum confirmations to filter
+     * @param maxConf The maximum confirmations to filter
+     * @param filter  Include only transaction outputs to the specified addresses
+     * @return The unspent transaction outputs
+     * @throws JsonRPCException
+     * @throws IOException
+     */
+    public List<Map<String, Object>> listUnspent(Integer minConf, Integer maxConf, Iterable<Address> filter)
+            throws JsonRPCException, IOException {
+        List<String> addressFilter = null;
+        if (null != filter) addressFilter = applyToString(filter);
+
+        List<Object> params = createParamList(minConf, maxConf, addressFilter);
         Map<String, Object> response = send("listunspent", params);
 
         @SuppressWarnings("unchecked")
-        List<Object> unspent = (List<Object>) response.get("result");
+        List<Map<String, Object>> unspent = (List<Map<String, Object>>) response.get("result");
         return unspent;
     }
+
     public BigDecimal getBalance() throws JsonRPCException, IOException {
         return getBalance(null, null);
     }
@@ -384,6 +468,21 @@ public class BitcoinClient extends RPCClient {
             formatter.close();
         }
         return sb.toString();
+    }
+
+    /**
+     * Applies toString() to every element of {@code elements} and returns a list of the results.
+     *
+     * @param elements The elements
+     * @return The list of strings
+     */
+    private <T> List<String> applyToString(Iterable<T> elements) {
+        List<String> stringList = new ArrayList<>();
+        for (T element : elements) {
+            String elementAsString = element.toString();
+            stringList.add(elementAsString);
+        }
+        return stringList;
     }
 
 }
