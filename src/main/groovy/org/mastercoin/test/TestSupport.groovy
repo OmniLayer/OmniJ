@@ -86,4 +86,35 @@ trait TestSupport implements MastercoinClientDelegate {
 
         return address
     }
+
+    /**
+     * Returns the Bitcoin balance of an address.
+     *
+     * @param address The address
+     * @return The balance
+     */
+    BigDecimal getBitcoinBalance(Address address) {
+        return getBitcoinBalance(address, 1, 99999)
+    }
+
+    /**
+     * Returns the Bitcoin balance of an address where spendable outputs have at least {@code minConf} and not more
+     * than {@code maxConf} confirmations.
+     *
+     * @param address The address
+     * @param minConf Minimum amount of confirmations
+     * @param maxConf Maximum amount of confirmations
+     * @return The balance
+     */
+    BigDecimal getBitcoinBalance(Address address, Integer minConf, Integer maxConf) {
+        def btcBalance = new BigDecimal(0)
+        def unspentOutputs = (List<Map<String, Object>>) listUnspent(minConf, maxConf, [address])
+
+        for (unspentOutput in unspentOutputs) {
+            def balanceBTCd = unspentOutput["amount"] as Double
+            btcBalance += BigDecimal.valueOf(balanceBTCd)
+        }
+
+        return btcBalance
+    }
 }
