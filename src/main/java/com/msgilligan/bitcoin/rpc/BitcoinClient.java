@@ -194,6 +194,23 @@ public class BitcoinClient extends RPCClient {
         return result;
     }
 
+    /**
+     * Signs inputs of a raw transaction.
+     *
+     * @param unsignedTransaction The hex-encoded raw transaction
+     * @return The signed transaction and information whether it has a complete set of signature
+     * @throws IOException
+     * @throws JsonRPCException
+     */
+    public Map<String, Object> signRawTransaction(String unsignedTransaction) throws IOException, JsonRPCException {
+        List<Object> params = createParamList(unsignedTransaction);
+        Map<String, Object> response = send("signrawtransaction", params);
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> signedTransaction = (Map<String, Object>) response.get("result");
+        return signedTransaction;
+    }
+
     public Object getRawTransaction(Sha256Hash txid, Boolean verbose) throws JsonRPCException, IOException {
         Object result;
         if (verbose) {
