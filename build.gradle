@@ -13,6 +13,9 @@ repositories {
 }
 
 configurations {
+    // jansi configuration is a workaround for a broken transitive dependency
+    // See: http://forums.gradle.org/gradle/topics/gradle_task_groovydoc_failing_with_noclassdeffounderror
+    jansi.extendsFrom(runtime)
     robovm
 }
 
@@ -20,12 +23,17 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.3.2'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
     compile 'commons-cli:commons-cli:1.2'
+
     robovm  'org.codehaus.groovy:groovy:2.4.0-rc-1:grooid'
+
     compile 'org.codehaus.groovy:groovy:2.4.0-rc-1'
     compile 'org.codehaus.groovy:groovy-json:2.4.0-rc-1'
     compile 'org.codehaus.groovy:groovy-sql:2.4.0-rc-1'
+    compile 'org.codehaus.groovy:groovy-ant:2.4.0-rc-1'   // used in Groovy doc
     compile 'com.google:bitcoinj:0.11.3'
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
+
+    jansi 'org.fusesource.jansi:jansi:1.11'
 
     testCompile("org.spockframework:spock-core:1.0-groovy-2.3-SNAPSHOT") {
         exclude module: "groovy-all"
@@ -134,6 +142,7 @@ groovydoc {
     // Create GroovyDoc for Groovy + Java classes
     source = sourceSets.main.groovy + sourceSets.main.java
     overview = "src/main/java/overview.html"
+    groovyClasspath = project.configurations.jansi
 }
 
 def currencyID = 1
