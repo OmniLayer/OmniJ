@@ -88,6 +88,63 @@ trait TestSupport implements MastercoinClientDelegate {
     }
 
     /**
+     * Creates a raw transaction, sending {@code amount} from a single address to a destination, whereby no new change
+     * address is created, and remaining amounts are returned to {@code fromAddress}.
+     *
+     * Note: the transaction inputs are not signed, and the transaction is not stored in the wallet or transmitted to
+     * the network.
+     *
+     * @param fromAddress The source to spent from
+     * @param toAddress The destination
+     * @param amount The amount
+     * @return The hex-encoded raw transaction
+     */
+    String createRawTransaction(Address fromAddress, Address toAddress, BigDecimal amount) {
+        def outputs = new HashMap<Address, BigDecimal>()
+        outputs[toAddress] = amount
+        return createRawTransaction(fromAddress, outputs)
+    }
+
+    /**
+     * Creates a raw transaction, spending from a single address, whereby no new change address is created, and
+     * remaining amounts are returned to {@code fromAddress}.
+     *
+     * Note: the transaction inputs are not signed, and the transaction is not stored in the wallet or transmitted to
+     * the network.
+     *
+     * @param fromAddress The source to spent from
+     * @param outputs The destinations and amounts to transfer
+     * @return The hex-encoded raw transaction
+     */
+    String createRawTransaction(Address fromAddress, Map<Address, BigDecimal> outputs) {
+        def amountIn = new BigDecimal(0)
+        def amountOut = new BigDecimal(0)
+        def inputs = new ArrayList<Map<String, Object>>()
+        def unspentOutputs = listUnspent(0, 999999, [fromAddress])
+
+        // Gather inputs
+        for (unspentOutput in unspentOutputs) {
+            def outpoint = new HashMap<String, Object>()
+            def amountBTCd = unspentOutput["amount"] as Double
+            amountIn += BigDecimal.valueOf(amountBTCd)
+            outpoint["txid"] = unspentOutput["txid"]
+            outpoint["vout"] = unspentOutput["vout"]
+            inputs.add(outpoint)
+        }
+
+        // Sum outgoing amount
+        for (entry in outputs.entrySet()) {
+            amountOut += entry.value
+        }
+
+        // Calculate change
+        def amountChange = amountIn - amountOut - stdTxFee
+        outputs[fromAddress] = amountChange
+
+        return createRawTransaction(inputs, outputs)
+    }
+
+    /**
      * Returns the Bitcoin balance of an address.
      *
      * @param address The address
