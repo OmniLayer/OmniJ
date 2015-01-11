@@ -195,6 +195,27 @@ public class BitcoinClient extends RPCClient {
     }
 
     /**
+     * Creates a raw transaction spending the given inputs to the given destinations.
+     *
+     * Note: the transaction inputs are not signed, and the transaction is not stored in the wallet or transmitted to
+     * the network.
+     *
+     * @param inputs  The outpoints to spent
+     * @param outputs The destinations and amounts to transfer
+     * @return The hex-encoded raw transaction
+     * @throws JsonRPCException
+     * @throws IOException
+     */
+    public String createRawTransaction(List<Object> inputs, Map<Address, BigDecimal> outputs)
+            throws JsonRPCException, IOException {
+        List<Object> params = Arrays.asList(inputs, outputs);
+        Map<String, Object> response = send("createrawtransaction", params);
+
+        String transactionHex = (String) response.get("result");
+        return transactionHex;
+    }
+
+    /**
      * Signs inputs of a raw transaction.
      *
      * @param unsignedTransaction The hex-encoded raw transaction
