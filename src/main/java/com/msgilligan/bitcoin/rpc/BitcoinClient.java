@@ -225,7 +225,7 @@ public class BitcoinClient extends RPCClient {
 
     /* TODO: Return a stronger type than an a Map? */
     public Map<String, Object> getRawTransactionMap(Sha256Hash txid) throws JsonRPCException, IOException {
-        List<Object> params = createParamList(txid, 1);
+        List<Object> params = createParamList(txid.toString(), 1);
         Map<String, Object> response = send("getrawtransaction", params);
 
         @SuppressWarnings("unchecked")
