@@ -254,8 +254,16 @@ public class BitcoinClient extends RPCClient {
         return sendRawTransaction(tx, null);
     }
 
+    public Sha256Hash sendRawTransaction(String hexTx) throws JsonRPCException, IOException {
+        return sendRawTransaction(hexTx, null);
+    }
+
     public Sha256Hash sendRawTransaction(Transaction tx, Boolean allowHighFees) throws JsonRPCException, IOException {
         String hexTx = transactionToHex(tx);
+        return sendRawTransaction(hexTx, allowHighFees);
+    }
+
+    public Sha256Hash sendRawTransaction(String hexTx, Boolean allowHighFees) throws JsonRPCException, IOException {
         List<Object> params = createParamList(hexTx, allowHighFees);
         Map<String, Object> response = send("sendrawtransaction", params);
 
