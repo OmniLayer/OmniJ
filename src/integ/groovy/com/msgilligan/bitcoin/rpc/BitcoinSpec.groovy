@@ -52,7 +52,7 @@ class BitcoinSpec extends BaseRegTestSpec {
         sendToAddress(destinationAddress, testAmount, "comment", "comment-to")
 
         and: "we request unconfirmed unspent outputs for #destinationAddress"
-        def unspent = listUnspent(0, 0, [destinationAddress])
+        def unspent = listUnspent(0, 0, [destinationAddress.toString()])
 
         then: "there is at least 1"
         unspent.size() >= 1

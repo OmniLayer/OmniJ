@@ -120,7 +120,7 @@ trait TestSupport implements MastercoinClientDelegate {
         def amountIn = new BigDecimal(0)
         def amountOut = new BigDecimal(0)
         def inputs = new ArrayList<Map<String, Object>>()
-        def unspentOutputs = listUnspent(0, 999999, [fromAddress])
+        def unspentOutputs = listUnspent(0, 999999, [fromAddress.toString()])
 
         // Gather inputs
         for (unspentOutput in unspentOutputs) {
@@ -165,7 +165,7 @@ trait TestSupport implements MastercoinClientDelegate {
      */
     BigDecimal getBitcoinBalance(Address address, Integer minConf, Integer maxConf) {
         def btcBalance = new BigDecimal(0)
-        def unspentOutputs = (List<Map<String, Object>>) listUnspent(minConf, maxConf, [address])
+        def unspentOutputs = (List<Map<String, Object>>) listUnspent(minConf, maxConf, [address.toString()])
 
         for (unspentOutput in unspentOutputs) {
             def balanceBTCd = unspentOutput["amount"] as Double
