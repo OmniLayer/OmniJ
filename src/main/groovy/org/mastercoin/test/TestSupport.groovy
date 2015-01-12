@@ -139,7 +139,9 @@ trait TestSupport implements MastercoinClientDelegate {
 
         // Calculate change
         def amountChange = amountIn - amountOut - stdTxFee
-        outputs[fromAddress] = amountChange
+        if (amountChange > 0) {
+            outputs[fromAddress] = amountChange
+        }
 
         return createRawTransaction(inputs, outputs)
     }
@@ -173,5 +175,40 @@ trait TestSupport implements MastercoinClientDelegate {
         }
 
         return btcBalance
+    }
+
+    /**
+     * Sends BTC from an address to a destination, whereby no new change address is created, and any leftover is
+     * returned to the sending address.
+     *
+     * @param fromAddress The source to spent from
+     * @param toAddress   The destination address
+     * @param amount      The amount to transfer
+     * @return The transaction hash
+     */
+    Sha256Hash sendBitcoin(Address fromAddress, Address toAddress, BigDecimal amount) {
+        def outputs = new HashMap<Address, BigDecimal>()
+        outputs[toAddress] = amount
+        return sendBitcoin(fromAddress, outputs)
+    }
+
+    /**
+     * Sends BTC from an address to the destinations, whereby no new change address is created, and any leftover is
+     * returned to the sending address.
+     *
+     * @param fromAddress The source to spent from
+     * @param outputs     The destinations and amounts to transfer
+     * @return The transaction hash
+     */
+    Sha256Hash sendBitcoin(Address fromAddress, Map<Address, BigDecimal> outputs) {
+        def unsignedTxHex = createRawTransaction(fromAddress, outputs)
+        def signingResult = signRawTransaction(unsignedTxHex)
+
+        assert signingResult["complete"] == true
+
+        def signedTxHex = signingResult["hex"] as String
+        def txid = sendRawTransaction(signedTxHex)
+
+        return txid
     }
 }
