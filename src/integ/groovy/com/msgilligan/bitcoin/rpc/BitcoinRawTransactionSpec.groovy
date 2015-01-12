@@ -77,4 +77,24 @@ class BitcoinRawTransactionSpec extends BaseRegTestSpec {
         def balanceDestination = getBitcoinBalance(destinationAddress)
         balanceDestination == sendingAmount
     }
+
+    def "Send Bitcoin"() {
+        when: "a new address is created"
+        def newAddress = getNewAddress()
+
+        and: "coins are sent to the new address from #destinationAddress"
+        def amount = sendingAmount - stdTxFee
+        sendBitcoin(destinationAddress, newAddress, amount)
+
+        and: "a new block is mined"
+        generateBlock()
+
+        then: "the sending address should be empty"
+        def balanceSource = getBitcoinBalance(destinationAddress)
+        balanceSource == 0
+
+        and: "the new adress should have the amount sent to"
+        def balance = getBitcoinBalance(newAddress)
+        balance == amount
+    }
 }
