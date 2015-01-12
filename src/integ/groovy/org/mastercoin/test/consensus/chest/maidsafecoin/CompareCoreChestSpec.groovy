@@ -12,7 +12,7 @@ import static org.mastercoin.CurrencyID.MaidSafeCoin
 /**
  */
 @Ignore
-@Title("Compare Master Core vs. Masterchest API for MaidSafeCoin currency")
+@Title("Compare Master Core vs. Omnichest API for MaidSafeCoin currency")
 class CompareCoreChestSpec extends BaseChestConsensusSpec {
 
     void setupSpec() {

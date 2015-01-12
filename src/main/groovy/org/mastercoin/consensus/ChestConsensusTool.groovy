@@ -7,17 +7,17 @@ import org.mastercoin.CurrencyID
  * Command-line tool and class for fetching Master Chest consensus data
  */
 class ChestConsensusTool extends ConsensusTool {
-    static URI ChestHost_Live = new URI("https://masterchest.info");
-    static URI ChestHost_Core = new URI("https://core.masterchest.info");
+    // masterchest.info had https, but omnichest.info doesn't have it (yet?)
+    static URI ChestHost_Live = new URI("http://omnichest.info");
     private def proto
     private def host
     private def port
     static def file = "/mastercoin_verify/addresses.aspx"
 
     ChestConsensusTool(URI chestURI) {
-        proto = "https"
-        port = 443;
-        host = chestURI.host;
+        proto = chestURI.scheme
+        port = chestURI.port
+        host = chestURI.host
     }
 
     public static void main(String[] args) {

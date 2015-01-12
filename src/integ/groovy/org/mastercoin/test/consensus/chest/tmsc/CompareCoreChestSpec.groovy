@@ -12,7 +12,7 @@ import static org.mastercoin.CurrencyID.TMSC
 /**
  */
 @Ignore
-@Title("Compare Master Core vs. Masterchest API for TMSC currency")
+@Title("Compare Master Core vs. Omnichest API for TMSC currency")
 class CompareCoreChestSpec extends BaseChestConsensusSpec {
 
     void setupSpec() {
