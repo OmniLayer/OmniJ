@@ -139,7 +139,9 @@ trait TestSupport implements MastercoinClientDelegate {
 
         // Calculate change
         def amountChange = amountIn - amountOut - stdTxFee
-        outputs[fromAddress] = amountChange
+        if (amountChange > 0) {
+            outputs[fromAddress] = amountChange
+        }
 
         return createRawTransaction(inputs, outputs)
     }
