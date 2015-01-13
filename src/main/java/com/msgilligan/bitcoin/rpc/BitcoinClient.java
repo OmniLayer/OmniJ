@@ -354,7 +354,9 @@ public class BitcoinClient extends RPCClient {
     public List<Map<String, Object>> listUnspent(Integer minConf, Integer maxConf, Iterable<Address> filter)
             throws JsonRPCException, IOException {
         List<String> addressFilter = null;
-        if (null != filter) addressFilter = applyToString(filter);
+        if (filter != null) {
+            addressFilter = applyToString(filter);
+        }
 
         List<Object> params = createParamList(minConf, maxConf, addressFilter);
         Map<String, Object> response = send("listunspent", params);
