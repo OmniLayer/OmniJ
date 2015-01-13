@@ -24,6 +24,47 @@ trait TestSupport implements MastercoinClientDelegate {
         return accountName
     }
 
+    Address createFundedAddress(BigDecimal requestedBTC, BigDecimal requestedMSC) {
+        final MPNetworkParameters params = MPRegTestParams.get()  // Hardcoded for RegTest for now
+        Address fundedAddress = getNewAddress()
+        def btcForMSC = requestedMSC / 100
+        def startBTC = requestedBTC + btcForMSC + stdTxFee
+
+        // Generate blocks until we have the requested amount of BTC
+        while (getBalance() < startBTC) {
+            generateBlock()
+        }
+        Sha256Hash txid = sendToAddress(fundedAddress, startBTC)
+        generateBlock()
+        def tx = getTransaction(txid)
+        assert tx.confirmations == 1
+
+        // Make sure we got the correct amount of BTC
+        BigDecimal btcBalance = getBitcoinBalance(fundedAddress)
+        assert btcBalance == startBTC
+
+        // Send BTC to get MSC (and TMSC)
+        txid = sendBitcoin(fundedAddress, params.moneyManAddress, btcForMSC)
+
+        generateBlock()
+
+        tx = getTransaction(txid)
+        assert tx.confirmations == 1
+
+        // Verify correct amounts received
+        btcBalance = getBitcoinBalance(fundedAddress)
+        BigDecimal mscBalance = getbalance_MP(fundedAddress, MSC).balance
+        BigDecimal tmscBalance = getbalance_MP(fundedAddress, TMSC).balance
+
+        assert btcBalance == requestedBTC
+        assert mscBalance == requestedMSC
+        assert tmscBalance == requestedMSC
+
+
+        return fundedAddress
+
+    }
+
     Address createFaucetAddress(String account, BigDecimal requestedBTC) {
         while (getBalance() < requestedBTC) {
             generateBlock()
