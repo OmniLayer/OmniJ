@@ -351,9 +351,12 @@ public class BitcoinClient extends RPCClient {
      * @throws JsonRPCException
      * @throws IOException
      */
-    public List<Map<String, Object>> listUnspent(Integer minConf, Integer maxConf, Iterable<String> filter)
+    public List<Map<String, Object>> listUnspent(Integer minConf, Integer maxConf, Iterable<Address> filter)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(minConf, maxConf, filter);
+        List<String> addressFilter = null;
+        if (null != filter) addressFilter = applyToString(filter);
+
+        List<Object> params = createParamList(minConf, maxConf, addressFilter);
         Map<String, Object> response = send("listunspent", params);
 
         @SuppressWarnings("unchecked")
@@ -465,6 +468,21 @@ public class BitcoinClient extends RPCClient {
             formatter.close();
         }
         return sb.toString();
+    }
+
+    /**
+     * Applies toString() to every element of {@code elements} and returns a list of the results.
+     *
+     * @param elements The elements
+     * @return The list of strings
+     */
+    private <T> List<String> applyToString(Iterable<T> elements) {
+        List<String> stringList = new ArrayList<>();
+        for (T element : elements) {
+            String elementAsString = element.toString();
+            stringList.add(elementAsString);
+        }
+        return stringList;
     }
 
 }
