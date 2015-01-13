@@ -15,11 +15,11 @@ import java.security.SecureRandom
  *
  * Turns out this is a well-known issue with Bitcoin accounts. -- Test ignored for now.
  */
+@Ignore
 class RegTestSendManySpec extends BaseRegTestSpec {
     final static BigDecimal sendAmount = 10.0
     final static BigDecimal extraAmount = 1.0
 
-    @Ignore
     def "Send BTC from a newly created address and wallet and make sure sending address is correct"() {
         given: "A newly created RPC account and a newly created BTC address"
         def namedAccount = new BigInteger(130, new SecureRandom()).toString(32)
