@@ -1,6 +1,6 @@
 = bitcoin-spock
 
-Integration testing for https://bitcoin.org[Bitcoin] and http://www.mastercoin.org[Mastercoin] using the https://github.com/spockframework/spock[Spock Framework].
+Integration testing for https://bitcoin.org[Bitcoin] and http://omni.foundation[Omni Protocol] using the https://github.com/spockframework/spock[Spock Framework].
 
 There are currently three test suites contained in this project.
 
