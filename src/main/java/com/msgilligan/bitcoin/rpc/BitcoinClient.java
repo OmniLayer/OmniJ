@@ -477,7 +477,7 @@ public class BitcoinClient extends RPCClient {
      * @return The list of strings
      */
     private <T> List<String> applyToString(Iterable<T> elements) {
-        List<String> stringList = new ArrayList<>();
+        List<String> stringList = new ArrayList<String>();
         for (T element : elements) {
             String elementAsString = element.toString();
             stringList.add(elementAsString);
