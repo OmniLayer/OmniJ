@@ -21,7 +21,7 @@ public class PropertyType extends Number {
     }
 
     public PropertyType(int value) {
-        this.value = value;
+        this((short) value);
     }
 
     @Override
