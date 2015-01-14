@@ -12,7 +12,8 @@ import spock.lang.Unroll
 
 
 /**
- *
+ * Experiment with using Spock data-driven testing and the ConsensusComparison
+ * for STO testing.
  */
 class MSCSendToOwnersConsensusComparisonSpec extends BaseRegTestSpec {
     @Shared

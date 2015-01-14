@@ -23,7 +23,7 @@ class MoneyManSpec extends BaseRegTestSpec {
     @Shared
     Address faucetAddress
 
-    def setupSpec() {
+    def setup() {
         faucetAddress = createFundedAddress(faucetBTC, faucetMSC)
     }
 

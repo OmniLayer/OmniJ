@@ -23,18 +23,11 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
     final static BigDecimal faucetBTC = 10.0
     final static BigDecimal faucetMSC = 1000.0
 
-    @Shared
-    String faucetAccount
-
-    @Shared
-    Address faucetAddress
-
-    def setupSpec() {
-        faucetAccount = createNewAccount()
-        faucetAddress = createFaucetAddress(faucetAccount, faucetBTC, faucetMSC)
-    }
 
     def "Can simple send MSC from one address to another" () {
+        setup:
+        def faucetAddress = createFundedAddress(faucetBTC, faucetMSC)
+
 
         when: "we send MSC"
         def startBalance = getbalance_MP(faucetAddress, MSC).balance
@@ -54,12 +47,12 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
     def "When the amount to transfer is zero Simple Sends are rejected by the RPC"() {
         // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
         // treated as invalid by the Master Core parser
-
         given: "a new, empty destination address"
+        def fundedAddress = createFundedAddress(faucetBTC, faucetMSC)
         def toAddress = getNewAddress()
 
         when: "the amount to transfer is zero"
-        send_MP(richAddress, toAddress, MSC, 0)
+        send_MP(fundedAddress, toAddress, MSC, 0)
         // TODO: Test sending a negative amount of coins?
         // TODO: Check that the *right type* of exceptions are thrown
         // Currently it seems they're all 500s
@@ -76,10 +69,11 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         // treated as invalid by the Master Core parser
 
         given: "a new, empty destination address"
+        def fundedAddress = createFundedAddress(faucetBTC, faucetMSC)
         def toAddress = getNewAddress()
 
         when: "the amount to transfer is zero"
-        send_MP(richAddress, toAddress, MSC, -1.0)
+        send_MP(fundedAddress, toAddress, MSC, -1.0)
         // TODO: Test sending a negative amount of coins?
         // TODO: Check that the *right type* of exceptions are thrown
         // Currently it seems they're all 500s
@@ -113,10 +107,11 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         // treated as invalid by the Master Core parser
 
         given: "a new, empty destination address"
+        def fundedAddress = createFundedAddress(faucetBTC, 1.0)
         def toAddress = getNewAddress()
 
         when: "the amount to transfer exceeds the number owned and available by the sending address"
-        send_MP(addressWith1MSC, toAddress, MSC, 1.00000001)
+        send_MP(fundedAddress, toAddress, MSC, 1.00000001)
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
@@ -129,6 +124,7 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         // treated as invalid by the Master Core parser
 
         given: "a new, empty destination address"
+        def fundedAddress = createFundedAddress(faucetBTC, 1.0)
         def toAddress = getNewAddress()
 
         when: "the specified currency identifier is non-existent"
