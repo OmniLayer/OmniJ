@@ -5,8 +5,11 @@ import com.google.bitcoin.core.Sha256Hash
 import com.google.bitcoin.core.Transaction
 import com.google.bitcoin.params.RegTestParams
 import com.msgilligan.bitcoin.BTC
+import org.mastercoin.CurrencyID
+import org.mastercoin.Ecosystem
 import org.mastercoin.MPNetworkParameters
 import org.mastercoin.MPRegTestParams
+import org.mastercoin.PropertyType
 import org.mastercoin.rpc.MastercoinClientDelegate
 import static org.mastercoin.CurrencyID.*
 
@@ -252,4 +255,78 @@ trait TestSupport implements MastercoinClientDelegate {
 
         return txid
     }
+
+    /**
+     * Creates a smart property with fixed supply.
+     *
+     * @param address    The issuance address
+     * @param ecosystem  The ecosystem to create the property in
+     * @param type       The property type
+     * @param amount     The number of units to create
+     * @return The transaction hash
+     */
+    Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount) {
+        return createProperty(address, ecosystem, type, amount, "SP");
+    }
+
+    /**
+     * Creates a smart property with fixed supply.
+     *
+     * @param address    The issuance address
+     * @param ecosystem  The ecosystem to create the property in
+     * @param type       The property type
+     * @param amount     The number of units to create
+     * @param label      The label or title of the property
+     * @return The transaction hash
+     */
+    Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount, String label) {
+        def rawTxHex = createPropertyHex(ecosystem, type, 0L, "", "", label, "", "", amount);
+        def txid = sendrawtx_MP(address, rawTxHex)
+        return txid
+    }
+
+    /**
+     * Creates a hex-encoded raw transaction of type 50: "create property with fixed supply".
+     */
+    String createPropertyHex(Ecosystem ecosystem, PropertyType propertyType, Long previousPropertyId,
+                             String category, String subCategory, String label, String website, String info,
+                             Long amount) {
+        def rawTxHex = String.format("00000032%02x%04x%08x%s00%s00%s00%s00%s00%016x",
+                                     ecosystem.byteValue(),
+                                     propertyType.intValue(),
+                                     previousPropertyId,
+                                     toHexString(category),
+                                     toHexString(subCategory),
+                                     toHexString(label),
+                                     toHexString(website),
+                                     toHexString(info),
+                                     amount)
+        return rawTxHex
+    }
+
+    /**
+     * Converts an UTF-8 encoded String into a hexadecimal string representation.
+     *
+     * @param str The string
+     * @return The hexadecimal representation
+     */
+    String toHexString(String str) {
+        def ba = str.getBytes("UTF-8")
+        return toHexString(ba)
+    }
+
+    /**
+     * Converts a byte array into a hexadecimal string representation.
+     *
+     * @param ba The byte array
+     * @return The hexadecimal representation
+     */
+    String toHexString(byte[] ba) {
+        StringBuilder str = new StringBuilder()
+        for (int i = 0; i < ba.length; i++) {
+            str.append(String.format("%x", ba[i]))
+        }
+        return str.toString()
+    }
+
 }

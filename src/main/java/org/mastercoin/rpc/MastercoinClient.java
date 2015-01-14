@@ -52,9 +52,24 @@ public class MastercoinClient extends BitcoinClient {
         Sha256Hash hash = new Sha256Hash(txid);
         return hash;
     }
+    
+    public Sha256Hash sendrawtx_MP(Address fromAddress, String rawTxHex) throws JsonRPCException, IOException {
+        List<Object> params = Arrays.asList((Object) fromAddress.toString(), rawTxHex);
+        Map<String, Object> response = send("sendrawtx_MP", params);
+        String txid = (String) response.get("result");
+        return new Sha256Hash(txid);
+    }
+
+    public Sha256Hash sendrawtx_MP(Address fromAddress, String rawTxHex, Address referenceAddress)
+            throws JsonRPCException, IOException {
+        List<Object> params = Arrays.asList((Object) fromAddress.toString(), rawTxHex, referenceAddress.toString());
+        Map<String, Object> response = send("sendrawtx_MP", params);
+        String txid = (String) response.get("result");
+        return new Sha256Hash(txid);
+    }
 
     public MPBalanceEntry getbalance_MP(Address address, CurrencyID currency) throws JsonRPCException, IOException, ParseException {
-        List<Object> params = Arrays.asList((Object) address.toString(), currency.intValue());
+        List<Object> params = Arrays.asList((Object) address.toString(), currency.longValue());
         Map<String, Object> response = send("getbalance_MP", params);
         Map<String, String> result = (Map<String, String>) response.get("result");
         BigDecimal balanceBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("balance"));
