@@ -3,7 +3,6 @@ package org.mastercoin.test.rpc
 import com.google.bitcoin.core.Address
 import org.mastercoin.BaseRegTestSpec
 import org.mastercoin.MPRegTestParams
-import org.mastercoin.consensus.MasterCoreConsensusTool
 import org.mastercoin.rpc.MastercoinClient
 import spock.lang.Shared
 import spock.lang.Stepwise
@@ -18,22 +17,14 @@ class MoneyManSpec extends BaseRegTestSpec {
     final static BigDecimal extraAmount = 0.10
     final static BigDecimal faucetBTC = 10.0
     final static BigDecimal faucetMSC = 1000.0
-    final static BigDecimal initalMSCPerBTC = 100.0
+    final static BigDecimal initialMSCPerBTC = 100.0
     final static BigDecimal simpleSendAmount = 1.0
 
     @Shared
     Address faucetAddress
 
-    @Shared
-    def consensusTool
-
-    @Shared
-    def consensusComparison
-
-
     def setupSpec() {
         faucetAddress = createFundedAddress(faucetBTC, faucetMSC)
-        consensusTool = new MasterCoreConsensusTool(client)
     }
 
     def "Send BTC to an address to get MSC and TMSC"() {
@@ -58,16 +49,16 @@ class MoneyManSpec extends BaseRegTestSpec {
 
         and: "The balances for the account we just sent MSC to is correct"
         getBitcoinBalance(testAddress) == extraAmount
-        getbalance_MP(testAddress, MSC).balance == initalMSCPerBTC * sendAmount
-        getbalance_MP(testAddress, TMSC).balance == initalMSCPerBTC * sendAmount
+        getbalance_MP(testAddress, MSC).balance == initialMSCPerBTC * sendAmount
+        getbalance_MP(testAddress, TMSC).balance == initialMSCPerBTC * sendAmount
     }
 
     def "check Spec setup"() {
         // This test is really an integration test of createFundedAddress()
         expect:
         getBitcoinBalance(faucetAddress) == faucetBTC
-        getbalance_MP(faucetAddress, MSC).balance == initalMSCPerBTC * sendAmount
-        getbalance_MP(faucetAddress, TMSC).balance == initalMSCPerBTC * sendAmount
+        getbalance_MP(faucetAddress, MSC).balance == initialMSCPerBTC * sendAmount
+        getbalance_MP(faucetAddress, TMSC).balance == initialMSCPerBTC * sendAmount
     }
 
     def "Simple send MSC from one address to another" () {
@@ -109,24 +100,5 @@ class MoneyManSpec extends BaseRegTestSpec {
 
         then: "balance is unchanged"
         newWealthyBalance == wealthyBalance
-    }
-
-    def "Be able to send to owners"() {
-        // This test should be flushed out and moved to the MSCSendToOwnersSpec
-        when: "We Send to Owners"
-        def senderBalance = getbalance_MP(faucetAddress, TMSC).balance
-//        ConsensusSnapshot snap1 = consensusTool.getConsensusSnapshot(TMSC)
-        def txid = sendToOwnersMP(faucetAddress, TMSC, 100.00)
-        generateBlock()
-        def tx = client.getTransaction(txid)
-        def balances = getallbalancesforid_MP(TMSC)
-        def numberDest = balances.size() - 1
-        def sendToOwnersFee = numberDest * 0.00000001
-        def expectedBalance = (numberDest == 0) ? senderBalance : senderBalance - 100.0 - sendToOwnersFee
-//        ConsensusSnapshot snap2 = consensusTool.getConsensusSnapshot(TMSC)
-//        consensusComparison = new ConsensusComparison(snap1, snap2)
-
-        then: "Our balance is a little lower since we're not getting back all coins we sent"
-        getbalance_MP(faucetAddress, TMSC).balance == expectedBalance
     }
 }
