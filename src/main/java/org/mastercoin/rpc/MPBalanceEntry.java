@@ -22,17 +22,24 @@ public class MPBalanceEntry {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof MPBalanceEntry)) {
-            return false;
-        }
-        MPBalanceEntry e = (MPBalanceEntry) o;
-        if (    (this.address == e.address) &&
-                (this.balance == e.balance) &&
-                (this.reserved == e.reserved) ) {
-            return true;
-        } else {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MPBalanceEntry that = (MPBalanceEntry) o;
+
+        if (!address.equals(that.address)) return false;
+        if (!balance.equals(that.balance)) return false;
+        if (!reserved.equals(that.reserved)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = address.hashCode();
+        result = 31 * result + balance.hashCode();
+        result = 31 * result + reserved.hashCode();
+        return result;
     }
 
     public Address getAddress() {
