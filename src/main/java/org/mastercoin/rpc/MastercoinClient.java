@@ -69,7 +69,7 @@ public class MastercoinClient extends BitcoinClient {
     }
 
     public MPBalanceEntry getbalance_MP(Address address, CurrencyID currency) throws JsonRPCException, IOException, ParseException {
-        List<Object> params = Arrays.asList((Object) address.toString(), currency.intValue());
+        List<Object> params = Arrays.asList((Object) address.toString(), currency.longValue());
         Map<String, Object> response = send("getbalance_MP", params);
         Map<String, String> result = (Map<String, String>) response.get("result");
         BigDecimal balanceBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("balance"));
