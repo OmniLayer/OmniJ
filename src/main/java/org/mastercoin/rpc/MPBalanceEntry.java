@@ -20,6 +20,21 @@ public class MPBalanceEntry {
         this.reserved = reserved;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof MPBalanceEntry)) {
+            return false;
+        }
+        MPBalanceEntry e = (MPBalanceEntry) o;
+        if (    (this.address == e.address) &&
+                (this.balance == e.balance) &&
+                (this.reserved == e.reserved) ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public Address getAddress() {
         return address;
     }
