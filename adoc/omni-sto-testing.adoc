@@ -1,0 +1,12 @@
+= Omni Protocol Send To Owners Testing
+
+== Overview
+
+There is currently a https://docs.google.com/a/mastercoin.org/spreadsheets/d/1WslNWrzYN0XMCsauefBwHPaeSswgj9LO3yggVxTD3Vc[Send To Owners Tests] spreadsheet on Google Docs, that contains a thorough list of test cases for Send To Owners transactions.
+
+== Spock Tests
+
+Work in progress tests are:
+
+* https://github.com/msgilligan/bitcoin-spock/blob/master/src/integ/groovy/org/mastercoin/test/rpc/MSCSendToOwnersSpec.groovy[MSCSendToOwnersSpec]: Proof-of-concept STO tests
+* https://github.com/msgilligan/bitcoin-spock/blob/master/src/integ/groovy/org/mastercoin/test/rpc/MSCSendToOwnersConsensusComparisonSpec.groovy[MSCSendToOwnersConsensusComparisonSpec]: Experiment using consensus test classes for STO testing
