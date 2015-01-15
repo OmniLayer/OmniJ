@@ -46,7 +46,7 @@ public class MastercoinClient extends BitcoinClient {
     }
 
     public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount) throws JsonRPCException, IOException {
-        List<Object> params = Arrays.asList((Object) fromAddress.toString(), toAddress.toString(), currency.intValue(), amount.toString());
+        List<Object> params = Arrays.asList((Object) fromAddress.toString(), toAddress.toString(), currency.longValue(), amount.toString());
         Map<String, Object> response = send("send_MP", params);
         String txid = (String) response.get("result");
         Sha256Hash hash = new Sha256Hash(txid);
@@ -79,7 +79,7 @@ public class MastercoinClient extends BitcoinClient {
     }
 
     public List<MPBalanceEntry> getallbalancesforid_MP(CurrencyID currency) throws JsonRPCException, IOException, ParseException, AddressFormatException {
-        List<Object> params = Arrays.asList((Object) currency.intValue());
+        List<Object> params = Arrays.asList((Object) currency.longValue());
         Map<String, Object> response = send("getallbalancesforid_MP", params);
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> untypedBalances = (List<Map<String, Object>>) response.get("result");
@@ -119,7 +119,7 @@ public class MastercoinClient extends BitcoinClient {
     }
 
     public Sha256Hash sendToOwnersMP(Address fromAddress, CurrencyID currency, BigDecimal amount) throws JsonRPCException, IOException {
-        List<Object> params = Arrays.asList((Object) fromAddress.toString(), currency.intValue(), amount.toString());
+        List<Object> params = Arrays.asList((Object) fromAddress.toString(), currency.longValue(), amount.toString());
         Map<String, Object> response = send("sendtoowners_MP", params);
         String txid = (String) response.get("result");
         Sha256Hash hash = new Sha256Hash(txid);
