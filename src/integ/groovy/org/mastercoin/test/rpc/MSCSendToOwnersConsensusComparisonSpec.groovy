@@ -14,6 +14,9 @@ import spock.lang.Unroll
 /**
  * Experiment with using Spock data-driven testing and the ConsensusComparison
  * for STO testing.
+ *
+ * In this test an amount of 100.0 MSC is sent to all MSC owners and it is
+ * confirmed that the balance of the recipients really increased. 
  */
 class MSCSendToOwnersConsensusComparisonSpec extends BaseRegTestSpec {
     @Shared
@@ -29,8 +32,8 @@ class MSCSendToOwnersConsensusComparisonSpec extends BaseRegTestSpec {
         // Run once before all tests in this Spec
         consensusTool = new MasterCoreConsensusTool(client)
         def startingBTC = 10.0
-        def startingMSC = 1000
-        def amountSent = 100
+        def startingMSC = 1000.0
+        def amountSent = 100.0
         fundedAddress = createFundedAddress(startingBTC, startingMSC)
         def currencyID = org.mastercoin.CurrencyID.TMSC
         def startingPropBal = getbalance_MP(fundedAddress, currencyID).balance
@@ -46,9 +49,9 @@ class MSCSendToOwnersConsensusComparisonSpec extends BaseRegTestSpec {
     }
 
     @Unroll
-    def "#address #after > #before" (String address, ConsensusEntry before, ConsensusEntry after) {
+    def "#address #after >= #before" (String address, ConsensusEntry before, ConsensusEntry after) {
         expect:
-        (address != fundedAddress.toString()) && (after.balance > before.balance) ||
+        (address != fundedAddress.toString()) && (after.balance >= before.balance) ||
                 (address == fundedAddress.toString()) && (after.balance < before.balance)
 
         where:

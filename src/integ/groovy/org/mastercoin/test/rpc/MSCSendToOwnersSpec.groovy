@@ -27,21 +27,32 @@ class MSCSendToOwnersSpec extends BaseRegTestSpec {
     def "STO calculates correct fees for the simple case"() {
         setup:
         def startingBTC = 10.0
-        def startingMSC = 1000
-        def amountSent = 100
+        def startingMSC = 1000.0
+        def amountSent = 100.0
         def fundedAddress = createFundedAddress(startingBTC, startingMSC)
         def currencyID = TMSC
+        def expectedBalance = 0.0
 
         when: "We Send to Owners"
-        def startingPropBal = getbalance_MP(fundedAddress, currencyID).balance
+        def startBalances = getallbalancesforid_MP(currencyID)
+        def startBalanceSender = getbalance_MP(fundedAddress, currencyID).balance
+        def numberOfHolders = startBalances.size()
         sendToOwnersMP(fundedAddress, currencyID, amountSent)
 
-        and: "we generate a block"
+        and: "We generate a block"
         generateBlock()
-        def balances = getallbalancesforid_MP(currencyID)
-        def numberDest = balances.size() - 1
-        def totalFee = numberDest * stoFeePerAddress
-        def expectedBalance = (numberDest == 0) ? startingPropBal : startingPropBal - amountSent - totalFee
+
+        // The fee for each receiver is #stoFeePerAddress
+        if (numberOfHolders > 1) {
+            def endBalances = getallbalancesforid_MP(currencyID)
+            def changedBalances = endBalances - startBalances
+            def numberReceivers = changedBalances.size() - 1
+            def totalFee = numberReceivers * stoFeePerAddress
+            expectedBalance = startBalanceSender - amountSent - totalFee
+        } else {
+            // There are no other holders, thus no receiver or fee
+            expectedBalance = startBalanceSender
+        }
 
         then: "Our balance has been reduced by amount sent + fees"
         getbalance_MP(fundedAddress, currencyID).balance == expectedBalance
@@ -49,12 +60,12 @@ class MSCSendToOwnersSpec extends BaseRegTestSpec {
 
     def "STO fails when amount sent is zero"() {
         setup:
-        def fundedAddress = createFundedAddress(10, 100)
+        def fundedAddress = createFundedAddress(10.0, 100.0)
         def currencyID = TMSC
         def startBalances = consensusTool.getConsensusSnapshot(currencyID)
 
         when: "We Send to Owners with amount equal zero"
-        sendToOwnersMP(fundedAddress, currencyID, 0)
+        sendToOwnersMP(fundedAddress, currencyID, 0.0)
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
@@ -67,4 +78,5 @@ class MSCSendToOwnersSpec extends BaseRegTestSpec {
         then: "balances unchanged"
         startBalances == endBalances
     }
+
 }
