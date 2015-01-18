@@ -45,6 +45,14 @@ public class MastercoinClient extends BitcoinClient {
         return result;
     }
 
+    public List<Object> listproperties_MP() throws JsonRPCException, IOException {
+        Map<String, Object> response = send("listproperties_MP", null);
+
+        @SuppressWarnings("unchecked")
+        List<Object> result = (List<Object>) response.get("result");
+        return result;
+    }
+
     public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList((Object) fromAddress.toString(), toAddress.toString(), currency.longValue(), amount.toString());
         Map<String, Object> response = send("send_MP", params);
@@ -66,6 +74,14 @@ public class MastercoinClient extends BitcoinClient {
         Map<String, Object> response = send("sendrawtx_MP", params);
         String txid = (String) response.get("result");
         return new Sha256Hash(txid);
+    }
+
+    public List<Map<String, Object>> getactivedexsells_MP() throws JsonRPCException, IOException {
+        Map<String, Object> response = send("getactivedexsells_MP", null);
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>>  result = (List<Map<String, Object>>) response.get("result");
+        return result;
     }
 
     public MPBalanceEntry getbalance_MP(Address address, CurrencyID currency) throws JsonRPCException, IOException, ParseException {
