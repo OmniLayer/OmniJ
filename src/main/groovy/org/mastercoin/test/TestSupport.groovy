@@ -257,6 +257,27 @@ trait TestSupport implements MastercoinClientDelegate {
     }
 
     /**
+     * Creates an offer on the traditional distributed exchange.
+     *
+     * @param address        The address
+     * @param currencyId     The identifier of the currency for sale
+     * @param amountForSale  The amount of currency
+     * @param amountDesired  The amount of desired Bitcoin
+     * @param paymentWindow  The payment window measured in blocks
+     * @param commitmentFee  The minimum transaction fee required to be paid as commmitment when accepting this offer
+     * @param action         The action applied to the offer (1 = new, 2 = update, 3 = cancel)
+     * @return The transaction hash
+     */
+    Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, BigDecimal amountForSale,
+                                  BigDecimal amountDesired, Number paymentWindow, BigDecimal commitmentFee,
+                                  Number action) {
+        def rawTxHex = createDexSellOfferHex(
+                currencyId, amountForSale, amountDesired, paymentWindow, commitmentFee, action);
+        def txid = sendrawtx_MP(address, rawTxHex)
+        return txid
+    }
+
+    /**
      * Creates a smart property with fixed supply.
      *
      * @param address    The issuance address
@@ -283,6 +304,21 @@ trait TestSupport implements MastercoinClientDelegate {
         def rawTxHex = createPropertyHex(ecosystem, type, 0L, "", "", label, "", "", amount);
         def txid = sendrawtx_MP(address, rawTxHex)
         return txid
+    }
+
+    /**
+     * Creates a hex-encoded raw transaction of type 20: "sell mastercoin for bitcoin".
+     */
+    String createDexSellOfferHex(CurrencyID currencyId, BigDecimal amountForSale, BigDecimal amountDesired,
+                                 Number paymentWindow, BigDecimal commitmentFee, Number action) {
+        def rawTxHex = String.format("00010014%08x%016x%016x%02x%016x%02x",
+                currencyId.longValue(),
+                (BTC.btcToSatoshis(amountForSale)).longValue(),
+                (BTC.btcToSatoshis(amountDesired)).longValue(),
+                paymentWindow.byteValue(),
+                (BTC.btcToSatoshis(commitmentFee)).longValue(),
+                action.byteValue())
+        return rawTxHex
     }
 
     /**
