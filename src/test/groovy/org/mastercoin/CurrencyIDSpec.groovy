@@ -63,7 +63,7 @@ class CurrencyIDSpec extends Specification {
 
     def "We can't create an CurrencyID with an invalid value"() {
         when: "we try to create a CurrencyID with an invalid value"
-        Ecosystem ecosystem = new CurrencyID(id)
+        CurrencyID currencyID = new CurrencyID(id)
 
         then: "exception is thrown"
         NumberFormatException e = thrown()
