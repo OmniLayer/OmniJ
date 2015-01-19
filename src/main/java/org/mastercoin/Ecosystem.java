@@ -60,4 +60,10 @@ public class Ecosystem extends Number {
         }
         return this.value == ((Ecosystem)obj).value;
     }
+
+    @Override
+    public String toString() {
+        return "Ecosystem:" + Short.toString(value);
+    }
+
 }

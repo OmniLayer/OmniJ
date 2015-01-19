@@ -10,6 +10,7 @@ import org.mastercoin.MPNetworkParameters
 import org.mastercoin.MPRegTestParams
 import org.mastercoin.rpc.MPBalanceEntry
 import spock.lang.Shared
+import spock.lang.Unroll
 
 import static org.mastercoin.CurrencyID.*
 
@@ -23,15 +24,13 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
     final static BigDecimal faucetBTC = 10.0
     final static BigDecimal faucetMSC = 1000.0
 
-
-    def "Can simple send MSC from one address to another" () {
+    @Unroll
+    def "Can simple send #amount MSC from one address to another"() {
         setup:
-        def faucetAddress = createFundedAddress(faucetBTC, faucetMSC)
-
+        def faucetAddress = createFundedAddress(faucetBTC, fundingMSC)
 
         when: "we send MSC"
         def startBalance = getbalance_MP(faucetAddress, MSC).balance
-        def amount = 1.0
         def toAddress = getNewAddress()
         send_MP(faucetAddress, toAddress, MSC, amount)
 
@@ -42,6 +41,12 @@ class MSCSimpleSendSpec extends BaseRegTestSpec {
         then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
         amount == getbalance_MP(toAddress, MSC).balance
         endBalance == startBalance - amount
+
+        where:
+        fundingMSC | amount
+        1000.0     | 1.0
+        1.0        | 0.12345678
+        0.000001   | 0.00000001
     }
 
     def "When the amount to transfer is zero Simple Sends are rejected by the RPC"() {
