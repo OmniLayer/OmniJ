@@ -68,6 +68,17 @@ class EcosystemSpec extends Specification {
 
         where:
         id << [0, -1, 3]
-
     }
+
+    def "An Ecosystem can be represented as String"() {
+        expect:
+        Ecosystem ecosystem = new Ecosystem(id)
+        ecosystem.toString() == ecosystemAsString
+
+        where:
+        id | ecosystemAsString
+        1  | "Ecosystem:1"
+        2  | "Ecosystem:2"
+    }
+
 }

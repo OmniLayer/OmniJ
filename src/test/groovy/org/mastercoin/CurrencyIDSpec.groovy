@@ -138,4 +138,18 @@ class CurrencyIDSpec extends Specification {
         id << [0, -1, 4294967296]
     }
 
+    def "A CurrencyID can be represented as String"() {
+        expect:
+        CurrencyID currency = new CurrencyID(id)
+        currency.toString() == currencyIdAsString
+
+        where:
+        id | currencyIdAsString
+        1 | "CurrencyID:1"
+        2 | "CurrencyID:2"
+        2147483647 | "CurrencyID:2147483647"
+        2147483647L + 1 | "CurrencyID:2147483648"
+        4294967295 | "CurrencyID:4294967295"
+    }
+
 }

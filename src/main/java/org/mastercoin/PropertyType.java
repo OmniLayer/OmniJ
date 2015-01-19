@@ -12,16 +12,12 @@ public class PropertyType extends Number {
     public static final PropertyType INDIVISIBLE = new PropertyType(INDIVISIBLE_VALUE);
     public static final PropertyType DIVISIBLE = new PropertyType(DIVISIBLE_VALUE);
 
-    public PropertyType(short value) {
+    public PropertyType(int value) {
         if (!(value == INDIVISIBLE_VALUE ||
               value == DIVISIBLE_VALUE)) {
             throw new NumberFormatException();
         }
         this.value = value;
-    }
-
-    public PropertyType(int value) {
-        this((short) value);
     }
 
     @Override
@@ -59,4 +55,10 @@ public class PropertyType extends Number {
         }
         return this.value == ((PropertyType)obj).value;
     }
+
+    @Override
+    public String toString() {
+        return "PropertyType:" + Integer.toString(value);
+    }
+
 }
