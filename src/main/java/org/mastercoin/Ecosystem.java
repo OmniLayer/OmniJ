@@ -15,18 +15,14 @@ public class Ecosystem extends Number {
     public static final Ecosystem   MSC = new Ecosystem(MSC_VALUE);
     public static final Ecosystem   TMSC = new Ecosystem(TMSC_VALUE);
 
-    public Ecosystem(short value) {
+    public Ecosystem(int value) {
         if (value < MIN_VALUE) {
             throw new NumberFormatException();
         }
         if (value > MAX_VALUE) {
             throw new NumberFormatException();
         }
-        this.value = value;
-    }
-
-    public Ecosystem(int value) {
-        this((short) value);
+        this.value = (short) value;
     }
 
     @Override

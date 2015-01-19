@@ -48,6 +48,17 @@ class EcosystemSpec extends Specification {
         e1 == e2
     }
 
+    def "constructor is strongly typed and won't allow all Number subclasses"() {
+        when: "we try to create an ecosystem using an invalid numeric type"
+        Ecosystem ecosystem = new Ecosystem(id)
+
+        then: "exception is thrown"
+        groovy.lang.GroovyRuntimeException e = thrown()
+
+        where:
+        id << [1F, 1.1F, 1.0D, 1.1D, 1.0, 1.1, 1.0G, 1.1G]
+    }
+
     def "We can't create an Ecosystem with an invalid value"() {
         when: "we try to create an invalid ecosystem"
         Ecosystem ecosystem = new Ecosystem(id)

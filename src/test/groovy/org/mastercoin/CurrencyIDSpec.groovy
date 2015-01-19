@@ -61,6 +61,72 @@ class CurrencyIDSpec extends Specification {
         4294967295 | Ecosystem.TMSC
     }
 
+    def "constructor will allow a variety of integer types"() {
+        when: "we try to create an ecosystem using a valid numeric type"
+        CurrencyID currencyID = new CurrencyID(id)
+
+        then: "it is created correctly"
+        currencyID.longValue() == 1
+
+        where:
+        id << [1 as Short, 1, 1I, 1L]
+    }
+
+    def "constructor will allow a variety of integer types (with class check)"() {
+        when: "we try to create an ecosystem using a valid numeric type"
+        CurrencyID currencyID = new CurrencyID(id)
+
+        then: "it is created correctly"
+        currencyID.longValue() == longValue
+
+        and: "class was as expected"
+        id.class == idClass
+
+        where:
+        id         | longValue   | idClass
+        1 as Short | 1L          | Short.class
+        1          | 1L          | Integer.class
+        1I         | 1L          | Integer.class
+        1L         | 1L          | Long.class
+        2147483647 | 2147483647L | Integer.class
+        2147483648 | 2147483648L | Long.class
+        4294967295 | 4294967295L | Long.class
+    }
+
+    def "constructor is strongly typed and won't allow all Number subclasses"() {
+        when: "we try to create an ecosystem using an invalid numeric type"
+        CurrencyID currencyID = new CurrencyID(id)
+
+        then: "exception is thrown"
+        groovy.lang.GroovyRuntimeException e = thrown()
+
+        where:
+        id << [1F, 1.1F, 1.0D, 1.1D, 1.0, 1.1, 1.0G, 1.1G]
+    }
+
+    def "constructor is strongly typed and won't allow all Number subclasses (with class check)"() {
+        when: "we try to create an ecosystem using an invalid numeric type"
+        CurrencyID currencyID = new CurrencyID(id)
+
+        then: "exception is thrown"
+        groovy.lang.GroovyRuntimeException e = thrown()
+
+        and: "class was as expected"
+        id.class == idClass
+
+        where:
+        id   | idClass
+        1F   | Float.class
+        1.1F | Float.class
+        1.0D | Double.class
+        1.1D | Double.class
+        1G   | BigInteger.class
+        1.0  | BigDecimal.class
+        1.1  | BigDecimal.class
+        1.0G | BigDecimal.class
+        1.1G | BigDecimal.class
+    }
+
     def "We can't create an CurrencyID with an invalid value"() {
         when: "we try to create a CurrencyID with an invalid value"
         CurrencyID currencyID = new CurrencyID(id)

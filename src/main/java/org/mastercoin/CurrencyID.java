@@ -22,7 +22,7 @@ public final class CurrencyID extends Number implements Cloneable {
     public static final CurrencyID  MaidSafeCoin = new CurrencyID(MaidSafeCoin_VALUE);
     public static final CurrencyID  TetherUS = new CurrencyID(TetherUS_VALUE);
 
-    public CurrencyID(Long value) {
+    public CurrencyID(long value) {
         if (value < MIN_VALUE) {
             throw new NumberFormatException();
         }
