@@ -4,7 +4,7 @@ import foundation.omni.BaseMainNetSpec
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.MasterCoreConsensusTool
 
-import static CurrencyID.*
+import static foundation.omni.CurrencyID.*
 
 class RPCSmokeTestSpec extends BaseMainNetSpec {
 

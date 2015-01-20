@@ -5,7 +5,7 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import spock.lang.Unroll
 
-import static CurrencyID.*
+import static foundation.omni.CurrencyID.*
 
 class MSCSimpleSendSpec extends BaseRegTestSpec {
     // Need to make sure these variables are set up with values that match their names

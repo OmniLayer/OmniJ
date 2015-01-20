@@ -10,7 +10,8 @@ import foundation.omni.MPNetworkParameters
 import foundation.omni.MPRegTestParams
 import foundation.omni.PropertyType
 import foundation.omni.rpc.MastercoinClientDelegate
-import static CurrencyID.*
+
+import static foundation.omni.CurrencyID.*
 
 import java.security.SecureRandom
 
