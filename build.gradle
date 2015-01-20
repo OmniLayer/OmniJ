@@ -115,7 +115,7 @@ task regTest(type: Test) {
 
     systemProperty 'regtest', true
 //    include 'org/mastercoin/test/rpc/**', 'com/msgilligan/bitcoin/rpc/**', 'com/msgilligan/bitcoinj/**'
-    include 'org/mastercoin/test/rpc/**', 'com/msgilligan/bitcoin/rpc/**'
+    include 'foundation/omni/test/rpc/**', 'com/msgilligan/bitcoin/rpc/**'
 }
 
 task regTestBTC(type: Test) {
@@ -135,7 +135,7 @@ task consensusTest(type: Test) {
     testLogging.showStandardStreams = true
 
     systemProperty 'regtest', false
-    include 'org/mastercoin/test/consensus/**'
+    include 'foundation/omni/test/consensus/**'
 }
 
 groovydoc {
@@ -148,19 +148,19 @@ groovydoc {
 def currencyID = 1
 
 task getMasterConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'org.mastercoin.consensus.MasterCoreConsensusTool'
+    main = 'foundation.omni.MasterCoreConsensusTool'
     args = [currencyID, 'build/mastercore_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task getOmniConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'org.mastercoin.consensus.OmniwalletConsensusTool'
+    main = 'foundation.omni.OmniwalletConsensusTool'
     args = [currencyID, 'build/omniwallet_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task getChestConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'org.mastercoin.consensus.ChestConsensusTool'
+    main = 'foundation.omni.ChestConsensusTool'
     args = [currencyID, 'build/chest_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }

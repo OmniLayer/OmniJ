@@ -1,10 +1,8 @@
 package com.msgilligan.bitcoin.rpc
 
-import com.google.bitcoin.core.Address
 import com.google.bitcoin.core.ECKey
-import com.google.bitcoin.core.NetworkParameters
 import com.google.bitcoin.params.RegTestParams
-import org.mastercoin.BaseRegTestSpec
+import foundation.omni.BaseRegTestSpec
 import spock.lang.Ignore
 
 import java.security.SecureRandom

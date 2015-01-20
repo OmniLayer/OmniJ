@@ -1,6 +1,6 @@
 package com.msgilligan.bitcoin.rpc
 
-import org.mastercoin.BaseRegTestSpec
+import foundation.omni.BaseRegTestSpec
 
 class BitcoinSpec extends BaseRegTestSpec {
     static final BigDecimal testAmount = 2.0

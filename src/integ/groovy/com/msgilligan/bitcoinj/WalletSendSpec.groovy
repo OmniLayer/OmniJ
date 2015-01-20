@@ -7,14 +7,12 @@ import com.google.bitcoin.core.NetworkParameters
 import com.google.bitcoin.core.PeerAddress
 import com.google.bitcoin.core.PeerGroup
 import com.google.bitcoin.core.Transaction
-import com.google.bitcoin.core.TransactionOutput
 import com.google.bitcoin.core.Wallet
 import com.google.bitcoin.params.RegTestParams
 import com.google.bitcoin.store.MemoryBlockStore
 import com.google.bitcoin.utils.BriefLogFormatter
-import com.google.bitcoin.utils.Threading
 import com.msgilligan.bitcoin.BTC
-import org.mastercoin.BaseRegTestSpec
+import foundation.omni.BaseRegTestSpec
 import spock.lang.Shared
 import spock.lang.Stepwise
 

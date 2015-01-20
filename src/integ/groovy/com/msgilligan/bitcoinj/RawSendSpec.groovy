@@ -4,7 +4,7 @@ import com.google.bitcoin.core.Address
 import com.google.bitcoin.core.NetworkParameters
 import com.google.bitcoin.core.Transaction
 import com.google.bitcoin.params.RegTestParams
-import org.mastercoin.BaseRegTestSpec
+import foundation.omni.BaseRegTestSpec
 
 /**
  * User: sean

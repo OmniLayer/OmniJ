@@ -1,13 +1,13 @@
 package com.msgilligan.bitcoin.rpc
 
 import groovy.transform.CompileStatic
-import org.mastercoin.rpc.MastercoinCLIClient
+import foundation.omni.rpc.MastercoinCLIClient
 
 /**
  * Bitcoin JSON-RPC client with method names that exactly match wire and CLI names.
  *
  * Currently all functionality that should be here is in
- * org.mastercoin.rpc.MastercoinCLIClient.
+ * MastercoinCLIClient.
  * (Until I figure out a good way of using traits to split functionality up logically.)
  *
  */
