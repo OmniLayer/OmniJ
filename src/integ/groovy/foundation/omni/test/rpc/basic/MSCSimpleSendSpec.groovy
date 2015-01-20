@@ -1,4 +1,4 @@
-package foundation.omni.test.rpc
+package foundation.omni.test.rpc.basic
 
 import com.msgilligan.bitcoin.rpc.JsonRPCStatusException
 import foundation.omni.BaseRegTestSpec

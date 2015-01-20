@@ -1,4 +1,4 @@
-package foundation.omni.test.rpc
+package foundation.omni.test.rpc.basic
 
 import com.google.bitcoin.core.Address
 import foundation.omni.BaseRegTestSpec

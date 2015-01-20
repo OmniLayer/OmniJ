@@ -1,4 +1,4 @@
-package foundation.omni.test.rpc
+package foundation.omni.test.rpc.sto
 
 import com.google.bitcoin.core.Address
 import foundation.omni.CurrencyID
