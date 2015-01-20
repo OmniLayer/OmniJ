@@ -7,11 +7,14 @@ There are currently three test suites contained in this project.
 Bitcoin RegTest Tests::
 Test Bitcoin RPC calls against an instance of `bitcoind` running in RegTest mode.
 
-Mastercoin RegTest Tests::
-Test Bitcoin and Mastercoin RPC calls against an instance of `mastercored` running in RegTest mode.
+Omni RegTest Tests::
+Test Bitcoin and Omni Core RPC calls against an instance of `mastercored` running in RegTest mode.
 
-Mastercoin Consensus Tests::
-Use the `getallbalancesforid_MP` RPC to get balances for multiple Mastercoin currencies and compare them against balance information from several well-known public Mastercoin servers with consensus-checking Web APIs.
+Omni Consensus Tests::
+Use the `getallbalancesforid_MP` RPC to get balances for multiple Omni Protocol currencies and compare them against balance information from several well-known public Omni Protocol servers with consensus-checking Web APIs.
+
+NOTE::
+Omni Core was formerly known as Master Core and the binary is still named `mastercored`, though that should change in a future release. The Omni Protocol was formerly Master Protocol.
 
 == Installing pre-requisites
 
@@ -25,7 +28,7 @@ All other dependencies are automatically downloaded and cached by the test start
 
     $ git clone https://github.com/msgilligan/bitcoin-spock.git
 
-. Start Master Core (or bitciond) on MainNet listening on the standard RPC port on `localhost`. The tests are configured to use the following username and password:
+. Start Omni Core (or bitcoind) on MainNet listening on the standard RPC port on `localhost`. The tests are configured to use the following username and password:
 
     rpcuser=bitcoinrpc
     rpcpassword=pass
@@ -42,7 +45,7 @@ or for Windows:
 
     ./gradlew.bat consensusTest
 +
-The above examples are for the Consensus Test, to run the other test suites replace the `consensusTest` Gradle target with `regTest` for the Mastercoin RegTests or with `regTestBTC` for the Bitcoin RegTests.
+The above examples are for the Consensus Test, to run the other test suites replace the `consensusTest` Gradle target with `regTest` for the Omni RegTests or with `regTestBTC` for the Bitcoin RegTests.
 
 
 == Running the tests from Jenkins
@@ -53,10 +56,10 @@ test-btc-integ-regtest.sh::
 Runs BTC RPC RegTest tests against a built executable of `bitcoind` in `copied-artifacts/src` directory.
 
 test-msc-integ-regtest.sh::
-Runs Mastercoin RPC regtest test against a built executable of `bitcoind` in `copied-artifacts/src` directory.
+Runs Omni Core RPC regtest test against a built executable of `mastercored` in `copied-artifacts/src` directory.
 
 test-msc-consensus-mainnet.sh::
-Runs consensus tests against a built executable of `bitcoind` in `copied-artifacts/src` directory.
+Runs consensus tests against a built executable of `mastercored` in `copied-artifacts/src` directory.
 
 [NOTE]
 Read the scripts carefully to make sure you understand how they work.
@@ -78,7 +81,7 @@ Should "Send an amount to a newly created address"() {
 
 == Supporting Libraries
 
-This project includes a variety of supporting classes necessary to implement the functional/integration tests. For an quick overview of these classes look at their http://ci.mastercoin.info/job/msc-integ-regtest/javadoc/[API documentation] (GroovyDoc).
+This project includes a variety of supporting classes necessary to implement the functional/integration tests. For an quick overview of these classes look at their http://ci.omni.foundation/job/msc-integ-regtest/javadoc/[API documentation] (GroovyDoc).
 
 == Regression Test Mode
 
