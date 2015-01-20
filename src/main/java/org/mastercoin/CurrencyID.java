@@ -82,7 +82,7 @@ public final class CurrencyID extends Number implements Cloneable {
 
     @Override
     public String toString() {
-        return "CurrencyID:" + Integer.toString(this.intValue());
+        return "CurrencyID:" + Long.toString(value);
     }
 
 }
