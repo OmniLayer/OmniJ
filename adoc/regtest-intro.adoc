@@ -1,4 +1,4 @@
-== Overview Regression Test Mode
+== Introduction to Regression Test Mode
 
 Bitcoin 0.9 and later include support for Regression Test Mode (aka RegTest mode). RegTest mode creates a single node Bitcoin "network" that can confirm blocks upon command.  (RegTest mode can also be used to create small, multi-node networks and even to simulate blockchain reorganizations.)
 

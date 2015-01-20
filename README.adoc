@@ -88,5 +88,5 @@ The `adoc` directory of this project contains some additional documents that mig
 
 . link:adoc/regtest-intro.adoc[Introduction to Regression Test Mode]
 . link:adoc/omni-sto-testing.adoc[Omni Protocol Send To Owners Testing]
-. link:adoc/omni-consensus-hashing[Omni Protocol Consensus Hashing Proposal]
+. link:adoc/omni-consensus-hashing.adoc[Omni Protocol Consensus Hashing Proposal]
 

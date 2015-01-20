@@ -57,7 +57,7 @@ A hash of the changes to balances of a all currencies that occured during the sp
 
 This proposal suggests using the SHA-256 Algorithm for three reasons.
 
-. It provides the funcionality we need
+. It provides the functionality we need
 . It is a well-known algorithm
 . All Bitcoin and Omni Protocol implementations have an implementation available
 
