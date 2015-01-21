@@ -265,6 +265,19 @@ trait TestSupport implements MastercoinClientDelegate {
     }
 
     /**
+     * Creates and broadcasts a "send to owners" transaction.
+     *
+     * @param currencyId  The identifier of the currency
+     * @param amount      The number of tokens to distribute
+     * @return The transaction hash
+     */
+    Sha256Hash sendToOwners(Address address, CurrencyID currencyId, Long amount) {
+        def rawTxHex = createSendToOwnersHex(currencyId, amount);
+        def txid = sendrawtx_MP(address, rawTxHex)
+        return txid
+    }
+
+    /**
      * Creates an offer on the traditional distributed exchange.
      *
      * @param address        The address
@@ -312,6 +325,14 @@ trait TestSupport implements MastercoinClientDelegate {
         def rawTxHex = createPropertyHex(ecosystem, type, 0L, "", "", label, "", "", amount);
         def txid = sendrawtx_MP(address, rawTxHex)
         return txid
+    }
+
+    /**
+     * Creates a hex-encoded raw transaction of type 3: "send to owners".
+     */
+    String createSendToOwnersHex(CurrencyID currencyId, Long amount) {
+        def rawTxHex = String.format("00000003%08x%016x", currencyId.longValue(), amount)
+        return rawTxHex
     }
 
     /**
