@@ -24,12 +24,12 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
     compile 'commons-cli:commons-cli:1.2'
 
-    robovm  'org.codehaus.groovy:groovy:2.4.0-rc-2:grooid'
+    robovm  'org.codehaus.groovy:groovy:2.4.0:grooid'
 
-    compile 'org.codehaus.groovy:groovy:2.4.0-rc-2'
-    compile 'org.codehaus.groovy:groovy-json:2.4.0-rc-2'
-    compile 'org.codehaus.groovy:groovy-sql:2.4.0-rc-2'
-    compile 'org.codehaus.groovy:groovy-ant:2.4.0-rc-2'   // used in Groovy doc
+    compile 'org.codehaus.groovy:groovy:2.4.0'
+    compile 'org.codehaus.groovy:groovy-json:2.4.0'
+    compile 'org.codehaus.groovy:groovy-sql:2.4.0'
+    compile 'org.codehaus.groovy:groovy-ant:2.4.0'   // used in Groovy doc
     compile 'com.google:bitcoinj:0.11.3'
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
     
