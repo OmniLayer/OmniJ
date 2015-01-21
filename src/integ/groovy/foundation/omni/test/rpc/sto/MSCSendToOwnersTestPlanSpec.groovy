@@ -11,7 +11,7 @@ import spock.lang.Shared
 import spock.lang.Unroll
 
 /**
- *
+ * Data driven tests for the "send to owners" transaction type
  */
 class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
     final static BigDecimal startBTC = 0.1
@@ -41,15 +41,21 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
         if (amountReserved > 0) {
             throw new org.junit.internal.AssumptionViolatedException("skipped")
         }
-        if (tmscReserved > 0) {
-            throw new org.junit.internal.AssumptionViolatedException("skipped")
-        }
         if (amountReservedOwners.sum() > 0) {
             throw new org.junit.internal.AssumptionViolatedException("skipped")
         }
 
-        def actorAddress = createFundedAddress(startBTC, tmscAvailable)
+        // Fund actor
+        def startMSC = tmscAvailable + tmscReserved
         def currencyMSC = new CurrencyID(ecosystem)
+        def actorAddress = createFundedAddress(startBTC, startMSC)
+
+        // Create a DEx offer to reserve an amount
+        if (tmscReserved > 0) {
+            reserveAmountMSC(actorAddress, currencyMSC, tmscReserved)
+        }
+
+        // Create property
         def currencySP = createStoProperty(actorAddress, data)
         def owners = [] as List<Address>
         def ownerIds = 0..<numOwners
@@ -61,8 +67,12 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "the actor has a balance of #inputMSC and #inputSP"
-        getbalance_MP(actorAddress, currencyMSC).balance == tmscAvailable
-        getbalance_MP(actorAddress, currencySP).balance == amountAvailable
+        def balanceActorMSC = getbalance_MP(actorAddress, currencyMSC)
+        def balanceActorSP = getbalance_MP(actorAddress, currencySP)
+        balanceActorMSC.balance == tmscAvailable
+        balanceActorMSC.reserved == tmscReserved
+        balanceActorSP.balance == amountAvailable
+        balanceActorSP.reserved == amountReserved
 
         and: "all owners have their starting balances"
         for (id in ownerIds) {
@@ -130,4 +140,17 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
         return currencyID
     }
 
+    def reserveAmountMSC(Address actorAddress, CurrencyID currency, BigDecimal reservedAmount) {
+        def desiredBTC = 1.0
+        def blockSpan = 100
+        def commitFee = 0.0001
+        def action = 1 // new offer
+
+        def txid = createDexSellOffer(actorAddress, currency, reservedAmount, desiredBTC, blockSpan, commitFee, action)
+        generateBlock()
+
+        def transaction = getTransactionMP(txid)
+        assert transaction.valid == true
+        assert transaction.confirmations == 1
+    }
 }
