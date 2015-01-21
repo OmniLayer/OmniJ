@@ -2,6 +2,7 @@ package foundation.omni.test.rpc.sto
 
 import com.msgilligan.bitcoin.rpc.JsonRPCStatusException
 import foundation.omni.BaseRegTestSpec
+import foundation.omni.CurrencyID
 import foundation.omni.consensus.ConsensusTool
 import foundation.omni.consensus.MasterCoreConsensusTool
 import spock.lang.Shared
@@ -75,6 +76,15 @@ class MSCSendToOwnersSpec extends BaseRegTestSpec {
 
         then: "balances unchanged"
         startBalances == endBalances
+    }
+
+    def "The generated hex-encoded transaction matches a valid reference transaction"() {
+        given:
+        def txHex = createSendToOwnersHex(new CurrencyID(6), 100000000000L)
+        def expectedHex = "0000000300000006000000174876e800"
+
+        expect:
+        txHex == expectedHex
     }
 
 }
