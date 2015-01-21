@@ -6,7 +6,27 @@ There is currently a https://docs.google.com/a/mastercoin.org/spreadsheets/d/1Ws
 
 == Spock Tests
 
-Work in progress tests are:
+Work in progress STO tests are:
 
-* https://github.com/msgilligan/bitcoin-spock/blob/master/src/integ/groovy/org/mastercoin/test/rpc/MSCSendToOwnersSpec.groovy[MSCSendToOwnersSpec]: Proof-of-concept STO tests
-* https://github.com/msgilligan/bitcoin-spock/blob/master/src/integ/groovy/org/mastercoin/test/rpc/MSCSendToOwnersConsensusComparisonSpec.groovy[MSCSendToOwnersConsensusComparisonSpec]: Experiment using consensus test classes for STO testing
+[options="header",frame="all"]
+|===
+| Test "Spec" (link to source) | Latest Results | Notes
+
+| https://github.com/msgilligan/bitcoin-spock/blob/master/src/integ/groovy/foundation/omni/test/rpc/sto/MSCSendToOwnersTestPlanSpec.groovy[MSCSendToOwnersTestPlanSpec]
+| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/MSCSendToOwnersTestPlanSpec/[results]
+| Driven by https://github.com/msgilligan/bitcoin-spock/blob/master/src/integ/groovy/foundation/omni/test/rpc/sto/sto-testplan.tsv[Tab-delimited test data] 
+
+| https://github.com/msgilligan/bitcoin-spock/blob/master/src/integ/groovy/foundation/omni/test/rpc/sto/MSCSendToOwnersSpec.groovy[MSCSendToOwnersSpec]
+| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/MSCSendToOwnersSpec/[results]
+| Proof-of-concept STO tests
+
+| https://github.com/msgilligan/bitcoin-spock/blob/master/src/integ/groovy/foundation/omni/test/rpc/sto/MSCSendToOwnersConsensusComparisonSpec.groovy[MSCSendToOwnersConsensusComparisonSpec]
+| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/MSCSendToOwnersConsensusComparisonSpec/[results]
+| Experiment using consensus test classes for STO testing
+
+|===
+
+== Omni Foundation Jenkins Server Info
+
+An overview of the http://ci.omni.foundation[Omni Foundation Continuous Integration Server] and the jobs it's currently running can be read in the https://github.com/mastercoin-MSC/omni-devops/blob/master/adoc/jenkins.adoc[Jenkins Continuous Integration Server] page on the https://github.com/mastercoin-MSC/omni-devops[omni-devops repository].
+
