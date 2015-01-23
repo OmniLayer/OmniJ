@@ -117,7 +117,7 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
         throw new org.junit.internal.AssumptionViolatedException("TODO")
     }
 
-    def "STO Property ID is 0 (bitcoin)"() {
+    def "STO Property ID is 0 - bitcoin"() {
         expect: true
         throw new org.junit.internal.AssumptionViolatedException("TODO")
     }
