@@ -1,0 +1,4 @@
+Description	Ecosystem	PropertyType	PropertyName	AmountAvailable	AmountReserved	AmountSTO	MSCAvailable	MSCReserved	NumOwners	AmountAvailableOwners	AmountReservedOwners	Exceptional	ExpectedValidity	ExpectedAmountAvailable	ExpectedAmountReserved	ExpectedMSCAvailable	ExpectedMSCReserved	ExpectedAmountAvailableOwners	ExpectedAmountReservedOwners
+STO Property ID is non-existent	2	2	SP4294967295	0.0	0.0	1.0	2.0	0.0	0	[]	[]	true	false	0.0	0.0	2.0	0.0	[]	[]
+STO Property ID is 0 (bitcoin)	2	2	SP0	0.001	0.0	0.0001	2.0	0.0	2	[1.0, 1.0]	[0.0, 0.0]	true	false	0.001	0.0	2.0	0.0	[1.0, 1.0]	[0.0, 0.0]
+Sender owns all the coins of the STO Property, other addresses had non-zero balances but now zero balances	2	2	TDiv1	1.0	0.0	0.1	1.0	0.0	0	[]	[]	false	false	1.0	0.0	1.0	0.0	[]	[]

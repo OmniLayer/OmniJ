@@ -112,6 +112,21 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
         expectedSPTReservedOwners = Eval.me(data.ExpectedAmountReservedOwners) as List<BigDecimal>
     }
 
+    def "STO Property ID is non-existent"() {
+        expect: true
+        throw new org.junit.internal.AssumptionViolatedException("TODO")
+    }
+
+    def "STO Property ID is 0 (bitcoin)"() {
+        expect: true
+        throw new org.junit.internal.AssumptionViolatedException("TODO")
+    }
+
+    def "Sender owns all the coins of the STO Property, other addresses had non-zero balances but now zero balances"() {
+        expect: true
+        throw new org.junit.internal.AssumptionViolatedException("TODO")
+    }
+
     /**
      * Creates a new property and returns it's identifier.
      */
