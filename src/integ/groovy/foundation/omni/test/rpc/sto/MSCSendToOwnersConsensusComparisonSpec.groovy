@@ -8,6 +8,7 @@ import foundation.omni.consensus.ConsensusEntry
 import foundation.omni.consensus.ConsensusSnapshot
 import foundation.omni.consensus.ConsensusTool
 import foundation.omni.consensus.MasterCoreConsensusTool
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -17,8 +18,13 @@ import spock.lang.Unroll
  * for STO testing.
  *
  * In this test an amount of 100.0 MSC is sent to all MSC owners and it is
- * confirmed that the balance of the recipients really increased. 
+ * confirmed that the balance of the recipients really increased.
+ *
+ * Ignored until Github Issue #26 is resolved
+ * https://github.com/msgilligan/bitcoin-spock/issues/26
+ * (Or maybe this test is redundant.)
  */
+@Ignore()
 class MSCSendToOwnersConsensusComparisonSpec extends BaseRegTestSpec {
     @Shared
     ConsensusTool consensusTool
