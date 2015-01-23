@@ -76,69 +76,6 @@ trait TestSupport implements MastercoinClientDelegate {
         return fundedAddress
     }
 
-    Address createFaucetAddress(String account, BigDecimal requestedBTC) {
-        while (getBalance() < requestedBTC) {
-            generateBlock()
-        }
-        // Create a BTC address to hold the requested BTC
-        Address address = getAccountAddress(account)
-        // and send it BTC
-        Sha256Hash txid = sendToAddress(address, requestedBTC)
-        generateBlock()
-        def tx = getTransaction(txid)
-        assert tx.confirmations == 1
-
-        // Make sure we got the correct amount of BTC
-        BigDecimal btcBalance = getBalance(account)
-        assert btcBalance == requestedBTC
-
-        return address
-    }
-
-    Address createFaucetAddress(String account, BigDecimal requestedBTC, BigDecimal requestedMSC) {
-        final MPNetworkParameters params = MPRegTestParams.get()  // Hardcoded for RegTest for now
-        def btcForMSC = requestedMSC / 100
-        def startBTC = requestedBTC + btcForMSC + stdTxFee
-
-        // Generate blocks until we have the requested amount of BTC
-        while (getBalance() < startBTC) {
-            generateBlock()
-        }
-
-        // Create a BTC address to hold the requested BTC and MSC
-        Address address = getAccountAddress(account)
-        // and send it BTC
-        Sha256Hash txid = sendToAddress(address, startBTC)
-
-        generateBlock()
-        def tx = getTransaction(txid)
-        assert tx.confirmations == 1
-
-        // Make sure we got the correct amount of BTC
-        BigDecimal btcBalance = getBalance(account)
-        assert btcBalance == startBTC
-
-        // Send BTC to get MSC (and TMSC)
-        def amounts = [(params.moneyManAddress): btcForMSC,
-                       (address): startBTC - btcForMSC ]
-        txid = sendMany(account, amounts)
-
-        generateBlock()
-        tx = getTransaction(txid)
-        assert tx.confirmations == 1
-
-        // Verify correct amounts received
-        btcBalance = getBalance(account)
-        BigDecimal mscBalance = getbalance_MP(address, MSC).balance
-        BigDecimal tmscBalance = getbalance_MP(address, TMSC).balance
-
-        assert btcBalance == requestedBTC
-        assert mscBalance == requestedMSC
-        assert tmscBalance == requestedMSC
-
-        return address
-    }
-
     /**
      * Creates a raw transaction, sending {@code amount} from a single address to a destination, whereby no new change
      * address is created, and remaining amounts are returned to {@code fromAddress}.
