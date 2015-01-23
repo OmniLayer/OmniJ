@@ -1,6 +1,7 @@
 package foundation.omni.test.rpc.sto
 
 import com.google.bitcoin.core.Address
+import com.google.bitcoin.core.Sha256Hash
 import com.msgilligan.bitcoin.BTC
 import com.xlson.groovycsv.CsvParser
 import foundation.omni.BaseRegTestSpec
@@ -20,116 +21,132 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
     def testdata
 
     def setupSpec() {
-        def path = "src/integ/groovy/foundation/omni/test/rpc/sto/sto-testplan.tsv"
-        def file = new File(path)
-        def csv = file.text
-        def data = new CsvParser().parse(csv, separator: '\t')
+        def file = new File(getTestPlanPath())
+        def tsv = file.text
+        def data = new CsvParser().parse(tsv, separator: '\t')
         testdata = data
+    }
+
+    def getTestPlanPath() {
+        return "src/integ/groovy/foundation/omni/test/rpc/sto/sto-testplan.tsv"
     }
 
     @Unroll
     def "#description"() {
-        setup:
-        assert numOwners == amountAvailableOwners.size()
-        assert numOwners == amountReservedOwners.size()
-        assert numOwners == expectedAmountAvailableOwners.size()
-        assert numOwners == expectedAmountReservedOwners.size()
+        assert numberOfOwners == sptAvailableOwners.size()
+        assert numberOfOwners == sptReservedOwners.size()
+        assert numberOfOwners == expectedSPTAvailableOwners.size()
+        assert numberOfOwners == expectedSPTReservedOwners.size()
 
-        if (validity != 1) {
-            throw new org.junit.internal.AssumptionViolatedException("skipped")
-        }
-        if (amountReserved > 0) {
-            throw new org.junit.internal.AssumptionViolatedException("skipped")
-        }
-        if (amountReservedOwners.sum() > 0) {
-            throw new org.junit.internal.AssumptionViolatedException("skipped")
-        }
+        maybeSkipReservedMetaDexTests(sptReserved, sptReservedOwners)
 
-        // Fund actor
-        def startMSC = tmscAvailable + tmscReserved
-        def currencyMSC = new CurrencyID(ecosystem)
+        given:
+        def startMSC = mscAvailable + mscReserved
         def actorAddress = createFundedAddress(startBTC, startMSC)
+        def currencyMSC = new CurrencyID(ecosystem.longValue())
+        def currencySPT = createStoProperty(actorAddress, data)
 
         // Create a DEx offer to reserve an amount
-        if (tmscReserved > 0) {
-            reserveAmountMSC(actorAddress, currencyMSC, tmscReserved)
+        if (mscReserved > 0) {
+            reserveAmountMSC(actorAddress, currencyMSC, mscReserved)
         }
-
-        // Create property
-        def currencySP = createStoProperty(actorAddress, data)
-        def owners = [] as List<Address>
-        def ownerIds = 0..<numOwners
 
         when: "the owners are funded"
+        def owners = [] as List<Address>
+        def ownerIds = 0..<numberOfOwners
         ownerIds.each { owners << newAddress }
         owners = owners.sort { it.toString() }
-        ownerIds.each { send_MP(actorAddress, owners[it], currencySP, amountAvailableOwners[it]) }
+        ownerIds.each { send_MP(actorAddress, owners[it], currencySPT, sptAvailableOwners[it]) }
         generateBlock()
 
-        then: "the actor has a balance of #inputMSC and #inputSP"
-        def balanceActorMSC = getbalance_MP(actorAddress, currencyMSC)
-        def balanceActorSP = getbalance_MP(actorAddress, currencySP)
-        balanceActorMSC.balance == tmscAvailable
-        balanceActorMSC.reserved == tmscReserved
-        balanceActorSP.balance == amountAvailable
-        balanceActorSP.reserved == amountReserved
+        then: "the actor starts with the correct #currencySPT and #currencyMSC balance"
+        assertBalance(actorAddress, currencyMSC, mscAvailable, mscReserved)
+        assertBalance(actorAddress, currencySPT, sptAvailable, sptReserved)
 
-        and: "all owners have their starting balances"
+        and: "every owner starts with the correct #currencySPT balance"
         for (id in ownerIds) {
-            assert getbalance_MP(owners[id], currencySP).balance == amountAvailableOwners[id]
+            assertBalance(owners[id], currencySPT, sptAvailableOwners[id], sptReservedOwners[id])
         }
 
-        when: "#stoAmountSP is sent to owners of #currencySP"
-        sendToOwnersMP(actorAddress, currencySP, amountSTO)
+        when: "#amountSTO is sent to owners of #currencySPT"
+        def txid = executeSendToOwners(actorAddress, currencySPT, propertyType, amountSTO, expectException)
         generateBlock()
 
-        then: "the sender ends up with #expectedMSC and #expectedSP"
-        getbalance_MP(actorAddress, currencyMSC).balance == expectedTMSCAvailable
-        getbalance_MP(actorAddress, currencySP).balance == expectedAmountAvailable
+        then: "the transaction validity is #expectedValidity"
+        if (txid != null) {
+            def transaction = getTransactionMP(txid)
+            assert transaction.valid == expectedValidity
+            assert transaction.confirmations == 1
+        }
 
-        and: "every owner has the expected balances"
+        and: "the sender ends up with the expected #currencySPT and #currencyMSC balance"
+        assertBalance(actorAddress, currencyMSC, expectedMSCAvailable, expectedMSCReserved)
+        assertBalance(actorAddress, currencySPT, expectedSPTAvailable, expectedSPTReserved)
+
+        and: "every owner ends up with the expected #currencySPT balance"
         for (id in ownerIds) {
-            assert getbalance_MP(owners[id], currencySP).balance == expectedAmountAvailableOwners[id]
+            assertBalance(owners[id], currencySPT, expectedSPTAvailableOwners[id], expectedSPTReservedOwners[id])
         }
 
         where:
         data << testdata
-        description = data.Description
-        ecosystem = Eval.me(data.Ecosystem)
-        propertyType = Eval.me(data.PropertyType)
-        propertyName = data.PropertyName
-        amountAvailable = Eval.me(data.AmountAvailable)
-        amountReserved = Eval.me(data.AmountReserved)
-        amountSTO = Eval.me(data.AmountSTO)
-        tmscAvailable = Eval.me(data.TMSCAvailable)
-        tmscReserved = Eval.me(data.TMSCReserved)
-        numOwners = Eval.me(data.NumOwners)
-        amountAvailableOwners = Eval.me(data.AmountAvailableOwners)
-        amountReservedOwners = Eval.me(data.AmountReservedOwners)
-        validity = Eval.me(data.Validity)
-        expectedAmountAvailable = Eval.me(data.ExpectedAmountAvailable)
-        expectedAmountReserved = Eval.me(data.ExpectedAmountReserved)
-        expectedTMSCAvailable = Eval.me(data.ExpectedTMSCAvailable)
-        expectedTMSCReserved = Eval.me(data.ExpectedTMSCReserved)
-        expectedAmountAvailableOwners = Eval.me(data.ExpectedAmountAvailableOwners)
-        expectedAmountReservedOwners = Eval.me(data.ExpectedAmountReservedOwners)
+        description = new String(data.Description)
+        ecosystem = new Ecosystem(Short.valueOf(data.Ecosystem))
+        propertyType = new PropertyType(Integer.valueOf(data.PropertyType))
+        propertyName = new String(data.PropertyName)
+        sptAvailable = new BigDecimal(data.AmountAvailable)
+        sptReserved = new BigDecimal(data.AmountReserved)
+        amountSTO = new BigDecimal(data.AmountSTO)
+        mscAvailable = new BigDecimal(data.MSCAvailable)
+        mscReserved = new BigDecimal(data.MSCReserved)
+        numberOfOwners = new Integer(data.NumOwners)
+        sptAvailableOwners = Eval.me(data.AmountAvailableOwners) as List<BigDecimal>
+        sptReservedOwners = Eval.me(data.AmountReservedOwners) as List<BigDecimal>
+        expectException = new Boolean(data.Exceptional)
+        expectedValidity = new Boolean(data.ExpectedValidity)
+        expectedSPTAvailable = new BigDecimal(data.ExpectedAmountAvailable)
+        expectedSPTReserved = new BigDecimal(data.ExpectedAmountReserved)
+        expectedMSCAvailable = new BigDecimal(data.ExpectedMSCAvailable)
+        expectedMSCReserved = new BigDecimal(data.ExpectedMSCReserved)
+        expectedSPTAvailableOwners = Eval.me(data.ExpectedAmountAvailableOwners) as List<BigDecimal>
+        expectedSPTReservedOwners = Eval.me(data.ExpectedAmountReservedOwners) as List<BigDecimal>
     }
 
-    def createStoProperty(def actorAddress, def data) {
-        def amountAvailableOwners = Eval.me(data.AmountAvailableOwners)
-        def ecosystemR = Eval.me(data.Ecosystem)
-        def propertyType = Eval.me(data.PropertyType)
-        def amountAvailable = Eval.me(data.AmountAvailable)
+    def "STO Property ID is non-existent"() {
+        expect: true
+        throw new org.junit.internal.AssumptionViolatedException("TODO")
+    }
 
-        def ecosystem = new Ecosystem(ecosystemR)
-        def divisibility = new PropertyType(propertyType)
-        def numberOfTokens = amountAvailableOwners.sum() + amountAvailable
+    def "STO Property ID is 0 - bitcoin"() {
+        expect: true
+        throw new org.junit.internal.AssumptionViolatedException("TODO")
+    }
 
-        if (divisibility == PropertyType.DIVISIBLE) {
+    def "Sender owns all the coins of the STO Property, other addresses had non-zero balances but now zero balances"() {
+        expect: true
+        throw new org.junit.internal.AssumptionViolatedException("TODO")
+    }
+
+    /**
+     * Creates a new property and returns it's identifier.
+     */
+    def createStoProperty(Address actorAddress, def data) {
+        def amountAvailableOwners = Eval.me(data.AmountAvailableOwners) as List<BigDecimal>
+        def amountAvailable = new BigDecimal(data.AmountAvailable)
+        def ecosystem = new Ecosystem(Short.valueOf(data.Ecosystem))
+        def propertyType = new PropertyType(Integer.valueOf(data.PropertyType))
+
+        def numberOfTokens = amountAvailable
+
+        if (amountAvailableOwners.size()) {
+            numberOfTokens += amountAvailableOwners.sum()
+        }
+
+        if (propertyType == PropertyType.DIVISIBLE) {
             numberOfTokens = BTC.btcToSatoshis(numberOfTokens)
         }
 
-        def txid = createProperty(actorAddress, ecosystem, divisibility, numberOfTokens.longValue())
+        def txid = createProperty(actorAddress, ecosystem, propertyType, numberOfTokens.longValue())
         generateBlock()
 
         def transaction = getTransactionMP(txid)
@@ -140,17 +157,60 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
         return currencyID
     }
 
-    def reserveAmountMSC(Address actorAddress, CurrencyID currency, BigDecimal reservedAmount) {
+    /**
+     * Creates an offer on the distributed exchange to reserve an amount.
+     */
+    def reserveAmountMSC(Address actorAddress, CurrencyID currency, BigDecimal amount) {
         def desiredBTC = 1.0
         def blockSpan = 100
         def commitFee = 0.0001
         def action = 1 // new offer
 
-        def txid = createDexSellOffer(actorAddress, currency, reservedAmount, desiredBTC, blockSpan, commitFee, action)
+        def txid = createDexSellOffer(actorAddress, currency, amount, desiredBTC, blockSpan, commitFee, action)
         generateBlock()
 
         def transaction = getTransactionMP(txid)
         assert transaction.valid == true
         assert transaction.confirmations == 1
     }
+
+    /**
+     * Executes the "send to owner" command. It catches exceptions and can expect them.
+     */
+    def executeSendToOwners(Address address, def currency, def propertyType, def amount, def exceptional=false) {
+        Boolean thrown = false
+        Sha256Hash txid = null
+
+        try {
+            txid = sendToOwnersMP(address, currency, amount)
+        } catch(Exception) {
+            thrown = true
+        }
+
+        assert thrown == exceptional
+
+        return txid
+    }
+
+    /**
+     * Skips tests which involve reserved token amounts, as such tests require the token/token exchange.
+     */
+    def maybeSkipReservedMetaDexTests(def amountReserved, def amountReservedOwners) {
+        if (amountReserved > 0) {
+            throw new org.junit.internal.AssumptionViolatedException("skipped")
+        }
+        if (amountReservedOwners.sum() > 0) {
+            throw new org.junit.internal.AssumptionViolatedException("skipped")
+        }
+    }
+
+    /**
+     * Short cut to confirm a balance.
+     */
+    void assertBalance(Address address, CurrencyID currency, def expectedAvailable, def expectedReserved) {
+        def balance = getbalance_MP(address, currency)
+        assert balance.balance == expectedAvailable
+        assert balance.reserved == expectedReserved
+    }
+
 }
