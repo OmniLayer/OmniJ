@@ -76,7 +76,7 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         and: "all owners have their starting balances"
         for (id in ownerIds) {
-            getbalance_MP(owners[id], currencySP).balance == amountAvailableOwners[id]
+            assert getbalance_MP(owners[id], currencySP).balance == amountAvailableOwners[id]
         }
 
         when: "#stoAmountSP is sent to owners of #currencySP"
@@ -89,7 +89,7 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         and: "every owner has the expected balances"
         for (id in ownerIds) {
-            getbalance_MP(owners[id], currencySP).balance == expectedAmountAvailableOwners[id]
+            assert getbalance_MP(owners[id], currencySP).balance == expectedAmountAvailableOwners[id]
         }
 
         where:
