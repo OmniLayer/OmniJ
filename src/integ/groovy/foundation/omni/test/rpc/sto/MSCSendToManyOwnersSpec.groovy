@@ -14,26 +14,36 @@ import static foundation.omni.CurrencyID.MSC
  */
 class MSCSendToManyOwnersSpec extends BaseRegTestSpec {
 
-    def dryRun(Integer maxN) {
+    final static BigDecimal stoFeePerAddress = 0.00000001
+    final static BigDecimal COIN = 100000000.0
+
+    def dryRun(Integer maxN,
+               BigDecimal amountStartPerOwner, BigDecimal amountDistributePerOwner, PropertyType propertyType) {
+        print "\n"
         println "-----------------------------------------------------------------------"
-        println String.format("Send to %d owers", maxN)
+        println String.format("%s: start with n * %s and send n * %s to %d owners",
+                propertyType.toString(), amountStartPerOwner.toPlainString(),
+                amountDistributePerOwner.toPlainString(), maxN)
         println "-----------------------------------------------------------------------"
         print "\n"
 
         // Preperation
-        def fundingSPT = ((maxN * (maxN + 1)) / 2) * 1.00000001
-        def actorSPT = ((maxN * (maxN + 1)) / 2) * 0.00000001
-        def actorMSC = maxN * 0.00000001
+        def fundingSPT = ((maxN * (maxN + 1)) / 2) * (amountStartPerOwner + amountDistributePerOwner)
+        def actorSPT = ((maxN * (maxN + 1)) / 2) * amountDistributePerOwner
+        def actorMSC = maxN * stoFeePerAddress
 
         // Create actor
         def actorAddress = createFundedAddress(1.0, actorMSC)
 
         // Create property
-        def numberOfTokens = BTC.btcToSatoshis(fundingSPT)
-        def fundingTxid = createProperty(actorAddress, Ecosystem.MSC, PropertyType.DIVISIBLE, numberOfTokens.longValue())
+        def numberOfTokens = fundingSPT
+        if (propertyType == PropertyType.DIVISIBLE) {
+            numberOfTokens = numberOfTokens.multiply(COIN);
+        }
+        def fundingTxid = createProperty(actorAddress, Ecosystem.MSC, propertyType, numberOfTokens.longValue())
         generateBlock()
 
-        println String.format("Creating a new divisible property with %s units ...", fundingSPT.toPlainString())
+        println String.format("Creating a new %s with %s units ...", propertyType.toString(), fundingSPT.toPlainString())
 
         // Get property identifier
         def fundingTx = getTransactionMP(fundingTxid)
@@ -50,23 +60,18 @@ class MSCSendToManyOwnersSpec extends BaseRegTestSpec {
 
         // Create owners
         def owners = [] as Map<Integer, Address>
-        def ownerAddresses = [] as List<Address>
-
-        // Create addresses for owners
-        for (n in 1..maxN) {
-            ownerAddresses << newAddress
-        }
-
-        // Sort addresses to avoid something strange
-        ownerAddresses.sort { it.toString() }
 
         // Fund owners
         for (n in 1..maxN) {
-            BigDecimal starting = n * 1.0
-            owners[n] = ownerAddresses[n-1]
+            BigDecimal starting = n * amountStartPerOwner
+            owners[n] = newAddress
             send_MP(actorAddress, owners[n], currencySPT, starting)
             println String.format("Sending %s SPT to owner #%d ...", starting.toPlainString(), n)
+            if (n % 500 == 0) {
+                generateBlock()
+            }
         }
+        generateBlock()
         generateBlock()
 
         // Check starting balances of actor
@@ -82,7 +87,7 @@ class MSCSendToManyOwnersSpec extends BaseRegTestSpec {
 
         // Check owner balances
         for (n in 1..maxN) {
-            def expectedBalanceOwnerSPT = n * 1.0
+            def expectedBalanceOwnerSPT = n * amountStartPerOwner
             def startingBalanceOwnerSPT = getbalance_MP(owners[n], currencySPT)
 
             println String.format("Owner #%d starts with: %s SPT and should have: %s SPT %s",
@@ -100,7 +105,7 @@ class MSCSendToManyOwnersSpec extends BaseRegTestSpec {
 
         // Check updated owner balances
         for (n in 1..maxN) {
-            def expectedFinalBalanceOwnerSPT = n * 1.00000001
+            def expectedFinalBalanceOwnerSPT = n * (amountStartPerOwner + amountDistributePerOwner)
             def finalBalanceOwnerSPT = getbalance_MP(owners[n], currencySPT)
 
             println String.format("Owner #%d ends up with: %s SPT and should have: %s SPT %s",
@@ -119,71 +124,72 @@ class MSCSendToManyOwnersSpec extends BaseRegTestSpec {
         println String.format(
                 "The actor ends up with: %s SPT and should have 0.0 SPT %s", finalBalanceSPT.balance.toPlainString(),
                 (finalBalanceSPT.balance != 0.0) ? "<------- FAIL" : "")
+
+        assert finalBalanceMSC.balance == 0.0
+        assert finalBalanceSPT.balance == 0.0
+
+        // Cleanup
+        sendToAddress(newAddress, getBalance() - 0.1)
+        generateBlock()
     }
 
     @Unroll
-    def "Send to #maxN owners"() {
-        dryRun(maxN)
+    def "#propertyType: start with n * #amountStartPerOwner and send n * #amountDistributePerOwner to #maxN owners"() {
+        dryRun(maxN, amountStartPerOwner, amountDistributePerOwner, propertyType)
 
         // Preperation
-        def fundingSPT = ((maxN * (maxN + 1)) / 2) * 1.00000001
-        def actorSPT = ((maxN * (maxN + 1)) / 2) * 0.00000001
-        def actorMSC = maxN * 0.00000001
+        def fundingSPT = ((maxN * (maxN + 1)) / 2) * (amountStartPerOwner + amountDistributePerOwner)
+        def actorSPT = ((maxN * (maxN + 1)) / 2) * amountDistributePerOwner
+        def actorMSC = maxN * stoFeePerAddress
 
         // Create actor
         def actorAddress = createFundedAddress(1.0, actorMSC)
 
         // Create property
-        def numberOfTokens = BTC.btcToSatoshis(fundingSPT)
-        def fundingTxid = createProperty(actorAddress, Ecosystem.MSC, PropertyType.DIVISIBLE, numberOfTokens.longValue())
+        def numberOfTokens = fundingSPT
+        if (propertyType == PropertyType.DIVISIBLE) {
+            numberOfTokens = numberOfTokens.multiply(COIN);
+        }
+        def fundingTxid = createProperty(actorAddress, Ecosystem.MSC, propertyType, numberOfTokens.longValue())
         generateBlock()
 
         // Get property identifier
         def fundingTx = getTransactionMP(fundingTxid)
         def currencySPT = new CurrencyID(fundingTx.propertyid)
-
         assert fundingTx.valid == true
         assert fundingTx.confirmations == 1
 
         // Check funding balances of actor
         def startingBalanceMSC = getbalance_MP(actorAddress, MSC)
         def startingBalanceSPT = getbalance_MP(actorAddress, currencySPT)
-
         assert startingBalanceMSC.balance == actorMSC
         assert startingBalanceSPT.balance == fundingSPT
 
         // Create owners
         def owners = [] as Map<Integer, Address>
-        def ownerAddresses = [] as List<Address>
-
-        // Create addresses for owners
-        for (n in 1..maxN) {
-            ownerAddresses << newAddress
-        }
-
-        // Sort addresses to avoid something strange
-        ownerAddresses.sort { it.toString() }
 
         // Fund owners
         for (n in 1..maxN) {
-            BigDecimal starting = n * 1.0
-            owners[n] = ownerAddresses[n-1]
+            BigDecimal starting = n * amountStartPerOwner
+            owners[n] = newAddress
             send_MP(actorAddress, owners[n], currencySPT, starting)
+            if (n % 500 == 0) {
+                generateBlock()
+            }
         }
+        generateBlock()
         generateBlock()
 
         // Check starting balances of actor
         def reallyBalanceMSC = getbalance_MP(actorAddress, MSC)
         def reallyBalanceSPT = getbalance_MP(actorAddress, currencySPT)
-
         assert reallyBalanceMSC.balance == actorMSC
         assert reallyBalanceSPT.balance == actorSPT
 
         // Check owner balances
         for (n in 1..maxN) {
-            def expectedBalanceOwnerSPT = n * 1.0
+            def expectedBalanceOwnerSPT = n * amountStartPerOwner
             def startingBalanceOwnerSPT = getbalance_MP(owners[n], currencySPT)
-
             assert startingBalanceOwnerSPT.balance == expectedBalanceOwnerSPT
         }
 
@@ -195,25 +201,40 @@ class MSCSendToManyOwnersSpec extends BaseRegTestSpec {
         assert stoTx.valid == true
         assert stoTx.confirmations == 1
 
-
         // Check updated owner balances
         for (n in 1..maxN) {
-            def expectedFinalBalanceOwnerSPT = n * 1.00000001
+            def expectedFinalBalanceOwnerSPT = n * (amountStartPerOwner + amountDistributePerOwner)
             def finalBalanceOwnerSPT = getbalance_MP(owners[n], currencySPT)
-
             assert finalBalanceOwnerSPT.balance == expectedFinalBalanceOwnerSPT
         }
 
         // Check final balances of actor
         def finalBalanceMSC = getbalance_MP(actorAddress, MSC)
         def finalBalanceSPT = getbalance_MP(actorAddress, currencySPT)
-
         assert finalBalanceMSC.balance == 0.0
         assert finalBalanceSPT.balance == 0.0
 
+        // Cleanup
+        sendToAddress(newAddress, getBalance() - 0.1)
+        generateBlock()
 
         where:
-        maxN << [1, 2, 65, 100]
+        maxN    | amountStartPerOwner                    | amountDistributePerOwner               | propertyType
+        1       | new BigDecimal("1")                    | new BigDecimal("9223372036854775806")  | PropertyType.INDIVISIBLE
+        1       | new BigDecimal("9223372036854775806")  | new BigDecimal("1")                    | PropertyType.INDIVISIBLE
+        100     | new BigDecimal("1")                    | new BigDecimal("1")                    | PropertyType.INDIVISIBLE
+        100     | new BigDecimal("1")                    | new BigDecimal("3")                    | PropertyType.INDIVISIBLE
+        100     | new BigDecimal("1")                    | new BigDecimal("100000000")            | PropertyType.INDIVISIBLE
+        100     | new BigDecimal("100000000")            | new BigDecimal("1")                    | PropertyType.INDIVISIBLE
+        100     | new BigDecimal("100000000")            | new BigDecimal("3")                    | PropertyType.INDIVISIBLE
+        1       | new BigDecimal("0.00000001")           | new BigDecimal("92233720368.54775806") | PropertyType.DIVISIBLE
+        1       | new BigDecimal("92233720368.54775806") | new BigDecimal("0.00000001")           | PropertyType.DIVISIBLE
+        100     | new BigDecimal("0.00000001")           | new BigDecimal("1.00000000")           | PropertyType.DIVISIBLE
+        100     | new BigDecimal("0.00000001")           | new BigDecimal("2.00000000")           | PropertyType.DIVISIBLE
+        100     | new BigDecimal("1.00000000")           | new BigDecimal("0.00000001")           | PropertyType.DIVISIBLE
+        100     | new BigDecimal("1.00000000")           | new BigDecimal("0.00000002")           | PropertyType.DIVISIBLE
+        100     | new BigDecimal("1.00000000")           | new BigDecimal("0.50000000")           | PropertyType.DIVISIBLE
+        100     | new BigDecimal("1.00000000")           | new BigDecimal("3.00000000")           | PropertyType.DIVISIBLE
     }
 
 }
