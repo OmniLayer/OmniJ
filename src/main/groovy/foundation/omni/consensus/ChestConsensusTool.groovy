@@ -4,10 +4,10 @@ import groovy.json.JsonSlurper
 import foundation.omni.CurrencyID
 
 /**
- * Command-line tool and class for fetching Master Chest consensus data
+ * Command-line tool and class for fetching Omni Chest consensus data
  */
 class ChestConsensusTool extends ConsensusTool {
-    // masterchest.info had https, but omnichest.info doesn't have it (yet?)
+    // omnichest.info doesn't have https:// support (yet?)
     static URI ChestHost_Live = new URI("http://omnichest.info");
     private def proto
     private def host
@@ -72,7 +72,7 @@ class ChestConsensusTool extends ConsensusTool {
         /* Since getConsensusForCurrency can't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
          *
-         * Note: Omni blockheight lags behind Blockchain.info and Master Core and this
+         * Note: Omni blockheight lags behind Blockchain.info and Omni Core and this
          * loop does not resolve that issue, it only makes sure the reported block height
          * matches the data returned.
          */
@@ -91,7 +91,7 @@ class ChestConsensusTool extends ConsensusTool {
             beforeBlockHeight = curBlockHeight
         }
 
-        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "MasterChest", consensusURL.toURI(), entries);
+        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "OmniChest", consensusURL.toURI(), entries);
         return snap
     }
 }
