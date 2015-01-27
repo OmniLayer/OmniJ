@@ -1,11 +1,9 @@
 package foundation.omni.test.rpc.sto
 import com.google.bitcoin.core.Address
-import com.msgilligan.bitcoin.BTC
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
-import spock.lang.Ignore
 import spock.lang.Unroll
 
 import static foundation.omni.CurrencyID.MSC
