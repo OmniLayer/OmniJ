@@ -20,7 +20,7 @@ class ChestServerSpec extends Specification {
 
         then: "something is there"
         snapshot.currencyID == MSC
-        snapshot.blockHeight == -1  // Chest doesn't make block height info available (?)
+        snapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
         snapshot.entries.size() >= 1
     }
 
