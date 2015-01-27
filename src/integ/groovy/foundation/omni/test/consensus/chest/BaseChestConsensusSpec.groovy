@@ -34,6 +34,17 @@ abstract class BaseChestConsensusSpec extends BaseMainNetSpec {
     }
 
     @Unroll
+    def "blockHeight #leftHeight == #rightHeight (#currency)"() {
+        expect:
+        leftHeight == rightHeight
+
+        where:
+        currency = comparison.c1.currencyID
+        leftHeight = comparison.c1.blockHeight
+        rightHeight = comparison.c2.blockHeight
+    }
+
+    @Unroll
     def "#address #entry1 == #entry2"() {
         expect:
         entry1.balance == entry2.balance

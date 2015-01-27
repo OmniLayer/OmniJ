@@ -13,6 +13,7 @@ class ChestConsensusTool extends ConsensusTool {
     private def host
     private def port
     static def file = "/mastercoin_verify/addresses.aspx"
+    static def blockHeightFile = "/apireq.aspx?stat=customapireq_lastblockprocessed"
 
     ChestConsensusTool(URI chestURI) {
         proto = chestURI.scheme
@@ -53,16 +54,44 @@ class ChestConsensusTool extends ConsensusTool {
 
     /* We're expecting input type String here */
     private BigDecimal jsonToBigDecimal(Object balanceIn) {
-        BigDecimal balanceOut = new BigDecimal(balanceIn).setScale(12)
+        BigDecimal balanceOut = new BigDecimal(balanceIn).setScale(8)
         return balanceOut
     }
+
+    private Integer currentBlockHeight() {
+        def blockHeightURL = new URL(proto, host, port, blockHeightFile)
+        String blockHeight = blockHeightURL.text
+        return blockHeight.toInteger()
+    }
+
 
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
         String httpFile = "${file}?currencyid=${currencyID as Integer}"
         def consensusURL = new URL(proto, host, port, httpFile)
-        SortedMap<String, ConsensusEntry> entries = this.getConsensusForCurrency(currencyID)
 
-        def snap = new ConsensusSnapshot(currencyID, -1, "MasterChest", consensusURL.toURI(), entries);
+        /* Since getConsensusForCurrency can't return the blockHeight, we have to check
+         * blockHeight before and after the call to make sure it didn't change.
+         *
+         * Note: Omni blockheight lags behind Blockchain.info and Master Core and this
+         * loop does not resolve that issue, it only makes sure the reported block height
+         * matches the data returned.
+         */
+
+        Integer beforeBlockHeight = currentBlockHeight()
+        Integer curBlockHeight
+        SortedMap<String, ConsensusEntry> entries
+        while (true) {
+            entries = this.getConsensusForCurrency(currencyID)
+            curBlockHeight = currentBlockHeight()
+            if (curBlockHeight == beforeBlockHeight) {
+                // If blockHeight didn't change, we're done
+                break;
+            }
+            // Otherwise we have to try again
+            beforeBlockHeight = curBlockHeight
+        }
+
+        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "MasterChest", consensusURL.toURI(), entries);
         return snap
     }
 }
