@@ -135,7 +135,7 @@ class CurrencyIDSpec extends Specification {
         NumberFormatException e = thrown()
 
         where:
-        id << [0, -1, 4294967296]
+        id << [-1, 4294967296]
     }
 
     def "A CurrencyID can be represented as String"() {
