@@ -154,7 +154,6 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def expectException = true
         def expectedValidity = false
         def currencyMSC = new CurrencyID(ecosystem.longValue())
-        def currencyBTC = new CurrencyID(0)
 
         when: "there is a well funded actor and two owners with bitcoin"
         def actorAddress = createFundedAddress(btcAvailable, startMSC)
@@ -168,7 +167,7 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
         getBitcoinBalance(ownerB) == btcAvailableOwners
 
         when: "#amountSTO is sent to the bitcoin owners"
-        def txid = executeSendToOwners(actorAddress, currencyBTC, propertyType, amountSTO, expectException)
+        def txid = executeSendToOwners(actorAddress, CurrencyID.BTC, propertyType, amountSTO, expectException)
         generateBlock()
 
         then: "the transaction validity is #expectedValidity"

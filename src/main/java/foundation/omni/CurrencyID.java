@@ -12,11 +12,13 @@ public final class CurrencyID extends Number implements Cloneable {
     public static final long   MAX_REAL_ECOSYSTEM_VALUE = 2147483647;
     public static final long   MAX_TEST_ECOSYSTEM_VALUE = MAX_VALUE;
 
+    public static final long    BTC_VALUE = 0;
     public static final long    MSC_VALUE = 1;
     public static final long    TMSC_VALUE = 2;
     public static final long    MaidSafeCoin_VALUE = 3;
     public static final long    TetherUS_VALUE = 31;
 
+    public static final CurrencyID  BTC = new CurrencyID(BTC_VALUE);
     public static final CurrencyID  MSC = new CurrencyID(MSC_VALUE);
     public static final CurrencyID  TMSC = new CurrencyID(TMSC_VALUE);
     public static final CurrencyID  MaidSafeCoin = new CurrencyID(MaidSafeCoin_VALUE);
