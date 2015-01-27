@@ -8,6 +8,7 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -113,18 +114,145 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
     }
 
     def "STO Property ID is non-existent"() {
-        expect: true
-        throw new org.junit.internal.AssumptionViolatedException("TODO")
+        def ecosystem = Ecosystem.TMSC
+        def propertyType = PropertyType.DIVISIBLE
+        def amountSTO = 1.0
+        def startMSC = 2.0
+        def expectException = true
+        def expectedValidity = false
+
+        def actorAddress = createFundedAddress(startBTC, startMSC)
+        def currencyMSC = new CurrencyID(ecosystem.longValue())
+        def currencySPT = new CurrencyID(4294967295L) // does not exist
+
+        given: "the actor starts with #startMSC #currencyMSC"
+        assert getbalance_MP(actorAddress, currencyMSC).balance == startMSC
+
+        when: "#amountSTO is sent to owners of #currencySPT"
+        def txid = executeSendToOwners(actorAddress, currencySPT, propertyType, amountSTO, expectException)
+        generateBlock()
+
+        then: "the transaction validity is #expectedValidity"
+        if (txid != null) {
+            def transaction = getTransactionMP(txid)
+            assert transaction.valid == expectedValidity
+            assert transaction.confirmations == 1
+        }
+
+        and: "the sender's balance is still the same"
+        getbalance_MP(actorAddress, currencyMSC).balance == startMSC
     }
 
+    @Ignore("https://github.com/msgilligan/bitcoin-spock/issues/35")
     def "STO Property ID is 0 - bitcoin"() {
-        expect: true
-        throw new org.junit.internal.AssumptionViolatedException("TODO")
+        def ecosystem = Ecosystem.TMSC
+        def propertyType = PropertyType.DIVISIBLE
+        def btcAvailable = 0.001
+        def btcAvailableOwners = 1.0
+        def amountSTO = 0.0001
+        def startMSC = 2.0
+        def expectException = true
+        def expectedValidity = false
+        def currencyMSC = new CurrencyID(ecosystem.longValue())
+        def currencyBTC = new CurrencyID(0)
+
+        when: "there is a well funded actor and two owners with bitcoin"
+        def actorAddress = createFundedAddress(btcAvailable, startMSC)
+        def ownerA = createFundedAddress(btcAvailableOwners, startMSC)
+        def ownerB = createFundedAddress(btcAvailableOwners, startMSC)
+
+        then: "they have a certain amount of tokens and coins"
+        getbalance_MP(actorAddress, currencyMSC).balance == startMSC
+        getBitcoinBalance(actorAddress) == btcAvailable
+        getBitcoinBalance(ownerA) == btcAvailableOwners
+        getBitcoinBalance(ownerB) == btcAvailableOwners
+
+        when: "#amountSTO is sent to the bitcoin owners"
+        def txid = executeSendToOwners(actorAddress, currencyBTC, propertyType, amountSTO, expectException)
+        generateBlock()
+
+        then: "the transaction validity is #expectedValidity"
+        if (txid != null) {
+            def transaction = getTransactionMP(txid)
+            assert transaction.valid == expectedValidity
+            assert transaction.confirmations == 1
+        }
+
+        and: "the sender paid at worst 2 * #stdTxFee bitcoin for the transaction itself"
+        getBitcoinBalance(actorAddress) >= (btcAvailable - 2 * stdTxFee)
+
+        and: "all other balances are still the same"
+        getbalance_MP(actorAddress, currencyMSC).balance == startMSC
+        getBitcoinBalance(ownerA) == btcAvailableOwners
+        getBitcoinBalance(ownerB) == btcAvailableOwners
     }
 
+    @Ignore("https://github.com/msgilligan/bitcoin-spock/issues/35")
     def "Sender owns all the coins of the STO Property, other addresses had non-zero balances but now zero balances"() {
-        expect: true
-        throw new org.junit.internal.AssumptionViolatedException("TODO")
+        def ecosystem = Ecosystem.TMSC
+        def propertyType = PropertyType.DIVISIBLE
+        def amountSTO = 1.0
+        def startMSC = 1.0
+        def expectException = true
+        def expectedValidity = false
+        def currencyMSC = new CurrencyID(ecosystem.longValue())
+
+        def actorAddress = createFundedAddress(startBTC, startMSC)
+        def ownerA = createFundedAddress(startBTC, startMSC)
+        def ownerB = createFundedAddress(startBTC, startMSC)
+
+        assert getbalance_MP(actorAddress, currencyMSC).balance == startMSC
+        assert getbalance_MP(ownerA, currencyMSC).balance == startMSC
+        assert getbalance_MP(ownerB, currencyMSC).balance == startMSC
+
+        // Create property
+        def numberOfTokens = amountSTO
+        if (propertyType == PropertyType.DIVISIBLE) {
+            numberOfTokens = BTC.btcToSatoshis(numberOfTokens)
+        }
+        def txidCreation = createProperty(ownerA, ecosystem, propertyType, numberOfTokens.longValue())
+        generateBlock()
+        def txCreation = getTransactionMP(txidCreation)
+        assert txCreation.valid == true
+        assert txCreation.confirmations == 1
+        def currencySPT = new CurrencyID(txCreation.propertyid)
+
+        // Owner A has the tokens
+        assert getbalance_MP(actorAddress, currencySPT).balance == 0.0
+        assert getbalance_MP(ownerA, currencySPT).balance == amountSTO
+        assert getbalance_MP(ownerB, currencySPT).balance == 0.0
+
+        // Owner A sends half of the tokens to owner B
+        send_MP(ownerA, ownerB, currencySPT, (amountSTO / 2))
+        generateBlock()
+        assert getbalance_MP(actorAddress, currencySPT).balance == 0.0
+        assert getbalance_MP(ownerA, currencySPT).balance == (amountSTO / 2)
+        assert getbalance_MP(ownerB, currencySPT).balance == (amountSTO / 2)
+
+        // Owner A and B send the tokens to the main actor
+        send_MP(ownerA, actorAddress, currencySPT, (amountSTO / 2))
+        send_MP(ownerB, actorAddress, currencySPT, (amountSTO / 2))
+        generateBlock()
+        assert getbalance_MP(actorAddress, currencySPT).balance == amountSTO
+        assert getbalance_MP(ownerA, currencySPT).balance == 0.0
+        assert getbalance_MP(ownerB, currencySPT).balance == 0.0
+
+        when: "#amountSTO is sent to owners of #currencySPT"
+        def txid = executeSendToOwners(actorAddress, currencySPT, propertyType, amountSTO, expectException)
+        generateBlock()
+
+        then: "the transaction validity is #expectedValidity"
+        if (txid != null) {
+            def transaction = getTransactionMP(txid)
+            assert transaction.valid == expectedValidity
+            assert transaction.confirmations == 1
+        }
+
+        and: "all balances still the same"
+        assert getbalance_MP(actorAddress, currencyMSC).balance == startMSC
+        assert getbalance_MP(actorAddress, currencySPT).balance == amountSTO
+        assert getbalance_MP(ownerA, currencySPT).balance == 0.0
+        assert getbalance_MP(ownerB, currencySPT).balance == 0.0
     }
 
     /**

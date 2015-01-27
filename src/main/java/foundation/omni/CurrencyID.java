@@ -6,7 +6,7 @@ package foundation.omni;
 public final class CurrencyID extends Number implements Cloneable {
     private final long value;
 
-    public static final long   MIN_VALUE = 1;
+    public static final long   MIN_VALUE = 0;
     public static final long   MAX_VALUE = 4294967295L;
 
     public static final long   MAX_REAL_ECOSYSTEM_VALUE = 2147483647;
