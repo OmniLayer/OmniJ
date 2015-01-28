@@ -8,7 +8,6 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
-import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -143,7 +142,6 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
         getbalance_MP(actorAddress, currencyMSC).balance == startMSC
     }
 
-    @Ignore("https://github.com/msgilligan/bitcoin-spock/issues/35")
     def "STO Property ID is 0 - bitcoin"() {
         def ecosystem = Ecosystem.TMSC
         def propertyType = PropertyType.DIVISIBLE
@@ -186,13 +184,12 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
         getBitcoinBalance(ownerB) == btcAvailableOwners
     }
 
-    @Ignore("https://github.com/msgilligan/bitcoin-spock/issues/35")
     def "Sender owns all the coins of the STO Property, other addresses had non-zero balances but now zero balances"() {
         def ecosystem = Ecosystem.TMSC
         def propertyType = PropertyType.DIVISIBLE
         def amountSTO = 1.0
         def startMSC = 1.0
-        def expectException = true
+        def expectException = false
         def expectedValidity = false
         def currencyMSC = new CurrencyID(ecosystem.longValue())
 

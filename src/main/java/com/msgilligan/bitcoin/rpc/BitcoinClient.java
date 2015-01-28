@@ -130,6 +130,48 @@ public class BitcoinClient extends RPCClient {
     }
 
     /**
+     * Returns the hash of block in best-block-chain at index provided.
+     *
+     * @param index The block index
+     * @return The block hash
+     */
+    public Sha256Hash getBlockHash(Integer index) throws JsonRPCException, IOException {
+        List<Object> params = createParamList(index);
+        Map<String, Object> response = send("getblockhash", params);
+
+        String hashStr = (String) response.get("result");
+        Sha256Hash hash = new Sha256Hash(hashStr);
+        return hash;
+    }
+
+    /**
+     * Returns information about a block with the given block hash.
+     *
+     * @param hash The block hash
+     * @return The information about the block
+     */
+    public Map<String,Object> getBlock(Sha256Hash hash) throws JsonRPCException, IOException {
+        // Use "verbose = true"
+        List<Object> params = createParamList(hash.toString(), true);
+        Map<String, Object> response = send("getblock", params);
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> json = (Map<String, Object>) response.get("result");
+        return json;
+    }
+
+    /**
+     * Returns information about a block at index provided.
+     *
+     * @param index The block index
+     * @return The information about the block
+     */
+    public Map<String,Object> getBlock(Integer index) throws JsonRPCException, IOException {
+        Sha256Hash blockHash = getBlockHash(index);
+        return getBlock(blockHash);
+    }
+
+    /**
      *
      * @param generate        turn generation on or off
      * @param genproclimit    Generation is limited to [genproclimit] processors, -1 is unlimited
@@ -364,6 +406,35 @@ public class BitcoinClient extends RPCClient {
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> unspent = (List<Map<String, Object>>) response.get("result");
         return unspent;
+    }
+
+    /**
+     * Returns details about an unspent transaction output.
+     *
+     * @param txid The transaction hash
+     * @param vout The transaction output index
+     * @return Details about an unspent output or nothing, if the output was already spent
+     */
+    public Map<String,Object> getTxOut(Sha256Hash txid, Integer vout) throws JsonRPCException, IOException {
+        return getTxOut(txid, vout, null);
+    }
+
+    /**
+     * Returns details about an unspent transaction output.
+     *
+     * @param txid The transaction hash
+     * @param vout The transaction output index
+     * @param includeMemoryPool Whether to included the memory pool
+     * @return Details about an unspent output or nothing, if the output was already spent
+     */
+    public Map<String,Object> getTxOut(Sha256Hash txid, Integer vout, Boolean includeMemoryPool)
+            throws JsonRPCException, IOException {
+        List<Object> params = createParamList(txid.toString(), vout, includeMemoryPool);
+        Map<String, Object> response = send("gettxout", params);
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> json = (Map<String, Object>) response.get("result");
+        return json;
     }
 
     public BigDecimal getBalance() throws JsonRPCException, IOException {

@@ -11,8 +11,6 @@ import foundation.omni.MPRegTestParams
 import foundation.omni.PropertyType
 import foundation.omni.rpc.MastercoinClientDelegate
 
-import static foundation.omni.CurrencyID.*
-
 import java.security.SecureRandom
 
 /**
@@ -27,6 +25,49 @@ trait TestSupport implements MastercoinClientDelegate {
         return accountName
     }
 
+    def requestBitcoin(Address toAddress, BigDecimal requestedBTC) {
+        def amountGatheredSoFar = 0.0
+        def inputs = new ArrayList<Map<String, Object>>()
+
+        // Newly mined coins need to mature to be spendable
+        def minCoinAge = 100
+
+        if (blockCount < minCoinAge) {
+            generateBlocks(minCoinAge - blockCount)
+        }
+
+        while (amountGatheredSoFar < requestedBTC) {
+            generateBlock()
+            def blockIndex = blockCount - minCoinAge
+            def block = client.getBlock(blockIndex)
+            def blockTxs = block.tx as List<String>
+            def coinbaseTx = new Sha256Hash(blockTxs.get(0))
+            def txout = client.getTxOut(coinbaseTx, 0)
+
+            // txout is empty, if output was already spent
+            if (txout.containsKey("value")) {
+                def amountBTCd = txout.value as Double
+                amountGatheredSoFar += BigDecimal.valueOf(amountBTCd)
+                def coinbaseTxid = coinbaseTx.toString()
+                inputs << ["txid": coinbaseTxid, "vout": 0]
+            }
+        }
+
+        // Don't care about change, we mine it anyway
+        def outputs = new HashMap<Address, BigDecimal>()
+        outputs.put(toAddress, requestedBTC)
+
+        def unsignedTxHex = client.createRawTransaction(inputs, outputs)
+        def signingResult = client.signRawTransaction(unsignedTxHex)
+
+        assert signingResult.complete == true
+
+        def signedTxHex = signingResult.hex as String
+        def txid = client.sendRawTransaction(signedTxHex, true)
+
+        return txid
+    }
+
     Address createFundedAddress(BigDecimal requestedBTC, BigDecimal requestedMSC) {
         final MPNetworkParameters params = MPRegTestParams.get()  // Hardcoded for RegTest for now
         Address stepAddress = getNewAddress()
@@ -34,11 +75,7 @@ trait TestSupport implements MastercoinClientDelegate {
         def startBTC = requestedBTC + btcForMSC + stdTxFee
         startBTC += 5 * stdTxFee  // To send BTC, MSC and TMSC to the real receiver
 
-        // Generate blocks until we have the requested amount of BTC
-        while (getBalance() < startBTC) {
-            generateBlock()
-        }
-        Sha256Hash txid = sendToAddress(stepAddress, startBTC)
+        Sha256Hash txid = requestBitcoin(stepAddress, startBTC)
         generateBlock()
         def tx = getTransaction(txid)
         assert tx.confirmations == 1
@@ -55,8 +92,8 @@ trait TestSupport implements MastercoinClientDelegate {
 
         // Send to the actual destination
         Address fundedAddress = getNewAddress()
-        send_MP(stepAddress, fundedAddress, MSC, requestedMSC)
-        send_MP(stepAddress, fundedAddress, TMSC, requestedMSC)
+        send_MP(stepAddress, fundedAddress, CurrencyID.MSC, requestedMSC)
+        send_MP(stepAddress, fundedAddress, CurrencyID.TMSC, requestedMSC)
         generateBlock()
         def remainingBTC = requestedBTC - getBitcoinBalance(fundedAddress)
         txid = sendBitcoin(stepAddress, fundedAddress, remainingBTC)
@@ -66,8 +103,8 @@ trait TestSupport implements MastercoinClientDelegate {
 
         // Verify correct amounts received
         btcBalance = getBitcoinBalance(fundedAddress)
-        BigDecimal mscBalance = getbalance_MP(fundedAddress, MSC).balance
-        BigDecimal tmscBalance = getbalance_MP(fundedAddress, TMSC).balance
+        BigDecimal mscBalance = getbalance_MP(fundedAddress, CurrencyID.MSC).balance
+        BigDecimal tmscBalance = getbalance_MP(fundedAddress, CurrencyID.TMSC).balance
 
         assert btcBalance == requestedBTC
         assert mscBalance == requestedMSC
