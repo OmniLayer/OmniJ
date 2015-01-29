@@ -25,7 +25,7 @@ trait TestSupport implements MastercoinClientDelegate {
         return accountName
     }
 
-    def requestBitcoin(Address toAddress, BigDecimal requestedBTC) {
+    Sha256Hash requestBitcoin(Address toAddress, BigDecimal requestedBTC) {
         def amountGatheredSoFar = 0.0
         def inputs = new ArrayList<Map<String, Object>>()
 
@@ -65,6 +65,18 @@ trait TestSupport implements MastercoinClientDelegate {
         def signedTxHex = signingResult.hex as String
         def txid = client.sendRawTransaction(signedTxHex, true)
 
+        return txid
+    }
+
+    Sha256Hash requestMSC(Address toAddress, BigDecimal requestedMSC) {
+        final MPNetworkParameters params = MPRegTestParams.get()  // Hardcoded for RegTest for now
+
+        // TODO: avoid inaccurate funding
+        // TODO: integrate into createFundedAddress
+        def btcForMSC = (requestedMSC / 100).setScale(8, BigDecimal.ROUND_UP)
+        requestBitcoin(toAddress, btcForMSC + stdTxFee)
+
+        def txid = sendBitcoin(toAddress, params.moneyManAddress, btcForMSC)
         return txid
     }
 
