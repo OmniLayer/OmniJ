@@ -24,6 +24,22 @@ public final class CurrencyID extends Number implements Cloneable {
     public static final CurrencyID  MaidSafeCoin = new CurrencyID(MaidSafeCoin_VALUE);
     public static final CurrencyID  TetherUS = new CurrencyID(TetherUS_VALUE);
 
+    public static CurrencyID valueOf(String s) {
+        switch (s) {
+            case "BTC":
+                return BTC;
+            case "MSC":
+                return MSC;
+            case "TMSC":
+                return TMSC;
+            case "MaidSafeCoin":
+                return MaidSafeCoin;
+            case "TetherUS":
+                return TetherUS;
+        }
+        throw new NumberFormatException();
+    }
+
     public CurrencyID(long value) {
         if (value < MIN_VALUE) {
             throw new NumberFormatException();
