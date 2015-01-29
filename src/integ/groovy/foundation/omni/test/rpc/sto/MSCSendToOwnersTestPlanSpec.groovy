@@ -271,12 +271,7 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
                 requestMSC(actorAddress, numberOfTokens)
                 generateBlock()
             }
-
-            if (propertyName == "MSC") {
-                return CurrencyID.MSC;
-            } else {
-                return CurrencyID.TMSC;
-            }
+            return CurrencyID.valueOf(propertyName)
         }
 
         numberOfTokens += amountAvailable
