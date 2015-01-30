@@ -44,7 +44,7 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def startMSC = mscAvailable + mscReserved
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def currencyMSC = new CurrencyID(ecosystem.longValue())
-        def currencySPT = createStoProperty(actorAddress, data)
+        def currencySPT = getStoProperty(actorAddress, data)
 
         // Create a DEx offer to reserve an amount
         if (mscReserved > 0) {
@@ -252,19 +252,29 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
     }
 
     /**
-     * Creates a new property and returns it's identifier.
+     * Parses the property identifier and creates a new property, if it's neither MSC or TMSC.
      */
-    def createStoProperty(Address actorAddress, def data) {
+    def getStoProperty(Address actorAddress, def data) {
         def amountAvailableOwners = Eval.me(data.AmountAvailableOwners) as List<BigDecimal>
         def amountAvailable = new BigDecimal(data.AmountAvailable)
         def ecosystem = new Ecosystem(Short.valueOf(data.Ecosystem))
         def propertyType = new PropertyType(Integer.valueOf(data.PropertyType))
-
-        def numberOfTokens = amountAvailable
+        def propertyName = new String(data.PropertyName)
+        def numberOfTokens = 0.0
 
         if (amountAvailableOwners.size()) {
             numberOfTokens += amountAvailableOwners.sum()
         }
+
+        if (propertyName == "MSC" || propertyName == "TMSC") {
+            if (numberOfTokens > 0) {
+                requestMSC(actorAddress, numberOfTokens)
+                generateBlock()
+            }
+            return CurrencyID.valueOf(propertyName)
+        }
+
+        numberOfTokens += amountAvailable
 
         if (propertyType == PropertyType.DIVISIBLE) {
             numberOfTokens = BTC.btcToSatoshis(numberOfTokens)

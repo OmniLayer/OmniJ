@@ -1,6 +1,7 @@
 package foundation.omni
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 /**
  * User: sean
@@ -150,6 +151,22 @@ class CurrencyIDSpec extends Specification {
         2147483647 | "CurrencyID:2147483647"
         2147483647L + 1 | "CurrencyID:2147483648"
         4294967295 | "CurrencyID:4294967295"
+    }
+
+    @Unroll
+    def "The String \"#str\" can be used to create CurrencyID:#value"() {
+
+        expect:
+        CurrencyID currency = CurrencyID.valueOf(str)
+        currency.longValue() == value
+
+        where:
+        str            | value
+        "BTC"          | CurrencyID.BTC_VALUE
+        "MSC"          | CurrencyID.MSC_VALUE
+        "TMSC"         | CurrencyID.TMSC_VALUE
+        "MaidSafeCoin" | CurrencyID.MaidSafeCoin_VALUE
+        "TetherUS"     | CurrencyID.TetherUS_VALUE
     }
 
 }
