@@ -251,6 +251,77 @@ class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
         assert getbalance_MP(ownerB, currencySPT).balance == 0.0
     }
 
+    def "Owners with similar effictive balances, but different available/reserved ratios, receive the same amount"() {
+        def ecosystem = Ecosystem.TMSC
+        def propertyType = PropertyType.DIVISIBLE
+        def startMSC = 100.0
+        def amountSTO = 99.0
+        def reservedOwnerA = 100.0
+        def reservedOwnerB = 10.0
+        def reservedOwnerC = 0.0
+        def expectException = false
+        def expectedValidity = true
+        def currencyMSC = new CurrencyID(ecosystem.longValue())
+
+        def numberOfAllOwners = getproperty_MP(currencyMSC).size()
+        if (BTC.btcToSatoshis(startMSC - amountSTO) < (numberOfAllOwners - 1)) {
+            throw new org.junit.internal.AssumptionViolatedException("actor may not have enough MSC to pay the fee")
+        }
+
+        // fund participants
+        def actorAddress = createFundedAddress(startBTC, startMSC)
+        def ownerA = createFundedAddress(startBTC, startMSC)
+        def ownerB = createFundedAddress(startBTC, startMSC)
+        def ownerC = createFundedAddress(startBTC, startMSC)
+
+        // reserve an amount for owner A and B
+        reserveAmountMSC(ownerA, currencyMSC, reservedOwnerA)
+        reserveAmountMSC(ownerB, currencyMSC, reservedOwnerB)
+
+        // confirm starting balances
+        assertBalance(actorAddress, currencyMSC, startMSC, 0.0)
+        assertBalance(ownerA, currencyMSC, (startMSC - reservedOwnerA), reservedOwnerA)
+        assertBalance(ownerB, currencyMSC, (startMSC - reservedOwnerB), reservedOwnerB)
+        assertBalance(ownerC, currencyMSC, (startMSC - reservedOwnerC), reservedOwnerC)
+
+        when: "#amountSTO is sent to three owners with similar effective balance of #currencyMSC"
+        def txid = executeSendToOwners(actorAddress, currencyMSC, propertyType, amountSTO, expectException)
+        generateBlock()
+
+        then: "the transaction is valid"
+        if (txid != null) {
+            def transaction = getTransactionMP(txid)
+            assert transaction.valid == expectedValidity
+            assert transaction.confirmations == 1
+        }
+
+        when: "comparing the updated balances after the send"
+        def actorBalance = getbalance_MP(actorAddress, currencyMSC)
+        def ownerBalanceA = getbalance_MP(ownerA, currencyMSC)
+        def ownerBalanceB = getbalance_MP(ownerB, currencyMSC)
+        def ownerBalanceC = getbalance_MP(ownerC, currencyMSC)
+        def amountSpentActor = startMSC - actorBalance.balance
+        def amountReceivedOwnerA = ownerBalanceA.balance - (startMSC - reservedOwnerA)
+        def amountReceivedOwnerB = ownerBalanceB.balance - (startMSC - reservedOwnerB)
+        def amountReceivedOwnerC = ownerBalanceC.balance - (startMSC - reservedOwnerC)
+
+        then: "the actor really spent MSC and the owners received MSC"
+        amountSpentActor > 0.0
+        0.0 < amountReceivedOwnerA
+        0.0 < amountReceivedOwnerB
+        0.0 < amountReceivedOwnerC
+
+        and: "the reserved balances are unchanged"
+        actorBalance.reserved  == 0.0
+        ownerBalanceA.reserved == reservedOwnerA
+        ownerBalanceB.reserved == reservedOwnerB
+        ownerBalanceC.reserved == reservedOwnerC
+
+        and: "the three owners received exactly the same amount"
+        amountReceivedOwnerA == amountReceivedOwnerB
+        amountReceivedOwnerB == amountReceivedOwnerC
+    }
+
     /**
      * Parses the property identifier and creates a new property, if it's neither MSC or TMSC.
      */
