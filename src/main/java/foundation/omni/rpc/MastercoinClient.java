@@ -53,6 +53,15 @@ public class MastercoinClient extends BitcoinClient {
         return result;
     }
 
+    public Map<String, Object> getproperty_MP(CurrencyID currency) throws JsonRPCException, IOException {
+        List<Object> params = Arrays.asList((Object) currency.longValue());
+        Map<String, Object> response = send("getproperty_MP", params);
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> result = (Map<String, Object>) response.get("result");
+        return result;
+    }
+
     public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList((Object) fromAddress.toString(), toAddress.toString(), currency.longValue(), amount.toPlainString());
         Map<String, Object> response = send("send_MP", params);
