@@ -8,26 +8,26 @@ trap cleanup EXIT
 
 BTCD=copied-artifacts/src/mastercored
 DATADIR=$HOME/.bitcoin
+LOGDIR=logs
 MSCLOG=/tmp/mastercore.log
 
 # Assume mastercored built elsewhere and copied by Jenkins Copy Artifact plugin
 chmod +x $BTCD
 
-# Set up bitcoin conf and data dir
+# Setup bitcoin conf and data dir
 mkdir -p $DATADIR
 cp -n bitcoin.conf $DATADIR
 
 # setup logging
-mkdir -p logs
-#rm -f $MSCLOG 
+mkdir -p $LOGDIR
 touch $MSCLOG
-ln -sf $MSCLOG logs/mastercore.log
+ln -sf $MSCLOG $LOGDIR/mastercore.log
 
-# remove all regtest data
+# Remove all regtest data
 rm -rf $DATADIR/regtest
 
-# Run Bitcoin in regtest mode
-$BTCD -server -regtest -datadir=$DATADIR -debug > logs/bitcoin.log &
+# Run mastercored in regtest mode
+$BTCD -regtest -datadir=$DATADIR > $LOGDIR/bitcoin.log &
 BTCSTATUS=$?
 BTCPID=$!
 
