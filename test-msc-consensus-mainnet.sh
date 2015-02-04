@@ -8,26 +8,26 @@ trap cleanup EXIT
 
 BTCD=copied-artifacts/src/mastercored
 DATADIR=$HOME/.bitcoin
+LOGDIR=logs
 MSCLOG=/tmp/mastercore.log
 
-# Assume mastercored built elsewhere and coied by Jenkins Copy Artifact plugin
+# Assume mastercored built elsewhere and copied by Jenkins Copy Artifact plugin
 chmod +x $BTCD
 
-# Set up bitcoin conf and data dir
+# Setup bitcoin conf and data dir
 mkdir -p $DATADIR
 cp -n bitcoin.conf $DATADIR
 
 # setup logging
-mkdir -p logs
-#rm -f $MSCLOG 
+mkdir -p $LOGDIR
 touch $MSCLOG
-ln -sf $MSCLOG logs/mastercore.log
+ln -sf $MSCLOG $LOGDIR/mastercore.log
 
-# remove Master Protocol persistence directories/files
+# Remove Omni Core persistence directories/files
 rm -rf $DATADIR/MP_*
 
-# Run Bitcoin on main net mode
-$BTCD -server -datadir=$DATADIR -debug > logs/bitcoin.log &
+# Run mastercored in mainnet mode
+$BTCD -datadir=$DATADIR > $LOGDIR/bitcoin.log &
 BTCSTATUS=$?
 BTCPID=$!
 
