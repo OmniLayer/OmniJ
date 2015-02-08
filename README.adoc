@@ -80,7 +80,7 @@ Should "Send an amount to a newly created address"() {
 
 == Supporting Libraries API Documentation
 
-This project includes a variety of supporting classes necessary to implement the functional/integration tests. For an quick overview of these classes look at their http://ci.omni.foundation/job/msc-integ-regtest/javadoc/[API documentation] (GroovyDoc).
+This project includes a variety of supporting classes necessary to implement the functional/integration tests. For an quick overview of these classes look at their http://ci.omni.foundation/job/bitcoin-spock/javadoc/[API documentation] (GroovyDoc).
 
 == Additional Documentation
 
