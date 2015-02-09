@@ -197,7 +197,22 @@ trait TestSupport implements MastercoinClientDelegate {
      * @return The balance
      */
     BigDecimal getBitcoinBalance(Address address) {
+        // NOTE: because null is currently removed from the argument lists passed via RPC, using it here for default
+        // values would result in the RPC call "listunspent" with arguments [["address"]], which is invalid, similar
+        // to a call with arguments [null, null, ["address"]], as expected arguments are either [], [int], [int, int]
+        // or [int, int, array]
         return getBitcoinBalance(address, 1, 99999)
+    }
+
+    /**
+     * Returns the Bitcoin balance of an address where spendable outputs have at least {@code minConf} confirmations.
+     *
+     * @param address The address
+     * @param minConf Minimum amount of confirmations
+     * @return The balance
+     */
+    BigDecimal getBitcoinBalance(Address address, Integer minConf) {
+        return getBitcoinBalance(address, minConf, 99999)
     }
 
     /**
@@ -333,12 +348,12 @@ trait TestSupport implements MastercoinClientDelegate {
     String createDexSellOfferHex(CurrencyID currencyId, BigDecimal amountForSale, BigDecimal amountDesired,
                                  Number paymentWindow, BigDecimal commitmentFee, Number action) {
         def rawTxHex = String.format("00010014%08x%016x%016x%02x%016x%02x",
-                currencyId.longValue(),
-                (BTC.btcToSatoshis(amountForSale)).longValue(),
-                (BTC.btcToSatoshis(amountDesired)).longValue(),
-                paymentWindow.byteValue(),
-                (BTC.btcToSatoshis(commitmentFee)).longValue(),
-                action.byteValue())
+                                     currencyId.longValue(),
+                                     (BTC.btcToSatoshis(amountForSale)).longValue(),
+                                     (BTC.btcToSatoshis(amountDesired)).longValue(),
+                                     paymentWindow.byteValue(),
+                                     (BTC.btcToSatoshis(commitmentFee)).longValue(),
+                                     action.byteValue())
         return rawTxHex
     }
 
