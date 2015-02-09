@@ -488,6 +488,21 @@ public class BitcoinClient extends RPCClient {
         return hash;
     }
 
+    /**
+     * Set the transaction fee per kB.
+     *
+     * @param amount The transaction fee in BTC/kB rounded to the nearest 0.00000001.
+     * @return True if successful
+     */
+    public Boolean setTxFee(BigDecimal amount) throws JsonRPCException, IOException {
+        List<Object> params = createParamList(amount);
+        Map<String, Object> response = send("settxfee", params);
+
+        @SuppressWarnings("unchecked")
+        Boolean result = (Boolean) response.get("result");
+        return result;
+    }
+
     public Map<String, Object> getTransaction(Sha256Hash txid) throws JsonRPCException, IOException {
         List<Object> params = createParamList(txid.toString());
         Map<String, Object> response = send("gettransaction", params);
