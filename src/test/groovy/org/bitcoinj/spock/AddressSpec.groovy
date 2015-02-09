@@ -9,7 +9,6 @@ import org.spongycastle.util.encoders.Hex
 import spock.lang.Ignore
 import spock.lang.Specification
 
-@Ignore("For some reason 'ECKey.fromPrivate(x)' doesn't work the same as new 'ECKey(x)'")
 class AddressSpec extends Specification {
     static final mainNetParams = MainNetParams.get()
     static final testNetParams = TestNet3Params.get()
@@ -18,7 +17,7 @@ class AddressSpec extends Specification {
 
     def "Create valid MainNet Address from private key"() {
         setup: ""
-        def key = ECKey.fromPrivate(NotSoPrivatePrivateKey)
+        def key = ECKey.fromPrivate(NotSoPrivatePrivateKey, false)
 
         when: "We create a MainNet Address"
         Address address = key.toAddress(mainNetParams)
@@ -31,7 +30,7 @@ class AddressSpec extends Specification {
 
     def "Create valid TestNet Address from private key"() {
         setup: ""
-        def key = ECKey.fromPrivate(NotSoPrivatePrivateKey)
+        def key = ECKey.fromPrivate(NotSoPrivatePrivateKey, false)
 
         when: "We create a TestNet Address"
         Address address = key.toAddress(testNetParams)
@@ -44,7 +43,7 @@ class AddressSpec extends Specification {
 
     def "Create valid RegTest Address from private key"() {
         setup: ""
-        def key = ECKey.fromPrivate(NotSoPrivatePrivateKey)
+        def key = ECKey.fromPrivate(NotSoPrivatePrivateKey, false)
 
         when: "We create a RegTest Address"
         Address address = key.toAddress(regTestParams)

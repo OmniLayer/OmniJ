@@ -38,13 +38,12 @@ class ECKeySpec extends Specification {
         key.creationTimeSeconds > 0          // since we created it, we know the creation time
     }
 
-    @Ignore("For some reason 'ECKey.fromPrivate(x)' doesn't work the same as new 'ECKey(x)'")
     def "Import a constant, publicly-known private key "() {
         when: "We import a constant, publicly known public key"
-        def key = ECKey.fromPrivate(NotSoPrivatePrivateKey)
+        def key = ECKey.fromPrivate(NotSoPrivatePrivateKey, false)
 
         then:
-        key.toString() == "pub:0401de173aa944eacf7e44e5073baca93fb34fe4b7897a1c82c92dfdc8a1f75ef58cd1b06e8052096980cb6e1ad6d3df143c34b3d7394bae2782a4df570554c2fb"
+        key.toString() == "ECKey{pub=0401de173aa944eacf7e44e5073baca93fb34fe4b7897a1c82c92dfdc8a1f75ef58cd1b06e8052096980cb6e1ad6d3df143c34b3d7394bae2782a4df570554c2fb, isEncrypted=false}"
         key.pubKey.encodeHex().toString() == "0401de173aa944eacf7e44e5073baca93fb34fe4b7897a1c82c92dfdc8a1f75ef58cd1b06e8052096980cb6e1ad6d3df143c34b3d7394bae2782a4df570554c2fb"
         key.pubKey.encodeBase64().toString() == "BAHeFzqpROrPfkTlBzusqT+zT+S3iXocgskt/cih9171jNGwboBSCWmAy24a1tPfFDw0s9c5S64ngqTfVwVUwvs="
     }
