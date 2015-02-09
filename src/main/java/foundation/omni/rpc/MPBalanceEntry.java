@@ -1,6 +1,6 @@
 package foundation.omni.rpc;
 
-import com.google.bitcoin.core.Address;
+import org.bitcoinj.core.Address;
 
 import java.math.BigDecimal;
 

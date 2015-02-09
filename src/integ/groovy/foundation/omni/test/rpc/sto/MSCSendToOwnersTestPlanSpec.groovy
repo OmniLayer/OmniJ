@@ -1,7 +1,7 @@
 package foundation.omni.test.rpc.sto
 
-import com.google.bitcoin.core.Address
-import com.google.bitcoin.core.Sha256Hash
+import org.bitcoinj.core.Address
+import org.bitcoinj.core.Sha256Hash
 import com.msgilligan.bitcoin.BTC
 import com.xlson.groovycsv.CsvParser
 import foundation.omni.BaseRegTestSpec

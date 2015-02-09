@@ -1,7 +1,7 @@
 package com.msgilligan.bitcoin.cli;
 
-import com.google.bitcoin.core.Address;
-import com.google.bitcoin.core.Sha256Hash;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.Sha256Hash;
 import com.msgilligan.bitcoin.rpc.JsonRPCException;
 
 import java.io.IOException;

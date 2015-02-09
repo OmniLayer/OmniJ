@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.sto
 
-import com.google.bitcoin.core.Address
+import org.bitcoinj.core.Address
 import foundation.omni.CurrencyID
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.consensus.ConsensusComparison

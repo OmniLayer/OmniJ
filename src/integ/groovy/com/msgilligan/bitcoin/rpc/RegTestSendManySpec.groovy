@@ -1,7 +1,7 @@
 package com.msgilligan.bitcoin.rpc
 
-import com.google.bitcoin.core.ECKey
-import com.google.bitcoin.params.RegTestParams
+import org.bitcoinj.core.ECKey
+import org.bitcoinj.params.RegTestParams
 import foundation.omni.BaseRegTestSpec
 import spock.lang.Ignore
 

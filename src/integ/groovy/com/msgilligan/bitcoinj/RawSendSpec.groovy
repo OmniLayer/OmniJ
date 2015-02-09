@@ -1,9 +1,9 @@
 package com.msgilligan.bitcoinj
 
-import com.google.bitcoin.core.Address
-import com.google.bitcoin.core.NetworkParameters
-import com.google.bitcoin.core.Transaction
-import com.google.bitcoin.params.RegTestParams
+import org.bitcoinj.core.Address
+import org.bitcoinj.core.NetworkParameters
+import org.bitcoinj.core.Transaction
+import org.bitcoinj.params.RegTestParams
 import foundation.omni.BaseRegTestSpec
 
 /**

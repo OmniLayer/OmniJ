@@ -1,8 +1,8 @@
 package foundation.omni.rpc;
 
-import com.google.bitcoin.core.Address;
-import com.google.bitcoin.core.AddressFormatException;
-import com.google.bitcoin.core.Sha256Hash;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.Sha256Hash;
 import com.msgilligan.bitcoin.rpc.BitcoinClient;
 import com.msgilligan.bitcoin.rpc.JsonRPCException;
 import foundation.omni.CurrencyID;

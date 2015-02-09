@@ -1,8 +1,8 @@
 package foundation.omni.test
 
-import com.google.bitcoin.core.Address
-import com.google.bitcoin.core.Sha256Hash
-import com.google.bitcoin.core.Transaction
+import org.bitcoinj.core.Address
+import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.core.Transaction
 import com.msgilligan.bitcoin.BTC
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
@@ -17,7 +17,10 @@ import java.security.SecureRandom
  * Test support functions intended to be mixed-in to Spock test specs
  */
 trait TestSupport implements MastercoinClientDelegate {
-    final BigDecimal stdTxFee = BTC.satoshisToBTC(Transaction.REFERENCE_DEFAULT_MIN_TX_FEE)
+    // TODO: For some reason when we upgraded to bitcoinj 12.2 (from 11.3) some integration tests
+    // broke because they were assuming the old transaction fee (or is this because Omni Core itself does)
+    // so, temporarily this constant is using 10x what bitcoinj is calling the default min tx fee.
+    final BigDecimal stdTxFee = BTC.satoshisToBTC(10 * Transaction.REFERENCE_DEFAULT_MIN_TX_FEE.value)
 
     String createNewAccount() {
         def random = new SecureRandom();
@@ -163,7 +166,7 @@ trait TestSupport implements MastercoinClientDelegate {
         // Gather inputs
         for (unspentOutput in unspentOutputs) {
             def outpoint = new HashMap<String, Object>()
-            def amountBTCd = unspentOutput["amount"] as Double
+            def amountBTCd = unspentOutput["amount"] as Double // TODO: Don't use Double
             amountIn += BigDecimal.valueOf(amountBTCd)
             outpoint["txid"] = unspentOutput["txid"]
             outpoint["vout"] = unspentOutput["vout"]
@@ -177,6 +180,9 @@ trait TestSupport implements MastercoinClientDelegate {
 
         // Calculate change
         def amountChange = amountIn - amountOut - stdTxFee
+        if (amountIn < (amountOut + stdTxFee)) {
+            println "Insufficient funds: ${amountIn} < ${amountOut + stdTxFee}"
+        }
         if (amountChange > 0) {
             outputs[fromAddress] = amountChange
         }

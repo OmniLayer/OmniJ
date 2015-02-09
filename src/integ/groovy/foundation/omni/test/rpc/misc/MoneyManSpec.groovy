@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.misc
 
-import com.google.bitcoin.core.Address
+import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.MPRegTestParams
 import foundation.omni.rpc.MastercoinClient

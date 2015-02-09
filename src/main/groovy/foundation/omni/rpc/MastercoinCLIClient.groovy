@@ -1,8 +1,8 @@
 package foundation.omni.rpc
 
-import com.google.bitcoin.core.Address
-import com.google.bitcoin.core.Sha256Hash
-import com.google.bitcoin.core.Transaction
+import org.bitcoinj.core.Address
+import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.core.Transaction
 import groovy.transform.CompileStatic
 
 /**

@@ -1,16 +1,16 @@
 package com.msgilligan.bitcoinj
 
-import com.google.bitcoin.core.Address
-import com.google.bitcoin.core.BlockChain
-import com.google.bitcoin.core.ECKey
-import com.google.bitcoin.core.NetworkParameters
-import com.google.bitcoin.core.PeerAddress
-import com.google.bitcoin.core.PeerGroup
-import com.google.bitcoin.core.Transaction
-import com.google.bitcoin.core.Wallet
-import com.google.bitcoin.params.RegTestParams
-import com.google.bitcoin.store.MemoryBlockStore
-import com.google.bitcoin.utils.BriefLogFormatter
+import org.bitcoinj.core.Address
+import org.bitcoinj.core.BlockChain
+import org.bitcoinj.core.ECKey
+import org.bitcoinj.core.NetworkParameters
+import org.bitcoinj.core.PeerAddress
+import org.bitcoinj.core.PeerGroup
+import org.bitcoinj.core.Transaction
+import org.bitcoinj.core.Wallet
+import org.bitcoinj.params.RegTestParams
+import org.bitcoinj.store.MemoryBlockStore
+import org.bitcoinj.utils.BriefLogFormatter
 import com.msgilligan.bitcoin.BTC
 import foundation.omni.BaseRegTestSpec
 import spock.lang.Shared

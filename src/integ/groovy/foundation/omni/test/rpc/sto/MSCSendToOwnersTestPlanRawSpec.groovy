@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.sto
 
-import com.google.bitcoin.core.Address
+import org.bitcoinj.core.Address
 import com.msgilligan.bitcoin.BTC
 import foundation.omni.CurrencyID
 import foundation.omni.PropertyType

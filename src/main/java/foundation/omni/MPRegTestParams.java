@@ -1,8 +1,8 @@
 package foundation.omni;
 
-import com.google.bitcoin.core.Address;
-import com.google.bitcoin.core.AddressFormatException;
-import com.google.bitcoin.params.RegTestParams;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.params.RegTestParams;
 
 /**
  * Master Protocol parameters for Bitcoin MainNet
