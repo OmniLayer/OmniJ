@@ -126,10 +126,6 @@ class MSCSendToManyOwnersSpec extends BaseRegTestSpec {
 
         assert finalBalanceMSC.balance == 0.0
         assert finalBalanceSPT.balance == 0.0
-
-        // Cleanup
-        sendToAddress(newAddress, getBalance() - 0.1)
-        generateBlock()
     }
 
     @Unroll
@@ -212,10 +208,6 @@ class MSCSendToManyOwnersSpec extends BaseRegTestSpec {
         def finalBalanceSPT = getbalance_MP(actorAddress, currencySPT)
         assert finalBalanceMSC.balance == 0.0
         assert finalBalanceSPT.balance == 0.0
-
-        // Cleanup
-        sendToAddress(newAddress, getBalance() - 0.1)
-        generateBlock()
 
         where:
         maxN    | amountStartPerOwner                    | amountDistributePerOwner               | propertyType
