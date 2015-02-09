@@ -17,7 +17,7 @@ class MSCSendToManyOwnersSpec extends BaseRegTestSpec {
     final static BigDecimal COIN = 100000000.0
 
     def dryRun(Integer maxN,
-               BigDecimal amountStartPerOwner, BigDecimal amountDistributePerOwner, PropertyType propertyType) {
+        BigDecimal amountStartPerOwner, BigDecimal amountDistributePerOwner, PropertyType propertyType) {
         print "\n"
         println "-----------------------------------------------------------------------"
         println String.format("%s: start with n * %s and send n * %s to %d owners",
