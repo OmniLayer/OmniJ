@@ -2,7 +2,6 @@ package foundation.omni
 
 import com.msgilligan.bitcoin.rpc.RPCURL
 import foundation.omni.rpc.MastercoinCLIClient
-//import MastercoinClient
 import foundation.omni.rpc.MastercoinClientDelegate
 import foundation.omni.test.TestSupport
 import spock.lang.Specification
@@ -17,21 +16,20 @@ class BaseRegTestSpec extends Specification implements MastercoinClientDelegate,
 
     static final BigDecimal minBTCForTests = 50.0;
 
-//    @Shared
-//    private BitcoinDaemon daemon
-
     {
         client = new MastercoinCLIClient(RPCURL.defaultRegTestURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
     }
 
     void setupSpec() {
-//        daemon = new BitcoinDaemon("${executable} -printtoconsole -server -regtest -datadir=${dataDir}")
-//        client = new MastercoinClient(RPCURL.defaultRegTestURL, rpcuser, rpcpassword)
         System.err.println("Waiting for server...")
         Boolean available = client.waitForServer(60)   // Wait up to 1 minute
         if (!available) {
             System.err.println("Timeout error.")
         }
+
+        // Set a default transaction fee, so a known reference value can be used in tests
+        assert client.setTxFee(stdTxFee)
+
         // Make sure we have enough test coins
         while (getBalance() < minBTCForTests) {
             // Mine blocks until we have some coins to spend
@@ -40,6 +38,7 @@ class BaseRegTestSpec extends Specification implements MastercoinClientDelegate,
     }
 
     void cleanupSpec() {
-//        daemon.stop()
+        // Nothing to clean up for now
     }
+
 }
