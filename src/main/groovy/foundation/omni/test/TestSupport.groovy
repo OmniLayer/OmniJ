@@ -17,10 +17,9 @@ import java.security.SecureRandom
  * Test support functions intended to be mixed-in to Spock test specs
  */
 trait TestSupport implements MastercoinClientDelegate {
-    // TODO: For some reason when we upgraded to bitcoinj 12.2 (from 11.3) some integration tests
-    // broke because they were assuming the old transaction fee (or is this because Omni Core itself does)
-    // so, temporarily this constant is using 10x what bitcoinj is calling the default min tx fee.
-    final BigDecimal stdTxFee = BTC.satoshisToBTC(10 * Transaction.REFERENCE_DEFAULT_MIN_TX_FEE.value)
+    // TODO: set, or get and verify default values of the client
+    final BigDecimal stdTxFee = new BigDecimal('0.00010000')
+    final BigDecimal stdRelayTxFee = new BigDecimal('0.00001000')
 
     String createNewAccount() {
         def random = new SecureRandom();
@@ -48,7 +47,7 @@ trait TestSupport implements MastercoinClientDelegate {
             def txout = client.getTxOut(coinbaseTx, 0)
 
             // txout is empty, if output was already spent
-            if (txout.containsKey("value")) {
+            if (txout && txout.containsKey("value")) {
                 def amountBTCd = txout.value as Double
                 amountGatheredSoFar += BigDecimal.valueOf(amountBTCd)
                 def coinbaseTxid = coinbaseTx.toString()
@@ -72,58 +71,70 @@ trait TestSupport implements MastercoinClientDelegate {
     }
 
     Sha256Hash requestMSC(Address toAddress, BigDecimal requestedMSC) {
+        return requestMSC(toAddress, requestedMSC, true)
+    }
+
+    Sha256Hash requestMSC(Address toAddress, BigDecimal requestedMSC, Boolean allowIntermediate) {
         final MPNetworkParameters params = MPRegTestParams.get()  // Hardcoded for RegTest for now
 
-        // TODO: avoid inaccurate funding
-        // TODO: integrate into createFundedAddress
-        def btcForMSC = (requestedMSC / 100).setScale(8, BigDecimal.ROUND_UP)
-        requestBitcoin(toAddress, btcForMSC + stdTxFee)
+        // For 1.0 BTC an amount of 100.0 MSC is generated, resulting in a minimal purchase amount of
+        // 0.00000100 MSC for 0.00000001 BTC
+        def btcForMSC = (requestedMSC / 100.0).setScale(8, BigDecimal.ROUND_UP)
+        def actualMSC = btcForMSC * 100.0
 
+        if (!allowIntermediate) {
+            assert actualMSC == requestedMSC
+        }
+
+        requestBitcoin(toAddress, btcForMSC + stdTxFee)
         def txid = sendBitcoin(toAddress, params.moneyManAddress, btcForMSC)
+
+        if (actualMSC != requestedMSC) {
+            def excessiveMSC = actualMSC - requestedMSC
+
+            // TODO: avoid magic numbers for dust calculation
+            def dustForExodus = ((((148 + 34) * 3) / 1000) * stdRelayTxFee).setScale(8, BigDecimal.ROUND_UP)
+            def dustForReference = ((((148 + 34) * 3) / 1000) * stdRelayTxFee).setScale(8, BigDecimal.ROUND_UP)
+            def dustForPayload = ((((148 + 80) * 3) / 1000) * stdRelayTxFee).setScale(8, BigDecimal.ROUND_UP)
+
+            // Simple send transactions have a dust output for the receiver reference, a marker output and an output
+            // for the actual payload. MSC and TMSC are forwarded in two transactions, so this amount, as well as the
+            // transaction fee, have to be paid twice
+            def additionalRequiredBTC = 2 * (dustForExodus + dustForReference + dustForPayload + stdTxFee)
+            requestBitcoin(toAddress, additionalRequiredBTC)
+
+            // The excessive amount of MSC is sent to a new address to get rid of it
+            def junkAddress = newAddress
+
+            // TODO: can we always get away with not generating a block inbetween?
+            def extraTxidMSC = send_MP(toAddress, junkAddress, CurrencyID.MSC, excessiveMSC)
+            def extraTxidTMSC = send_MP(toAddress, junkAddress, CurrencyID.TMSC, excessiveMSC)
+        }
+
+        // TODO: when using an intermediate receiver, this txid doesn't reflect the whole picture
         return txid
     }
 
     Address createFundedAddress(BigDecimal requestedBTC, BigDecimal requestedMSC) {
-        final MPNetworkParameters params = MPRegTestParams.get()  // Hardcoded for RegTest for now
-        Address stepAddress = getNewAddress()
-        def btcForMSC = (requestedMSC / 100).setScale(8, BigDecimal.ROUND_UP)
-        def startBTC = requestedBTC + btcForMSC + stdTxFee
-        startBTC += 5 * stdTxFee  // To send BTC, MSC and TMSC to the real receiver
+        return createFundedAddress(requestedBTC, requestedMSC, true)
+    }
 
-        Sha256Hash txid = requestBitcoin(stepAddress, startBTC)
-        generateBlock()
-        def tx = getTransaction(txid)
-        assert tx.confirmations == 1
+    Address createFundedAddress(BigDecimal requestedBTC, BigDecimal requestedMSC, Boolean confirmTransactions) {
+        def fundedAddress = newAddress
 
-        // Make sure we got the correct amount of BTC
-        BigDecimal btcBalance = getBitcoinBalance(stepAddress)
-        assert btcBalance == startBTC
+        if (requestedMSC > 0.0) {
+            def txidMSC = requestMSC(fundedAddress, requestedMSC)
+        }
 
-        // Send BTC to get MSC (and TMSC)
-        txid = sendBitcoin(stepAddress, params.moneyManAddress, btcForMSC)
-        generateBlock()
-        tx = getTransaction(txid)
-        assert tx.confirmations == 1
+        if (requestedBTC > 0.0) {
+            def txidBTC = requestBitcoin(fundedAddress, requestedBTC)
+        }
 
-        // Send to the actual destination
-        Address fundedAddress = getNewAddress()
-        send_MP(stepAddress, fundedAddress, CurrencyID.MSC, requestedMSC)
-        send_MP(stepAddress, fundedAddress, CurrencyID.TMSC, requestedMSC)
-        generateBlock()
-        def remainingBTC = requestedBTC - getBitcoinBalance(fundedAddress)
-        txid = sendBitcoin(stepAddress, fundedAddress, remainingBTC)
-        generateBlock()
-        tx = getTransaction(txid)
-        assert tx.confirmations == 1
+        if (confirmTransactions) {
+            generateBlock()
+        }
 
-        // Verify correct amounts received
-        btcBalance = getBitcoinBalance(fundedAddress)
-        BigDecimal mscBalance = getbalance_MP(fundedAddress, CurrencyID.MSC).balance
-        BigDecimal tmscBalance = getbalance_MP(fundedAddress, CurrencyID.TMSC).balance
-
-        assert btcBalance == requestedBTC
-        assert mscBalance == requestedMSC
-        assert tmscBalance == requestedMSC
+        // TODO: maybe add assertions to check correct funding amounts?
 
         return fundedAddress
     }
