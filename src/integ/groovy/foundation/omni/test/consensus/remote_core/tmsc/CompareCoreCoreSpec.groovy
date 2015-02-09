@@ -4,12 +4,14 @@ import com.msgilligan.bitcoin.rpc.RPCURL
 import foundation.omni.consensus.MasterCoreConsensusTool
 import foundation.omni.rpc.MastercoinClient
 import foundation.omni.test.consensus.BaseConsensusSpec
+import spock.lang.Ignore
 import spock.lang.Title
 
 import static foundation.omni.CurrencyID.TMSC
 
 /**
  */
+@Ignore("Need to update remote core for STO")
 @Title("Compare Master Core vs. Remote Master Core (e.g. stable/last revision)")
 class CompareCoreCoreSpec extends BaseConsensusSpec {
 
