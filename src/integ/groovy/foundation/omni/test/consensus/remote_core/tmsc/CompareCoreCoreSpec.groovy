@@ -11,7 +11,6 @@ import static foundation.omni.CurrencyID.TMSC
 
 /**
  */
-@Ignore("Need to update remote core for STO")
 @Title("Compare Master Core vs. Remote Master Core (e.g. stable/last revision)")
 class CompareCoreCoreSpec extends BaseConsensusSpec {
 
