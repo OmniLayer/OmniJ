@@ -388,6 +388,48 @@ trait TestSupport implements MastercoinClientDelegate {
     }
 
     /**
+     * Collects <b>all</b> unspent outputs and spends the whole amount minus {@code stdRelayTxFee}, which is sent
+     * to a new address, as fee, to sweep dust and to minimize the number of unspent outputs, to avoid creating too
+     * large transactions. No new block is generated afterwards.
+     *
+     * @see foundation.omni.BaseRegTestSpec#cleanup()
+     * @see <a href="https://github.com/msgilligan/bitcoin-spock/issues/50">Issue #50 on GitHub</a>
+     *
+     * @return True, if enough outputs with a value of at least {@code stdRelayTxFee} were spent
+     */
+    Boolean consolidateCoins() {
+        def amountIn = new BigDecimal(0)
+        def inputs = new ArrayList<Map<String, Object>>()
+        def unspentOutputs = listUnspent(0, 999999)
+
+        // Gather inputs
+        for (unspentOutput in unspentOutputs) {
+            def amountBTCd = unspentOutput['amount'] as Double
+            amountIn += BigDecimal.valueOf(amountBTCd)
+            inputs << ['txid': unspentOutput['txid'], 'vout': unspentOutput['vout']]
+        }
+
+        // Check if there is a sufficient high amount to sweep at all
+        if (amountIn < stdRelayTxFee) {
+            return false
+        }
+
+        // No receiver, just spend most of it as fee (!)
+        def outputs = new HashMap<Address, BigDecimal>()
+        outputs[newAddress] = stdRelayTxFee
+
+        def unsignedTxHex = client.createRawTransaction(inputs, outputs)
+        def signingResult = client.signRawTransaction(unsignedTxHex)
+
+        assert signingResult.complete == true
+
+        def signedTxHex = signingResult.hex as String
+        def txid = client.sendRawTransaction(signedTxHex, true)
+
+        return true
+    }
+
+    /**
      * Converts an UTF-8 encoded String into a hexadecimal string representation.
      *
      * @param str The string

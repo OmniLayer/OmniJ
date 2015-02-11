@@ -38,7 +38,8 @@ class BaseRegTestSpec extends Specification implements MastercoinClientDelegate,
     }
 
     void cleanupSpec() {
-        // Nothing to clean up for now
+        // Spend almost all coins as fee, to sweep dust
+        consolidateCoins()
     }
 
 }
