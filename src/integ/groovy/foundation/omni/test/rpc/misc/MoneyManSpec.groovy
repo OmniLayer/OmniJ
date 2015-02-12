@@ -3,7 +3,7 @@ package foundation.omni.test.rpc.misc
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.OPRegTestParams
-import foundation.omni.rpc.MastercoinClient
+import foundation.omni.rpc.OmniClient
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -71,7 +71,7 @@ class MoneyManSpec extends BaseRegTestSpec {
         def tx = client.getTransaction(txid)
 
         then: "we got a non-zero transaction id"
-        txid != MastercoinClient.zeroHash
+        txid != OmniClient.zeroHash
         tx
 
         when: "a block is generated"
@@ -92,7 +92,7 @@ class MoneyManSpec extends BaseRegTestSpec {
         def txid = send_MP(faucetAddress, faucetAddress, MSC, 10.12345678)
 
         then: "we got a non-zero transaction id"
-        txid != MastercoinClient.zeroHash
+        txid != OmniClient.zeroHash
 
         when: "a block is generated"
         generateBlock()

@@ -21,12 +21,12 @@ import java.util.Map;
 /**
  * Pure Java Bitcoin and Mastercoin JSON-RPC client with camelCase method names.
  */
-public class MastercoinClient extends BitcoinClient {
+public class OmniClient extends BitcoinClient {
 
     public static Sha256Hash zeroHash = new Sha256Hash("0000000000000000000000000000000000000000000000000000000000000000");
     private DecimalFormat jsonDecimalFormat;
 
-    public MastercoinClient(URL server, String rpcuser, String rpcpassword) throws IOException {
+    public OmniClient(URL server, String rpcuser, String rpcpassword) throws IOException {
         super(server, rpcuser, rpcpassword);
         // Create a DecimalFormat that fits our requirements
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();

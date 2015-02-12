@@ -3,7 +3,7 @@ package foundation.omni.consensus
 import com.msgilligan.bitcoin.rpc.RPCURL
 import foundation.omni.CurrencyID
 import foundation.omni.rpc.MPBalanceEntry
-import foundation.omni.rpc.MastercoinClient
+import foundation.omni.rpc.OmniClient
 
 /**
  * Command-line tool and class for fetching Master Core consensus data
@@ -11,15 +11,15 @@ import foundation.omni.rpc.MastercoinClient
 class OmniCoreConsensusTool extends ConsensusTool {
     static def rpcuser = "bitcoinrpc"
     static def rpcpassword = "pass"
-    protected MastercoinClient client
+    protected OmniClient client
 
-    OmniCoreConsensusTool(MastercoinClient client)
+    OmniCoreConsensusTool(OmniClient client)
     {
         this.client = client
     }
 
     public static void main(String[] args) {
-        MastercoinClient client = new MastercoinClient(RPCURL.defaultMainNetURL, rpcuser, rpcpassword)
+        OmniClient client = new OmniClient(RPCURL.defaultMainNetURL, rpcuser, rpcpassword)
         OmniCoreConsensusTool tool = new OmniCoreConsensusTool(client)
         tool.run(args.toList())
     }

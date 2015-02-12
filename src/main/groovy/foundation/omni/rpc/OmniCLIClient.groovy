@@ -22,7 +22,7 @@ import groovy.transform.CompileStatic
  *
  */
 @CompileStatic
-class OmniCLIClient extends MastercoinClient {
+class OmniCLIClient extends OmniClient {
 
     OmniCLIClient(URL server, String rpcuser, String rpcpassword) {
         super(server, rpcuser, rpcpassword)

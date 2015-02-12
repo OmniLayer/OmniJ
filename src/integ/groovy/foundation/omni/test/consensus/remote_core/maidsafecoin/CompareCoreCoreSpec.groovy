@@ -2,7 +2,7 @@ package foundation.omni.test.consensus.remote_core.maidsafecoin
 
 import com.msgilligan.bitcoin.rpc.RPCURL
 import foundation.omni.consensus.OmniCoreConsensusTool
-import foundation.omni.rpc.MastercoinClient
+import foundation.omni.rpc.OmniClient
 import foundation.omni.test.consensus.BaseConsensusSpec
 import spock.lang.Title
 
@@ -15,7 +15,7 @@ class CompareCoreCoreSpec extends BaseConsensusSpec {
 
     void setupSpec() {
 
-        MastercoinClient remoteClient = new MastercoinClient(RPCURL.stablePublicMainNetURL, 'xmc-msc-rpc', 'emdERDIDE82934$%$')
+        OmniClient remoteClient = new OmniClient(RPCURL.stablePublicMainNetURL, 'xmc-msc-rpc', 'emdERDIDE82934$%$')
         setupComparisonForCurrency(new OmniCoreConsensusTool(remoteClient),
                 MaidSafeCoin)
     }
