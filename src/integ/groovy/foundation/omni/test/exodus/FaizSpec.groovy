@@ -1,11 +1,11 @@
 package foundation.omni.test.exodus
 
 import foundation.omni.BaseRegTestSpec
-import foundation.omni.MPRegTestParams
+import foundation.omni.OPRegTestParams
 import foundation.omni.consensus.ConsensusComparison
 import foundation.omni.consensus.ConsensusEntry
 import foundation.omni.consensus.ConsensusTool
-import foundation.omni.consensus.MasterCoreConsensusTool
+import foundation.omni.consensus.OmniCoreConsensusTool
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -27,7 +27,7 @@ class FaizSpec extends BaseRegTestSpec {
     ConsensusComparison comparison
 
     def setupSpec() {
-        consensusFetcher = new MasterCoreConsensusTool(client)
+        consensusFetcher = new OmniCoreConsensusTool(client)
     }
 
     def "Faiz's test"() {
@@ -43,7 +43,7 @@ class FaizSpec extends BaseRegTestSpec {
         getBalance(accountname) >= 2*sendAmount + extraAmount
 
         when: "We send the BTC to the moneyManAddress and generate a block"
-        def amounts = [(MPRegTestParams.MoneyManAddress): sendAmount, (MPRegTestParams.ExodusAddress): sendAmount]
+        def amounts = [(OPRegTestParams.MoneyManAddress): sendAmount, (OPRegTestParams.ExodusAddress): sendAmount]
         def txid = sendMany(accountname, amounts)
         generateBlock()
         def tx = getTransaction(txid)

@@ -2,21 +2,20 @@ package foundation.omni.test
 
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Sha256Hash
-import org.bitcoinj.core.Transaction
 import com.msgilligan.bitcoin.BTC
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.MPNetworkParameters
-import foundation.omni.MPRegTestParams
+import foundation.omni.OPNetworkParameters
+import foundation.omni.OPRegTestParams
 import foundation.omni.PropertyType
-import foundation.omni.rpc.MastercoinClientDelegate
+import foundation.omni.rpc.OmniClientDelegate
 
 import java.security.SecureRandom
 
 /**
  * Test support functions intended to be mixed-in to Spock test specs
  */
-trait TestSupport implements MastercoinClientDelegate {
+trait TestSupport implements OmniClientDelegate {
     // TODO: set, or get and verify default values of the client
     final BigDecimal stdTxFee = new BigDecimal('0.00010000')
     final BigDecimal stdRelayTxFee = new BigDecimal('0.00001000')
@@ -75,7 +74,7 @@ trait TestSupport implements MastercoinClientDelegate {
     }
 
     Sha256Hash requestMSC(Address toAddress, BigDecimal requestedMSC, Boolean allowIntermediate) {
-        final MPNetworkParameters params = MPRegTestParams.get()  // Hardcoded for RegTest for now
+        final OPNetworkParameters params = OPRegTestParams.get()  // Hardcoded for RegTest for now
 
         // For 1.0 BTC an amount of 100.0 MSC is generated, resulting in a minimal purchase amount of
         // 0.00000100 MSC for 0.00000001 BTC

@@ -14,7 +14,7 @@ import spock.lang.Unroll
 /**
  * Data driven tests for the "send to owners" transaction type
  */
-class MSCSendToOwnersTestPlanSpec extends BaseRegTestSpec {
+class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     final static BigDecimal startBTC = 0.1
 
     @Shared

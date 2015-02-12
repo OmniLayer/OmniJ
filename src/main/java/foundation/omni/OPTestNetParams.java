@@ -3,9 +3,9 @@ package foundation.omni;
 /**
  * Master Protocol parameters for Bitcoin MainNet
  */
-public class MPTestNetParams extends MPNetworkParameters {
+public class OPTestNetParams extends OPNetworkParameters {
     /* TestNet not supported yet */
-    public static synchronized MPMainNetParams get() {
+    public static synchronized OPMainNetParams get() {
         throw new UnsupportedOperationException();
     }
 }

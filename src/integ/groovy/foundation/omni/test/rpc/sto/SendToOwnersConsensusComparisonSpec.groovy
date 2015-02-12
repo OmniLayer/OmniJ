@@ -7,7 +7,7 @@ import foundation.omni.consensus.ConsensusComparison
 import foundation.omni.consensus.ConsensusEntry
 import foundation.omni.consensus.ConsensusSnapshot
 import foundation.omni.consensus.ConsensusTool
-import foundation.omni.consensus.MasterCoreConsensusTool
+import foundation.omni.consensus.OmniCoreConsensusTool
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Unroll
@@ -25,7 +25,7 @@ import spock.lang.Unroll
  * (Or maybe this test is redundant.)
  */
 @Ignore()
-class MSCSendToOwnersConsensusComparisonSpec extends BaseRegTestSpec {
+class SendToOwnersConsensusComparisonSpec extends BaseRegTestSpec {
     @Shared
     ConsensusTool consensusTool
 
@@ -37,7 +37,7 @@ class MSCSendToOwnersConsensusComparisonSpec extends BaseRegTestSpec {
 
     def setupSpec() {
         // Run once before all tests in this Spec
-        consensusTool = new MasterCoreConsensusTool(client)
+        consensusTool = new OmniCoreConsensusTool(client)
         def startingBTC = 10.0
         def startingMSC = 1000.0
         def amountSent = 100.0

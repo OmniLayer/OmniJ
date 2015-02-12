@@ -1,7 +1,7 @@
 package com.msgilligan.bitcoin.rpc
 
 import groovy.transform.CompileStatic
-import foundation.omni.rpc.MastercoinCLIClient
+import foundation.omni.rpc.OmniCLIClient
 
 /**
  * Bitcoin JSON-RPC client with method names that exactly match wire and CLI names.
@@ -12,7 +12,7 @@ import foundation.omni.rpc.MastercoinCLIClient
  *
  */
 @CompileStatic
-class BitcoinCLIClient extends MastercoinCLIClient {
+class BitcoinCLIClient extends OmniCLIClient {
 
     BitcoinCLIClient(URL server, String rpcuser, String rpcpassword) {
         super(server, rpcuser, rpcpassword)

@@ -6,7 +6,7 @@ import org.bitcoinj.core.NetworkParameters;
 /**
  * Base class for Master Protocol network parameters
  */
-public abstract class MPNetworkParameters {
+public abstract class OPNetworkParameters {
     protected NetworkParameters params;
     protected Address exodusAddress;
 
@@ -19,7 +19,7 @@ public abstract class MPNetworkParameters {
     protected Integer mscDEXBlock;
     protected Integer mscSPBlock;
 
-    protected MPNetworkParameters() {
+    protected OPNetworkParameters() {
     }
 
     public NetworkParameters getParams() {

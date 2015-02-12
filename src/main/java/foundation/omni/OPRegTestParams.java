@@ -7,11 +7,11 @@ import org.bitcoinj.params.RegTestParams;
 /**
  * Master Protocol parameters for Bitcoin MainNet
  */
-public class MPRegTestParams extends MPNetworkParameters {
+public class OPRegTestParams extends OPNetworkParameters {
     private final static String ExodusAddress = "mpexoDuSkGGqvqrkrjiFng38QPkJQVFyqv";
     private final static String MoneyManAddress = "moneyqMan7uh8FqdCA2BV5yZ8qVrc9ikLP";
 
-    private MPRegTestParams() {
+    private OPRegTestParams() {
         super();
         params = RegTestParams.get();
         try {
@@ -26,16 +26,16 @@ public class MPRegTestParams extends MPNetworkParameters {
         }
         /* Use MPMainNetParams for magic block numbers */
         firstExodusBlock = 5;
-        lastExodusBlock = MPMainNetParams.LAST_EXODUS_BLOCK;
-        postExodusBlock = MPMainNetParams.POST_EXODUS_BLOCK;
-        mscDEXBlock = MPMainNetParams.MSC_DEX_BLOCK;
-        mscSPBlock = MPMainNetParams.MSC_SP_BLOCK;
+        lastExodusBlock = OPMainNetParams.LAST_EXODUS_BLOCK;
+        postExodusBlock = OPMainNetParams.POST_EXODUS_BLOCK;
+        mscDEXBlock = OPMainNetParams.MSC_DEX_BLOCK;
+        mscSPBlock = OPMainNetParams.MSC_SP_BLOCK;
     }
 
-    private static MPRegTestParams instance;
-    public static synchronized MPRegTestParams get() {
+    private static OPRegTestParams instance;
+    public static synchronized OPRegTestParams get() {
         if (instance == null) {
-            instance = new MPRegTestParams();
+            instance = new OPRegTestParams();
         }
         return instance;
     }

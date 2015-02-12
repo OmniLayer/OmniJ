@@ -7,7 +7,7 @@ import spock.lang.Shared
 /**
  * Rudimentary tests of the raw transaction interface of Omni Core.
  */
-class MSCSendRawTransactionSpec extends BaseRegTestSpec {
+class OPSendRawTransactionSpec extends BaseRegTestSpec {
 
     final static BigDecimal startBTC = 1.0
     final static BigDecimal startMSC = 50.0

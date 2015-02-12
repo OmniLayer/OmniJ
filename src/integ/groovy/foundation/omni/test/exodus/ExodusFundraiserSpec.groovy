@@ -4,8 +4,8 @@ import foundation.omni.BaseRegTestSpec
 import spock.lang.Ignore
 
 import static foundation.omni.CurrencyID.*
-import foundation.omni.MPNetworkParameters
-import foundation.omni.MPRegTestParams
+import foundation.omni.OPNetworkParameters
+import foundation.omni.OPRegTestParams
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -24,7 +24,7 @@ import spock.lang.Stepwise
 @Stepwise
 class ExodusFundraiserSpec extends BaseRegTestSpec {
     @Shared
-    MPNetworkParameters mpNetParams
+    OPNetworkParameters mpNetParams
     @Shared
     Integer    startHeight
     @Shared
@@ -35,7 +35,7 @@ class ExodusFundraiserSpec extends BaseRegTestSpec {
     String participatingAddress
 
     void setupSpec() {
-        mpNetParams = MPRegTestParams.get()
+        mpNetParams = OPRegTestParams.get()
         fundraiserAmountBTC = 5000.0
         extraBTCForTxFees = 1.0
         // We can start this test 1 blocks before the exodus

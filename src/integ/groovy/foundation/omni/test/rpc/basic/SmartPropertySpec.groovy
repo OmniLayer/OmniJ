@@ -13,7 +13,7 @@ import spock.lang.Shared
   Curtis may have sent some of these into the BlockChain
  */
 
-class MSCSmartPropertySpec extends BaseRegTestSpec {
+class SmartPropertySpec extends BaseRegTestSpec {
 
     final static BigDecimal startBTC = 1.0
     final static BigDecimal startMSC = 50.0

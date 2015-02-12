@@ -4,7 +4,7 @@ import com.msgilligan.bitcoin.rpc.JsonRPCStatusException
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.ConsensusTool
-import foundation.omni.consensus.MasterCoreConsensusTool
+import foundation.omni.consensus.OmniCoreConsensusTool
 import spock.lang.Shared
 
 import static foundation.omni.CurrencyID.*
@@ -12,7 +12,7 @@ import static foundation.omni.CurrencyID.*
 /**
  *
  */
-class MSCSendToOwnersSpec extends BaseRegTestSpec {
+class SendToOwnersSpec extends BaseRegTestSpec {
     final static BigDecimal stoFeePerAddress = 0.00000001
 
     @Shared
@@ -20,7 +20,7 @@ class MSCSendToOwnersSpec extends BaseRegTestSpec {
 
     def setupSpec() {
         // Run once before all tests in this Spec
-        consensusTool = new MasterCoreConsensusTool(client)
+        consensusTool = new OmniCoreConsensusTool(client)
     }
 
     def "STO calculates correct fees for the simple case"() {

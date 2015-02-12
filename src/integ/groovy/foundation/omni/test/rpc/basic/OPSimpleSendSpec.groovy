@@ -7,7 +7,7 @@ import spock.lang.Unroll
 
 import static foundation.omni.CurrencyID.*
 
-class MSCSimpleSendSpec extends BaseRegTestSpec {
+class OPSimpleSendSpec extends BaseRegTestSpec {
     // Need to make sure these variables are set up with values that match their names
     static final CurrencyID nonExistentCurrencyID = new CurrencyID(293487L)
     def addressWith1MSC = getNewAddress() // Get an address with a balance of 1 MSC

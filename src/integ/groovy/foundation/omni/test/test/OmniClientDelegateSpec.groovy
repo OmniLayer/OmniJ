@@ -3,7 +3,7 @@ package foundation.omni.test.test
 import com.msgilligan.bitcoin.rpc.RPCURL
 import foundation.omni.BaseMainNetSpec
 import foundation.omni.rpc.MastercoinClient
-import foundation.omni.rpc.MastercoinClientDelegate
+import foundation.omni.rpc.OmniClientDelegate
 import spock.lang.Specification
 
 
@@ -12,7 +12,7 @@ import spock.lang.Specification
  * Date: 7/24/14
  * Time: 8:16 AM
  */
-class MastercoinClientDelegateSpec extends Specification implements MastercoinClientDelegate {
+class OmniClientDelegateSpec extends Specification implements OmniClientDelegate {
 
     {
         client = new MastercoinClient(RPCURL.defaultRegTestURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)

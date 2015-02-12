@@ -4,7 +4,7 @@ import foundation.omni.BaseMainNetSpec
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.ConsensusComparison
 import foundation.omni.consensus.ConsensusFetcher
-import foundation.omni.consensus.MasterCoreConsensusTool
+import foundation.omni.consensus.OmniCoreConsensusTool
 import spock.lang.Shared
 import spock.lang.Subject
 import spock.lang.Unroll
@@ -24,7 +24,7 @@ abstract class  BaseConsensusSpec extends BaseMainNetSpec {
      * @param id CurrencyID to compare
      */
     void setupComparisonForCurrency(ConsensusFetcher referenceFetcher, CurrencyID id) {
-        def mscFetcher = new MasterCoreConsensusTool(client)
+        def mscFetcher = new OmniCoreConsensusTool(client)
         def mscSnapshot = mscFetcher.getConsensusSnapshot(id)
 
         def referenceSnapshot = referenceFetcher.getConsensusSnapshot(id)

@@ -1,8 +1,8 @@
 package foundation.omni
 
 import com.msgilligan.bitcoin.rpc.RPCURL
-import foundation.omni.rpc.MastercoinCLIClient
-import foundation.omni.rpc.MastercoinClientDelegate
+import foundation.omni.rpc.OmniCLIClient
+import foundation.omni.rpc.OmniClientDelegate
 import foundation.omni.test.TestSupport
 import spock.lang.Specification
 
@@ -12,12 +12,12 @@ import spock.lang.Specification
  * Date: 7/26/14
  * Time: 7:01 PM
  */
-class BaseRegTestSpec extends Specification implements MastercoinClientDelegate, TestSupport {
+class BaseRegTestSpec extends Specification implements OmniClientDelegate, TestSupport {
 
     static final BigDecimal minBTCForTests = 50.0;
 
     {
-        client = new MastercoinCLIClient(RPCURL.defaultRegTestURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
+        client = new OmniCLIClient(RPCURL.defaultRegTestURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
     }
 
     void setupSpec() {

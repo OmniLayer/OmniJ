@@ -9,7 +9,7 @@ import static CurrencyID.MSC
 /**
  * Specification for the traditional distributed exchange
  */
-class MSCDexSpec extends BaseRegTestSpec {
+class DexSpec extends BaseRegTestSpec {
 
     final static BigDecimal stdCommitFee = 0.0001
     final static BigInteger stdBlockSpan = 10

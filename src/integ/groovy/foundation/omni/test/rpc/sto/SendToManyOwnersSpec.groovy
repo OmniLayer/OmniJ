@@ -11,7 +11,7 @@ import static foundation.omni.CurrencyID.MSC
 /**
  *
  */
-class MSCSendToManyOwnersSpec extends BaseRegTestSpec {
+class SendToManyOwnersSpec extends BaseRegTestSpec {
 
     final static BigDecimal stoFeePerAddress = 0.00000001
     final static BigDecimal COIN = 100000000.0

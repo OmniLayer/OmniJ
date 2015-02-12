@@ -9,7 +9,7 @@ import static foundation.omni.CurrencyID.*
  * Date: 6/16/14
  * Time: 5:32 PM
  */
-class MastercoinSpec extends BaseRegTestSpec {
+class OmniSpec extends BaseRegTestSpec {
 
     def "Implement getbalance_MP"() {
         when: "we call getbalance_MP on a newly generated address"

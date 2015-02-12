@@ -1,8 +1,7 @@
 package foundation.omni.test.consensus
 
 import foundation.omni.BaseMainNetSpec
-import foundation.omni.CurrencyID
-import foundation.omni.consensus.MasterCoreConsensusTool
+import foundation.omni.consensus.OmniCoreConsensusTool
 
 import static foundation.omni.CurrencyID.*
 
@@ -24,7 +23,7 @@ class RPCSmokeTestSpec extends BaseMainNetSpec {
 
     def "Can get Mastercore consensus data"() {
         setup:
-        def mscFetcher = new MasterCoreConsensusTool(client)
+        def mscFetcher = new OmniCoreConsensusTool(client)
 
         when: "we get data"
         def mscSnapshot = mscFetcher.getConsensusSnapshot(MSC)

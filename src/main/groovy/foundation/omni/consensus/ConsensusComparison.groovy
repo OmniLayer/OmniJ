@@ -1,7 +1,7 @@
 package foundation.omni.consensus
 
 import groovy.transform.Immutable
-import foundation.omni.MPMainNetParams
+import foundation.omni.OPMainNetParams
 
 /**
  * A pair of ConsensusSnapshots with comparison iterators for Spock tests
@@ -23,7 +23,7 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
             def c1Keys = c1.entries.keySet()
             def c2Keys = c2.entries.keySet()
             unionAddresses = c1Keys + c2Keys
-            unionAddresses.remove(MPMainNetParams.ExodusAddress)
+            unionAddresses.remove(OPMainNetParams.ExodusAddress)
         }
         return new PairIterator(unionAddresses.iterator())
     }

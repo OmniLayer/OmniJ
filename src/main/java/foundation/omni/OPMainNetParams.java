@@ -7,7 +7,7 @@ import org.bitcoinj.params.MainNetParams;
 /**
  * Master Protocol parameters for Bitcoin MainNet
  */
-public class MPMainNetParams extends MPNetworkParameters {
+public class OPMainNetParams extends OPNetworkParameters {
     private static final String ExodusAddress = "1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P";
     public static final Integer FIRST_EXODUS_BLOCK = 249498;
     public static final Integer LAST_EXODUS_BLOCK = 255365;
@@ -15,7 +15,7 @@ public class MPMainNetParams extends MPNetworkParameters {
     public static final Integer MSC_DEX_BLOCK = 290630;
     public static final Integer MSC_SP_BLOCK =297110;
 
-    private MPMainNetParams() {
+    private OPMainNetParams() {
         super();
         params = MainNetParams.get();
         try {
@@ -31,10 +31,10 @@ public class MPMainNetParams extends MPNetworkParameters {
         mscSPBlock = MSC_SP_BLOCK;
     }
 
-    private static MPMainNetParams instance;
-    public static synchronized MPMainNetParams get() {
+    private static OPMainNetParams instance;
+    public static synchronized OPMainNetParams get() {
         if (instance == null) {
-            instance = new MPMainNetParams();
+            instance = new OPMainNetParams();
         }
         return instance;
     }

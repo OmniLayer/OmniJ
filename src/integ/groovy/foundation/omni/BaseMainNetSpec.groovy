@@ -3,8 +3,8 @@ package foundation.omni
 import com.msgilligan.bitcoin.rpc.JsonRPCStatusException
 import com.msgilligan.bitcoin.rpc.RPCURL
 import foundation.omni.consensus.WaitForBlockchainSync
-import foundation.omni.rpc.MastercoinCLIClient
-import foundation.omni.rpc.MastercoinClientDelegate
+import foundation.omni.rpc.OmniCLIClient
+import foundation.omni.rpc.OmniClientDelegate
 import spock.lang.Specification
 
 /**
@@ -16,9 +16,9 @@ import spock.lang.Specification
  * Bitcoin Blockchain.
  *
  */
-abstract class BaseMainNetSpec extends Specification implements MastercoinClientDelegate {
+abstract class BaseMainNetSpec extends Specification implements OmniClientDelegate {
     {
-        client = new MastercoinCLIClient(RPCURL.defaultMainNetURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
+        client = new OmniCLIClient(RPCURL.defaultMainNetURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
     }
     static final String rpcuser = "bitcoinrpc"
     static final String rpcpassword = "pass"
