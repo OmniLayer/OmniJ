@@ -5,8 +5,8 @@ import org.bitcoinj.core.Sha256Hash
 import com.msgilligan.bitcoin.BTC
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.OPNetworkParameters
-import foundation.omni.OPRegTestParams
+import foundation.omni.OmniNetworkParameters
+import foundation.omni.OmniRegTestParams
 import foundation.omni.PropertyType
 import foundation.omni.rpc.OmniClientDelegate
 
@@ -74,7 +74,7 @@ trait TestSupport implements OmniClientDelegate {
     }
 
     Sha256Hash requestMSC(Address toAddress, BigDecimal requestedMSC, Boolean allowIntermediate) {
-        final OPNetworkParameters params = OPRegTestParams.get()  // Hardcoded for RegTest for now
+        final OmniNetworkParameters params = OmniRegTestParams.get()  // Hardcoded for RegTest for now
 
         // For 1.0 BTC an amount of 100.0 MSC is generated, resulting in a minimal purchase amount of
         // 0.00000100 MSC for 0.00000001 BTC

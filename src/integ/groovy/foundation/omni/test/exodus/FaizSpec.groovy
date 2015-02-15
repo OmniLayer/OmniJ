@@ -1,7 +1,7 @@
 package foundation.omni.test.exodus
 
 import foundation.omni.BaseRegTestSpec
-import foundation.omni.OPRegTestParams
+import foundation.omni.OmniRegTestParams
 import foundation.omni.consensus.ConsensusComparison
 import foundation.omni.consensus.ConsensusEntry
 import foundation.omni.consensus.ConsensusTool
@@ -43,7 +43,7 @@ class FaizSpec extends BaseRegTestSpec {
         getBalance(accountname) >= 2*sendAmount + extraAmount
 
         when: "We send the BTC to the moneyManAddress and generate a block"
-        def amounts = [(OPRegTestParams.MoneyManAddress): sendAmount, (OPRegTestParams.ExodusAddress): sendAmount]
+        def amounts = [(OmniRegTestParams.MoneyManAddress): sendAmount, (OmniRegTestParams.ExodusAddress): sendAmount]
         def txid = sendMany(accountname, amounts)
         generateBlock()
         def tx = getTransaction(txid)

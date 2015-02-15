@@ -2,7 +2,7 @@ package foundation.omni.test.rpc.misc
 
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
-import foundation.omni.OPRegTestParams
+import foundation.omni.OmniRegTestParams
 import foundation.omni.rpc.OmniClient
 import spock.lang.Shared
 import spock.lang.Stepwise
@@ -40,7 +40,7 @@ class MoneyManSpec extends BaseRegTestSpec {
         getBitcoinBalance(testAddress) == sendAmount + extraAmount + stdTxFee
 
         when: "We send the BTC to the moneyManAddress and generate a block"
-        txid = sendBitcoin(testAddress, OPRegTestParams.get().moneyManAddress, sendAmount)
+        txid = sendBitcoin(testAddress, OmniRegTestParams.get().moneyManAddress, sendAmount)
         generateBlock()
         def tx = client.getTransaction(txid)
 
