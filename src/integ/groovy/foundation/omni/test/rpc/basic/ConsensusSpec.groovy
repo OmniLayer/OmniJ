@@ -4,7 +4,7 @@ import foundation.omni.BaseRegTestSpec
 
 import static foundation.omni.CurrencyID.*
 
-class OPConsensusSpec extends BaseRegTestSpec {
+class ConsensusSpec extends BaseRegTestSpec {
 
     def "Check all balances"() {
         when: "we check Mastercoin balances"
