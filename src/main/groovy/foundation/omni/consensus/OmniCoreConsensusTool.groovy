@@ -7,7 +7,7 @@ import foundation.omni.rpc.OmniClient
 import org.bitcoinj.core.Address
 
 /**
- * Command-line tool and class for fetching Master Core consensus data
+ * Command-line tool and class for fetching Omni Core consensus data
  */
 class OmniCoreConsensusTool extends ConsensusTool {
     static def rpcuser = "bitcoinrpc"
@@ -46,6 +46,7 @@ class OmniCoreConsensusTool extends ConsensusTool {
         return new ConsensusEntry(balance: item.balance, reserved:item.reserved)
     }
 
+    @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
         /* Since getallbalancesforid_MP doesn't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
@@ -63,7 +64,7 @@ class OmniCoreConsensusTool extends ConsensusTool {
             // Otherwise we have to try again
             beforeBlockHeight = curBlockHeight
         }
-        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "Master Core", client.serverURL.toURI(), entries);
+        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "Omni Core", client.serverURL.toURI(), entries);
         return snap
     }
 

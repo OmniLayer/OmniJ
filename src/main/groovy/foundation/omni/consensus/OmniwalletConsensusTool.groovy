@@ -9,7 +9,6 @@ import org.bitcoinj.core.Address
  */
 class OmniwalletConsensusTool extends ConsensusTool {
     static URI OmniHost_Live = new URI("https://www.omniwallet.org");
-//    static URI OmniHost_DBDev = new URI("https://dbdev.omniwallet.org");
     private def proto
     private def host
     private def port
@@ -64,14 +63,15 @@ class OmniwalletConsensusTool extends ConsensusTool {
         return revisionInfo.last_block
     }
 
+    @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
         String httpFile = "${file}?currency_id=${currencyID as Integer}"
         def consensusURL = new URL(proto, host, port, httpFile)
 
-        /* Since getallbalancesforid_MP doesn't return the blockHeight, we have to check
+        /* Since getConsensusForCurrency() doesn't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
          *
-         * Note: Omni blockheight lags behind Blockchain.info and Master Core and this
+         * Note: Omniwallet blockheight can lag behind Blockchain.info and Master Core and this
          * loop does not resolve that issue, it only makes sure the reported block height
          * matches the data returned.
          */
@@ -88,7 +88,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
             // Otherwise we have to try again
             beforeBlockHeight = curBlockHeight
         }
-        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "Omniwallet (Master tools)", consensusURL.toURI(), entries);
+        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "Omniwallet", consensusURL.toURI(), entries);
         return snap
     }
 }

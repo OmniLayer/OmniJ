@@ -66,6 +66,7 @@ class ChestConsensusTool extends ConsensusTool {
     }
 
 
+    @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
         String httpFile = "${file}?currencyid=${currencyID as Integer}"
         def consensusURL = new URL(proto, host, port, httpFile)
