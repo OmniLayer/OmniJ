@@ -4,6 +4,7 @@ import com.msgilligan.bitcoin.rpc.RPCURL
 import foundation.omni.CurrencyID
 import foundation.omni.rpc.MPBalanceEntry
 import foundation.omni.rpc.OmniClient
+import org.bitcoinj.core.Address
 
 /**
  * Command-line tool and class for fetching Master Core consensus data
@@ -24,14 +25,14 @@ class OmniCoreConsensusTool extends ConsensusTool {
         tool.run(args.toList())
     }
 
-    private SortedMap<String, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
+    private SortedMap<Address, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
         List<MPBalanceEntry> balances = client.getallbalancesforid_MP(currencyID)
 
-        TreeMap<String, ConsensusEntry> map = [:]
+        TreeMap<Address, ConsensusEntry> map = [:]
 
         balances.each { MPBalanceEntry item ->
 
-            String address = item.address
+            Address address = item.address
             ConsensusEntry entry = itemToEntry(item)
 
             if (address != "" && entry.balance > 0) {
@@ -51,7 +52,7 @@ class OmniCoreConsensusTool extends ConsensusTool {
          */
         Integer beforeBlockHeight = client.blockCount
         Integer curBlockHeight
-        SortedMap<String, ConsensusEntry> entries
+        SortedMap<Address, ConsensusEntry> entries
         while (true) {
             entries = this.getConsensusForCurrency(currencyID)
             curBlockHeight = client.blockCount

@@ -2,6 +2,7 @@ package foundation.omni.consensus
 
 import groovy.json.JsonSlurper
 import foundation.omni.CurrencyID
+import org.bitcoinj.core.Address
 
 /**
  * Command-line tool and class for fetching Omni Chest consensus data
@@ -26,17 +27,17 @@ class ChestConsensusTool extends ConsensusTool {
         tool.run(args.toList())
     }
 
-    private SortedMap<String, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
+    private SortedMap<Address, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
         def slurper = new JsonSlurper()
         String httpFile = "${file}?currencyid=${currencyID as Integer}"
         def consensusURL = new URL(proto, host, port, httpFile)
 //        def balancesText =  consensusURL.getText()
         def balances = slurper.parse(consensusURL)
 
-        TreeMap<String, ConsensusEntry> map = [:]
+        TreeMap<Address, ConsensusEntry> map = [:]
         balances.each { item ->
 
-            String address = item.address
+            Address address = new Address(null, item.address)
             ConsensusEntry entry = itemToEntry(item)
 
             if (address != "" && entry.balance > 0) {
@@ -79,7 +80,7 @@ class ChestConsensusTool extends ConsensusTool {
 
         Integer beforeBlockHeight = currentBlockHeight()
         Integer curBlockHeight
-        SortedMap<String, ConsensusEntry> entries
+        SortedMap<Address, ConsensusEntry> entries
         while (true) {
             entries = this.getConsensusForCurrency(currencyID)
             curBlockHeight = currentBlockHeight()

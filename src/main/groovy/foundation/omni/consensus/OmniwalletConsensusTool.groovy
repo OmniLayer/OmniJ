@@ -2,6 +2,7 @@ package foundation.omni.consensus
 
 import groovy.json.JsonSlurper
 import foundation.omni.CurrencyID
+import org.bitcoinj.core.Address
 
 /**
  * Command-line tool and class for fetching OmniWallet consensus data
@@ -26,7 +27,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
         tool.run(args.toList())
     }
 
-    private SortedMap<String, ConsensusEntry> getConsensusForCurrency(URL consensusURL) {
+    private SortedMap<Address, ConsensusEntry> getConsensusForCurrency(URL consensusURL) {
         def slurper = new JsonSlurper()
         def balances = slurper.parse(consensusURL)
 
@@ -34,7 +35,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
 
         balances.each { item ->
 
-            String address = item.address
+            Address address = new Address(null, item.address)
             ConsensusEntry entry = itemToEntry(item)
 
             if (address != "" && entry.balance > 0) {
@@ -76,7 +77,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
          */
         Integer beforeBlockHeight = currentBlockHeight()
         Integer curBlockHeight
-        SortedMap<String, ConsensusEntry> entries
+        SortedMap<Address, ConsensusEntry> entries
         while (true) {
             entries = this.getConsensusForCurrency(consensusURL)
             curBlockHeight = currentBlockHeight()

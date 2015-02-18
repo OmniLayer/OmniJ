@@ -2,6 +2,7 @@ package foundation.omni.consensus
 
 import groovy.transform.Immutable
 import foundation.omni.OmniMainNetParams
+import org.bitcoinj.core.Address
 
 /**
  * A pair of ConsensusSnapshots with comparison iterators for Spock tests
@@ -10,7 +11,7 @@ import foundation.omni.OmniMainNetParams
 class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
     final ConsensusSnapshot c1
     final ConsensusSnapshot c2
-    private TreeSet<String> unionAddresses = null
+    private TreeSet<Address> unionAddresses = null
 
     /**
      * Return an iterator that will iterate through the union of addresses
@@ -23,7 +24,7 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
             def c1Keys = c1.entries.keySet()
             def c2Keys = c2.entries.keySet()
             unionAddresses = c1Keys + c2Keys
-            unionAddresses.remove(OmniMainNetParams.ExodusAddress)
+            unionAddresses.remove(OmniMainNetParams.get().exodusAddress)
         }
         return new PairIterator(unionAddresses.iterator())
     }
@@ -32,9 +33,9 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
      * Iterates a ConsensusComparison pair-by-pair
      */
     class PairIterator implements Iterator<ConsensusEntryPair> {
-        java.util.Iterator<String> keyIterator
+        java.util.Iterator<Address> keyIterator
 
-        PairIterator(java.util.Iterator<String> keyIterator) {
+        PairIterator(java.util.Iterator<Address> keyIterator) {
             this.keyIterator = keyIterator
         }
 
@@ -45,7 +46,7 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
 
         @Override
         ConsensusEntryPair next() {
-            String key = keyIterator.next()
+            Address key = keyIterator.next()
             ConsensusEntryPair comp = new ConsensusEntryPair(key, c1.entries[key], c2.entries[key])
             return comp
         }

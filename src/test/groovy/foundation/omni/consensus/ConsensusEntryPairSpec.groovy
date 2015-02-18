@@ -1,5 +1,10 @@
 package foundation.omni.consensus
 
+import foundation.omni.OmniMainNetParams
+import org.bitcoinj.core.Address
+import org.bitcoinj.core.ECKey
+import org.bitcoinj.params.MainNetParams
+import org.bitcoinj.spock.ECKeySpec
 import spock.lang.Specification
 
 
@@ -8,9 +13,11 @@ import spock.lang.Specification
  */
 class ConsensusEntryPairSpec extends Specification {
 
+    static final Address testAddress = OmniMainNetParams.get().exodusAddress // Could be any valid address
+
     def "is immutable"() {
         setup:
-        def pair = new ConsensusEntryPair("address", new ConsensusEntry(0,0), new ConsensusEntry(0,0))
+        def pair = new ConsensusEntryPair(testAddress, new ConsensusEntry(0,0), new ConsensusEntry(0,0))
 
         when: "we try to change it"
         pair.entry1 = new ConsensusEntry(1,1)
@@ -21,7 +28,7 @@ class ConsensusEntryPairSpec extends Specification {
 
     def "is iterable"() {
         setup:
-        def pair = new ConsensusEntryPair("address", new ConsensusEntry(0,0), new ConsensusEntry(1,1))
+        def pair = new ConsensusEntryPair(testAddress, new ConsensusEntry(0,0), new ConsensusEntry(1,1))
 
         when: "we iterate it"
         def objs = []
@@ -31,7 +38,7 @@ class ConsensusEntryPairSpec extends Specification {
 
         then: "it worked"
         objs.size() == 3
-        objs[0] == "address"
+        objs[0] == testAddress
         objs[1] == new ConsensusEntry(0,0)
         objs[2] == new ConsensusEntry(1,1)
     }

@@ -1,6 +1,9 @@
 package foundation.omni.consensus
 
 import foundation.omni.CurrencyID
+import org.bitcoinj.core.Address
+import org.bitcoinj.core.ECKey
+import org.bitcoinj.params.MainNetParams
 
 /**
  * ConsensusSnapshot test data
@@ -9,12 +12,16 @@ class SnapshotData {
 
     static String TestDataConsensusSource = "TEST DATA";
 
-    static TreeMap<String, ConsensusEntry> empty = [:]
-    static TreeMap<String, ConsensusEntry> small1 = [a: new ConsensusEntry(balance: 0, reserved: 0),
-                                                       b: new ConsensusEntry(balance: 1.5G, reserved: 1.5G),
-                                                       c: new ConsensusEntry(balance: 1G, reserved: 0)]
-    static TreeMap<String, ConsensusEntry> small2 = [a: new ConsensusEntry(balance: 0, reserved: 0),
-                                                       b: new ConsensusEntry(balance: 1.5G, reserved: 0.5G)]
+    static Address a = new ECKey().toAddress(MainNetParams.get())
+    static Address b = new ECKey().toAddress(MainNetParams.get())
+    static Address c = new ECKey().toAddress(MainNetParams.get())
+
+    static TreeMap<Address, ConsensusEntry> empty = new TreeMap([:])
+    static TreeMap<Address, ConsensusEntry> small1 = new TreeMap([(a): new ConsensusEntry(balance: 0, reserved: 0),
+                                                      (b): new ConsensusEntry(balance: 1.5G, reserved: 1.5G),
+                                                      (c): new ConsensusEntry(balance: 1G, reserved: 0)])
+    static TreeMap<Address, ConsensusEntry> small2 = new TreeMap([(a): new ConsensusEntry(balance: 0, reserved: 0),
+                                                      (b): new ConsensusEntry(balance: 1.5G, reserved: 0.5G)])
 
     static ConsensusSnapshot empty() {
         return createSnapshot("empty", empty)

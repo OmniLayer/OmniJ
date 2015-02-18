@@ -30,7 +30,15 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-json:2.4.0'
     compile 'org.codehaus.groovy:groovy-sql:2.4.0'
     compile 'org.codehaus.groovy:groovy-ant:2.4.0'   // used in Groovy doc
-    compile 'org.bitcoinj:bitcoinj-core:0.12.2'
+//    compile 'org.bitcoinj:bitcoinj-core:0.12.2'
+    // Temporarily use snapshot and local jar, until Comparable address is in snapshot/release.
+//    compile 'org.bitcoinj:bitcoinj-core:0.13-SNAPSHOT'
+    compile 'com.google.guava:guava:16.0.1'
+    compile 'com.madgag.spongycastle:core:1.51.0.0'
+    compile 'com.google.protobuf:protobuf-java:2.5.0'
+    compile 'org.bitcoinj:orchid:1.1'
+    compile 'org.slf4j:slf4j-api:1.7.6'
+    compile files('lib/bitcoinj-core-0.13-SNAPSHOT.jar')
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
     
     testCompile 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests

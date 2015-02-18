@@ -1,6 +1,7 @@
 package foundation.omni.consensus
 
 import groovy.transform.Immutable
+import org.bitcoinj.core.Address
 
 /**
  * A pair of ConsensusEntries, with their Address with iteration support for Spock tests
@@ -10,7 +11,7 @@ class ConsensusEntryPair implements Iterable<Object> {
     /**
      * Bitcoin Address
      */
-    final String         address
+    final Address         address
     /**
      * Consensus Entry from first source
      */
