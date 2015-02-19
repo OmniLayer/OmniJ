@@ -47,16 +47,22 @@ class OmniCoreConsensusTool extends ConsensusTool {
     }
 
     @Override
+    Integer currentBlockHeight() {
+        return client.getBlockCount()
+    }
+
+
+    @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
         /* Since getallbalancesforid_MP doesn't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
          */
-        Integer beforeBlockHeight = client.blockCount
+        Integer beforeBlockHeight = currentBlockHeight()
         Integer curBlockHeight
         SortedMap<Address, ConsensusEntry> entries
         while (true) {
             entries = this.getConsensusForCurrency(currencyID)
-            curBlockHeight = client.blockCount
+            curBlockHeight = currentBlockHeight()
             if (curBlockHeight == beforeBlockHeight) {
                 // If blockHeight didn't change, we're done
                 break;

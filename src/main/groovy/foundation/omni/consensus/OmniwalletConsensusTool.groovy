@@ -56,7 +56,8 @@ class OmniwalletConsensusTool extends ConsensusTool {
         return balanceOut
     }
 
-    private Integer currentBlockHeight() {
+    @Override
+    Integer currentBlockHeight() {
         def revisionURL = new URL(proto, host, port, revisionFile)
         def slurper = new JsonSlurper()
         def revisionInfo = slurper.parse(revisionURL)

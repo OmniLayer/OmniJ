@@ -11,5 +11,13 @@ interface ConsensusFetcher {
      * @param currencyID The currency to get consensus data for
      * @return Consensus data for all addresses owning currencyID
      */
-    ConsensusSnapshot           getConsensusSnapshot(CurrencyID currencyID);
+    ConsensusSnapshot           getConsensusSnapshot(CurrencyID currencyID)
+
+    /**
+     * Fetch the current block height
+     *
+     * @return The current blockheight of the remote consensus server
+     */
+    Integer currentBlockHeight()
+
 }

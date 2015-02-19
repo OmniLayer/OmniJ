@@ -11,6 +11,17 @@ import static foundation.omni.CurrencyID.MSC
  */
 class ChestServerSpec extends Specification {
 
+    def "Can get block height"() {
+        setup:
+        ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
+
+        when: "we get block height"
+        def blockHeight = fetcher.currentBlockHeight()
+
+        then: "it looks reasonable"
+        blockHeight > 323000  // Greater than a relatively recent main-net block
+    }
+
     def "Can get Chest consensus data"() {
         setup:
         ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)

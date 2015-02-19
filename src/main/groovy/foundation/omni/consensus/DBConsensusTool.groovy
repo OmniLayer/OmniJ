@@ -26,7 +26,8 @@ class DBConsensusTool extends ConsensusTool {
         tool.run(args.toList())
     }
 
-    public Integer fetchBlockHeight() {
+    @Override
+    Integer currentBlockHeight() {
         def row = sql.rows("select max(blocknumber) from blocks")[0]
         def height = row.max
         return height;

@@ -59,7 +59,8 @@ class ChestConsensusTool extends ConsensusTool {
         return balanceOut
     }
 
-    private Integer currentBlockHeight() {
+    @Override
+    Integer currentBlockHeight() {
         def blockHeightURL = new URL(proto, host, port, blockHeightFile)
         String blockHeight = blockHeightURL.text
         return blockHeight.toInteger()
