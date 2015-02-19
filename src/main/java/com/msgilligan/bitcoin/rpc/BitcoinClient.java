@@ -178,14 +178,12 @@ public class BitcoinClient extends RPCClient {
      *                        in regtest mode genproclimit is number of blocks to generate immediately
      * @throws IOException
      */
-    public void setGenerate(Boolean generate, Long genproclimit) throws JsonRPCException, IOException {
+    public Object setGenerate(Boolean generate, Long genproclimit) throws JsonRPCException, IOException {
         List<Object> params = createParamList(generate, genproclimit);
-
         Map<String, Object> response = send("setgenerate", params);
 
-
-        String result = (String) response.get("result");
-        assert result == null;
+        Object result = response.get("result");
+        return result;
     }
 
     public void generateBlock() throws JsonRPCException, IOException {
