@@ -160,10 +160,12 @@ class DexSpec extends BaseRegTestSpec {
                 fundedAddress, currencyOffered, firstOfferMSC, firstOfferBTC, stdBlockSpan, stdCommitFee, actionNew)
         generateBlock()
 
-        then: "creating any other offer accepting BTC is rejected"
+        and: "and another offer accepting BTC is made"
         def secondOfferTxid = createDexSellOffer(
                 fundedAddress, currencyOffered, secondOfferMSC, secondOfferBTC, stdBlockSpan, stdCommitFee, actionNew)
         generateBlock()
+
+        then: "the other offer is rejected"
         getTransactionMP(firstOfferTxid).valid == true
         getTransactionMP(secondOfferTxid).valid == false
 

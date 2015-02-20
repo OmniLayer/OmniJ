@@ -176,6 +176,10 @@ public class BitcoinClient extends RPCClient {
      * @param generate        turn generation on or off
      * @param genproclimit    Generation is limited to [genproclimit] processors, -1 is unlimited
      *                        in regtest mode genproclimit is number of blocks to generate immediately
+     * @return Object         Bitcoin 0.10.0+: An array containing the block header hashes of the generated blocks or null
+     *                        if no blocks were generated
+     *                        Bitcoin 0.9.x: null
+     *
      * @throws IOException
      */
     public Object setGenerate(Boolean generate, Long genproclimit) throws JsonRPCException, IOException {
@@ -186,12 +190,12 @@ public class BitcoinClient extends RPCClient {
         return result;
     }
 
-    public void generateBlock() throws JsonRPCException, IOException {
-        generateBlocks(1L);
+    public Object generateBlock() throws JsonRPCException, IOException {
+        return generateBlocks(1L);
     }
 
-    public void generateBlocks(Long blocks) throws JsonRPCException, IOException {
-        setGenerate(true, blocks);
+    public Object generateBlocks(Long blocks) throws JsonRPCException, IOException {
+        return setGenerate(true, blocks);
     }
 
     public Address getNewAddress() throws JsonRPCException, IOException {

@@ -45,9 +45,12 @@ class OmniCLIClient extends OmniClient {
      * <p>
      * @param generate to enable generation, true; to disable, false.
      * @param genproclimit (optional) the number of logical processors to use. Defaults to 1; use -1 to use all available processors.
+     * @return Object         Bitcoin 0.10.0+: An array containing the block header hashes of the generated blocks or null
+     *                        if no blocks were generated
+     *                        Bitcoin 0.9.x: null
      */
-    void setgenerate(Boolean generate, Long genproclimit = null) {
-        setGenerate(generate, genproclimit);
+    Object setgenerate(Boolean generate, Long genproclimit = null) {
+        return setGenerate(generate, genproclimit);
     }
 
     /**

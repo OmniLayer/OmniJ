@@ -27,11 +27,10 @@ class BitcoinCLIAPISpec extends BaseRegTestSpec {
         def startHeight = getblockcount()
 
         when: "we generate 1 new block"
-        setgenerate(true, 1)
+        def result = setgenerate(true, 1)
 
         then: "the block height is 1 higher"
         getblockcount() == startHeight + 1
-
     }
 
 }
