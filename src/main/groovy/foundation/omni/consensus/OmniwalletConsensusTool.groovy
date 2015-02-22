@@ -30,7 +30,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
         def slurper = new JsonSlurper()
         def balances = slurper.parse(consensusURL)
 
-        TreeMap<String, ConsensusEntry> map = [:]
+        TreeMap<Address, ConsensusEntry> map = [:]
 
         balances.each { item ->
 
