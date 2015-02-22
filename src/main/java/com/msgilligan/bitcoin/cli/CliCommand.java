@@ -12,6 +12,8 @@ import java.net.URL;
 
 import com.msgilligan.bitcoin.rpc.BitcoinClient;
 import com.msgilligan.bitcoin.rpc.RPCConfig;
+import org.bitcoinj.params.MainNetParams;
+import org.bitcoinj.params.TestNet3Params;
 
 /**
  * Base class for CLI commands that use Bitcoin RPC
@@ -62,19 +64,21 @@ public abstract class CliCommand {
         formatter.printHelp(name, options, true);
     }
 
-    public void preflight() {
+    public Integer preflight() {
         getClient();
         if (line.hasOption("help")) {
             printHelp();
-            System.exit(0);
+            // Return 1 so tool can exit (but 1 will be status code TODO: fix that)
+            return 1;
         }
         if (line.hasOption("rpcwait")) {
             boolean available = client.waitForServer(60*60);   // Wait up to 1 hour
             if (!available) {
                 System.out.println("Timeout error.");
-                System.exit(1);
+                return 1;
             }
         }
+        return 0;
     }
 
     private URL getServerURL() {
@@ -83,6 +87,9 @@ public abstract class CliCommand {
         int port = defaultport;
         String file = defaultfile;
 
+        if (line.hasOption("regtest") || line.hasOption("testnet")) {
+            port = 18332;
+        }
         URL rpcServerURL = null;
         try {
             rpcServerURL = new URL(proto, host, port, file);
@@ -99,8 +106,11 @@ public abstract class CliCommand {
         URL url = getServerURL();
         RPCConfig cfg = new RPCConfig();
         cfg.setUrl(url);
-        cfg.setUsername(rpcuser);
-        cfg.setPassword(rpcpassword);
+
+        String user = line.getOptionValue("rpcuser", rpcuser);
+        String pass = line.getOptionValue("rpcpassword", rpcpassword);
+        cfg.setUsername(user);
+        cfg.setPassword(pass);
         return cfg;
     }
 

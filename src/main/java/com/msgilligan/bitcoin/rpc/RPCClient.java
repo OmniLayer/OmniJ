@@ -147,6 +147,11 @@ public class RPCClient {
         return response.get("result");
     }
 
+    public Object cliSend(String method) throws IOException, JsonRPCException {
+        Map<String, Object> response = send(method, null);
+        return response.get("result");
+    }
+
     private void openConnection() throws IOException {
         connection =  (HttpURLConnection) serverURL.openConnection();
         connection.setDoOutput(true); // For writes
