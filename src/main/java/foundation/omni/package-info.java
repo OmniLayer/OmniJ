@@ -1,4 +1,4 @@
 /**
- * Master Protocol support
+ * Omni Layer
  */
 package foundation.omni;

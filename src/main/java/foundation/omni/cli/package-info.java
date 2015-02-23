@@ -1,4 +1,4 @@
 /**
- *  Omni Command-line tools communicating with Master Core using JSON-RPC
+ *  Omni Command-line tools communicating with Omni Core using JSON-RPC
  */
 package foundation.omni.cli;
