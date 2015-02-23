@@ -137,7 +137,7 @@ task regTestBTC(type: Test) {
     testLogging.showStandardStreams = true
 
     systemProperty 'regtest', true
-    include 'com/msgilligan/bitcoin/rpc/**'
+    include 'com/msgilligan/bitcoin/rpc/**', 'com/msgilligan/bitcoin/cli/**'
 }
 
 task consensusTest(type: Test) {
