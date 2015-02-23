@@ -1,7 +1,10 @@
-apply plugin: 'java'
-apply plugin: 'groovy'
-apply plugin: 'application'
-apply plugin: 'maven'
+plugins {
+    id 'java'
+    id 'groovy'
+    id 'application'
+    id 'maven'
+    id 'idea'
+}
 
 sourceCompatibility = 1.7
 group = 'com.msgilligan'
