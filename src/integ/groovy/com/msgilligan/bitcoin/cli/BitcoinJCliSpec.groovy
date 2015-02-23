@@ -1,7 +1,8 @@
 package com.msgilligan.bitcoin.cli
 
 /**
- * Test Spec for the bitcoinj-cli tool
+ * Integration Test Spec for the bitcoinj-cli tool
+ * Assumes bitcoind running on localhost in RegTest mode.
  *
  * TODO: We should probably check the command output (eventually)
  */
@@ -19,7 +20,7 @@ class BitcoinJCliSpec extends BaseCLISpec {
 
     def "get block count"() {
         when:
-        def result = command '-regtest getblockcount'
+        def result = command '-regtest -rpcwait getblockcount'
 
         then:
         result.status == 0
@@ -30,7 +31,7 @@ class BitcoinJCliSpec extends BaseCLISpec {
 
     def "generate a block"() {
         when:
-        def result = command '-regtest setgenerate 1'
+        def result = command '-regtest -rpcwait setgenerate 1'
 
         then:
         result.status == 0

@@ -1,13 +1,14 @@
 package com.msgilligan.bitcoin.cli
 
 /**
- * Spec for GetBlockCount command-line tool
+ * Integration Spec for GetBlockCount command-line tool
+ * Assumes bitcoind running on localhost in RegTest mode.
  */
 class GetBlockCountSpec extends BaseCLISpec {
 
     def "run against local RegTest RPC"() {
         when:
-        def result = command '-regtest'
+        def result = command '-regtest -rpcwait'
 
         then:
         result.status == 0
