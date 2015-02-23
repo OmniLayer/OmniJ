@@ -9,37 +9,25 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- *  Unfinished command-line Master Core consensus tool.
+ *  Unfinished command-line Omni Core consensus tool.
  *  <p>
- *      TODO: Merge code from MasterCoreConsensusTool
+ *      TODO: Merge code from OmniCoreConsensusTool
  *  </p>
  */
 public class Consensus extends CliCommand {
-    public final static String commandName = "msc-consensus";
+    public final static String commandName = "omni-consensus";
 
     public Consensus(String[] args) {
         super(commandName, new CliOptions(), args);
     }
 
-    public static void main(String[] args) throws JsonRPCException, IOException {
+    public static void main(String[] args) {
         Consensus command = new Consensus(args);
         command.run();
     }
 
-    public void run() throws JsonRPCException, IOException {
-        preflight();
-        Map<String, Object> info = client.getInfo();
-
-        Integer bitcoinVersion = (Integer) info.get("version");
-        Integer masterCoreVersion = (Integer) info.get("mastercoreversion");
-        Integer blocks = (Integer) info.get("blocks");
-
-        System.out.println("Bitcoin Core Version: " + bitcoinVersion);
-        if (masterCoreVersion != null) {
-            System.out.println("Master Core version: " + masterCoreVersion);
-        }
-        System.out.println("Block count: " + blocks);
-        System.exit(0);
+    public Integer runImpl() throws IOException, JsonRPCException {
+        return 0;
     }
 
 }

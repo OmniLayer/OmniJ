@@ -1,47 +1,55 @@
 package com.msgilligan.bitcoin.cli
 
-import spock.lang.Specification
-
-
 /**
  * Test Spec for the bitcoinj-cli tool
+ *
+ * TODO: We should probably check the command output (eventually)
  */
-class BitcoinJCliSpec extends Specification {
+class BitcoinJCliSpec extends BaseCLISpec {
 
-    def "help option outputs help"() {
-        when: "we run the tool"
-        InputStream is = new ByteArrayInputStream(new byte[0])
-        String[] args = ["--help"]
-        BitcoinJCli cli = new BitcoinJCli(args)
-        def status = cli.run(is, System.out, System.err)
+    def "help option"() {
+        when:
+        def result = command '--help'
 
-        then: "Status is 1"
-        status == 1
-        // We could output to stringbuffers and check the output here, I suppose.
+        then:
+        result.status == 1
+        result.output.length() > 0
+        result.error.length() == 0
     }
 
-    def "getblockcount"() {
-        when: "we run the tool"
-        InputStream is = new ByteArrayInputStream(new byte[0])
-        String[] args = ["getblockcount", "-regtest"]
-        BitcoinJCli cli = new BitcoinJCli(args)
-        def status = cli.run(is, System.out, System.err)
+    def "get block count"() {
+        when:
+        def result = command '-regtest getblockcount'
 
-        then: "Status is 0"
-        status == 0
-        // We could output to stringbuffers and check the output here, I suppose.
+        then:
+        result.status == 0
+        result.output.length() > 0
+        Integer.parseInt(result.output[0..-2]) > 0 // blockcount is a valid integer 0 or greater
+        result.error.length() == 0
     }
 
     def "generate a block"() {
-        when: "we run the tool"
-        InputStream is = new ByteArrayInputStream(new byte[0])
-        String[] args = ["setgenerate", "1", "-regtest"]
-        BitcoinJCli cli = new BitcoinJCli(args)
-        def status = cli.run(is, System.out, System.err)
+        when:
+        def result = command '-regtest setgenerate 1'
 
-        then: "Status is 0"
-        status == 0
-        // We could output to stringbuffers and check the output here, I suppose.
+        then:
+        result.status == 0
+        result.output.length() == 0
+        result.error.length() == 0
+    }
+
+    /**
+     * Helper method to create and run a command
+     *
+     * @param line The command args in a single string, separated by spaces
+     * @return  status and output streams in Strings
+     */
+    protected CommandResult command(String line) {
+        String[] args = parseCommandLine(line)     // Parse line into separate args
+
+        // Run the command
+        BitcoinJCli cli = new BitcoinJCli(args)
+        return runCommand(cli)
     }
 
 }

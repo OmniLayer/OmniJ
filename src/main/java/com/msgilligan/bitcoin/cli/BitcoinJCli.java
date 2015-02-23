@@ -5,6 +5,7 @@ import com.msgilligan.bitcoin.rpc.JsonRPCException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -25,27 +26,24 @@ public class BitcoinJCli extends CliCommand {
         System.exit(status);
     }
 
-    public Integer run() throws JsonRPCException, IOException {
-        return run(System.in, System.out, System.err);
-    }
-
-    public Integer run(InputStream in, PrintStream out, PrintStream err) throws JsonRPCException, IOException {
-        Integer status = preflight();
-        if (status != 0) {
-            return status;
-        }
-
-        // Hacked together parsing that barely supports two RPC methods
-        // TODO: Make this better
+    public Integer runImpl() throws IOException {
+        // Hacked together parsing that barely supports the two RPC methods in the Spock test
+        // TODO: Make this better and complete
         List args = line.getArgList();
         String method = (String) args.get(0);
         args.remove(0); // remove method from list
         if (args.size() > 0 && args.get(0) != null) {
             args.set(0, true);
         }
-        Object result = client.cliSend(method, args);
+        Object result = null;
+        try {
+            result = client.cliSend(method, args);
+        } catch (JsonRPCException e) {
+            e.printStackTrace();
+            return 1;
+        }
         if (result != null) {
-            out.println(result.toString());
+            pwout.println(result.toString());
         }
         return 0;
     }

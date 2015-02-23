@@ -1,5 +1,6 @@
 package com.msgilligan.bitcoin.cli;
 
+import com.msgilligan.bitcoin.rpc.JsonRPCException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -7,8 +8,12 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import com.msgilligan.bitcoin.rpc.BitcoinClient;
 import com.msgilligan.bitcoin.rpc.RPCConfig;
@@ -31,6 +36,11 @@ public abstract class CliCommand {
     protected CliOptions options;
     protected String name;
     protected HelpFormatter formatter = null;
+
+    protected InputStream in;
+    protected PrintWriter pwout;
+    protected PrintWriter pwerr;
+
     protected BitcoinClient client = null;
 
     protected CliCommand(String name, CliOptions options, String[] args) {
@@ -61,16 +71,16 @@ public abstract class CliCommand {
         if (formatter == null) {
             formatter = new HelpFormatter();
         }
-        formatter.printHelp(name, options, true);
+        formatter.printUsage(pwout, HelpFormatter.DEFAULT_WIDTH, name, options);
     }
 
     public Integer preflight() {
-        getClient();
         if (line.hasOption("help")) {
             printHelp();
             // Return 1 so tool can exit (but 1 will be status code TODO: fix that)
             return 1;
         }
+        getClient();
         if (line.hasOption("rpcwait")) {
             boolean available = client.waitForServer(60*60);   // Wait up to 1 hour
             if (!available) {
@@ -80,6 +90,37 @@ public abstract class CliCommand {
         }
         return 0;
     }
+
+    public Integer run() {
+        return run(System.in, System.out, System.err);
+    }
+
+    public Integer run(InputStream in, PrintStream out, PrintStream err) {
+        this.in = in;
+        this.pwout = new PrintWriter(out, true);
+        this.pwerr = new PrintWriter(err, true);
+
+        Integer status = preflight();
+        if (status != 0) {
+            return status;
+        }
+
+        try {
+            return runImpl();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 1;
+        } catch (JsonRPCException e) {
+            e.printStackTrace();
+            return 1;
+        }
+    }
+
+    /**
+     * Implement in subclasses
+     * @return status code
+     */
+    abstract protected Integer runImpl() throws IOException, JsonRPCException;
 
     private URL getServerURL() {
         String proto = defaultproto;
