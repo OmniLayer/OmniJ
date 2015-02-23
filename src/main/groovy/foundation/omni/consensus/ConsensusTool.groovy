@@ -1,16 +1,17 @@
 package foundation.omni.consensus
 
 import foundation.omni.CurrencyID
+import groovy.transform.TypeChecked
+import org.bitcoinj.core.Address
 
 /**
  * Base class for fetching Master Protocol consensus data
  */
-
+@TypeChecked
 abstract class ConsensusTool implements ConsensusFetcher {
-    void run(List args) {
-        String currencyString = args[0]
-        Long currencyLong =  Long.parseLong(currencyString, 10)
-        CurrencyID currencyID = currencyString ? new CurrencyID(currencyLong) : CurrencyID.MSC
+    void run(List<String> args) {
+        Long currencyIDNum =  args[0] ? Long.parseLong(args[0], 10) : CurrencyID.MSC_VALUE
+        CurrencyID currencyID = new CurrencyID(currencyIDNum)
 
         String fileName = args[1]
 
@@ -25,17 +26,20 @@ abstract class ConsensusTool implements ConsensusFetcher {
     }
 
     void save(ConsensusSnapshot snap, File file) {
-        file.withWriter { out ->
-            snap.entries.each { addr, cb ->
-                out.writeLine("${addr}\t${cb.balance}\t${cb.reserved}")
-            }
-        }
-
+        output(snap, file.newPrintWriter(), true)
     }
 
-    void print(ConsensusSnapshot consensus) {
-        consensus.entries.each {  address, ConsensusEntry bal ->
-            println "${address}: ${bal.balance}"
+    void print(ConsensusSnapshot snap) {
+        output(snap, System.out.newPrintWriter(), false)
+    }
+
+    void output(ConsensusSnapshot snap, PrintWriter writer, boolean tsv) {
+        snap.entries.each { Address address, ConsensusEntry entry ->
+            if (tsv) {
+                writer.println("${address}\t${entry.balance}\t${entry.reserved}")
+            } else {
+                writer.println("${address}: ${entry.balance}, ${entry.reserved}")
+            }
         }
     }
 }
