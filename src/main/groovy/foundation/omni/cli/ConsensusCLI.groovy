@@ -65,7 +65,9 @@ class ConsensusCLI extends CliCommand {
     }
 
     void save(ConsensusSnapshot snap, File file) {
-        output(snap, file.newPrintWriter(), true)
+        PrintWriter pw = file.newPrintWriter()
+        output(snap, pw, true)
+        pw.flush()
     }
 
     void print(ConsensusSnapshot snap) {
@@ -74,10 +76,12 @@ class ConsensusCLI extends CliCommand {
 
     void output(ConsensusSnapshot snap, PrintWriter writer, boolean tsv) {
         snap.entries.each { Address address, ConsensusEntry entry ->
+            String balance = entry.balance.toPlainString()
+            String reserved = entry.reserved.toPlainString()
             if (tsv) {
-                writer.println("${address}\t${entry.balance}\t${entry.reserved}")
+                writer.println("${address}\t${balance}\t${reserved}")
             } else {
-                writer.println("${address}: ${entry.balance}, ${entry.reserved}")
+                writer.println("${address}: ${balance}, ${reserved}")
             }
         }
     }
