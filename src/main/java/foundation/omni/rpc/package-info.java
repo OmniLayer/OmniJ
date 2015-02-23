@@ -1,4 +1,4 @@
 /**
- * Master Core extensions to Bitcoin JSON-RPC
+ * Omni Core extensions to Bitcoin JSON-RPC
  */
 package foundation.omni.rpc;
