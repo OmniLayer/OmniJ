@@ -16,7 +16,8 @@ public class GetBlockCount extends CliCommand {
 
     public static void main(String[] args) throws Exception {
         GetBlockCount command = new GetBlockCount(args);
-        command.run();
+        Integer status = command.run();
+        System.exit(status);
     }
 
     @Override

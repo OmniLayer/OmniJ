@@ -33,7 +33,7 @@ public class CliOptions extends Options {
             .addOption("w", "rpcwait", false, "Wait for RPC server to start")
             .addOption("u", "rpcuser", true, "Username for JSON-RPC connections")
             .addOption("p", "rpcpassword", true, "Password for JSON-RPC connections")
-            .addOption("ssl", "rpcssl", true, "Use https for JSON-RPC connections");
+            .addOption("ssl", "rpcssl", false, "Use https for JSON-RPC connections");
     }
 
 }

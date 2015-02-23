@@ -15,9 +15,10 @@ public class Status extends CliCommand {
         super(commandName, new CliOptions(), args);
     }
 
-    public static void main(String[] args) throws JsonRPCException, IOException {
+    public static void main(String[] args) {
         Status command = new Status(args);
-        command.run();
+        Integer status = command.run();
+        System.exit(status);
     }
 
     @Override

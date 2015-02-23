@@ -39,7 +39,7 @@ public class BitcoinClient extends RPCClient {
      * @param timeout Timeout in seconds
      * @return
      */
-    public Boolean waitForServer(Integer timeout) {
+    public Boolean waitForServer(Integer timeout) throws JsonRPCException {
         Integer seconds = 0;
 
         System.out.println("Waiting for server RPC ready...");
@@ -67,6 +67,7 @@ public class BitcoinClient extends RPCClient {
                 // Expected exceptions on Android, RoboVM
             } catch (JsonRPCException e) {
                 e.printStackTrace();
+                throw e;
             } catch (IOException e) {
                 e.printStackTrace();
             }

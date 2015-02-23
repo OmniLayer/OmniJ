@@ -20,7 +20,7 @@ public class BitcoinJCli extends CliCommand {
         super(commandName, new CliOptions(), args);
     }
 
-    public static void main(String[] args) throws JsonRPCException, IOException {
+    public static void main(String[] args) {
         BitcoinJCli command = new BitcoinJCli(args);
         Integer status = command.run();
         System.exit(status);

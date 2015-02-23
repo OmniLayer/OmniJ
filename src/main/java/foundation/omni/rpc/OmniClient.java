@@ -1,5 +1,6 @@
 package foundation.omni.rpc;
 
+import com.msgilligan.bitcoin.rpc.RPCConfig;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Sha256Hash;
@@ -25,6 +26,10 @@ public class OmniClient extends BitcoinClient {
 
     public static Sha256Hash zeroHash = new Sha256Hash("0000000000000000000000000000000000000000000000000000000000000000");
     private DecimalFormat jsonDecimalFormat;
+
+    public OmniClient(RPCConfig config) throws IOException {
+        this(config.getUrl(), config.getUsername(), config.getPassword());
+    }
 
     public OmniClient(URL server, String rpcuser, String rpcpassword) throws IOException {
         super(server, rpcuser, rpcpassword);

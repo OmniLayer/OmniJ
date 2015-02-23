@@ -92,9 +92,15 @@ public class RPCClient {
             responseStream = connection.getErrorStream();
         }
 
-        String responseString = new Scanner(responseStream,"UTF-8").useDelimiter("\\A").next();
-        @SuppressWarnings("unchecked")
-        Map<String, Object> responseMap = mapper.readValue(responseString, Map.class);
+        String responseString;
+        Map<String, Object> responseMap;
+        if (responseStream != null) {
+            responseString = new Scanner(responseStream,"UTF-8").useDelimiter("\\A").next();
+            responseMap = mapper.readValue(responseString, Map.class);
+        } else {
+            responseString = "";
+            responseMap = new HashMap<String, Object>();
+        }
 
         if (code != 200) {
             String exceptionMessage = message; // Default to HTTP result message
@@ -163,7 +169,7 @@ public class RPCClient {
         connection.setRequestProperty("Connection", "close");   // Avoid EOFException: http://stackoverflow.com/questions/19641374/android-eofexception-when-using-httpurlconnection-headers
     }
 
-    private void closeConnection() {
+    public void closeConnection() {
         connection.disconnect();
     }
 

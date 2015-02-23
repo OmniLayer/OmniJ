@@ -180,3 +180,10 @@ task getChestConsensus(dependsOn: 'classes',  type: JavaExec) {
 task getConsensus(dependsOn: ['getMasterConsensus', 'getOmniConsensus', 'getChestConsensus']) << {
     println "Consensus files are in build/*_consensus.txt"
 }
+
+task runOmniConsensusCLI(dependsOn: 'classes',  type: JavaExec) {
+    main = 'foundation.omni.cli.ConsensusCLI'
+    args = ['-regtest', '-rpcwait', '-rpcconnect', '127.0.0.1', currencyID]
+    classpath = sourceSets.main.runtimeClasspath
+}
+

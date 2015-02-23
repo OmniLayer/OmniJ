@@ -67,6 +67,14 @@ public abstract class CliCommand {
         return client;
     }
 
+    /**
+     * Can be used by subclasses to set a narrower type
+     * @param client An instance of BitcoinClient or subclass
+     */
+    protected void setClient(BitcoinClient client) {
+        this.client = client;
+    }
+
     public void printHelp() {
         if (formatter == null) {
             formatter = new HelpFormatter();
@@ -82,7 +90,13 @@ public abstract class CliCommand {
         }
         getClient();
         if (line.hasOption("rpcwait")) {
-            boolean available = client.waitForServer(60*60);   // Wait up to 1 hour
+            boolean available = false;   // Wait up to 1 hour
+            try {
+                available = client.waitForServer(60*60);
+            } catch (JsonRPCException e) {
+                this.pwerr.println("JSON-RPC Exception: " + e.getMessage());
+                return 1;
+            }
             if (!available) {
                 this.pwerr.println("Timeout error.");
                 return 1;
@@ -106,14 +120,17 @@ public abstract class CliCommand {
         }
 
         try {
-            return runImpl();
+            status = runImpl();
         } catch (IOException e) {
             e.printStackTrace();
-            return 1;
+            status = 1;
         } catch (JsonRPCException e) {
             e.printStackTrace();
-            return 1;
+            status = 1;
+        } finally {
+            client.closeConnection();
         }
+        return status;
     }
 
     /**
@@ -128,6 +145,12 @@ public abstract class CliCommand {
         int port = defaultport;
         String file = defaultfile;
 
+        if (line.hasOption("rpcssl")) {
+            proto = "https";
+        }
+        if (line.hasOption("rpcconnect")) {
+            host = line.getOptionValue("rpcconnect", defaulthost);
+        }
         if (line.hasOption("regtest") || line.hasOption("testnet")) {
             port = 18332;
         }
@@ -143,7 +166,7 @@ public abstract class CliCommand {
         return rpcServerURL;
     }
 
-    private RPCConfig getRPCConfig() {
+    protected RPCConfig getRPCConfig() {
         URL url = getServerURL();
         RPCConfig cfg = new RPCConfig();
         cfg.setUrl(url);
