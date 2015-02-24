@@ -2,32 +2,44 @@ package foundation.omni.cli
 
 import com.msgilligan.bitcoin.cli.CliCommand
 import com.msgilligan.bitcoin.cli.CliOptions
-import com.msgilligan.bitcoin.rpc.BitcoinClient
 import com.msgilligan.bitcoin.rpc.JsonRPCException
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.ConsensusEntry
-import foundation.omni.consensus.ConsensusFetcher
 import foundation.omni.consensus.ConsensusSnapshot
 import foundation.omni.consensus.OmniCoreConsensusTool
 import foundation.omni.rpc.OmniClient
-import groovy.transform.CompileStatic
+import org.apache.commons.cli.OptionBuilder
 import org.bitcoinj.core.Address
 
 /**
  * Tool to get fetch consensus
  */
-@CompileStatic
 class ConsensusCLI extends CliCommand {
     public final static String commandName = "omni-consensus"
+    public final static String commandUsage = "omni-consensus [options] <CurrencyIDNumber>"
 
     public ConsensusCLI(String[] args) {
-        super(commandName, new ConsensusCLIOptions(), args)
+        super(commandName, commandUsage, new ConsensusCLIOptions(), args)
     }
 
     public static void main(String[] args) {
         ConsensusCLI command = new ConsensusCLI(args)
         def status = command.run()
         System.exit(status)
+    }
+
+    @Override
+    public Integer checkArgs() {
+        Integer status = super.checkArgs()
+        if (status != 0) {
+            return status
+        }
+        // 1 and only 1 arg: CurrencyIDNum
+        if (line.args.length != 1) {
+            printHelp()
+            return 1
+        }
+        return 0
     }
 
     @Override
@@ -90,7 +102,11 @@ class ConsensusCLI extends CliCommand {
     public static class ConsensusCLIOptions extends CliOptions {
         public ConsensusCLIOptions() {
             super()
-            this.addOption("o", "output", true, "Output filename")
+            this.addOption(OptionBuilder.withLongOpt('output')
+                    .withDescription('Output filename')
+                    .hasArg()
+                    .withArgName('filename')
+                    .create('o'));
         }
     }
 }

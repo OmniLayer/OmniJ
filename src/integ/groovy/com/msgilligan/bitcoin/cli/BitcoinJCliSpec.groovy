@@ -10,7 +10,7 @@ class BitcoinJCliSpec extends BaseCLISpec {
 
     def "help option"() {
         when:
-        def result = command '--help'
+        def result = command '-?'
 
         then:
         result.status == 1

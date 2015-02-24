@@ -170,7 +170,9 @@ public class RPCClient {
     }
 
     public void closeConnection() {
-        connection.disconnect();
+        if (connection != null) {
+            connection.disconnect();
+        }
     }
 
     private static void disableSslVerification() {

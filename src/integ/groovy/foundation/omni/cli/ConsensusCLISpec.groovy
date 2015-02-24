@@ -12,7 +12,7 @@ class ConsensusCLISpec extends BaseCLISpec {
 
     def "help option"() {
         when:
-        def result = command '--help'
+        def result = command '-?'
 
         then:
         result.status == 1
@@ -30,19 +30,19 @@ class ConsensusCLISpec extends BaseCLISpec {
         result.error.length() == 0
     }
 
-    def "no currency specified, should default to MSC"() {
+    def "no currency specified, should output help"() {
         when:
         def result = command '-regtest -rpcwait'
 
         then:
-        result.status == 0
+        result.status == 1
         result.output.length() > 0
         result.error.length() == 0
     }
 
     def "fetch MSC consensus to stdout with rpcconnect option"() {
         when:
-        def result = command '-regtest -rpcwait 1 -rpcconnect 127.0.0.1'
+        def result = command '-regtest -rpcwait 1 -rpcconnect=127.0.0.1'
 
         then:
         result.status == 0

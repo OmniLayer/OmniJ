@@ -13,12 +13,9 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 import com.msgilligan.bitcoin.rpc.BitcoinClient;
 import com.msgilligan.bitcoin.rpc.RPCConfig;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.TestNet3Params;
 
 /**
  * Base class for CLI commands that use Bitcoin RPC
@@ -35,6 +32,7 @@ public abstract class CliCommand {
     protected CommandLineParser parser = null;
     protected CliOptions options;
     protected String name;
+    protected String usage;
     protected HelpFormatter formatter = null;
 
     protected InputStream in;
@@ -44,7 +42,16 @@ public abstract class CliCommand {
     protected BitcoinClient client = null;
 
     protected CliCommand(String name, CliOptions options, String[] args) {
+        this(name, null, options, args);
+    }
+
+    protected CliCommand(String name, String usage, CliOptions options, String[] args) {
         this.name = name;
+        if (usage != null) {
+            this.usage = usage;
+        } else {
+            this.usage = name;
+        }
         this.options = options;
         parser = new GnuParser();
         try {
@@ -78,16 +85,37 @@ public abstract class CliCommand {
     public void printHelp() {
         if (formatter == null) {
             formatter = new HelpFormatter();
+            formatter.setLongOptPrefix("-");
         }
-        formatter.printUsage(pwout, HelpFormatter.DEFAULT_WIDTH, name, options);
+        int leftPad = 4;
+        int descPad = 2;
+        int helpWidth = 120;
+        String header = "";
+        String footer = "";
+        formatter.printHelp(pwout, helpWidth, usage, header, options, leftPad, descPad, footer, false);
     }
 
-    public Integer preflight() {
-        if (line.hasOption("help")) {
+    /**
+     * Check Options and Arguments
+     *
+     * Override to customize behavior.
+     *
+     * @return status code
+     */
+    public Integer checkArgs() {
+        if (line.hasOption("?")) {
             printHelp();
-            // Return 1 so tool can exit (but 1 will be status code TODO: fix that)
+            // Return 1 so tool can exit
             return 1;
         }
+        return 0;
+    }
+
+    /**
+     * Initial a client and if rpcwait option set, make sure server is accepting connections.
+     * @return status code
+     */
+    public Integer preflight() {
         getClient();
         if (line.hasOption("rpcwait")) {
             boolean available = false;   // Wait up to 1 hour
@@ -114,7 +142,12 @@ public abstract class CliCommand {
         this.pwout = new PrintWriter(out, true);
         this.pwerr = new PrintWriter(err, true);
 
-        Integer status = preflight();
+        Integer status = checkArgs();
+        if (status != 0) {
+            return status;
+        }
+
+        status = preflight();
         if (status != 0) {
             return status;
         }
