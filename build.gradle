@@ -44,6 +44,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.6'
     compile files('lib/bitcoinj-core-0.13-SNAPSHOT.jar')
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
+    runtime 'org.slf4j:slf4j-jdk14:1.7.5'             // Transitive runtime dependency of bitcoinj
     
     testCompile 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests
 
