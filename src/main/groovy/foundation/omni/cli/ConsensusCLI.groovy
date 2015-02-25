@@ -34,8 +34,12 @@ class ConsensusCLI extends CliCommand {
         if (status != 0) {
             return status
         }
-        // 1 and only 1 arg: CurrencyIDNum
-        if (line.args.length != 1) {
+        // zero (extra) args
+        if (line.args.length >= 1) {
+            printHelp()
+            return 1
+        }
+        if (!line.hasOption('p') ) {
             printHelp()
             return 1
         }
@@ -44,7 +48,8 @@ class ConsensusCLI extends CliCommand {
 
     @Override
     public Integer runImpl() throws IOException, JsonRPCException {
-        Long currencyIDNum =  line.args.length > 0 ? Long.parseLong(line.args[0], 10) : CurrencyID.MSC_VALUE
+        String property = line.getOptionValue("property")
+        Long currencyIDNum =  Long.parseLong(property, 10)
         CurrencyID currencyID = new CurrencyID(currencyIDNum)
 
         String fileName = line.getOptionValue("output")
@@ -107,6 +112,11 @@ class ConsensusCLI extends CliCommand {
                     .hasArg()
                     .withArgName('filename')
                     .create('o'));
+            this.addOption(OptionBuilder.withLongOpt('property')
+                    .withDescription('Omni property/currency id (numeric)')
+                    .hasArg()
+                    .withArgName('id')
+                    .create('p'));
         }
     }
 }

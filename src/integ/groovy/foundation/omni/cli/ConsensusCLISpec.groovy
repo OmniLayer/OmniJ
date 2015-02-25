@@ -22,7 +22,7 @@ class ConsensusCLISpec extends BaseCLISpec {
 
     def "fetch MSC consensus to stdout"() {
         when:
-        def result = command '-regtest -rpcwait 1'
+        def result = command '-regtest -rpcwait -property 1'
 
         then:
         result.status == 0
@@ -42,7 +42,7 @@ class ConsensusCLISpec extends BaseCLISpec {
 
     def "fetch MSC consensus to stdout with rpcconnect option"() {
         when:
-        def result = command '-regtest -rpcwait 1 -rpcconnect=127.0.0.1'
+        def result = command '-regtest -rpcwait -property=1 -rpcconnect=127.0.0.1'
 
         then:
         result.status == 0
@@ -56,7 +56,7 @@ class ConsensusCLISpec extends BaseCLISpec {
     @Ignore("This test fails if we previously authorized")
     def "fetch MSC consensus to stdout setting bad username & password"() {
         when:
-        def result = command '-regtest -rpcwait -rpcuser x -rpcpassword y 1'
+        def result = command '-regtest -rpcwait -rpcuser=x -rpcpassword=y -property=1'
 
         then:
         result.status == 1
