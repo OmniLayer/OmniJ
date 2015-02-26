@@ -4,11 +4,15 @@ import com.msgilligan.bitcoin.cli.CliCommand
 import com.msgilligan.bitcoin.cli.CliOptions
 import com.msgilligan.bitcoin.rpc.JsonRPCException
 import foundation.omni.CurrencyID
+import foundation.omni.consensus.ChestConsensusTool
 import foundation.omni.consensus.ConsensusEntry
 import foundation.omni.consensus.ConsensusSnapshot
+import foundation.omni.consensus.ConsensusTool
 import foundation.omni.consensus.OmniCoreConsensusTool
+import foundation.omni.consensus.OmniwalletConsensusTool
 import foundation.omni.rpc.OmniClient
 import org.apache.commons.cli.OptionBuilder
+import org.apache.commons.cli.OptionGroup
 import org.bitcoinj.core.Address
 
 /**
@@ -54,8 +58,14 @@ class ConsensusCLI extends CliCommand {
 
         String fileName = line.getOptionValue("output")
 
-        OmniCoreConsensusTool tool = new OmniCoreConsensusTool(this.getClient())
-
+        ConsensusTool tool
+        if (line.hasOption("omniwallet-url")) {
+            tool = new OmniwalletConsensusTool(line.getOptionValue("omniwallet-url").toURI())
+        } else if (line.hasOption("omnichest-url")) {
+            tool = new ChestConsensusTool(line.getOptionValue("omnichest-url").toURI())
+        } else {
+            tool = new OmniCoreConsensusTool(this.getClient())
+        }
 
         def consensus = tool.getConsensusSnapshot(currencyID)
 
@@ -111,12 +121,25 @@ class ConsensusCLI extends CliCommand {
                     .withDescription('Output filename')
                     .hasArg()
                     .withArgName('filename')
-                    .create('o'));
-            this.addOption(OptionBuilder.withLongOpt('property')
+                    .create('o'))
+                .addOption(OptionBuilder.withLongOpt('property')
                     .withDescription('Omni property/currency id (numeric)')
                     .hasArg()
                     .withArgName('id')
-                    .create('p'));
+                    .create('p'))
+                // Technically the -rpc* options should also be mutually exclusive with these
+                // but the current implmentation just ignores them if -ow or -oc is present.
+                .addOptionGroup(new OptionGroup()
+                    .addOption(OptionBuilder.withLongOpt('omniwallet-url')
+                        .withDescription('Use Omniwallet API via URL')
+                        .hasArg()
+                        .withArgName('url')
+                        .create('ow'))
+                    .addOption(OptionBuilder.withLongOpt('omnichest-url')
+                        .withDescription('Use Omnichest API via URL')
+                        .hasArg()
+                        .withArgName('url')
+                        .create('oc')))
         }
     }
 }
