@@ -16,11 +16,11 @@ import org.apache.commons.cli.OptionGroup
 import org.bitcoinj.core.Address
 
 /**
- * Tool to get fetch consensus
+ * Tool to fetch Omni consensus from Omni Core or one of several other Omni APIs.
  */
 class ConsensusCLI extends CliCommand {
     public final static String commandName = "omni-consensus"
-    public final static String commandUsage = "omni-consensus [options] -property <id>"
+    public final static String commandUsage = "${commandName} [options] -property <id>"
 
     public ConsensusCLI(String[] args) {
         super(commandName, commandUsage, new ConsensusCLIOptions(), args)
@@ -98,7 +98,7 @@ class ConsensusCLI extends CliCommand {
     }
 
     void print(ConsensusSnapshot snap) {
-        output(snap, this.pwout, false)
+        output(snap, this.pwout, true)
     }
 
     void output(ConsensusSnapshot snap, PrintWriter writer, boolean tsv) {
