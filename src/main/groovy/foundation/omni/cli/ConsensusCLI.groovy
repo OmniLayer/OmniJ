@@ -20,7 +20,7 @@ import org.bitcoinj.core.Address
  */
 class ConsensusCLI extends CliCommand {
     public final static String commandName = "omni-consensus"
-    public final static String commandUsage = "omni-consensus [options] <CurrencyIDNumber>"
+    public final static String commandUsage = "omni-consensus [options] -property <id>"
 
     public ConsensusCLI(String[] args) {
         super(commandName, commandUsage, new ConsensusCLIOptions(), args)
