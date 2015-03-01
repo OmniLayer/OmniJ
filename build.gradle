@@ -30,10 +30,10 @@ dependencies {
 
     robovm  'org.codehaus.groovy:groovy:2.4.1:grooid'
 
-    compile 'org.codehaus.groovy:groovy:2.4.1'
-    compile 'org.codehaus.groovy:groovy-json:2.4.1'
-    compile 'org.codehaus.groovy:groovy-sql:2.4.1'
-    compile 'org.codehaus.groovy:groovy-ant:2.4.1'   // used in Groovy doc
+    compile 'org.codehaus.groovy:groovy:2.3.10'
+    compile 'org.codehaus.groovy:groovy-json:2.3.10'
+    compile 'org.codehaus.groovy:groovy-sql:2.3.10'
+    compile 'org.codehaus.groovy:groovy-ant:2.3.10'   // used in Groovy doc
 //    compile 'org.bitcoinj:bitcoinj-core:0.12.2'
     // Temporarily use snapshot and local jar, until Comparable address is in snapshot/release.
 //    compile 'org.bitcoinj:bitcoinj-core:0.13-SNAPSHOT'
