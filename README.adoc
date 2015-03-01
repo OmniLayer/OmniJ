@@ -18,7 +18,7 @@ Omni Core was formerly known as Master Core and the binary is still named `maste
 
 == Installing pre-requisites
 
-The only prerequisite for running these tests is an installed Java Runtime Environment. Either an Oracle or OpenJDK VM will work. Java 7 or later is recommended.
+The only prerequisite for running these tests is an installed Java Runtime Environment. Either an Oracle or OpenJDK VM will work. Java 7 or later is required.
 
 All other dependencies are automatically downloaded and cached by the test startup script.
 
