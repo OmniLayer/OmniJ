@@ -162,8 +162,6 @@ public abstract class CliCommand {
         } catch (JsonRPCException e) {
             e.printStackTrace();
             status = 1;
-        } finally {
-            client.closeConnection();
         }
         return status;
     }

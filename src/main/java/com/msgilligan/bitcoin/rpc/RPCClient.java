@@ -32,7 +32,6 @@ import java.util.Scanner;
  */
 public class RPCClient {
     private URI serverURI;
-    private HttpURLConnection connection;
     private ObjectMapper mapper;
     private long requestId;
     private static final boolean disableSslVerification = true;
@@ -66,7 +65,7 @@ public class RPCClient {
     }
 
     public Map<String, Object> send(Map<String, Object> request) throws IOException, JsonRPCException {
-        openConnection();
+        HttpURLConnection connection = openConnection();
         OutputStream output = connection.getOutputStream();
         String reqString = mapper.writeValueAsString(request);
 //        System.out.println("Req json = " + reqString);
@@ -116,7 +115,7 @@ public class RPCClient {
             throw new JsonRPCStatusException(exceptionMessage, code, message, responseString, responseMap);
         }
 
-        closeConnection();
+        connection.disconnect();
         return responseMap;
     }
 
@@ -159,8 +158,8 @@ public class RPCClient {
         return response.get("result");
     }
 
-    private void openConnection() throws IOException {
-        connection =  (HttpURLConnection) serverURI.toURL().openConnection();
+    private HttpURLConnection openConnection() throws IOException {
+        HttpURLConnection connection =  (HttpURLConnection) serverURI.toURL().openConnection();
         connection.setDoOutput(true); // For writes
         connection.setRequestMethod("POST");
 //        connection.setRequestProperty("Accept-Charset", StandardCharsets.UTF_8.toString());
@@ -168,12 +167,7 @@ public class RPCClient {
         connection.setRequestProperty("Accept-Charset", "UTF-8");
         connection.setRequestProperty("Content-Type", "application/json;charset=" +  "UTF-8");
         connection.setRequestProperty("Connection", "close");   // Avoid EOFException: http://stackoverflow.com/questions/19641374/android-eofexception-when-using-httpurlconnection-headers
-    }
-
-    public void closeConnection() {
-        if (connection != null) {
-            connection.disconnect();
-        }
+        return connection;
     }
 
     private static void disableSslVerification() {
