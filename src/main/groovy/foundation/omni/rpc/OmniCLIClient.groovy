@@ -24,7 +24,7 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class OmniCLIClient extends OmniClient {
 
-    OmniCLIClient(URL server, String rpcuser, String rpcpassword) {
+    OmniCLIClient(URI server, String rpcuser, String rpcpassword) {
         super(server, rpcuser, rpcpassword)
     }
 

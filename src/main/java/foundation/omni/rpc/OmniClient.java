@@ -10,6 +10,7 @@ import foundation.omni.CurrencyID;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -28,10 +29,10 @@ public class OmniClient extends BitcoinClient {
     private DecimalFormat jsonDecimalFormat;
 
     public OmniClient(RPCConfig config) throws IOException {
-        this(config.getUrl(), config.getUsername(), config.getPassword());
+        this(config.getURI(), config.getUsername(), config.getPassword());
     }
 
-    public OmniClient(URL server, String rpcuser, String rpcpassword) throws IOException {
+    public OmniClient(URI server, String rpcuser, String rpcpassword) throws IOException {
         super(server, rpcuser, rpcpassword);
         // Create a DecimalFormat that fits our requirements
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();

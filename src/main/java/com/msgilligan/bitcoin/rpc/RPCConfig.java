@@ -1,5 +1,7 @@
 package com.msgilligan.bitcoin.rpc;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -10,31 +12,25 @@ import java.net.URL;
  */
 public class RPCConfig {
 
-    public URL      url;
-    public String   username;
-    public String   password;
+    private final URI uri;
+    private final String   username;
+    private final String   password;
 
-    public URL getUrl() {
-        return url;
+    public RPCConfig(URI uri, String username, String password) {
+        this.uri = uri;
+        this.username = username;
+        this.password = password;
     }
 
-    public void setUrl(URL url) {
-        this.url = url;
+    public URI getURI() {
+        return uri;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

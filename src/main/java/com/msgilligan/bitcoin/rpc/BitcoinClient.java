@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.SocketException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,12 +27,12 @@ public class BitcoinClient extends RPCClient {
 
     private static final Integer SECOND = 1000;
 
-    public BitcoinClient(URL server, String rpcuser, String rpcpassword) {
+    public BitcoinClient(URI server, String rpcuser, String rpcpassword) {
         super(server, rpcuser, rpcpassword);
     }
 
     public BitcoinClient(RPCConfig config) throws IOException {
-        this(config.getUrl(), config.getUsername(), config.getPassword());
+        this(config.getURI(), config.getUsername(), config.getPassword());
     }
 
     /**

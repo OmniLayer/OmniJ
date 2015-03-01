@@ -14,7 +14,7 @@ import foundation.omni.rpc.OmniCLIClient
 @CompileStatic
 class BitcoinCLIClient extends OmniCLIClient {
 
-    BitcoinCLIClient(URL server, String rpcuser, String rpcpassword) {
+    BitcoinCLIClient(URI server, String rpcuser, String rpcpassword) {
         super(server, rpcuser, rpcpassword)
     }
 }

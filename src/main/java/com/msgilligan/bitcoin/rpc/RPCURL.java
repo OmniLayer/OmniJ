@@ -1,6 +1,8 @@
 package com.msgilligan.bitcoin.rpc;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -17,34 +19,38 @@ public class RPCURL {
     public static final int RPCPORT_TESTNET = 18332;
     public static final int RPCPORT_REGTEST = 18332;
 
-    public static URL getDefaultMainNetURL() {
+    public static URI getDefaultMainNetURI() {
         try {
-            return new URL(rpcproto, rpchost, RPCPORT_MAINNET, rpcfile);
-        } catch (MalformedURLException e) {
+            return new URI(rpcproto, null, rpchost, RPCPORT_MAINNET, rpcfile, null, null);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
             return null;
         }
     }
 
-    public static URL getDefaultTestNetURL() {
+    public static URI getDefaultTestNetURL() {
         try {
-            return new URL(rpcproto, rpchost, RPCPORT_TESTNET, rpcfile);
-        } catch (MalformedURLException e) {
+            return new URI(rpcproto, null, rpchost, RPCPORT_TESTNET, rpcfile, null, null);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
             return null;
         }
     }
 
-    public static URL getDefaultRegTestURL() {
+    public static URI getDefaultRegTestURL() {
         try {
-            return new URL(rpcproto, rpchost, RPCPORT_REGTEST, rpcfile);
-        } catch (MalformedURLException e) {
+            return new URI(rpcproto, null, rpchost, RPCPORT_REGTEST, rpcfile, null, null);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
             return null;
         }
     }
 
-    public static URL getStablePublicMainNetURL() {
+    public static URI getStablePublicMainNetURL() {
         try {
-            return new URL(rpcssl, stableMscRpcHost, RPCPORT_MAINNET, rpcfile);
-        } catch (MalformedURLException e) {
+            return new URI(rpcssl, null, stableMscRpcHost, RPCPORT_MAINNET, rpcfile, null, null);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
             return null;
         }
     }

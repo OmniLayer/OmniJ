@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
+import java.net.URI;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -30,7 +31,7 @@ import java.util.Scanner;
  * JSON-RPC Client
  */
 public class RPCClient {
-    private URL serverURL;
+    private URI serverURI;
     private HttpURLConnection connection;
     private ObjectMapper mapper;
     private long requestId;
@@ -45,23 +46,23 @@ public class RPCClient {
     }
 
     public RPCClient(RPCConfig config) {
-        this(config.getUrl(), config.getUsername(), config.getPassword());
+        this(config.getURI(), config.getUsername(), config.getPassword());
     }
 
-    public RPCClient(URL server, final String rpcuser, final String rpcpassword) {
+    public RPCClient(URI server, final String rpcuser, final String rpcpassword) {
         Authenticator.setDefault(new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(rpcuser, rpcpassword.toCharArray());
             }
         });
 
-        serverURL = server;
+        serverURI = server;
         requestId = 0;
         mapper = new ObjectMapper();
     }
 
-    public URL getServerURL() {
-        return serverURL;
+    public URI getServerURI() {
+        return serverURI;
     }
 
     public Map<String, Object> send(Map<String, Object> request) throws IOException, JsonRPCException {
@@ -159,7 +160,7 @@ public class RPCClient {
     }
 
     private void openConnection() throws IOException {
-        connection =  (HttpURLConnection) serverURL.openConnection();
+        connection =  (HttpURLConnection) serverURI.toURL().openConnection();
         connection.setDoOutput(true); // For writes
         connection.setRequestMethod("POST");
 //        connection.setRequestProperty("Accept-Charset", StandardCharsets.UTF_8.toString());

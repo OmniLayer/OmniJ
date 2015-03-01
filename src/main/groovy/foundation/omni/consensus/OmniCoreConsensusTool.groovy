@@ -70,7 +70,7 @@ class OmniCoreConsensusTool extends ConsensusTool {
             // Otherwise we have to try again
             beforeBlockHeight = curBlockHeight
         }
-        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "Omni Core", client.serverURL.toURI(), entries);
+        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "Omni Core", client.serverURI, entries);
         return snap
     }
 

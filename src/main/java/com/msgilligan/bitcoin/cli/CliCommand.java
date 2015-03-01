@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import com.msgilligan.bitcoin.rpc.BitcoinClient;
@@ -64,7 +66,7 @@ public abstract class CliCommand {
 
     public BitcoinClient getClient() {
         if (client == null) {
-            System.out.println("Connecting to: " + getRPCConfig().getUrl());
+            System.out.println("Connecting to: " + getRPCConfig().getURI());
             try {
                 client = new BitcoinClient(getRPCConfig());
             } catch (IOException e) {
@@ -172,7 +174,7 @@ public abstract class CliCommand {
      */
     abstract protected Integer runImpl() throws IOException, JsonRPCException;
 
-    private URL getServerURL() {
+    private URI getServerURI() {
         String proto = defaultproto;
         String host = defaulthost;
         int port = defaultport;
@@ -187,27 +189,23 @@ public abstract class CliCommand {
         if (line.hasOption("regtest") || line.hasOption("testnet")) {
             port = 18332;
         }
-        URL rpcServerURL = null;
+        URI rpcServerURI = null;
         try {
-            rpcServerURL = new URL(proto, host, port, file);
-        } catch (MalformedURLException e) {
+            rpcServerURI = new URI(proto, null, host, port, file, null, null);
+        } catch (URISyntaxException e) {
             // We should be careful that this never happens
             e.printStackTrace();
             // But if it does, throw an unchecked exception
             throw new RuntimeException(e);
         }
-        return rpcServerURL;
+        return rpcServerURI;
     }
 
     protected RPCConfig getRPCConfig() {
-        URL url = getServerURL();
-        RPCConfig cfg = new RPCConfig();
-        cfg.setUrl(url);
-
+        URI uri = getServerURI();
         String user = line.getOptionValue("rpcuser", rpcuser);
         String pass = line.getOptionValue("rpcpassword", rpcpassword);
-        cfg.setUsername(user);
-        cfg.setPassword(pass);
+        RPCConfig cfg = new RPCConfig(uri, user, pass);
         return cfg;
     }
 
