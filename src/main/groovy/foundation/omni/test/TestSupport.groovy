@@ -19,6 +19,7 @@ trait TestSupport implements OmniClientDelegate {
     // TODO: set, or get and verify default values of the client
     final BigDecimal stdTxFee = new BigDecimal('0.00010000')
     final BigDecimal stdRelayTxFee = new BigDecimal('0.00001000')
+    final Integer defaultMaxConf = 9999999
 
     String createNewAccount() {
         def random = new SecureRandom();
@@ -171,7 +172,7 @@ trait TestSupport implements OmniClientDelegate {
         def amountIn = new BigDecimal(0)
         def amountOut = new BigDecimal(0)
         def inputs = new ArrayList<Map<String, Object>>()
-        def unspentOutputs = listUnspent(0, 999999, [fromAddress])
+        def unspentOutputs = listUnspent(0, defaultMaxConf, [fromAddress])
 
         // Gather inputs
         for (unspentOutput in unspentOutputs) {
@@ -211,7 +212,7 @@ trait TestSupport implements OmniClientDelegate {
         // values would result in the RPC call "listunspent" with arguments [["address"]], which is invalid, similar
         // to a call with arguments [null, null, ["address"]], as expected arguments are either [], [int], [int, int]
         // or [int, int, array]
-        return getBitcoinBalance(address, 1, 99999)
+        return getBitcoinBalance(address, 1, defaultMaxConf)
     }
 
     /**
@@ -222,7 +223,7 @@ trait TestSupport implements OmniClientDelegate {
      * @return The balance
      */
     BigDecimal getBitcoinBalance(Address address, Integer minConf) {
-        return getBitcoinBalance(address, minConf, 99999)
+        return getBitcoinBalance(address, minConf, defaultMaxConf)
     }
 
     /**
@@ -399,7 +400,7 @@ trait TestSupport implements OmniClientDelegate {
     Boolean consolidateCoins() {
         def amountIn = new BigDecimal(0)
         def inputs = new ArrayList<Map<String, Object>>()
-        def unspentOutputs = listUnspent(0, 999999)
+        def unspentOutputs = listUnspent(0, defaultMaxConf)
 
         // Gather inputs
         for (unspentOutput in unspentOutputs) {
