@@ -1,6 +1,6 @@
 package foundation.omni.test.consensus.remote_core.tetherus
 
-import com.msgilligan.bitcoin.rpc.RPCURL
+import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.consensus.OmniCoreConsensusTool
 import foundation.omni.rpc.OmniClient
 import foundation.omni.test.consensus.BaseConsensusSpec
@@ -15,7 +15,7 @@ class CompareCoreCoreSpec extends BaseConsensusSpec {
 
     void setupSpec() {
 
-        OmniClient remoteClient = new OmniClient(RPCURL.stablePublicMainNetURL, 'xmc-msc-rpc', 'emdERDIDE82934$%$')
+        OmniClient remoteClient = new OmniClient(RPCURI.stablePublicMainNetURL, 'xmc-msc-rpc', 'emdERDIDE82934$%$')
         setupComparisonForCurrency(new OmniCoreConsensusTool(remoteClient),
                 TetherUS)
     }

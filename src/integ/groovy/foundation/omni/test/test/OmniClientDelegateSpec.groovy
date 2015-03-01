@@ -1,6 +1,6 @@
 package foundation.omni.test.test
 
-import com.msgilligan.bitcoin.rpc.RPCURL
+import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.BaseMainNetSpec
 import foundation.omni.rpc.OmniClient
 import foundation.omni.rpc.OmniClientDelegate
@@ -15,7 +15,7 @@ import spock.lang.Specification
 class OmniClientDelegateSpec extends Specification implements OmniClientDelegate {
 
     {
-        client = new OmniClient(RPCURL.defaultRegTestURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
+        client = new OmniClient(RPCURI.defaultRegTestURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
     }
 
 //    void setupSpec() {

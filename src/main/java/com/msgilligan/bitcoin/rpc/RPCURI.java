@@ -8,7 +8,7 @@ import java.net.URL;
 /**
  * Utility class with default connection information for Bitcoin/Mastercoin JSON-RPC
  */
-public class RPCURL {
+public class RPCURI {
     public static final String rpcproto = "http";
     public static final String rpcssl = "https";
     public static final String rpchost = "127.0.0.1";
