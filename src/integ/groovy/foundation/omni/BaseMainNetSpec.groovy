@@ -18,7 +18,7 @@ import spock.lang.Specification
  */
 abstract class BaseMainNetSpec extends Specification implements OmniClientDelegate {
     {
-        client = new OmniCLIClient(RPCURL.defaultMainNetURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
+        client = new OmniCLIClient(RPCURL.defaultMainNetURI, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
     }
     static final String rpcuser = "bitcoinrpc"
     static final String rpcpassword = "pass"
