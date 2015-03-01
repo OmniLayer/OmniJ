@@ -303,7 +303,7 @@ trait TestSupport implements OmniClientDelegate {
      * @param amountForSale  The amount of currency
      * @param amountDesired  The amount of desired Bitcoin
      * @param paymentWindow  The payment window measured in blocks
-     * @param commitmentFee  The minimum transaction fee required to be paid as commmitment when accepting this offer
+     * @param commitmentFee  The minimum transaction fee required to be paid as commitment when accepting this offer
      * @param action         The action applied to the offer (1 = new, 2 = update, 3 = cancel)
      * @return The transaction hash
      */
