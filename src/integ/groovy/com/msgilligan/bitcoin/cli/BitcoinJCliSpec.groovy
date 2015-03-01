@@ -25,7 +25,7 @@ class BitcoinJCliSpec extends BaseCLISpec {
         then:
         result.status == 0
         result.output.length() > 0
-        result.output[0..-2].toInteger() > 0    // blockcount is a valid integer 0 or greater (trim '\n')
+        result.output[0..-2].toInteger() >= 0    // blockcount is a valid integer 0 or greater (trim '\n')
         result.error.length() == 0
     }
 
