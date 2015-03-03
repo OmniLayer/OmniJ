@@ -1,4 +1,4 @@
-package foundation.omni.test.rpc.misc
+package foundation.omni.test.rpc.exodus
 
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
