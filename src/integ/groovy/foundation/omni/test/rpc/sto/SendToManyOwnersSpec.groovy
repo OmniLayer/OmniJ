@@ -9,9 +9,12 @@ import spock.lang.Unroll
 import static foundation.omni.CurrencyID.MSC
 
 /**
- *
+ * Creates several "send to owners" transactions.
  */
 class SendToManyOwnersSpec extends BaseRegTestSpec {
+
+    // Print intermediate results
+    final static Boolean EXTRA_DEBUG_ROUNDS = false
 
     final static BigDecimal stoFeePerAddress = 0.00000001
     final static BigDecimal COIN = 100000000.0
@@ -130,7 +133,10 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
 
     @Unroll
     def "#propertyType: start with n * #amountStartPerOwner and send n * #amountDistributePerOwner to #maxN owners"() {
-        dryRun(maxN, amountStartPerOwner, amountDistributePerOwner, propertyType)
+        // Run the tests twice to print intermediate results
+        if (EXTRA_DEBUG_ROUNDS) {
+            dryRun(maxN, amountStartPerOwner, amountDistributePerOwner, propertyType)
+        }
 
         // Preperation
         def fundingSPT = ((maxN * (maxN + 1)) / 2) * (amountStartPerOwner + amountDistributePerOwner)
