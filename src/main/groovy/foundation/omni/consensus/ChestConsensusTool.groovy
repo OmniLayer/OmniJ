@@ -78,11 +78,10 @@ class ChestConsensusTool extends ConsensusTool {
         List<SmartPropertyListInfo> propList = new ArrayList<SmartPropertyListInfo>()
         for (Map jsonProp : props) {
             // TODO: Should this mapping be done by Jackson?
-            println "${jsonProp.currencyID}: ${jsonProp.name}"
-            Integer idint = (Integer) jsonProp.get("currencyID")
+            Number idnum = (Number) jsonProp.get("currencyID")
             CurrencyID id
             try {
-                id = new CurrencyID(idint)
+                id = new CurrencyID(idnum.longValue())
             } catch (NumberFormatException e) {
                 id = null
             }

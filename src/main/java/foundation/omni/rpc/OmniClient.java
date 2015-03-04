@@ -60,8 +60,8 @@ public class OmniClient extends BitcoinClient {
         List<SmartPropertyListInfo> propList = new ArrayList<SmartPropertyListInfo>();
         for (Map jsonProp : result) {
             // TODO: Should this mapping be done by Jackson?
-            Integer idint = (Integer) jsonProp.get("propertyid");
-            CurrencyID id = new CurrencyID(idint);
+            Number idnum = (Number) jsonProp.get("propertyid");
+            CurrencyID id = new CurrencyID(idnum.longValue());
             String name = (String) jsonProp.get("name");
             String category = (String) jsonProp.get("category");
             String subCategory = (String) jsonProp.get("subcategory");
