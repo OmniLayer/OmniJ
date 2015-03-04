@@ -50,7 +50,7 @@ public final class CurrencyID extends Number implements Cloneable {
         this.value = value;
     }
 
-    public Ecosystem ecosystem() {
+    public Ecosystem getEcosystem() {
         if (value == MSC_VALUE) {
             return Ecosystem.MSC;
         } else if (value == TMSC_VALUE) {

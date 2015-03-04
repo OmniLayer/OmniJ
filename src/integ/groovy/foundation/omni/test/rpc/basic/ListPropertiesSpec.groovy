@@ -2,10 +2,11 @@ package foundation.omni.test.rpc.basic
 
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
+import foundation.omni.Ecosystem
+
 import static foundation.omni.CurrencyID.MSC
 import static foundation.omni.CurrencyID.TMSC
 import foundation.omni.rpc.SmartPropertyListInfo
-import org.apache.tools.ant.taskdefs.optional.vss.MSVSSConstants
 
 /**
  * Specification for listproperties_MP
@@ -26,6 +27,7 @@ class ListPropertiesSpec extends BaseRegTestSpec {
 
         then: "we can check MSC and TMSC are as expected"
         props[MSC].id == MSC
+        props[MSC].id.ecosystem == Ecosystem.MSC
         props[MSC].name == "MasterCoin"
         props[MSC].category == "N/A"
         props[MSC].subCategory == "N/A"
@@ -34,6 +36,7 @@ class ListPropertiesSpec extends BaseRegTestSpec {
         props[MSC].divisible == true
 
         props[TMSC].id == TMSC
+        props[TMSC].id.ecosystem == Ecosystem.TMSC
         props[TMSC].name == "Test MasterCoin"
         props[TMSC].category == "N/A"
         props[TMSC].subCategory == "N/A"

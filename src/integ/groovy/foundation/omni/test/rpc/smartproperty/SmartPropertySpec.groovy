@@ -41,7 +41,7 @@ class SmartPropertySpec extends BaseRegTestSpec {
 
         and: "is in the main ecosystem"
         def propertyId = new CurrencyID(transaction.propertyid)
-        propertyId.ecosystem() == Ecosystem.MSC
+        propertyId.ecosystem == Ecosystem.MSC
 
         and: "has 3.14159265 divisible units"
         transaction.divisible == true
@@ -68,7 +68,7 @@ class SmartPropertySpec extends BaseRegTestSpec {
 
         and: "is in the test ecosystem"
         def propertyId = new CurrencyID(transaction.propertyid)
-        propertyId.ecosystem() == Ecosystem.TMSC
+        propertyId.ecosystem == Ecosystem.TMSC
 
         and: "has 4815162342 indivisible units"
         transaction.divisible == false

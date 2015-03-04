@@ -4,9 +4,7 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 /**
- * User: sean
- * Date: 7/12/14
- * Time: 5:36 PM
+ * Specification for CurrencyID class
  */
 class CurrencyIDSpec extends Specification {
     def "MSC has value 1"() {
@@ -24,7 +22,7 @@ class CurrencyIDSpec extends Specification {
         currency.doubleValue() == 1.0D
 
         and: "it is in the right ecosystem"
-        currency.ecosystem() == Ecosystem.MSC
+        currency.ecosystem == Ecosystem.MSC
     }
 
     def "TMSC has value 2"() {
@@ -42,7 +40,7 @@ class CurrencyIDSpec extends Specification {
         currency.doubleValue() == 2.0D
 
         and: "it is in the right ecosystem"
-        currency.ecosystem() == Ecosystem.TMSC
+        currency.ecosystem == Ecosystem.TMSC
     }
 
     def "An instance knows which ecosystem it is in"() {
@@ -50,7 +48,7 @@ class CurrencyIDSpec extends Specification {
         CurrencyID currency = new CurrencyID(id)
 
         then: "it's in the correct ecosystem"
-        currency.ecosystem() == ecosystem
+        currency.ecosystem == ecosystem
 
         where:
         id | ecosystem

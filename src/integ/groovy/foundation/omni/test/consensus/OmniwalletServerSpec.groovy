@@ -1,6 +1,7 @@
 package foundation.omni.test.consensus
 
 import foundation.omni.CurrencyID
+import foundation.omni.Ecosystem
 import foundation.omni.consensus.OmniwalletConsensusTool
 import foundation.omni.rpc.SmartPropertyListInfo
 
@@ -55,6 +56,7 @@ class OmniwalletServerSpec extends Specification {
 
         then: "we can check MSC and TMSC are as expected"
         props[MSC].id == MSC
+        props[MSC].id.ecosystem == Ecosystem.MSC
         props[MSC].name == "Mastercoin" // Note: Omni Core returns "MasterCoin" with a capital-C
         props[MSC].category == ""
         props[MSC].subCategory == ""
@@ -63,6 +65,7 @@ class OmniwalletServerSpec extends Specification {
         props[MSC].divisible == null
 
         props[TMSC].id == TMSC
+        props[TMSC].id.ecosystem == Ecosystem.TMSC
         props[TMSC].name == "Test Mastercoin" // Note: Omni Core returns "Mastercoin" with a capital-C
         props[TMSC].category == ""
         props[TMSC].subCategory == ""

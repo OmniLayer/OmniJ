@@ -3,9 +3,7 @@ package foundation.omni
 import spock.lang.Specification
 
 /**
- * User: sean
- * Date: 7/12/14
- * Time: 5:36 PM
+ * Specification for Omni Ecosystem class
  */
 class EcosystemSpec extends Specification {
 
