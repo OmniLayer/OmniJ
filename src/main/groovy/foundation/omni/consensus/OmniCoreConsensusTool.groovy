@@ -4,6 +4,8 @@ import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.CurrencyID
 import foundation.omni.rpc.MPBalanceEntry
 import foundation.omni.rpc.OmniClient
+import foundation.omni.rpc.SmartPropertyListInfo
+import groovy.transform.TypeChecked
 import org.bitcoinj.core.Address
 
 /**
@@ -51,6 +53,12 @@ class OmniCoreConsensusTool extends ConsensusTool {
         return client.getBlockCount()
     }
 
+    @Override
+    @TypeChecked
+    List<SmartPropertyListInfo> listProperties() {
+        List<SmartPropertyListInfo> props = client.listproperties_MP()
+        return props
+    }
 
     @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {

@@ -7,6 +7,7 @@ import groovy.json.JsonSlurper
  *
  * Prints list size (for now)
  */
+@Deprecated
 class OmniwalletListProperties {
     public static void main(String[] args) {
         def slurper = new JsonSlurper()

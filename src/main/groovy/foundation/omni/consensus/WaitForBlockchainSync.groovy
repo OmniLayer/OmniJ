@@ -6,7 +6,10 @@ import groovy.json.JsonSlurper
 /**
  * Utility class that uses a reference (currently Blockchain.info API) and waits for an BitcoinClient
  * to reach the current blockheight.
+ *
+ * There is a waitForSync method in BitcoinClient that should be used instead.
  */
+@Deprecated()
 class WaitForBlockchainSync {
 
     static def waitForSync(BitcoinClient client) {

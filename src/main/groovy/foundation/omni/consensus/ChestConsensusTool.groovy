@@ -1,7 +1,9 @@
 package foundation.omni.consensus
 
+import foundation.omni.rpc.SmartPropertyListInfo
 import groovy.json.JsonSlurper
 import foundation.omni.CurrencyID
+import groovy.transform.TypeChecked
 import org.bitcoinj.core.Address
 
 /**
@@ -10,11 +12,12 @@ import org.bitcoinj.core.Address
 class ChestConsensusTool extends ConsensusTool {
     // omnichest.info doesn't have https:// support (yet?)
     static URI ChestHost_Live = new URI("http://omnichest.info");
-    private def proto
-    private def host
-    private def port
-    static def file = "/mastercoin_verify/addresses.aspx"
-    static def blockHeightFile = "/apireq.aspx?stat=customapireq_lastblockprocessed"
+    private String proto
+    private String host
+    private int port
+    static String file = "/mastercoin_verify/addresses.aspx"
+    static String listFile = "/mastercoin_verify/properties.aspx/"
+    static String blockHeightFile = "/apireq.aspx?stat=customapireq_lastblockprocessed"
 
     ChestConsensusTool(URI chestURI) {
         proto = chestURI.scheme
@@ -66,6 +69,42 @@ class ChestConsensusTool extends ConsensusTool {
         return blockHeight.toInteger()
     }
 
+    @Override
+    @TypeChecked
+    List<SmartPropertyListInfo> listProperties() {
+        def listPropUrl = new URL(proto, host, port, listFile)
+        def slurper = new JsonSlurper()
+        List<Map<String, Object>> props = (List<Map<String, Object>>) slurper.parse(listPropUrl)
+        List<SmartPropertyListInfo> propList = new ArrayList<SmartPropertyListInfo>()
+        for (Map jsonProp : props) {
+            // TODO: Should this mapping be done by Jackson?
+            println "${jsonProp.currencyID}: ${jsonProp.name}"
+            Integer idint = (Integer) jsonProp.get("currencyID")
+            CurrencyID id
+            try {
+                id = new CurrencyID(idint)
+            } catch (NumberFormatException e) {
+                id = null
+            }
+            if (id != null) {
+                String name = (String) jsonProp.get("name")
+                String category = ""
+                String subCategory = ""
+                String data = ""
+                String url = ""
+                Boolean divisible = null
+                SmartPropertyListInfo prop = new SmartPropertyListInfo(id,
+                        name,
+                        category,
+                        subCategory,
+                        data,
+                        url,
+                        divisible)
+                propList.add(prop)
+            }
+        }
+        return propList
+    }
 
     @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {

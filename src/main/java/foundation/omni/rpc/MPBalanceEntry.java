@@ -5,7 +5,7 @@ import org.bitcoinj.core.Address;
 import java.math.BigDecimal;
 
 /**
- * Balance data for a specific Mastercoin CurrencyID in a single Bitcoin address
+ * Balance data for a specific Omni CurrencyID in a single Bitcoin address
  *
  * A Java representation of the JSON entry returned by getallbalancesforid_MP
  */

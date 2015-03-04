@@ -51,12 +51,33 @@ public class OmniClient extends BitcoinClient {
         return result;
     }
 
-    public List<Object> listproperties_MP() throws JsonRPCException, IOException {
+    public List<SmartPropertyListInfo> listproperties_MP() throws JsonRPCException, IOException {
         Map<String, Object> response = send("listproperties_MP", null);
 
         @SuppressWarnings("unchecked")
-        List<Object> result = (List<Object>) response.get("result");
-        return result;
+        List<Map<String, Object>> result = (List<Map<String, Object>>) response.get("result");
+
+        List<SmartPropertyListInfo> propList = new ArrayList<SmartPropertyListInfo>();
+        for (Map jsonProp : result) {
+            // TODO: Should this mapping be done by Jackson?
+            Integer idint = (Integer) jsonProp.get("propertyid");
+            CurrencyID id = new CurrencyID(idint);
+            String name = (String) jsonProp.get("name");
+            String category = (String) jsonProp.get("category");
+            String subCategory = (String) jsonProp.get("subcategory");
+            String data = (String) jsonProp.get("data");
+            String url = (String) jsonProp.get("url");
+            Boolean divisible = (Boolean) jsonProp.get("divisible");
+            SmartPropertyListInfo prop = new SmartPropertyListInfo(id,
+                    name,
+                    category,
+                    subCategory,
+                    data,
+                    url,
+                    divisible);
+            propList.add(prop);
+        }
+        return propList;
     }
 
     public Map<String, Object> getproperty_MP(CurrencyID currency) throws JsonRPCException, IOException {
@@ -116,6 +137,7 @@ public class OmniClient extends BitcoinClient {
         List<Map<String, Object>> untypedBalances = (List<Map<String, Object>>) response.get("result");
         List<MPBalanceEntry> balances = new ArrayList<MPBalanceEntry>(untypedBalances.size());
         for (Map map : untypedBalances) {
+            // TODO: Should this mapping be done by Jackson?
             BigDecimal balance;
             BigDecimal reserved;
             String addressString = (String) map.get("address");

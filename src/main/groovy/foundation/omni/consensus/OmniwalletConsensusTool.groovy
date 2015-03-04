@@ -1,7 +1,9 @@
 package foundation.omni.consensus
 
+import foundation.omni.rpc.SmartPropertyListInfo
 import groovy.json.JsonSlurper
 import foundation.omni.CurrencyID
+import groovy.transform.TypeChecked
 import org.bitcoinj.core.Address
 
 /**
@@ -9,11 +11,12 @@ import org.bitcoinj.core.Address
  */
 class OmniwalletConsensusTool extends ConsensusTool {
     static URI OmniHost_Live = new URI("https://www.omniwallet.org");
-    private def proto
-    private def host
-    private def port
+    private String proto
+    private String host
+    private int port
     static String file = "/v1/mastercoin_verify/addresses"
     static String revisionFile = "/v1/system/revision.json"
+    static String listFile = "/v1/mastercoin_verify/properties"
 
     OmniwalletConsensusTool(URI hostURI) {
         proto = "https"
@@ -62,6 +65,47 @@ class OmniwalletConsensusTool extends ConsensusTool {
         def slurper = new JsonSlurper()
         def revisionInfo = slurper.parse(revisionURL)
         return revisionInfo.last_block
+    }
+
+    /**
+     * Only returns Omni Properties, filters out BTC and Fiat (USD, etc) currencies
+     * @return
+     */
+    @Override
+    @TypeChecked
+    List<SmartPropertyListInfo> listProperties() {
+        def listPropUrl = new URL(proto, host, port, listFile)
+        def slurper = new JsonSlurper()
+        List<Map<String, Object>> props = (List<Map<String, Object>>) slurper.parse(listPropUrl)
+        List<SmartPropertyListInfo> propList = new ArrayList<SmartPropertyListInfo>()
+        for (Map jsonProp : props) {
+            // TODO: Should this mapping be done by Jackson?
+            Integer idint = (Integer) jsonProp.get("currencyID")
+            CurrencyID id
+            try {
+                id = new CurrencyID(idint)
+            } catch (NumberFormatException e) {
+                id = null
+            }
+            if (id != null) {
+                String name = (String) jsonProp.get("name")
+                String category = ""
+                String subCategory = ""
+                String data = ""
+                String url = ""
+                Boolean divisible = null
+                SmartPropertyListInfo prop = new SmartPropertyListInfo(id,
+                        name,
+                        category,
+                        subCategory,
+                        data,
+                        url,
+                        divisible)
+                propList.add(prop)
+            }
+        }
+
+        return propList
     }
 
     @Override

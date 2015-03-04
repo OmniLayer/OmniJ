@@ -1,6 +1,7 @@
 package foundation.omni.consensus
 
 import foundation.omni.CurrencyID
+import foundation.omni.rpc.SmartPropertyListInfo
 
 /**
  * Interface implemented by all consensus fetching tools.
@@ -20,4 +21,12 @@ interface ConsensusFetcher {
      */
     Integer currentBlockHeight()
 
+    /**
+     * Get a list of properties
+     *
+     * Should there be a property snapshot that includes a blockheight?
+     *
+     * @return A list of property objects
+     */
+    List<SmartPropertyListInfo> listProperties()
 }

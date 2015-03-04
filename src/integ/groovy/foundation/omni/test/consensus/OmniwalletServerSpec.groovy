@@ -1,6 +1,8 @@
 package foundation.omni.test.consensus
 
+import foundation.omni.CurrencyID
 import foundation.omni.consensus.OmniwalletConsensusTool
+import foundation.omni.rpc.SmartPropertyListInfo
 
 import static foundation.omni.CurrencyID.*
 import spock.lang.Specification
@@ -36,5 +38,36 @@ class OmniwalletServerSpec extends Specification {
         omniSnapshot.entries.size() >= 1
     }
 
+    def "Can get Omniwallet property list"() {
+        setup:
+        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_Live)
 
+        when: "we get data"
+        def properties = omniFetcher.listProperties()
+
+        then: "we get a list of size >= 2"
+        properties != null
+        properties.size() >= 2
+
+        when: "we convert the list to a map"
+        // This may be unnecessary if we can assume the property list is ordered by propertyid
+        Map<CurrencyID, SmartPropertyListInfo> props = properties.collect{[it.id, it]}.collectEntries()
+
+        then: "we can check MSC and TMSC are as expected"
+        props[MSC].id == MSC
+        props[MSC].name == "Mastercoin" // Note: Omni Core returns "MasterCoin" with a capital-C
+        props[MSC].category == ""
+        props[MSC].subCategory == ""
+        props[MSC].data == ""
+        props[MSC].url == ""
+        props[MSC].divisible == null
+
+        props[TMSC].id == TMSC
+        props[TMSC].name == "Test Mastercoin" // Note: Omni Core returns "Mastercoin" with a capital-C
+        props[TMSC].category == ""
+        props[TMSC].subCategory == ""
+        props[TMSC].data == ""
+        props[TMSC].url == ""
+        props[TMSC].divisible == null
+    }
 }
