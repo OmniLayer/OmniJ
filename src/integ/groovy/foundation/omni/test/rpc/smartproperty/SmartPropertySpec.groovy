@@ -1,4 +1,4 @@
-package foundation.omni.test.rpc.basic
+package foundation.omni.test.rpc.smartproperty
 
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
