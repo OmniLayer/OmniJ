@@ -7,7 +7,7 @@ import groovy.json.JsonSlurper
  *
  * Prints list size (for now)
  */
-class OmniListProperties {
+class OmniwalletListProperties {
     public static void main(String[] args) {
         def slurper = new JsonSlurper()
         def props = slurper.parse("https://www.omniwallet.org/v1/mastercoin_verify/properties")
