@@ -4,14 +4,14 @@ import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
 import foundation.omni.test.TestSupport
+import groovy.util.logging.Slf4j
 import spock.lang.Specification
 
 
 /**
- * User: sean
- * Date: 7/26/14
- * Time: 7:01 PM
+ * Base specification for integration tests on RegTest net
  */
+@Slf4j
 class BaseRegTestSpec extends Specification implements OmniClientDelegate, TestSupport {
 
     static final BigDecimal minBTCForTests = 50.0;
@@ -21,11 +21,12 @@ class BaseRegTestSpec extends Specification implements OmniClientDelegate, TestS
     }
 
     void setupSpec() {
-        System.err.println("Waiting for server...")
+        log.info "Waiting for server..."
         Boolean available = client.waitForServer(60)   // Wait up to 1 minute
         if (!available) {
-            System.err.println("Timeout error.")
+            log.error "Timeout error."
         }
+        assert available
 
         // Set a default transaction fee, so a known reference value can be used in tests
         assert client.setTxFee(stdTxFee)

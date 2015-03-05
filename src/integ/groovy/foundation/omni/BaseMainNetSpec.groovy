@@ -8,7 +8,7 @@ import foundation.omni.rpc.OmniClientDelegate
 import spock.lang.Specification
 
 /**
- * Base specification for tests on Main net
+ * Base specification for integration tests on Main net
  *
  * Creates an RPC client (currently <code>MastercoinCLIClient</code>), waits for
  * RPC server to be responding (typical integration/functional requests require starting

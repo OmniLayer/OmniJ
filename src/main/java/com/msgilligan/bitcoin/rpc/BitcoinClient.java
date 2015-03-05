@@ -3,17 +3,17 @@ package com.msgilligan.bitcoin.rpc;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.params.RegTestParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.SocketException;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
@@ -24,6 +24,7 @@ import java.util.Map;
  * JSON-RPC Client for bitcoind
  */
 public class BitcoinClient extends RPCClient {
+    private static final Logger log = LoggerFactory.getLogger(BitcoinClient.class);
 
     private static final Integer SECOND = 1000;
 
@@ -43,7 +44,7 @@ public class BitcoinClient extends RPCClient {
     public Boolean waitForServer(Integer timeout) throws JsonRPCException {
         Integer seconds = 0;
 
-        System.out.println("Waiting for server RPC ready...");
+        System.err.println("Waiting for server RPC ready:");
 
         Integer block;
 
@@ -51,7 +52,7 @@ public class BitcoinClient extends RPCClient {
             try {
                 block = this.getBlockCount();
                 if (block != null ) {
-                    System.out.println("\nRPC Ready.");
+                    System.err.println("\nRPC Ready.");
                     return true;
                 }
             } catch (SocketException se ) {
@@ -73,10 +74,10 @@ public class BitcoinClient extends RPCClient {
                 e.printStackTrace();
             }
             try {
-                System.out.print(".");
+                System.err.print(".");      // Every second print a '.'
                 seconds++;
-                if (seconds % 60 == 0) {
-                    System.out.println();
+                if (seconds % 60 == 0) {    // Every minute start a new line
+                    System.err.println();
                 }
                 Thread.sleep(SECOND);
             } catch (InterruptedException e) {
@@ -87,27 +88,29 @@ public class BitcoinClient extends RPCClient {
     }
 
     /**
+     * Wait for RPC server to reach specified block height
      *
+     * @param blockHeight blockHeight to wait for
      * @param timeout Timeout in seconds
-     * @return
+     * @return true if blockHeight reached, false if timeout
      */
-    public Boolean waitForSync(Long blockCount, Integer timeout) throws JsonRPCException, IOException {
+    public Boolean waitForSync(Long blockHeight, Integer timeout) throws JsonRPCException, IOException {
         Integer seconds = 0;
 
-        System.out.println("Waiting for server to get to block " +  blockCount);
+        log.info("Waiting for server to reach block " + blockHeight);
 
         Integer block;
 
         while ( seconds < timeout ) {
             block = this.getBlockCount();
-            if (block >= blockCount ) {
-                System.out.println("Server is at block " +  block + " returning 'true'.");
+            if (block >= blockHeight ) {
+                log.info("Server is at block " + block + " returning 'true'.");
                 return true;
             } else {
                 try {
                     seconds++;
                     if (seconds % 60 == 0) {
-                        System.out.println("Server at block " + block);
+                        log.info("Server at block " + block);
                     }
                     Thread.sleep(SECOND);
                 } catch (InterruptedException e) {
