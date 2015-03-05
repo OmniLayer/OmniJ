@@ -5,6 +5,7 @@ import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.consensus.WaitForBlockchainSync
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
+import groovy.util.logging.Slf4j
 import spock.lang.Specification
 
 /**
@@ -16,6 +17,7 @@ import spock.lang.Specification
  * Bitcoin Blockchain.
  *
  */
+@Slf4j
 abstract class BaseMainNetSpec extends Specification implements OmniClientDelegate {
     {
         client = new OmniCLIClient(RPCURI.defaultMainNetURI, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
@@ -28,11 +30,12 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
      * Wait for RPC server to be responding and to be in sync with the Bitcoin Blockchain
      */
     void setupSpec() {
-        println "Waiting for server..."
+        log.info "Waiting for server..."
         Boolean available = client.waitForServer(rpcWaitTimeoutSeconds)
         if (!available) {
-            println "Timeout error."
+            log.error "Timeout error."
         }
+        assert available
 
         //
         // Get in sync with the Blockchain
@@ -53,7 +56,7 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
         } else {
             mscVersion = info.mastercoreversion
         }
-        println "Bitcoin version: ${info.version}"
-        println "Mastercore version: ${mscVersion}"
+        log.info "Bitcoin version: ${info.version}"
+        log.info "Mastercore version: ${mscVersion}"
     }
 }

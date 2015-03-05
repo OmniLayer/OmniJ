@@ -188,7 +188,7 @@ task getChestConsensus(dependsOn: 'classes',  type: JavaExec) {
 }
 
 task getConsensus(dependsOn: ['getMasterConsensus', 'getOmniConsensus', 'getChestConsensus']) << {
-    println "Consensus files are in build/*_consensus.txt"
+    logger.info "Consensus files are in build/*_consensus.txt"
 }
 
 task runOmniConsensusCLI(dependsOn: 'classes',  type: JavaExec) {
