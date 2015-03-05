@@ -63,7 +63,26 @@ public final class CurrencyID extends Number implements Cloneable {
     }
 
     @Override
+    public byte byteValue() {
+        if (value > Byte.MAX_VALUE) {
+            throw new ArithmeticException("Value too big to be converted to byte");
+        }
+        return (byte) value;
+    }
+
+    @Override
+    public short shortValue() {
+        if (value > Short.MAX_VALUE) {
+            throw new ArithmeticException("Value too big to be converted to short");
+        }
+        return (short) value;
+    }
+
+    @Override
     public int intValue() {
+        if (value > Integer.MAX_VALUE) {
+            throw new ArithmeticException("Value too big to be converted to integer");
+        }
         return (int) value;
     }
 
@@ -74,12 +93,12 @@ public final class CurrencyID extends Number implements Cloneable {
 
     @Override
     public float floatValue() {
-        return (float) value;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public double doubleValue() {
-        return (double) value;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override

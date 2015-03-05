@@ -18,8 +18,6 @@ class EcosystemSpec extends Specification {
         ecosystem.shortValue() == (short) 1
         ecosystem.intValue() == 1
         ecosystem.longValue() == 1L
-        ecosystem.floatValue() == 1.0F
-        ecosystem.doubleValue() == 1.0D
     }
 
     def "Test MSC Ecosystem has value 2"() {
@@ -33,8 +31,6 @@ class EcosystemSpec extends Specification {
         ecosystem.shortValue() == (short) 2
         ecosystem.intValue() == 2
         ecosystem.longValue() == 2L
-        ecosystem.floatValue() == 2.0F
-        ecosystem.doubleValue() == 2.0D
     }
 
     def "constructor will take short or integer"() {

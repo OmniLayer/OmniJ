@@ -18,8 +18,6 @@ class CurrencyIDSpec extends Specification {
         currency.shortValue() == (short) 1
         currency.intValue() == 1
         currency.longValue() == 1L
-        currency.floatValue() == 1.0F
-        currency.doubleValue() == 1.0D
 
         and: "it is in the right ecosystem"
         currency.ecosystem == Ecosystem.MSC
@@ -36,8 +34,6 @@ class CurrencyIDSpec extends Specification {
         currency.shortValue() == (short) 2
         currency.intValue() == 2
         currency.longValue() == 2L
-        currency.floatValue() == 2.0F
-        currency.doubleValue() == 2.0D
 
         and: "it is in the right ecosystem"
         currency.ecosystem == Ecosystem.TMSC
@@ -166,5 +162,42 @@ class CurrencyIDSpec extends Specification {
         "MaidSafeCoin" | CurrencyID.MaidSafeCoin_VALUE
         "TetherUS"     | CurrencyID.TetherUS_VALUE
     }
+
+    def "Converting to float not allowed"() {
+        when:
+        def currency = new CurrencyID(CurrencyID.MSC_VALUE)
+        def f = currency.floatValue()
+
+        then:
+        UnsupportedOperationException e = thrown()
+    }
+
+    def "Converting to double not allowed"() {
+        when:
+        def currency = new CurrencyID(CurrencyID.MSC_VALUE)
+        def f = currency.doubleValue()
+
+        then:
+        UnsupportedOperationException e = thrown()
+    }
+
+    def "Exception is thrown when converting to int would throw exception"() {
+        when:
+        def currency = new CurrencyID(CurrencyID.MAX_VALUE)
+        def f = currency.intValue()
+
+        then:
+        ArithmeticException e = thrown()
+    }
+
+    def "Exception is thrown when converting to int (via Groovy 'as') would throw exception"() {
+        when:
+        def currency = new CurrencyID(CurrencyID.MAX_VALUE)
+        def f = currency as Integer
+
+        then:
+        ArithmeticException e = thrown()
+    }
+
 
 }

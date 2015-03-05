@@ -110,7 +110,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
 
     @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
-        String httpFile = "${file}?currency_id=${currencyID as Integer}"
+        String httpFile = "${file}?currency_id=${currencyID as Long}"
         def consensusURL = new URL(proto, host, port, httpFile)
 
         /* Since getConsensusForCurrency() doesn't return the blockHeight, we have to check
