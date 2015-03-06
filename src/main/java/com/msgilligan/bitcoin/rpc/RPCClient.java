@@ -15,6 +15,7 @@ import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -32,6 +33,8 @@ import java.util.Scanner;
  */
 public class RPCClient {
     private URI serverURI;
+    private String username;
+    private String password;
     private ObjectMapper mapper;
     private long requestId;
     private static final boolean disableSslVerification = true;
@@ -49,13 +52,9 @@ public class RPCClient {
     }
 
     public RPCClient(URI server, final String rpcuser, final String rpcpassword) {
-        Authenticator.setDefault(new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(rpcuser, rpcpassword.toCharArray());
-            }
-        });
-
         serverURI = server;
+        username = rpcuser;
+        password = rpcpassword;
         requestId = 0;
         mapper = new ObjectMapper();
     }
@@ -66,12 +65,17 @@ public class RPCClient {
 
     public Map<String, Object> send(Map<String, Object> request) throws IOException, JsonRPCException {
         HttpURLConnection connection = openConnection();
-        OutputStream output = connection.getOutputStream();
+
+        String userpass = username + ":" + password;
+        String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+        connection.setRequestProperty ("Authorization", basicAuth);
+
+        OutputStream requestStream = connection.getOutputStream();
         String reqString = mapper.writeValueAsString(request);
 //        System.out.println("Req json = " + reqString);
          try {
-             mapper.writeValue(output, request);
-             output.close();
+             mapper.writeValue(requestStream, request);
+             requestStream.close();
          }
          catch (IOException logOrIgnore) {
              System.out.println("Exception: " + logOrIgnore);
@@ -91,12 +95,15 @@ public class RPCClient {
         } else {
             responseStream = connection.getErrorStream();
         }
+        String contentType = connection.getContentType();
 
         String responseString;
-        Map<String, Object> responseMap;
+        Map<String, Object> responseMap = null;
         if (responseStream != null) {
             responseString = new Scanner(responseStream,"UTF-8").useDelimiter("\\A").next();
-            responseMap = mapper.readValue(responseString, Map.class);
+            if (contentType.equals("application/json")) {
+                responseMap = mapper.readValue(responseString, Map.class);
+            }
         } else {
             responseString = "";
             responseMap = new HashMap<String, Object>();

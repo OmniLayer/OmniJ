@@ -50,19 +50,18 @@ class ConsensusCLISpec extends BaseCLISpec {
         result.error.length() == 0
     }
 
-    // This test fails if previous tests have been run, but succeeds if it
-    // is run independently. The problem is probably that cookies aren't being
-    // cleared between tests.
-    @Ignore("This test fails if we previously authorized")
+
     def "fetch MSC consensus to stdout setting bad username & password"() {
         when:
         def result = command '-regtest -rpcwait -rpcuser=x -rpcpassword=y -property=1'
 
         then:
         result.status == 1
-        result.output.length() > 0
-        result.error.length() == 0
+        result.output.length() == 0
+        result.error.length() > 0
+        result.error == "JSON-RPC Exception: Authorization Required\n"
     }
+
 
     /**
      * Helper method to create and run a command
