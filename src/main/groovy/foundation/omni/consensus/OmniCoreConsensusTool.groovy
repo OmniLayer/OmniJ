@@ -16,6 +16,30 @@ class OmniCoreConsensusTool extends ConsensusTool {
     static def rpcpassword = "pass"
     protected OmniClient client
 
+    /**
+     * URI Constructor
+     *
+     * @param coreURI URI to connect to - user/pass if required, must be encoded in URL
+     */
+    OmniCoreConsensusTool(URI coreURI)
+    {
+        String user = ""
+        String pass = ""
+        String userInfo = coreURI.getUserInfo()
+        if (userInfo != null) {
+            String[] userpass = userInfo.split(':')
+            user = userpass[0]
+            pass = userpass[1]
+        }
+        OmniClient client = new OmniClient(coreURI, user, pass)
+        this.client = client
+    }
+
+    /**
+     * Constructor that takes an existing OmniClient
+     *
+     * @param client An existing client instance
+     */
     OmniCoreConsensusTool(OmniClient client)
     {
         this.client = client
