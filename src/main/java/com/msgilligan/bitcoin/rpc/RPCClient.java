@@ -63,12 +63,9 @@ public class RPCClient {
         return serverURI;
     }
 
-    public Map<String, Object> send(Map<String, Object> request) throws IOException, JsonRPCException {
+    protected Map<String, Object> send(Map<String, Object> request) throws IOException, JsonRPCException {
         HttpURLConnection connection = openConnection();
 
-        String userpass = username + ":" + password;
-        String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
-        connection.setRequestProperty ("Authorization", basicAuth);
 
         OutputStream requestStream = connection.getOutputStream();
         String reqString = mapper.writeValueAsString(request);
@@ -76,9 +73,9 @@ public class RPCClient {
          try {
              mapper.writeValue(requestStream, request);
              requestStream.close();
-         }
-         catch (IOException logOrIgnore) {
-             System.out.println("Exception: " + logOrIgnore);
+         } catch (IOException e) {
+             e.printStackTrace();
+             throw new JsonRPCException("IOException writing request stream", e);
          }
 
         InputStream responseStream = null;
@@ -126,7 +123,7 @@ public class RPCClient {
         return responseMap;
     }
 
-    public Map<String, Object> send(String method, List<Object> params) throws IOException, JsonRPCException  {
+    protected Map<String, Object> send(String method, List<Object> params) throws IOException, JsonRPCException  {
         Map<String, Object> request = new HashMap<String, Object>();
         request.put("jsonrpc", "1.0");
         request.put("method", method);
@@ -174,6 +171,11 @@ public class RPCClient {
         connection.setRequestProperty("Accept-Charset", "UTF-8");
         connection.setRequestProperty("Content-Type", "application/json;charset=" +  "UTF-8");
         connection.setRequestProperty("Connection", "close");   // Avoid EOFException: http://stackoverflow.com/questions/19641374/android-eofexception-when-using-httpurlconnection-headers
+
+        String auth = username + ":" + password;
+        String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(auth.getBytes());
+        connection.setRequestProperty ("Authorization", basicAuth);
+
         return connection;
     }
 
