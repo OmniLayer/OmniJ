@@ -12,9 +12,9 @@ import spock.lang.Unroll
 
 /**
  * Special case base class for Chest comparison tests
- * No blockHeight comparison for now
  * Only compare balance, since current Chest API doesn't return reserved.
  */
+@Deprecated
 abstract class BaseChestConsensusSpec extends BaseMainNetSpec {
     @Shared @Subject
     ConsensusComparison comparison
@@ -47,7 +47,7 @@ abstract class BaseChestConsensusSpec extends BaseMainNetSpec {
     @Unroll
     def "#address #entry1 == #entry2"() {
         expect:
-        entry1.balance == entry2.balance
+        entry1 == entry2
 
         where:
         [address, entry1, entry2] << comparison

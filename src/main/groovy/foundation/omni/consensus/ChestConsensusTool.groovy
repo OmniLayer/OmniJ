@@ -52,7 +52,7 @@ class ChestConsensusTool extends ConsensusTool {
 
     private ConsensusEntry itemToEntry(Object item) {
         BigDecimal balance = jsonToBigDecimal(item.balance)
-        BigDecimal reserved = jsonToBigDecimal("0")
+        BigDecimal reserved = jsonToBigDecimal(item.reserved)
         return new ConsensusEntry(balance: balance, reserved:reserved)
     }
 
