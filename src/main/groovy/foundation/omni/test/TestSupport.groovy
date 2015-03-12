@@ -27,6 +27,15 @@ trait TestSupport implements OmniClientDelegate {
         return accountName
     }
 
+    /**
+     * Generate blocks and fund an address with requested amount of BTC
+     *
+     * TODO: Improve performance. Can we mine multiple blocks with a single RPC?
+     *
+     * @param toAddress Address to fund with BTC
+     * @param requestedBTC Amount of BTC to "mine" and send
+     * @return
+     */
     Sha256Hash requestBitcoin(Address toAddress, BigDecimal requestedBTC) {
         def amountGatheredSoFar = 0.0
         def inputs = new ArrayList<Map<String, Object>>()
