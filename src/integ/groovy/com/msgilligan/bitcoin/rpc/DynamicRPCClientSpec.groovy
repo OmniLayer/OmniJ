@@ -29,7 +29,7 @@ class DynamicRPCClientSpec extends Specification {
 //        }
 //        assert available
     }
-    def "test getblockcount"() {
+    def "getblockcount"() {
         when:
         def result = client.getblockcount()
 
@@ -37,7 +37,7 @@ class DynamicRPCClientSpec extends Specification {
         result >= 0
     }
 
-    def "test setgenerate"() {
+    def "setgenerate"() {
         when:
         def result = client.setgenerate(true, 2)
 
@@ -45,7 +45,18 @@ class DynamicRPCClientSpec extends Specification {
         result == null
     }
 
-    def "test non-existent method"() {
+    def "getinfo" () {
+        when:
+        def info = client.getinfo()
+
+        then:
+        info != null
+        info.version >= 90100
+        info.protocolversion >= 70002
+
+    }
+
+    def "non-existent method throws JsonRPCStatusException"() {
         when:
         client.idontexist("parm", 2)
 
