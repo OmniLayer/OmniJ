@@ -31,19 +31,18 @@ class DynamicRPCClientSpec extends Specification {
     }
     def "test getblockcount"() {
         when:
-        Map response = client.getblockcount()
+        def result = client.getblockcount()
 
         then:
-        response.error == null
-        response.result >= 0
+        result >= 0
     }
 
     def "test setgenerate"() {
         when:
-        Map response = client.setgenerate(true, 2)
+        def result = client.setgenerate(true, 2)
 
         then:
-        response.error == null
+        result == null
     }
 
     def "test non-existent method"() {

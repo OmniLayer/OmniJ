@@ -24,9 +24,11 @@ class DynamicRPCClient extends RPCClient {
      *
      * @param name The JSON-RPC method name
      * @param args JSON-RPC arguments
-     * @return a Map containing the complete JSON-RPC response
+     * @return an object containing the JSON-RPC response.result
+     * @throws JsonRPCStatusException
      */
     def methodMissing(String name, def args) {
-        return this.send(name, args as List)
+        Map response = this.send(name, args as List)
+        return response.result
     }
 }
