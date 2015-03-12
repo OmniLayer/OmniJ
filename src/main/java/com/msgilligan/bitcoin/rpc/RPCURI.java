@@ -28,7 +28,7 @@ public class RPCURI {
         }
     }
 
-    public static URI getDefaultTestNetURL() {
+    public static URI getDefaultTestNetURI() {
         try {
             return new URI(rpcproto, null, rpchost, RPCPORT_TESTNET, rpcfile, null, null);
         } catch (URISyntaxException e) {
@@ -37,7 +37,7 @@ public class RPCURI {
         }
     }
 
-    public static URI getDefaultRegTestURL() {
+    public static URI getDefaultRegTestURI() {
         try {
             return new URI(rpcproto, null, rpchost, RPCPORT_REGTEST, rpcfile, null, null);
         } catch (URISyntaxException e) {
@@ -46,7 +46,7 @@ public class RPCURI {
         }
     }
 
-    public static URI getStablePublicMainNetURL() {
+    public static URI getStablePublicMainNetURI() {
         try {
             return new URI(rpcssl, null, stableMscRpcHost, RPCPORT_MAINNET, rpcfile, null, null);
         } catch (URISyntaxException e) {

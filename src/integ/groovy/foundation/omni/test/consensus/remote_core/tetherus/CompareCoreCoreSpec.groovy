@@ -15,7 +15,7 @@ class CompareCoreCoreSpec extends BaseConsensusSpec {
 
     void setupSpec() {
 
-        OmniClient remoteClient = new OmniClient(RPCURI.stablePublicMainNetURL, 'xmc-msc-rpc', 'emdERDIDE82934$%$')
+        OmniClient remoteClient = new OmniClient(RPCURI.stablePublicMainNetURI, 'xmc-msc-rpc', 'emdERDIDE82934$%$')
         setupComparisonForCurrency(new OmniCoreConsensusTool(remoteClient),
                 TetherUS)
     }

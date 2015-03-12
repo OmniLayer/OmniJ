@@ -17,7 +17,7 @@ class BaseRegTestSpec extends Specification implements OmniClientDelegate, TestS
     static final BigDecimal minBTCForTests = 50.0;
 
     {
-        client = new OmniCLIClient(RPCURI.defaultRegTestURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
+        client = new OmniCLIClient(RPCURI.defaultRegTestURI, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
     }
 
     void setupSpec() {

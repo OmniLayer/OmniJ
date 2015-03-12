@@ -15,7 +15,7 @@ import spock.lang.Specification
 class OmniClientDelegateSpec extends Specification implements OmniClientDelegate {
 
     {
-        client = new OmniClient(RPCURI.defaultRegTestURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
+        client = new OmniClient(RPCURI.defaultRegTestURI, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
     }
 
 //    void setupSpec() {
