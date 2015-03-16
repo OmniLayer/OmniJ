@@ -3,6 +3,7 @@ package foundation.omni
 import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
+import foundation.omni.test.TestServers
 import foundation.omni.test.TestSupport
 import groovy.util.logging.Slf4j
 import spock.lang.Specification
@@ -17,7 +18,7 @@ class BaseRegTestSpec extends Specification implements OmniClientDelegate, TestS
     static final BigDecimal minBTCForTests = 50.0;
 
     {
-        client = new OmniCLIClient(RPCURI.defaultRegTestURI, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
+        client = new OmniCLIClient(RPCURI.defaultRegTestURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
     }
 
     void setupSpec() {

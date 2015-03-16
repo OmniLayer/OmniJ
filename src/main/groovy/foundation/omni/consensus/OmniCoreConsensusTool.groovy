@@ -5,6 +5,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.rpc.MPBalanceEntry
 import foundation.omni.rpc.OmniClient
 import foundation.omni.rpc.SmartPropertyListInfo
+import foundation.omni.test.TestServers
 import groovy.transform.TypeChecked
 import org.bitcoinj.core.Address
 
@@ -12,8 +13,6 @@ import org.bitcoinj.core.Address
  * Command-line tool and class for fetching Omni Core consensus data
  */
 class OmniCoreConsensusTool extends ConsensusTool {
-    static def rpcuser = "bitcoinrpc"
-    static def rpcpassword = "pass"
     protected OmniClient client
 
     /**
@@ -46,7 +45,7 @@ class OmniCoreConsensusTool extends ConsensusTool {
     }
 
     public static void main(String[] args) {
-        OmniClient client = new OmniClient(RPCURI.defaultMainNetURL, rpcuser, rpcpassword)
+        OmniClient client = new OmniClient(RPCURI.defaultMainNetURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
         OmniCoreConsensusTool tool = new OmniCoreConsensusTool(client)
         tool.run(args.toList())
     }

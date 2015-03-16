@@ -1,27 +1,22 @@
 package foundation.omni.test.test
 
 import com.msgilligan.bitcoin.rpc.RPCURI
-import foundation.omni.BaseMainNetSpec
 import foundation.omni.rpc.OmniClient
 import foundation.omni.rpc.OmniClientDelegate
+import foundation.omni.test.TestServers
 import spock.lang.Specification
 
 
 /**
- * User: sean
- * Date: 7/24/14
- * Time: 8:16 AM
+ * Test that implementing the OmniClientDelegate trait works.
+ *
+ * TODO: Should we keep this test around?
  */
 class OmniClientDelegateSpec extends Specification implements OmniClientDelegate {
 
     {
-        client = new OmniClient(RPCURI.defaultRegTestURI, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
+        client = new OmniClient(RPCURI.defaultRegTestURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
     }
-
-//    void setupSpec() {
-//        this.setClient(new MastercoinClient(RPCURL.defaultMainNetURL, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword))
-//        assert client != null
-//    }
 
     def "get block count"() {
         expect:

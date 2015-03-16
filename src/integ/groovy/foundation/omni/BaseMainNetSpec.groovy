@@ -5,6 +5,7 @@ import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.consensus.WaitForBlockchainSync
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
+import foundation.omni.test.TestServers
 import groovy.util.logging.Slf4j
 import spock.lang.Specification
 
@@ -20,10 +21,8 @@ import spock.lang.Specification
 @Slf4j
 abstract class BaseMainNetSpec extends Specification implements OmniClientDelegate {
     {
-        client = new OmniCLIClient(RPCURI.defaultMainNetURI, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
+        client = new OmniCLIClient(RPCURI.defaultMainNetURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
     }
-    static final String rpcuser = "bitcoinrpc"
-    static final String rpcpassword = "pass"
     static final Integer rpcWaitTimeoutSeconds = 3*60*60  // Wait up to 3 hours for RPC response
 
     /**

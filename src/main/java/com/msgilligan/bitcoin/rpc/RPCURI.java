@@ -1,5 +1,7 @@
 package com.msgilligan.bitcoin.rpc;
 
+import foundation.omni.test.TestServers;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -11,9 +13,6 @@ public class RPCURI {
     public static final String rpcssl = "https";
     public static final String rpchost = "127.0.0.1";
     public static final String rpcfile = "/";
-    public static final String stableOmniRpcHost = "core.stage.merchantcoin.net";
-    public static final String stableOmniRpcUser = "xmc-msc-rpc";
-    public static final String stableOmniRpcPassword = "emdERDIDE82934$%$";
 
     public static final int RPCPORT_MAINNET = 8332;
     public static final int RPCPORT_TESTNET = 18332;
@@ -40,15 +39,6 @@ public class RPCURI {
     public static URI getDefaultRegTestURI() {
         try {
             return new URI(rpcproto, null, rpchost, RPCPORT_REGTEST, rpcfile, null, null);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static URI getStablePublicMainNetURI() {
-        try {
-            return new URI(rpcssl, null, stableOmniRpcHost, RPCPORT_MAINNET, rpcfile, null, null);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return null;

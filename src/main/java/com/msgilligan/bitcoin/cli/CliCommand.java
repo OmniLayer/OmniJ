@@ -27,8 +27,6 @@ public abstract class CliCommand {
     static final String defaulthost = "127.0.0.1";
     static final int defaultport = 8332;
     static final String defaultfile = "/";
-    static final String rpcuser ="bitcoinrpc";
-    static final String rpcpassword ="pass";
 
     protected CommandLine line = null;
     protected CommandLineParser parser = null;
@@ -201,8 +199,8 @@ public abstract class CliCommand {
 
     protected RPCConfig getRPCConfig() {
         URI uri = getServerURI();
-        String user = line.getOptionValue("rpcuser", rpcuser);
-        String pass = line.getOptionValue("rpcpassword", rpcpassword);
+        String user = line.getOptionValue("rpcuser", "");
+        String pass = line.getOptionValue("rpcpassword", "");
         RPCConfig cfg = new RPCConfig(uri, user, pass);
         return cfg;
     }

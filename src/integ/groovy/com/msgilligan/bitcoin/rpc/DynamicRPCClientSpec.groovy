@@ -1,7 +1,6 @@
 package com.msgilligan.bitcoin.rpc
 
-import foundation.omni.BaseMainNetSpec
-import foundation.omni.rpc.OmniCLIClient
+import foundation.omni.test.TestServers
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -15,7 +14,7 @@ class DynamicRPCClientSpec extends Specification {
     DynamicRPCClient client
 
     void setupSpec() {
-        client = new DynamicRPCClient(RPCURI.defaultRegTestURI, BaseMainNetSpec.rpcuser, BaseMainNetSpec.rpcpassword)
+        client = new DynamicRPCClient(RPCURI.defaultRegTestURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
 
 // TODO: Need to implement waitForServer()
 // waitForServer() is in BitcoinClient because it uses getBlockCount()
@@ -29,6 +28,7 @@ class DynamicRPCClientSpec extends Specification {
 //        }
 //        assert available
     }
+
     def "getblockcount"() {
         when:
         def result = client.getblockcount()
