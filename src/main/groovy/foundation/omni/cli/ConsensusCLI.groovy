@@ -8,6 +8,7 @@ import foundation.omni.consensus.ChestConsensusTool
 import foundation.omni.consensus.ConsensusEntry
 import foundation.omni.consensus.ConsensusSnapshot
 import foundation.omni.consensus.ConsensusTool
+import foundation.omni.consensus.MultiPropertyComparison
 import foundation.omni.consensus.OmniCoreConsensusTool
 import foundation.omni.consensus.OmniwalletConsensusTool
 import foundation.omni.rpc.OmniClient
@@ -55,25 +56,37 @@ class ConsensusCLI extends CliCommand {
         String property = line.getOptionValue("property")
         Long currencyIDNum =  Long.parseLong(property, 10)
         CurrencyID currencyID = new CurrencyID(currencyIDNum)
+        boolean compareReserved = true
 
         String fileName = line.getOptionValue("output")
 
-        ConsensusTool tool
-        if (line.hasOption("omniwallet-url")) {
-            tool = new OmniwalletConsensusTool(line.getOptionValue("omniwallet-url").toURI())
+        ConsensusTool tool1, tool2
+        if (line.hasOption("omnicore-url")) {
+            URI toolURI = line.getOptionValue("omnicore-url").toURI()
+            println "URI: ${toolURI}"
+            tool1 = new OmniCoreConsensusTool(line.getOptionValue("omnicore-url").toURI())
+        } else if (line.hasOption("omniwallet-url")) {
+            tool1 = new OmniwalletConsensusTool(line.getOptionValue("omniwallet-url").toURI())
         } else if (line.hasOption("omnichest-url")) {
-            tool = new ChestConsensusTool(line.getOptionValue("omnichest-url").toURI())
+            compareReserved = false
+            tool1 = new ChestConsensusTool(line.getOptionValue("omnichest-url").toURI())
         } else {
-            tool = new OmniCoreConsensusTool(this.getClient())
+            tool1 = new OmniCoreConsensusTool(this.getClient())
         }
 
-        def consensus = tool.getConsensusSnapshot(currencyID)
-
-        if (fileName != null) {
-            File output = new File(fileName)
-            this.save(consensus, output)
+        if (line.hasOption("compare")) {
+            tool2 = new OmniCoreConsensusTool(this.getClient())
+            MultiPropertyComparison multiComparison = new MultiPropertyComparison(tool2, tool1, compareReserved);
+            multiComparison.compareAllProperties()
         } else {
-            this.print(consensus)
+            def consensus = tool1.getConsensusSnapshot(currencyID)
+
+            if (fileName != null) {
+                File output = new File(fileName)
+                this.save(consensus, output)
+            } else {
+                this.print(consensus)
+            }
         }
 
         return 0;
@@ -127,19 +140,27 @@ class ConsensusCLI extends CliCommand {
                     .hasArg()
                     .withArgName('id')
                     .create('p'))
+                .addOption(OptionBuilder.withLongOpt('compare')
+                    .withDescription('Compare properties from two URLs')
+                    .create('x'))
                 // Technically the -rpc* options should also be mutually exclusive with these
-                // but the current implmentation just ignores them if -ow or -oc is present.
+                // but the current implementation just ignores them if -ow or -oc is present.
                 .addOptionGroup(new OptionGroup()
+                    .addOption(OptionBuilder.withLongOpt('omnicore-url')
+                        .withDescription('Use Omni Core API via URL')
+                        .hasArg()
+                        .withArgName('url')
+                        .create('core'))
                     .addOption(OptionBuilder.withLongOpt('omniwallet-url')
                         .withDescription('Use Omniwallet API via URL')
                         .hasArg()
                         .withArgName('url')
-                        .create('ow'))
+                        .create('wallet'))
                     .addOption(OptionBuilder.withLongOpt('omnichest-url')
                         .withDescription('Use Omnichest API via URL')
                         .hasArg()
                         .withArgName('url')
-                        .create('oc')))
+                        .create('chest')))
         }
     }
 }
