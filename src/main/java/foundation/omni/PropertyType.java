@@ -32,12 +32,12 @@ public class PropertyType extends Number {
 
     @Override
     public float floatValue() {
-        return (float) value;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public double doubleValue() {
-        return (double) value;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
