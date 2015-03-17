@@ -4,7 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * Utility class with default connection information for Bitcoin/Mastercoin JSON-RPC
+ * Utility class with default connection information for Bitcoin JSON-RPC
  */
 public class RPCURI {
     public static final String rpcproto = "http";
