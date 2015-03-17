@@ -1,6 +1,6 @@
 package com.msgilligan.bitcoin.cli
 
-import foundation.omni.test.TestServers
+import foundation.omni.rpc.test.TestServers
 import spock.lang.Specification
 
 import java.nio.charset.StandardCharsets

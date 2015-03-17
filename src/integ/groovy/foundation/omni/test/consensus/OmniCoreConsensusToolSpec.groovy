@@ -1,7 +1,7 @@
 package foundation.omni.test.consensus
 
 import foundation.omni.consensus.OmniCoreConsensusTool
-import foundation.omni.test.TestServers
+import foundation.omni.rpc.test.TestServers
 import spock.lang.Specification
 
 

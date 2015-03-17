@@ -1,7 +1,4 @@
 package com.msgilligan.bitcoin.cli
-
-import foundation.omni.test.TestServers
-
 /**
  * Integration Test Spec for the bitcoinj-cli tool
  * Assumes bitcoind running on localhost in RegTest mode.

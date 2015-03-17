@@ -5,7 +5,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.rpc.MPBalanceEntry
 import foundation.omni.rpc.OmniClient
 import foundation.omni.rpc.SmartPropertyListInfo
-import foundation.omni.test.TestServers
+import foundation.omni.rpc.test.TestServers
 import groovy.transform.TypeChecked
 import org.bitcoinj.core.Address
 

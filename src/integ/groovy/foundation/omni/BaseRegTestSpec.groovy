@@ -4,7 +4,7 @@ import com.msgilligan.bitcoin.rpc.Loggable
 import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
-import foundation.omni.test.TestServers
+import foundation.omni.rpc.test.TestServers
 import foundation.omni.test.TestSupport
 import spock.lang.Specification
 

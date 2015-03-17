@@ -2,7 +2,7 @@ package foundation.omni.test.consensus.remote_core.maidsafecoin
 
 import foundation.omni.consensus.OmniCoreConsensusTool
 import foundation.omni.rpc.OmniClient
-import foundation.omni.test.TestServers
+import foundation.omni.rpc.test.TestServers
 import foundation.omni.test.consensus.BaseConsensusSpec
 import spock.lang.Title
 

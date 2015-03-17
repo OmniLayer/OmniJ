@@ -1,4 +1,4 @@
-package foundation.omni.test;
+package foundation.omni.rpc.test;
 
 import com.msgilligan.bitcoin.rpc.RPCURI;
 

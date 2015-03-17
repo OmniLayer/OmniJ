@@ -1,6 +1,6 @@
 package com.msgilligan.bitcoin.rpc
 
-import foundation.omni.test.TestServers
+import foundation.omni.rpc.test.TestServers
 import spock.lang.Shared
 import spock.lang.Specification
 

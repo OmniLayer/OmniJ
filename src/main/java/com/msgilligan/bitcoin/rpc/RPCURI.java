@@ -1,7 +1,5 @@
 package com.msgilligan.bitcoin.rpc;
 
-import foundation.omni.test.TestServers;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 

@@ -1,7 +1,7 @@
 package foundation.omni.cli
 
 import com.msgilligan.bitcoin.cli.BaseCLISpec
-import foundation.omni.test.TestServers
+import foundation.omni.rpc.test.TestServers
 import spock.lang.Ignore
 
 

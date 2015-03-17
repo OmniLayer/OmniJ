@@ -3,7 +3,7 @@ package foundation.omni.test.test
 import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.rpc.OmniClient
 import foundation.omni.rpc.OmniClientDelegate
-import foundation.omni.test.TestServers
+import foundation.omni.rpc.test.TestServers
 import spock.lang.Specification
 
 

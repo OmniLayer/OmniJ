@@ -6,8 +6,7 @@ import com.msgilligan.bitcoin.rpc.Loggable
 import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
-import foundation.omni.test.TestServers
-import groovy.util.logging.Slf4j
+import foundation.omni.rpc.test.TestServers
 import spock.lang.Specification
 
 /**
