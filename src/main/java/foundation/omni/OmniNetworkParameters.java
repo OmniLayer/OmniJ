@@ -4,7 +4,7 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.NetworkParameters;
 
 /**
- * Base class for Master Protocol network parameters
+ * Base class for Omni Protocol network parameters
  */
 public abstract class OmniNetworkParameters {
     protected NetworkParameters params;

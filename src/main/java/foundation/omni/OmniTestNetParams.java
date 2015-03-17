@@ -1,7 +1,7 @@
 package foundation.omni;
 
 /**
- * Master Protocol parameters for Bitcoin MainNet
+ * Omni Protocol parameters for Bitcoin MainNet
  */
 public class OmniTestNetParams extends OmniNetworkParameters {
     /* TestNet not supported yet */

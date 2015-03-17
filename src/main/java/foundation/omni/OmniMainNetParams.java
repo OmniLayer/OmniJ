@@ -5,7 +5,7 @@ import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.params.MainNetParams;
 
 /**
- * Master Protocol parameters for Bitcoin MainNet
+ * Omni Protocol parameters for Bitcoin MainNet
  */
 public class OmniMainNetParams extends OmniNetworkParameters {
     private static final String ExodusAddress = "1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P";
