@@ -8,7 +8,7 @@ class GetBlockCountSpec extends BaseCLISpec {
 
     def "run against local RegTest RPC"() {
         when:
-        def result = command '-regtest -rpcwait'
+        def result = command "-regtest -rpcuser=${rpcUser} -rpcpassword=${rpcPassword} -rpcwait"
 
         then:
         result.status == 0

@@ -23,7 +23,7 @@ class ConsensusCLISpec extends BaseCLISpec {
 
     def "fetch MSC consensus to stdout"() {
         when:
-        def result = command '-regtest -rpcwait -property 1'
+        def result = command "-regtest -rpcuser=${rpcUser} -rpcpassword=${rpcPassword} -rpcwait -property 1"
 
         then:
         result.status == 0
@@ -43,7 +43,7 @@ class ConsensusCLISpec extends BaseCLISpec {
 
     def "fetch MSC consensus to stdout with rpcconnect option"() {
         when:
-        def result = command '-regtest -rpcwait -property=1 -rpcconnect=127.0.0.1'
+        def result = command "-regtest -rpcuser=${rpcUser} -rpcpassword=${rpcPassword} -rpcwait -property=1 -rpcconnect=127.0.0.1"
 
         then:
         result.status == 0

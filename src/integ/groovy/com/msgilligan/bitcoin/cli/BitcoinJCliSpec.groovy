@@ -1,5 +1,7 @@
 package com.msgilligan.bitcoin.cli
 
+import foundation.omni.test.TestServers
+
 /**
  * Integration Test Spec for the bitcoinj-cli tool
  * Assumes bitcoind running on localhost in RegTest mode.
@@ -20,7 +22,7 @@ class BitcoinJCliSpec extends BaseCLISpec {
 
     def "get block count"() {
         when:
-        def result = command '-regtest -rpcwait getblockcount'
+        def result = command "-regtest -rpcuser=${rpcUser} -rpcpassword=${rpcPassword} -rpcwait getblockcount"
 
         then:
         result.status == 0
@@ -31,7 +33,7 @@ class BitcoinJCliSpec extends BaseCLISpec {
 
     def "generate a block"() {
         when:
-        def result = command '-regtest -rpcwait setgenerate 1'
+        def result = command "-regtest -rpcuser=${rpcUser} -rpcpassword=${rpcPassword} -rpcwait setgenerate 1"
 
         then:
         result.status == 0
