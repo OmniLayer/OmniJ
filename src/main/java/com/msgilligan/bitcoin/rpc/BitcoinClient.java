@@ -94,7 +94,7 @@ public class BitcoinClient extends RPCClient {
      * @param timeout Timeout in seconds
      * @return true if blockHeight reached, false if timeout
      */
-    public Boolean waitForSync(Long blockHeight, Integer timeout) throws JsonRPCException, IOException {
+    public Boolean waitForBlock(Integer blockHeight, Integer timeout) throws JsonRPCException, IOException {
         Integer seconds = 0;
 
         log.info("Waiting for server to reach block " + blockHeight);

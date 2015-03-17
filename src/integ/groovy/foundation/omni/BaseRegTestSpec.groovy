@@ -1,5 +1,6 @@
 package foundation.omni
 
+import com.msgilligan.bitcoin.rpc.Loggable
 import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
@@ -12,8 +13,7 @@ import spock.lang.Specification
 /**
  * Base specification for integration tests on RegTest net
  */
-@Slf4j
-class BaseRegTestSpec extends Specification implements OmniClientDelegate, TestSupport {
+class BaseRegTestSpec extends Specification implements OmniClientDelegate, TestSupport, Loggable {
 
     static final BigDecimal minBTCForTests = 50.0;
 

@@ -34,7 +34,7 @@ import java.util.Scanner;
  * JSON-RPC Client
  */
 public class RPCClient {
-    private static final Logger log = LoggerFactory.getLogger(BitcoinClient.class);
+    private static final Logger log = LoggerFactory.getLogger(RPCClient.class);
     private URI serverURI;
     private String username;
     private String password;
@@ -82,8 +82,8 @@ public class RPCClient {
         // http://developer.android.com/reference/java/net/HttpURLConnection.html
         // http://android-developers.blogspot.com/2011/09/androids-http-clients.html
 
-        if (log.isInfoEnabled()) {
-            log.info("Req json: {}", mapper.writeValueAsString(request));
+        if (log.isDebugEnabled()) {
+            log.debug("Req json: {}", mapper.writeValueAsString(request));
         }
 
         OutputStream requestStream = connection.getOutputStream();
@@ -91,7 +91,7 @@ public class RPCClient {
         requestStream.close();
 
         int responseCode = connection.getResponseCode();
-        log.info("Response code: {}", responseCode);
+        log.debug("Response code: {}", responseCode);
 
         Map<String, Object> responseJson = null;
         if (responseCode == 200) {
@@ -120,7 +120,7 @@ public class RPCClient {
             throw new JsonRPCStatusException(exceptionMessage, responseCode, responseMessage, bodyString, bodyJson);
         }
 
-        log.info("Resp json: {}", responseJson);
+        log.debug("Resp json: {}", responseJson);
 
         connection.disconnect();
         return responseJson;

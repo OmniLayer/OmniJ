@@ -21,7 +21,7 @@ class WaitForBlockchainSync {
         println "Blockchain.info current height: ${newHeight}"
         while ( newHeight > curHeight ) {
             curHeight = newHeight
-            Boolean upToDate = client.waitForSync(curHeight, 60*60)
+            Boolean upToDate = client.waitForBlock(curHeight, 60*60)
             newHeight = getReferenceBlockHeight()
             println "Current reference block height: ${newHeight}"
         }

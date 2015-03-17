@@ -1,8 +1,9 @@
 package foundation.omni
 
+import com.msgilligan.bitcoin.rpc.BlockchainDotInfoSyncing
 import com.msgilligan.bitcoin.rpc.JsonRPCStatusException
+import com.msgilligan.bitcoin.rpc.Loggable
 import com.msgilligan.bitcoin.rpc.RPCURI
-import foundation.omni.consensus.WaitForBlockchainSync
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
 import foundation.omni.test.TestServers
@@ -18,8 +19,8 @@ import spock.lang.Specification
  * Bitcoin Blockchain.
  *
  */
-@Slf4j
-abstract class BaseMainNetSpec extends Specification implements OmniClientDelegate {
+abstract class BaseMainNetSpec extends Specification implements OmniClientDelegate,
+        BlockchainDotInfoSyncing, Loggable {
     {
         client = new OmniCLIClient(RPCURI.defaultMainNetURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
     }
@@ -39,7 +40,7 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
         //
         // Get in sync with the Blockchain
         //
-        WaitForBlockchainSync.waitForSync(client);
+        waitForSync(client);
 
         def info = client.getinfo()
 
