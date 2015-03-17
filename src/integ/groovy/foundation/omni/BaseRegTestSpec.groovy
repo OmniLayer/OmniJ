@@ -6,7 +6,6 @@ import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
 import foundation.omni.test.TestServers
 import foundation.omni.test.TestSupport
-import groovy.util.logging.Slf4j
 import spock.lang.Specification
 
 

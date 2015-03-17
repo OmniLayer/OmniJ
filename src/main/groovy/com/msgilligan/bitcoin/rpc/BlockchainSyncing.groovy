@@ -6,7 +6,7 @@ package com.msgilligan.bitcoin.rpc
  * Since synchronization may take time, we check the block height again
  * after waitForBlock returns.
  */
-trait BlockchainSyncing {
+trait BlockchainSyncing extends Loggable {
 
     def waitForSync(BitcoinClient client) {
         //
@@ -14,18 +14,19 @@ trait BlockchainSyncing {
         //
         def curHeight = 0
         def newHeight = getReferenceBlockHeight()
-        println "Blockchain.info current height: ${newHeight}"
+        log.info "Reference current height: {}", newHeight
         while ( newHeight > curHeight ) {
             curHeight = newHeight
             Boolean upToDate = client.waitForBlock(curHeight, 60*60)
             newHeight = getReferenceBlockHeight()
-            println "Current reference block height: ${newHeight}"
+            log.info "Current reference block height: {}", newHeight
         }
 
     }
 
     /**
      * Use an external reference to get the current block height
+     * See: BlockchainDotInfoSyncing
      */
     abstract Integer getReferenceBlockHeight()
 }
