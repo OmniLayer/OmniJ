@@ -39,13 +39,13 @@ All other dependencies are automatically downloaded and cached by the test start
 
 . Run the tests with the provided Gradle wrapper scripts. For Unix/Mac:
 
-    ./gradlew consensusTest
+    ./gradlew :omnij-rpc:consensusTest
 +
 or for Windows:
 
-    ./gradlew.bat consensusTest
+    ./gradlew.bat :omnij-rpc:consensusTest
 +
-The above examples are for the Consensus Test, to run the other test suites replace the `consensusTest` Gradle target with `regTest` for the Omni RegTests or with `regTestBTC` for the Bitcoin RegTests.
+The above examples are for the Consensus Test, to run the other test suites replace the `:omnij-rpc:consensusTest` Gradle target with `:omnij-rpc:regTest` for the Omni RegTests or with `:bitcoin-rpc:regTest` for the Bitcoin RegTests.
 
 == Running the tests from Jenkins
 
