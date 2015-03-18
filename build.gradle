@@ -1,7 +1,10 @@
+allprojects {
+    apply plugin: 'idea'
+}
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
-    apply plugin: 'idea'
 
     repositories {
         jcenter()

@@ -4,7 +4,6 @@ import foundation.omni.OmniMainNetParams
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.ECKey
 import org.bitcoinj.params.MainNetParams
-import org.bitcoinj.spock.ECKeySpec
 import spock.lang.Specification
 
 

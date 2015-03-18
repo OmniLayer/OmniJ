@@ -1,5 +1,4 @@
 plugins {
-    id 'groovy'
     id 'application'
     id 'maven'
     id 'com.github.johnrengelman.shadow' version '1.2.1'
@@ -16,10 +15,6 @@ configurations {
 dependencies {
     compile project(':bitcoin-rpc')
     compile project(':omnij-core')
-
-    compile 'com.fasterxml.jackson.core:jackson-core:2.3.2'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
-    compile 'commons-cli:commons-cli:1.2'
 
     robovm  'org.codehaus.groovy:groovy:2.4.1:grooid'
 
