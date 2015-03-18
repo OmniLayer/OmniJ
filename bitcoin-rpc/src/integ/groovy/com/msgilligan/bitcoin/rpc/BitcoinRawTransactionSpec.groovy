@@ -5,6 +5,7 @@ import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise
 
+@Ignore("Needs methods from TestSupport trait in omni-rpc project")
 @Stepwise
 class BitcoinRawTransactionSpec extends BaseRegTestSpec {
     final static BigDecimal fundingAmount = 10.0
