@@ -35,8 +35,8 @@ BTCPID=$!
 sleep 30
 
 # Run integration tests
-echo "Running integration tests in regtest mode..."
-./gradlew regTest
+echo "Running Omni RPC integration tests in RegTest mode..."
+./gradlew :omnij-rpc:regTest
 GRADLESTATUS=$?
 
 exit $GRADLESTATUS

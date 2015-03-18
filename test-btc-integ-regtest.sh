@@ -35,8 +35,8 @@ BTCPID=$!
 sleep 30
 
 # Run integration tests
-echo "Running BTC integration tests in regtest mode..."
-./gradlew regTestBTC
+echo "Running Bitcoin RPC integration tests in regtest mode..."
+./gradlew :bitcoin-rpc:regTest
 GRADLESTATUS=$?
 
 exit $GRADLESTATUS
