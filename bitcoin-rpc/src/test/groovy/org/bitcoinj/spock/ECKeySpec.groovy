@@ -43,7 +43,8 @@ class ECKeySpec extends Specification {
         def key = ECKey.fromPrivate(NotSoPrivatePrivateKey, false)
 
         then:
-        key.toString() == "ECKey{pub HEX=0401de173aa944eacf7e44e5073baca93fb34fe4b7897a1c82c92dfdc8a1f75ef58cd1b06e8052096980cb6e1ad6d3df143c34b3d7394bae2782a4df570554c2fb, isEncrypted=false, isPubKeyOnly=false}"
+//        key.toString() == "ECKey{pub HEX=0401de173aa944eacf7e44e5073baca93fb34fe4b7897a1c82c92dfdc8a1f75ef58cd1b06e8052096980cb6e1ad6d3df143c34b3d7394bae2782a4df570554c2fb, isEncrypted=false, isPubKeyOnly=false}"
+        key.toString() == "ECKey{pub=0401de173aa944eacf7e44e5073baca93fb34fe4b7897a1c82c92dfdc8a1f75ef58cd1b06e8052096980cb6e1ad6d3df143c34b3d7394bae2782a4df570554c2fb, isEncrypted=false}"
         key.pubKey.encodeHex().toString() == "0401de173aa944eacf7e44e5073baca93fb34fe4b7897a1c82c92dfdc8a1f75ef58cd1b06e8052096980cb6e1ad6d3df143c34b3d7394bae2782a4df570554c2fb"
         key.pubKey.encodeBase64().toString() == "BAHeFzqpROrPfkTlBzusqT+zT+S3iXocgskt/cih9171jNGwboBSCWmAy24a1tPfFDw0s9c5S64ngqTfVwVUwvs="
     }
