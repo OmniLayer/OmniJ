@@ -1,6 +1,6 @@
 package com.msgilligan.bitcoin.rpc
 
-import foundation.omni.BaseRegTestSpec
+import com.msgilligan.bitcoin.BaseRegTestSpec
 import spock.lang.Shared
 
 import java.security.SecureRandom

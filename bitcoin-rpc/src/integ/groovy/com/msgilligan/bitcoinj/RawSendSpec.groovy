@@ -4,7 +4,7 @@ import org.bitcoinj.core.Address
 import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.params.RegTestParams
-import foundation.omni.BaseRegTestSpec
+import com.msgilligan.bitcoin.BaseRegTestSpec
 
 /**
  * User: sean

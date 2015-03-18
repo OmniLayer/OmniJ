@@ -12,7 +12,7 @@ import org.bitcoinj.params.RegTestParams
 import org.bitcoinj.store.MemoryBlockStore
 import org.bitcoinj.utils.BriefLogFormatter
 import com.msgilligan.bitcoin.BTC
-import foundation.omni.BaseRegTestSpec
+import com.msgilligan.bitcoin.BaseRegTestSpec
 import spock.lang.Shared
 import spock.lang.Stepwise
 
