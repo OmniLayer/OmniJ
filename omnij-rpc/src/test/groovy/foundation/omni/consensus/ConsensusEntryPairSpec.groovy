@@ -1,9 +1,7 @@
 package foundation.omni.consensus
 
-import foundation.omni.OmniMainNetParams
+import foundation.omni.net.OmniMainNetParams
 import org.bitcoinj.core.Address
-import org.bitcoinj.core.ECKey
-import org.bitcoinj.params.MainNetParams
 import spock.lang.Specification
 
 

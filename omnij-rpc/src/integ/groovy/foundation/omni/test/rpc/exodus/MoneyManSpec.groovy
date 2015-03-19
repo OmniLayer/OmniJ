@@ -2,7 +2,7 @@ package foundation.omni.test.rpc.exodus
 
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
-import foundation.omni.OmniRegTestParams
+import foundation.omni.net.OmniRegTestParams
 import foundation.omni.rpc.OmniClient
 import spock.lang.Shared
 import spock.lang.Stepwise

@@ -1,4 +1,4 @@
-package foundation.omni;
+package foundation.omni.net;
 
 /**
  * Omni Protocol parameters for Bitcoin MainNet

@@ -1,4 +1,4 @@
-package foundation.omni;
+package foundation.omni.net;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.NetworkParameters;

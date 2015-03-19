@@ -5,8 +5,8 @@ import org.bitcoinj.core.Sha256Hash
 import com.msgilligan.bitcoin.BTC
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.OmniNetworkParameters
-import foundation.omni.OmniRegTestParams
+import foundation.omni.net.OmniNetworkParameters
+import foundation.omni.net.OmniRegTestParams
 import foundation.omni.PropertyType
 import foundation.omni.rpc.OmniClientDelegate
 

@@ -1,7 +1,7 @@
 package foundation.omni.consensus
 
 import groovy.transform.Immutable
-import foundation.omni.OmniMainNetParams
+import foundation.omni.net.OmniMainNetParams
 import org.bitcoinj.core.Address
 
 /**
