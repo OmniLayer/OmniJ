@@ -10,7 +10,6 @@ package foundation.omni.tx;
  *
  */
 public class SequenceNumbers {
-    private static final int chunkDataSize = 30;
     private static final int maxChunks = Byte.MAX_VALUE;    // TODO: Should this be lower?
 
     /**
@@ -31,8 +30,8 @@ public class SequenceNumbers {
      * @return byte array with sequence numbers inserted
      */
     public static byte[] add(final byte[] input, final int startSeqNum) {
-        int nFullChunks = input.length / chunkDataSize;                    // number of full chunks
-        int nPartialChunks = (input.length % chunkDataSize == 0) ? 0 : 1;  // number of partial chunks
+        int nFullChunks = input.length / EncodingClassB.chunkDataSize;                    // number of full chunks
+        int nPartialChunks = (input.length % EncodingClassB.chunkDataSize == 0) ? 0 : 1;  // number of partial chunks
         int nChunks = nFullChunks + nPartialChunks;
 
         byte[] output = new byte[input.length + nChunks];
@@ -45,9 +44,9 @@ public class SequenceNumbers {
 
         for (int n = 0; n < nChunks ; n++) {
             int seqNum = n + startSeqNum;
-            int inPos = n * chunkDataSize;
+            int inPos = n * EncodingClassB.chunkDataSize;
 
-            int length = Math.min(chunkDataSize, input.length - inPos);
+            int length = Math.min(EncodingClassB.chunkDataSize, input.length - inPos);
             output[outPos++] = (byte) seqNum;
             System.arraycopy(input, inPos, output, outPos, length);
             outPos += length;
