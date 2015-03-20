@@ -54,15 +54,30 @@ public class Obfuscation {
     }
 
     public static byte[] xorHashMix(String string, byte[] bytes) {
-        assert(bytes.length == 31); // Should we require a Sha256Hash here?
         byte[] strBytes = hexToBinary(string);
-        assert(strBytes.length == 32);
+        return xor(strBytes, bytes);
+    }
 
-        byte[] output = new byte[31];
+    /**
+     * Exclusive OR of two byte-arrays
+     *
+     * Inputs not required to be of equal length, extra bytes are copied from longer array
+     *
+     * @param lhs Left hand byte array
+     * @param rhs Right hand byte array
+     * @return Byte array equal in length to the longer input
+     */
+     static byte[] xor(final byte[] lhs, final byte[] rhs) {
+        final byte[] longer = (lhs.length > rhs.length) ? lhs : rhs;
+        final byte[] shorter = (lhs.length > rhs.length) ? rhs : lhs;
+        final byte[] output = new byte[longer.length];
 
-        int n = 0;
-        for (byte b : bytes) {
-            output[n] = (byte) (b ^ strBytes[n++]);
+        for (int n = 0; n < longer.length; n++) {
+            if (n < shorter.length) {
+                output[n] = (byte) (longer[n] ^ shorter[n]);
+            } else {
+                output[n] = longer[n];
+            }
         }
         return output;
     }
