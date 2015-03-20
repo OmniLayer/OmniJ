@@ -34,7 +34,7 @@ class BitcoinJCliSpec extends BaseCLISpec {
 
         then:
         result.status == 0
-        result.output.length() == 0
+        result.output.length() >= 0  // length == 0 on bitcoin core 0.9.x, length  > 0 on 0.10.x
         result.error.length() == 0
     }
 

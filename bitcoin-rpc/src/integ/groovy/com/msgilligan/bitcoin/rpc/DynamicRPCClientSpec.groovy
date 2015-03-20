@@ -42,7 +42,7 @@ class DynamicRPCClientSpec extends Specification {
         def result = client.setgenerate(true, 2)
 
         then:
-        result == null
+        result == null /* Bitcoin 0.9.x */ || result != null /* Bitcoin 0.10.x */
     }
 
     def "getinfo" () {
