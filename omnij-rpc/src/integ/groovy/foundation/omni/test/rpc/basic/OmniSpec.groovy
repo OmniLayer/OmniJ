@@ -5,9 +5,8 @@ import foundation.omni.BaseRegTestSpec
 import static foundation.omni.CurrencyID.*
 
 /**
- * User: sean
- * Date: 6/16/14
- * Time: 5:32 PM
+ * Two quick checks that will work on Omni Core but not Bitcoin Core.
+ * Maybe they should be moved or removed for being redundant.
  */
 class OmniSpec extends BaseRegTestSpec {
 

@@ -21,6 +21,15 @@ subprojects {
         jansi 'org.fusesource.jansi:jansi:1.11'         // Transitive dependency of GroovyDoc
         jansi 'org.codehaus.groovy:groovy-ant:2.4.1'    // used in Groovy doc
 
+        //    compile 'org.bitcoinj:bitcoinj-core:0.12.2'
+        // Temporarily use snapshot and local jar, until Comparable address is in snapshot/release.
+//    compile 'org.bitcoinj:bitcoinj-core:0.13-SNAPSHOT'
+        compile files('../omnij-rpc/lib/bitcoinj-core-0.13-SNAPSHOT.jar')
+        compile 'com.google.guava:guava:16.0.1'
+        compile 'com.madgag.spongycastle:core:1.51.0.0'
+        compile 'com.google.protobuf:protobuf-java:2.5.0'
+        compile 'org.bitcoinj:orchid:1.1'
+
         compile 'org.slf4j:slf4j-api:1.7.6'
         runtime 'org.slf4j:slf4j-jdk14:1.7.5'             // Transitive runtime dependency of bitcoinj
 
