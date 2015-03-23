@@ -6,7 +6,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
 
-    ext.groovyVersion = '2.4.2'
+    ext.groovyVersion = '2.4.3'
 
     repositories {
         jcenter()
