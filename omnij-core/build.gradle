@@ -8,7 +8,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.6'
     runtime 'org.slf4j:slf4j-jdk14:1.7.5'
 
-    testCompile 'org.codehaus.groovy:groovy:2.4.1'
+    testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
 
     testRuntime 'org.slf4j:slf4j-jdk14:1.7.5'         // Transitive runtime dependency of bitcoinj
 }

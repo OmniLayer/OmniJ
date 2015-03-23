@@ -16,12 +16,12 @@ dependencies {
     compile project(':bitcoin-rpc')
     compile project(':omnij-core')
 
-    robovm  'org.codehaus.groovy:groovy:2.4.1:grooid'
+    robovm  "org.codehaus.groovy:groovy:${groovyVersion}:grooid"
 
-    compile 'org.codehaus.groovy:groovy:2.4.1'
-    compile 'org.codehaus.groovy:groovy-json:2.4.1'
+    compile "org.codehaus.groovy:groovy:${groovyVersion}"
+    compile "org.codehaus.groovy:groovy-json:${groovyVersion}"
 
-    compile 'org.codehaus.groovy:groovy-sql:2.4.1'
+    compile "org.codehaus.groovy:groovy-sql:${groovyVersion}"
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
 
     testCompile 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests

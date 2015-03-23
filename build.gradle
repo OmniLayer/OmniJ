@@ -6,6 +6,8 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
 
+    ext.groovyVersion = '2.4.2'
+
     repositories {
         jcenter()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/'}
@@ -19,7 +21,7 @@ subprojects {
 
     dependencies {
         jansi 'org.fusesource.jansi:jansi:1.11'         // Transitive dependency of GroovyDoc
-        jansi 'org.codehaus.groovy:groovy-ant:2.4.1'    // used in Groovy doc
+        jansi "org.codehaus.groovy:groovy-ant:${groovyVersion}"    // used in Groovy doc
 
         //    compile 'org.bitcoinj:bitcoinj-core:0.12.2'
         // Temporarily use snapshot and local jar, until Comparable address is in snapshot/release.

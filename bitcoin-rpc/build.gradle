@@ -18,10 +18,10 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
     compile 'commons-cli:commons-cli:1.2'
 
-    robovm  'org.codehaus.groovy:groovy:2.4.1:grooid'
+    robovm  "org.codehaus.groovy:groovy:${groovyVersion}:grooid"
 
-    compile 'org.codehaus.groovy:groovy:2.4.1'
-    compile 'org.codehaus.groovy:groovy-json:2.4.1'
+    compile "org.codehaus.groovy:groovy:${groovyVersion}"
+    compile "org.codehaus.groovy:groovy-json:${groovyVersion}"
 //    compile 'org.bitcoinj:bitcoinj-core:0.12.2'
 
     testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
