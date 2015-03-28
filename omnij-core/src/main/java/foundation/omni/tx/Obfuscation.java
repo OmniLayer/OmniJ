@@ -18,6 +18,12 @@ public class Obfuscation {
         return obfuscate(input, address.toString());
     }
 
+    /**
+     *
+     * @param input
+     * @param seed
+     * @return
+     */
     public static byte[] obfuscate(final byte[] input, final String seed) {
         int nFullChunks = input.length / EncodingClassB.chunkSize;                    // number of full chunks
         int nPartialChunks = (input.length % EncodingClassB.chunkSize == 0) ? 0 : 1;  // number of partial chunks
@@ -49,11 +55,17 @@ public class Obfuscation {
         return output;
     }
 
-    public static String upperSha256(String string) {
+    private static String upperSha256(String string) {
         return Sha256Hash.create(string.getBytes()).toString().toUpperCase();
     }
 
-    public static byte[] xorHashMix(String string, byte[] bytes) {
+    /**
+     *
+     * @param string
+     * @param bytes
+     * @return
+     */
+    private static byte[] xorHashMix(String string, byte[] bytes) {
         byte[] strBytes = hexToBinary(string);
         return xor(strBytes, bytes);
     }
