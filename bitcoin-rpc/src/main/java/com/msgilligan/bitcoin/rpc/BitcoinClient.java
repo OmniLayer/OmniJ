@@ -549,19 +549,11 @@ public class BitcoinClient extends RPCClient {
         // From: http://bitcoin.stackexchange.com/questions/8475/how-to-get-hex-string-from-transaction-in-bitcoinj
         final StringBuilder sb = new StringBuilder();
         Formatter formatter = new Formatter(sb);
-        try {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            tx.bitcoinSerialize(os);
-            byte[] bytes = os.toByteArray();
-            for (byte b : bytes) {
-                formatter.format("%02x", b);
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException("Can't convert Transaction to Hex String", e);
-        } finally {
-            formatter.close();
+        byte[] bytes = tx.bitcoinSerialize();
+        for (byte b : bytes) {
+            formatter.format("%02x", b);
         }
+        formatter.close();
         return sb.toString();
     }
 
