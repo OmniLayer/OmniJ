@@ -43,7 +43,7 @@ public class PubKeyConversion {
         byte[] pub = new byte[EncodingClassB.prefixPubKeySize];
 //        pub[0] = rand.nextBoolean() ? (byte) 0x02 : (byte) 0x03;        // prefix
         // Don't use random for now to make unit testing work -- TODO: Fix this
-        pub[0] = (byte) 0x02;        // prefix
+        pub[0] = (byte) 0x03;        // prefix
         System.arraycopy(input, 0, pub, 1, EncodingClassB.chunkSize);   // Data
 
         ECKey key = findValidKey(pub);

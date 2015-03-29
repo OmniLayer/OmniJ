@@ -14,7 +14,7 @@ class PubKeyConversionSpec extends Specification {
         def key = PubKeyConversion.createPubKey(input)
 
         then:
-        key.pubKey == hex("02777ac9576cb08fb869efd4be2ca094c55808054e2220285f3c754d59361b3000")
+        key.pubKey == hex("03777ac9576cb08fb869efd4be2ca094c55808054e2220285f3c754d59361b3000")
 
     }
 
@@ -24,7 +24,7 @@ class PubKeyConversionSpec extends Specification {
 
         then:
         list.size() == 1
-        list[0].pubKey == hex("021234560000000000000000000000000000000000000000000000000000000001");
+        list[0].pubKey == hex("031234560000000000000000000000000000000000000000000000000000000001");
     }
 
     byte[] hex(String string) {

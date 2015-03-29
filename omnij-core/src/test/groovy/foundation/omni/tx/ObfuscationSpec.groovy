@@ -62,6 +62,19 @@ class ObfuscationSpec extends Specification {
         enc2 == msg
     }
 
+    def "obfuscation of multi-chunk test data works as expected"() {
+        def msg = hex("0100000000000000010000000002faf0800000000000000000000000000000")
+        def seed = "1CdighsfdfRcj4ytQSskZgQXbUEamuMUNF"
+
+        when:
+        def enc = Obfuscation.obfuscate(msg, seed)
+
+        then:
+        // TODO: The expected result here is not necessarily valid
+        enc == hex("1c9a3de5c2e22bf89b1e41e6fed84fb502f8a0c3ae14394a59366293dd130c")
+    }
+
+
     byte[] hex(String string) {
         return string.decodeHex()
     }
