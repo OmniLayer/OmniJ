@@ -1,9 +1,7 @@
 package foundation.omni.tx
 
-import org.bitcoinj.core.Address
 import org.bitcoinj.core.ECKey
 import org.bitcoinj.core.Transaction
-import org.spongycastle.util.encoders.Hex
 import spock.lang.Specification
 
 
@@ -27,10 +25,12 @@ class EncodeMultisigSpec extends Specification {
         then:
         tx != null
         tx.inputs.size() == 0       // No inputs yet
-        tx.outputs.size() == 1
+        tx.outputs.size() == 2
         tx.outputs[0].value.value == 100_000
-        tx.outputs[0].scriptBytes != null
-        // TODO: Check to make sure generated script is correct
+        tx.outputs[0].scriptBytes.encodeHex().toString() == "51210347d08029b5cbc934f6079b650c50718eab5a56d51cf6b742ec9f865a41fcfca32102e2e98198f331c436644f88b5a6bc5c65df64d53457d624ed05e78dba40dd5e012102fac1e512bac2575554a5dee8a345fc773615af68a09d0291473316fe39087e0653ae"
+        tx.outputs[1].value.value == 100_000
+// TODO: Make this match
+//        tx.outputs[1].scriptBytes.encodeHex().toString() == "51210347d08029b5cbc934f6079b650c50718eab5a56d51cf6b742ec9f865a41fcfca32102fabf5862d9719cf2fc07b1c1a2204cb4d74ea3e72f358f31f32f90c4629c210052ae"
     }
 
     byte[] hex(String string) {

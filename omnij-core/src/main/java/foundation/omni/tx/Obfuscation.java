@@ -44,7 +44,7 @@ public class Obfuscation {
             System.arraycopy(input, pos, curChunk, 0, length);
 
             // Calculate current hash and save for next iteration
-            strHash = upperSha256(seed);
+            strHash = upperSha256(strHash);
 
             // XOR
             byte[] encChunk = xorHashMix(strHash, curChunk);
