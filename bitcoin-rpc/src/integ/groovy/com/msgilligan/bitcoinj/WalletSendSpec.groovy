@@ -17,9 +17,7 @@ import spock.lang.Shared
 import spock.lang.Stepwise
 
 /**
- * User: sean
- * Date: 7/15/14
- * Time: 9:48 PM
+ * Various interoperability tests between RPC server and bitcoinj wallets.
  */
 @Stepwise
 class WalletSendSpec extends BaseRegTestSpec {
@@ -72,7 +70,7 @@ class WalletSendSpec extends BaseRegTestSpec {
         wallet.balance == BTC.btcToSatoshis(amount)
     }
 
-    def "Send from BitcoinJ wallet to the Bitcoind/Mastercore wallet"() {
+    def "Send from BitcoinJ wallet to the Bitcoind/Omnicore wallet"() {
         when: "we send coins from BitcoinJ and write a block"
         BigDecimal amount = 1.0
         def rpcAddress = getNewAddress()
