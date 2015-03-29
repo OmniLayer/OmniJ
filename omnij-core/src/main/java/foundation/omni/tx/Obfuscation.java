@@ -4,6 +4,7 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Sha256Hash;
 
 import javax.xml.bind.DatatypeConverter;
+import java.util.Arrays;
 
 /**
  * Omni Class B Obfuscation
@@ -41,6 +42,7 @@ public class Obfuscation {
             int length = Math.min(EncodingClassB.chunkSize, input.length - pos);
 
             // (Unnecessarily) copy an input chunk to curChunk
+            Arrays.fill(curChunk, (byte) 0);  // Zero it out first
             System.arraycopy(input, pos, curChunk, 0, length);
 
             // Calculate current hash and save for next iteration
