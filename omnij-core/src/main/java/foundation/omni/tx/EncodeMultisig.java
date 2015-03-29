@@ -16,7 +16,8 @@ import java.util.List;
  */
 public class EncodeMultisig {
 
-    private static final int maxKeys = 3;
+    private static final int maxKeys = 3;  /* Redeemable key + 2 data keys */
+    private static final int maxDataKeys = maxKeys - 1;
     private static final int dustAmountInSatoshis = 100_000;
 
     /**
@@ -29,13 +30,13 @@ public class EncodeMultisig {
     public static Transaction encode(ECKey redeemingKey, byte[] data) {
         List<TransactionOutput> outputs = null;
         List<ECKey> dataAsKeys = PubKeyConversion.convert(data);
-        int numGroups = (dataAsKeys.size() + (maxKeys - 1)) / maxKeys;
+        int numGroups = (dataAsKeys.size() + (maxDataKeys - 1)) / (maxDataKeys);
 
         // Create groups of keys, one group per multisig output
         List<List <ECKey>> keysByOutput = new ArrayList<List <ECKey>>();
         for (int n = 0 ; n < numGroups ; n++) {
-            int groupSize = Math.min(numGroups - n, maxKeys);
-            int from = n * maxKeys;
+            int groupSize = Math.min(numGroups - n, (maxDataKeys));
+            int from = n * (maxDataKeys);
             int to = from + groupSize;
             List<ECKey> group = dataAsKeys.subList(from, to);
             keysByOutput.add(group);
