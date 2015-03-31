@@ -28,7 +28,7 @@ class DynamicRPCClient extends RPCClient {
      * @throws JsonRPCStatusException
      */
     def methodMissing(String name, def args) {
-        Map response = this.send(name, args as List)
-        return response.result
+        Object result = this.send(name, args as List)
+        return result
     }
 }
