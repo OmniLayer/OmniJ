@@ -93,7 +93,7 @@ public class OmniClient extends BitcoinClient {
 
     public Sha256Hash sendrawtx_MP(Address fromAddress, String rawTxHex, Address referenceAddress)
             throws JsonRPCException, IOException {
-        List<Object> params = Arrays.asList((Object) fromAddress.toString(), rawTxHex);
+        List<Object> params = createParamList((Object) fromAddress.toString(), rawTxHex);
         if (referenceAddress != null) {
             params.add(referenceAddress.toString());
         }
