@@ -67,14 +67,14 @@ public class RPCClient {
     }
 
     /**
-     * Send a JSON-RPC request to the server and return a response.
+     * Send a JSON-RPC request to the server and return a JSON-RPC response.
      *
      * @param request JSON-RPC request in Map format
-     * @return
+     * @return JSON-RPC response
      * @throws IOException when thrown by the underlying HttpURLConnection
      * @throws JsonRPCStatusException when the HTTP response code is other than 200
      */
-    protected Map<String, Object> send(Map<String, Object> request) throws IOException, JsonRPCStatusException {
+    private Map<String, Object> send(Map<String, Object> request) throws IOException, JsonRPCStatusException {
         HttpURLConnection connection = openConnection();
 
         // TODO: Make sure HTTP keep-alive will work
@@ -126,7 +126,16 @@ public class RPCClient {
         return responseJson;
     }
 
-    protected Map<String, Object> send(String method, List<Object> params) throws IOException, JsonRPCStatusException {
+    /**
+     * JSON-RPC remote method call that returns the 'result'
+     *
+     * @param method JSON RPC method call to send
+     * @param params JSON RPC params
+     * @return the 'result' field of the JSON RPC response
+     * @throws IOException
+     * @throws JsonRPCStatusException
+     */
+    protected Object send(String method, List<Object> params) throws IOException, JsonRPCStatusException {
         Map<String, Object> request = new HashMap<String, Object>();
         request.put("jsonrpc", "1.0");
         request.put("method", method);
@@ -148,22 +157,24 @@ public class RPCClient {
 
         requestId++;
 
-        return response;
-    }
-
-    public Object cliSend(String method, List<Object> params) throws IOException, JsonRPCException {
-        Map<String, Object> response = send(method, params);
         return response.get("result");
     }
 
+    /**
+     * CLI-style send
+     *
+     * Useful for:
+     * * Simple (not client-side validated) command line utilities
+     * * Functional tests that need to send incorrect types to the server to test error handling
+     *
+     * @param method Allows RPC method to be passed as a stream
+     * @param params variable number of untyped objects
+     * @return The 'result' element from the returned JSON RPC response
+     * @throws IOException
+     * @throws JsonRPCException
+     */
     public Object cliSend(String method, Object... params) throws IOException, JsonRPCException {
-        Map<String, Object> response = send(method, Arrays.asList(params));
-        return response.get("result");
-    }
-
-    public Object cliSend(String method) throws IOException, JsonRPCException {
-        Map<String, Object> response = send(method, null);
-        return response.get("result");
+        return send(method, createParamList(params));
     }
 
     private HttpURLConnection openConnection() throws IOException {

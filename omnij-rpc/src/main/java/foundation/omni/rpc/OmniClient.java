@@ -44,18 +44,12 @@ public class OmniClient extends BitcoinClient {
     }
 
     public Map<String, Object> getinfo_MP() throws JsonRPCException, IOException {
-        Map<String, Object> response = send("getinfo_MP", null);
-
-        @SuppressWarnings("unchecked")
-        Map<String, Object> result = (Map<String, Object>) response.get("result");
+        Map<String, Object> result = (Map<String, Object>) send("getinfo_MP", null);
         return result;
     }
 
     public List<SmartPropertyListInfo> listproperties_MP() throws JsonRPCException, IOException {
-        Map<String, Object> response = send("listproperties_MP", null);
-
-        @SuppressWarnings("unchecked")
-        List<Map<String, Object>> result = (List<Map<String, Object>>) response.get("result");
+        List<Map<String, Object>> result = (List<Map<String, Object>>)  send("listproperties_MP", null);
 
         List<SmartPropertyListInfo> propList = new ArrayList<SmartPropertyListInfo>();
         for (Map jsonProp : result) {
@@ -82,17 +76,13 @@ public class OmniClient extends BitcoinClient {
 
     public Map<String, Object> getproperty_MP(CurrencyID currency) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList((Object) currency.longValue());
-        Map<String, Object> response = send("getproperty_MP", params);
-
-        @SuppressWarnings("unchecked")
-        Map<String, Object> result = (Map<String, Object>) response.get("result");
+        Map<String, Object> result = (Map<String, Object>)  send("getproperty_MP", params);
         return result;
     }
 
     public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList((Object) fromAddress.toString(), toAddress.toString(), currency.longValue(), amount.toPlainString());
-        Map<String, Object> response = send("send_MP", params);
-        String txid = (String) response.get("result");
+        String txid = (String) send("send_MP", params);
         Sha256Hash hash = new Sha256Hash(txid);
         return hash;
     }
@@ -104,23 +94,18 @@ public class OmniClient extends BitcoinClient {
     public Sha256Hash sendrawtx_MP(Address fromAddress, String rawTxHex, Address referenceAddress)
             throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList((Object) fromAddress.toString(), rawTxHex, referenceAddress.toString());
-        Map<String, Object> response = send("sendrawtx_MP", params);
-        String txid = (String) response.get("result");
+        String txid = (String)  send("sendrawtx_MP", params);
         return new Sha256Hash(txid);
     }
 
     public List<Map<String, Object>> getactivedexsells_MP() throws JsonRPCException, IOException {
-        Map<String, Object> response = send("getactivedexsells_MP", null);
-
-        @SuppressWarnings("unchecked")
-        List<Map<String, Object>>  result = (List<Map<String, Object>>) response.get("result");
+        List<Map<String, Object>>  result = (List<Map<String, Object>>) send("getactivedexsells_MP", null);
         return result;
     }
 
     public MPBalanceEntry getbalance_MP(Address address, CurrencyID currency) throws JsonRPCException, IOException, ParseException {
         List<Object> params = Arrays.asList((Object) address.toString(), currency.longValue());
-        Map<String, Object> response = send("getbalance_MP", params);
-        Map<String, String> result = (Map<String, String>) response.get("result");
+        Map<String, String> result = (Map<String, String>)  send("getbalance_MP", params);
         BigDecimal balanceBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("balance"));
         BigDecimal reservedBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("reserved"));
         MPBalanceEntry entry = new MPBalanceEntry(address, balanceBTC, reservedBTC);
@@ -129,9 +114,7 @@ public class OmniClient extends BitcoinClient {
 
     public List<MPBalanceEntry> getallbalancesforid_MP(CurrencyID currency) throws JsonRPCException, IOException, ParseException, AddressFormatException {
         List<Object> params = Arrays.asList((Object) currency.longValue());
-        Map<String, Object> response = send("getallbalancesforid_MP", params);
-        @SuppressWarnings("unchecked")
-        List<Map<String, Object>> untypedBalances = (List<Map<String, Object>>) response.get("result");
+        List<Map<String, Object>> untypedBalances = (List<Map<String, Object>>) send("getallbalancesforid_MP", params);
         List<MPBalanceEntry> balances = new ArrayList<MPBalanceEntry>(untypedBalances.size());
         for (Map map : untypedBalances) {
             // TODO: Should this mapping be done by Jackson?
@@ -161,17 +144,13 @@ public class OmniClient extends BitcoinClient {
 
     public Map<String, Object> getTransactionMP(Sha256Hash txid) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList((Object) txid.toString());
-        Map<String, Object> response = send("gettransaction_MP", params);
-
-        @SuppressWarnings("unchecked")
-        Map<String, Object> transaction = (Map<String, Object>) response.get("result");
+        Map<String, Object> transaction = (Map<String, Object>) send("gettransaction_MP", params);
         return transaction;
     }
 
     public Sha256Hash sendToOwnersMP(Address fromAddress, CurrencyID currency, BigDecimal amount) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList((Object) fromAddress.toString(), currency.longValue(), amount.toPlainString());
-        Map<String, Object> response = send("sendtoowners_MP", params);
-        String txid = (String) response.get("result");
+        String txid = (String) send("sendtoowners_MP", params);
         Sha256Hash hash = new Sha256Hash(txid);
         return hash;
     }
