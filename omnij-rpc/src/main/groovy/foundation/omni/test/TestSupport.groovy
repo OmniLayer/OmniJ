@@ -299,8 +299,8 @@ trait TestSupport implements OmniClientDelegate {
      * @return The transaction hash
      */
     Sha256Hash sendToOwners(Address address, CurrencyID currencyId, Long amount) {
-        def rawTxHex = createSendToOwnersHex(currencyId, amount);
-        def txid = sendrawtx_MP(address, rawTxHex)
+        String rawTxHex = createSendToOwnersHex(currencyId, amount);
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex)
         return txid
     }
 
@@ -319,9 +319,9 @@ trait TestSupport implements OmniClientDelegate {
     Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, BigDecimal amountForSale,
                                   BigDecimal amountDesired, Number paymentWindow, BigDecimal commitmentFee,
                                   Number action) {
-        def rawTxHex = createDexSellOfferHex(
+        String rawTxHex = createDexSellOfferHex(
                 currencyId, amountForSale, amountDesired, paymentWindow, commitmentFee, action);
-        def txid = sendrawtx_MP(address, rawTxHex)
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex)
         return txid
     }
 
@@ -349,8 +349,8 @@ trait TestSupport implements OmniClientDelegate {
      * @return The transaction hash
      */
     Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount, String label) {
-        def rawTxHex = createPropertyHex(ecosystem, type, 0L, "", "", label, "", "", amount);
-        def txid = sendrawtx_MP(address, rawTxHex)
+        String rawTxHex = createPropertyHex(ecosystem, type, 0L, "", "", label, "", "", amount);
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex)
         return txid
     }
 
@@ -358,7 +358,7 @@ trait TestSupport implements OmniClientDelegate {
      * Creates a hex-encoded raw transaction of type 3: "send to owners".
      */
     String createSendToOwnersHex(CurrencyID currencyId, Long amount) {
-        def rawTxHex = String.format("00000003%08x%016x", currencyId.longValue(), amount)
+        String rawTxHex = String.format("00000003%08x%016x", currencyId.longValue(), amount)
         return rawTxHex
     }
 
@@ -367,7 +367,7 @@ trait TestSupport implements OmniClientDelegate {
      */
     String createDexSellOfferHex(CurrencyID currencyId, BigDecimal amountForSale, BigDecimal amountDesired,
                                  Number paymentWindow, BigDecimal commitmentFee, Number action) {
-        def rawTxHex = String.format("00010014%08x%016x%016x%02x%016x%02x",
+        String rawTxHex = String.format("00010014%08x%016x%016x%02x%016x%02x",
                                      currencyId.longValue(),
                                      (BTC.btcToSatoshis(amountForSale)).longValue(),
                                      (BTC.btcToSatoshis(amountDesired)).longValue(),
@@ -383,7 +383,7 @@ trait TestSupport implements OmniClientDelegate {
     String createPropertyHex(Ecosystem ecosystem, PropertyType propertyType, Long previousPropertyId,
                              String category, String subCategory, String label, String website, String info,
                              Long amount) {
-        def rawTxHex = String.format("00000032%02x%04x%08x%s00%s00%s00%s00%s00%016x",
+        String rawTxHex = String.format("00000032%02x%04x%08x%s00%s00%s00%s00%s00%016x",
                                      ecosystem.byteValue(),
                                      propertyType.intValue(),
                                      previousPropertyId,
