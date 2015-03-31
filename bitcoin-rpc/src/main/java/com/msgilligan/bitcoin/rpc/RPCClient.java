@@ -218,4 +218,12 @@ public class RPCClient {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Create a mutable param list (so send() can remove null parameters)
+     */
+    protected List<Object> createParamList(Object... parameters) {
+        List<Object> paramList = new ArrayList<Object>(Arrays.asList(parameters));
+        return paramList;
+    }
 }

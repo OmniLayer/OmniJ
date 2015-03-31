@@ -537,14 +537,6 @@ public class BitcoinClient extends RPCClient {
         return data;
     }
 
-    /*
-     * Create a mutable param list (so send() can remove null parameters)
-     */
-    private List<Object> createParamList(Object... parameters) {
-        List<Object> paramList = new ArrayList<Object>(Arrays.asList(parameters));
-        return paramList;
-    }
-
     private String transactionToHex(Transaction tx) {
         // From: http://bitcoin.stackexchange.com/questions/8475/how-to-get-hex-string-from-transaction-in-bitcoinj
         final StringBuilder sb = new StringBuilder();
