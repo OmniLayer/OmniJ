@@ -1,6 +1,5 @@
-package foundation.omni.rpc;
+package foundation.omni.tx;
 
-import com.msgilligan.bitcoin.BTC;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
 import foundation.omni.PropertyType;

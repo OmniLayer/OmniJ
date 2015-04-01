@@ -2,7 +2,6 @@ package foundation.omni.test.rpc.dex
 
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
-import foundation.omni.rpc.RawTxBuilder
 import spock.lang.Unroll
 
 import static CurrencyID.MSC

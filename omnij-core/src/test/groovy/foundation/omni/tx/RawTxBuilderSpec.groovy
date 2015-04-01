@@ -1,6 +1,6 @@
-package foundation.omni.rpc
+package foundation.omni.tx
 
-import com.msgilligan.bitcoin.BTC
+import org.bitcoinj.core.Coin
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -21,10 +21,10 @@ class RawTxBuilderSpec extends Specification {
     def "The generated hex-encoded transaction matches a valid reference transaction"() {
         when:
         def txHex = builder.createDexSellOfferHex(MSC,
-                BTC.btcToSatoshis(1.0).longValue(),
-                BTC.btcToSatoshis(0.2).longValue(),
+                Coin.COIN_VALUE,    // 1 BTC in Satoshis
+                20000000,           // 0.2 BTC in Satoshis
                 (Byte) 10,
-                BTC.btcToSatoshis(0.0001).longValue(),
+                10000,              // Fee in Satoshis
                 (Byte) 1)
 
         then:

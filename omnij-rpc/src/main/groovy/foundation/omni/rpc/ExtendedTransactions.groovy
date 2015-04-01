@@ -40,12 +40,12 @@ trait ExtendedTransactions implements OmniClientDelegate, RawTxDelegate {
      * @param action         The action applied to the offer (1 = new, 2 = update, 3 = cancel)
      * @return The transaction hash
      */
-    Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, Long amountForSale,
-                                  Long amountDesired, Byte paymentWindow, Long commitmentFee,
+    Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, BigDecimal amountForSale,
+                                  BigDecimal amountDesired, Byte paymentWindow, BigDecimal commitmentFee,
                                   Byte action) {
-        Long satoshisForSale = BTC.satoshisToBTC(amountForSale)
-        Long satoshisDesired = BTC.satoshisToBTC(amountDesired)
-        Long satoshisFee = BTC.satoshisToBTC(commitmentFee)
+        Long satoshisForSale = BTC.btcToSatoshis(amountForSale)
+        Long satoshisDesired = BTC.btcToSatoshis(amountDesired)
+        Long satoshisFee = BTC.btcToSatoshis(commitmentFee)
         String rawTxHex = createDexSellOfferHex(
                 currencyId, satoshisForSale, satoshisDesired, paymentWindow, satoshisFee, action);
         Sha256Hash txid = sendrawtx_MP(address, rawTxHex)
