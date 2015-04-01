@@ -2,6 +2,7 @@ package foundation.omni.test.rpc.dex
 
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
+import foundation.omni.rpc.RawTxBuilder
 import spock.lang.Unroll
 
 import static CurrencyID.MSC
@@ -12,27 +13,17 @@ import static CurrencyID.MSC
 class DexSpec extends BaseRegTestSpec {
 
     final static BigDecimal stdCommitFee = 0.0001
-    final static BigInteger stdBlockSpan = 10
-    final static Short actionNew = 1
-
-    def "The generated hex-encoded transaction matches a valid reference transaction"() {
-        given:
-        def txHex = createDexSellOfferHex(MSC, 1.0, 0.2, 10, 0.0001, 1)
-        def expectedHex = "00010014000000010000000005f5e1000000000001312d000a000000000000271001"
-
-        expect:
-        txHex == expectedHex
-    }
+    final static Byte stdBlockSpan = 10
+    final static Byte actionNew = 1
 
     def "A new sell offer can be created with Action = 1 (New)"() {
         given:
-        def action = 1
         def fundedAddress = createFundedAddress(startBTC, startMSC)
         def activeOffersAtTheStart = getactivedexsells_MP()
 
         when: "creating an offer with action = 1"
         def offerTxid = createDexSellOffer(
-                fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee, action)
+                fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
         generateBlock()
 
         then: "it is a valid transaction"

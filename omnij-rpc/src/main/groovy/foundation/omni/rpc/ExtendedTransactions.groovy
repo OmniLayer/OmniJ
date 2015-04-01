@@ -40,8 +40,8 @@ trait ExtendedTransactions implements OmniClientDelegate, RawTxDelegate {
      * @return The transaction hash
      */
     Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, BigDecimal amountForSale,
-                                  BigDecimal amountDesired, Number paymentWindow, BigDecimal commitmentFee,
-                                  Number action) {
+                                  BigDecimal amountDesired, Byte paymentWindow, BigDecimal commitmentFee,
+                                  Byte action) {
         String rawTxHex = createDexSellOfferHex(
                 currencyId, amountForSale, amountDesired, paymentWindow, commitmentFee, action);
         Sha256Hash txid = sendrawtx_MP(address, rawTxHex)

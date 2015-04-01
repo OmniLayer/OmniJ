@@ -71,5 +71,4 @@ class SendRawTransactionSpec extends BaseRegTestSpec {
                      // Tx 50: Create property in main ecosystem, 1123581321345589 indivisible "MIndiv"
                      "000000320100010000000000004d496e6469760000000003fde42988fa35"]
     }
-
 }

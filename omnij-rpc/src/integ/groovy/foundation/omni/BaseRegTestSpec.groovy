@@ -4,6 +4,7 @@ import com.msgilligan.bitcoin.rpc.Loggable
 import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
+import foundation.omni.rpc.RawTxBuilder
 import foundation.omni.rpc.test.TestServers
 import foundation.omni.test.TestSupport
 import spock.lang.Specification
@@ -18,6 +19,7 @@ class BaseRegTestSpec extends Specification implements OmniClientDelegate, TestS
 
     {
         client = new OmniCLIClient(RPCURI.defaultRegTestURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
+        builder = new RawTxBuilder()
     }
 
     void setupSpec() {

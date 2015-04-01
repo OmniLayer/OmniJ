@@ -16,7 +16,7 @@ public class RawTxBuilder {
     /**
      * Creates a hex-encoded raw transaction of type 3: "send to owners".
      */
-    String createSendToOwnersHex(CurrencyID currencyId, Long amount) {
+    public String createSendToOwnersHex(CurrencyID currencyId, Long amount) {
         String rawTxHex = String.format("00000003%08x%016x", currencyId.longValue(), amount);
         return rawTxHex;
     }
@@ -24,8 +24,8 @@ public class RawTxBuilder {
     /**
      * Creates a hex-encoded raw transaction of type 20: "sell mastercoin for bitcoin".
      */
-    String createDexSellOfferHex(CurrencyID currencyId, BigDecimal amountForSale, BigDecimal amountDesired,
-                                 Number paymentWindow, BigDecimal commitmentFee, Number action) {
+    public String createDexSellOfferHex(CurrencyID currencyId, BigDecimal amountForSale, BigDecimal amountDesired,
+                                        Byte paymentWindow, BigDecimal commitmentFee, Byte action) {
         String rawTxHex = String.format("00010014%08x%016x%016x%02x%016x%02x",
                 currencyId.longValue(),
                 (BTC.btcToSatoshis(amountForSale)).longValue(),
@@ -39,7 +39,7 @@ public class RawTxBuilder {
     /**
      * Creates a hex-encoded raw transaction of type 50: "create property with fixed supply".
      */
-    String createPropertyHex(Ecosystem ecosystem, PropertyType propertyType, Long previousPropertyId,
+    public String createPropertyHex(Ecosystem ecosystem, PropertyType propertyType, Long previousPropertyId,
                              String category, String subCategory, String label, String website, String info,
                              Long amount) {
         String rawTxHex = String.format("00000032%02x%04x%08x%s00%s00%s00%s00%s00%016x",

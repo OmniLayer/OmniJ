@@ -366,10 +366,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
      * Creates an offer on the distributed exchange to reserve an amount.
      */
     def reserveAmountMSC(Address actorAddress, CurrencyID currency, BigDecimal amount) {
-        def desiredBTC = 1.0
-        def blockSpan = 100
-        def commitFee = 0.0001
-        def action = 1 // new offer
+        BigDecimal desiredBTC = 1.0
+        Byte blockSpan = 100
+        BigDecimal commitFee = 0.0001
+        Byte action = 1 // new offer
 
         def txid = createDexSellOffer(actorAddress, currency, amount, desiredBTC, blockSpan, commitFee, action)
         generateBlock()
@@ -382,7 +382,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     /**
      * Executes the "send to owner" command. It catches exceptions and can expect them.
      */
-    def executeSendToOwners(Address address, def currency, def propertyType, def amount, def exceptional=false) {
+    def executeSendToOwners(Address address, CurrencyID currency, def propertyType, BigDecimal amount, def exceptional=false) {
         Boolean thrown = false
         Sha256Hash txid = null
 
