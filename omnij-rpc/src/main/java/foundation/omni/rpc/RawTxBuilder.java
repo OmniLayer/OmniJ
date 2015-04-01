@@ -23,15 +23,25 @@ public class RawTxBuilder {
 
     /**
      * Creates a hex-encoded raw transaction of type 20: "sell mastercoin for bitcoin".
+     *
+     * Currency amounts are Long values in Satoshis/Willets
+     *
+     * @param currencyId
+     * @param amountForSale
+     * @param amountDesired
+     * @param paymentWindow
+     * @param commitmentFee
+     * @param action
+     * @return
      */
-    public String createDexSellOfferHex(CurrencyID currencyId, BigDecimal amountForSale, BigDecimal amountDesired,
-                                        Byte paymentWindow, BigDecimal commitmentFee, Byte action) {
+    public String createDexSellOfferHex(CurrencyID currencyId, Long amountForSale, Long amountDesired,
+                                        Byte paymentWindow, Long commitmentFee, Byte action) {
         String rawTxHex = String.format("00010014%08x%016x%016x%02x%016x%02x",
                 currencyId.longValue(),
-                (BTC.btcToSatoshis(amountForSale)).longValue(),
-                (BTC.btcToSatoshis(amountDesired)).longValue(),
+                amountForSale,
+                amountDesired,
                 paymentWindow.byteValue(),
-                (BTC.btcToSatoshis(commitmentFee)).longValue(),
+                commitmentFee,
                 action.byteValue());
         return rawTxHex;
     }

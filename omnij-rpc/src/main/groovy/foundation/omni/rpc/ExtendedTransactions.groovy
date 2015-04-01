@@ -1,5 +1,6 @@
 package foundation.omni.rpc
 
+import com.msgilligan.bitcoin.BTC
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
@@ -32,18 +33,21 @@ trait ExtendedTransactions implements OmniClientDelegate, RawTxDelegate {
      *
      * @param address        The address
      * @param currencyId     The identifier of the currency for sale
-     * @param amountForSale  The amount of currency
-     * @param amountDesired  The amount of desired Bitcoin
+     * @param amountForSale  The amount of currency (BigDecimal coins)
+     * @param amountDesired  The amount of desired Bitcoin (in BTC)
      * @param paymentWindow  The payment window measured in blocks
      * @param commitmentFee  The minimum transaction fee required to be paid as commitment when accepting this offer
      * @param action         The action applied to the offer (1 = new, 2 = update, 3 = cancel)
      * @return The transaction hash
      */
-    Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, BigDecimal amountForSale,
-                                  BigDecimal amountDesired, Byte paymentWindow, BigDecimal commitmentFee,
+    Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, Long amountForSale,
+                                  Long amountDesired, Byte paymentWindow, Long commitmentFee,
                                   Byte action) {
+        Long satoshisForSale = BTC.satoshisToBTC(amountForSale)
+        Long satoshisDesired = BTC.satoshisToBTC(amountDesired)
+        Long satoshisFee = BTC.satoshisToBTC(commitmentFee)
         String rawTxHex = createDexSellOfferHex(
-                currencyId, amountForSale, amountDesired, paymentWindow, commitmentFee, action);
+                currencyId, satoshisForSale, satoshisDesired, paymentWindow, satoshisFee, action);
         Sha256Hash txid = sendrawtx_MP(address, rawTxHex)
         return txid
     }
