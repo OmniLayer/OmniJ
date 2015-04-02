@@ -13,6 +13,14 @@ import java.math.BigDecimal;
 public class RawTxBuilder {
 
     /**
+     * Creates a hex-encoded raw transaction of type 0: "Simple Send".
+     */
+    public String createSimpleSendHex(CurrencyID currencyId, Long amount) {
+        String rawTxHex = String.format("00000000%08x%016x", currencyId.longValue(), amount);
+        return rawTxHex;
+    }
+
+    /**
      * Creates a hex-encoded raw transaction of type 3: "send to owners".
      */
     public String createSendToOwnersHex(CurrencyID currencyId, Long amount) {

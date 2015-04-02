@@ -18,7 +18,25 @@ class RawTxBuilderSpec extends Specification {
         builder = new RawTxBuilder()
     }
 
-    def "The generated hex-encoded transaction matches a valid reference transaction"() {
+    def "The generated hex-encoded Simple Send transaction matches a valid reference transaction"() {
+        when:
+        def txHex = builder.createSimpleSendHex(MSC,
+                Coin.COIN_VALUE)
+
+        then:
+        txHex == "00000000000000010000000005f5e100"
+    }
+
+    def "The generated hex-encoded Simple To Owners transaction matches a valid reference transaction"() {
+        when:
+        def txHex = builder.createSendToOwnersHex(MSC,
+                Coin.COIN_VALUE)
+
+        then:
+        txHex == "00000003000000010000000005f5e100"
+    }
+
+    def "The generated hex-encoded Dex Sell Offer transaction matches a valid reference transaction"() {
         when:
         def txHex = builder.createDexSellOfferHex(MSC,
                 Coin.COIN_VALUE,    // 1 BTC in Satoshis
