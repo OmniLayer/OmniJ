@@ -31,14 +31,14 @@ public class RawTxBuilder {
     /**
      * Creates a hex-encoded raw transaction of type 20: "sell mastercoin for bitcoin".
      *
-     * Currency amounts are Long values in Satoshis/Willets
+     * Currency amounts are Long values in satoshis/willets
      *
-     * @param currencyId
-     * @param amountForSale
-     * @param amountDesired
-     * @param paymentWindow
-     * @param commitmentFee
-     * @param action
+     * @param currencyId Currency ID to sell MSC or TMSC only
+     * @param amountForSale Amount of MSC/TMSC for sale (in willets)
+     * @param amountDesired Amount of BTC desired (in satoshis)
+     * @param paymentWindow Time period in blocks
+     * @param commitmentFee Minimum Bitcoin transaction fee (satoshis)
+     * @param action Sell offer sub-action
      * @return
      */
     public String createDexSellOfferHex(CurrencyID currencyId, Long amountForSale, Long amountDesired,

@@ -39,11 +39,11 @@ class RawTxBuilderSpec extends Specification {
     def "The generated hex-encoded Dex Sell Offer transaction matches a valid reference transaction"() {
         when:
         def txHex = builder.createDexSellOfferHex(MSC,
-                Coin.COIN_VALUE,    // 1 BTC in Satoshis
-                20000000,           // 0.2 BTC in Satoshis
-                (Byte) 10,
-                10000,              // Fee in Satoshis
-                (Byte) 1)
+                Coin.COIN_VALUE,    // amount for sale: 1 BTC in satoshis
+                20000000,           // amount desired: 0.2 BTC in satoshis
+                (Byte) 10,          // payment window in blocks
+                10000,              // commitment Fee in satoshis
+                (Byte) 1)           // sub-action: new offer
 
         then:
         txHex == "00010014000000010000000005f5e1000000000001312d000a000000000000271001"
