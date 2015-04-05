@@ -7,5 +7,5 @@ import foundation.omni.tx.RawTxBuilder
  */
 trait RawTxDelegate {
     @Delegate
-    RawTxBuilder builder
+    RawTxBuilder builder = new RawTxBuilder()
 }
