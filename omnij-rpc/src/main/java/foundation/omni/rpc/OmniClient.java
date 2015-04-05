@@ -44,12 +44,12 @@ public class OmniClient extends BitcoinClient {
     }
 
     public Map<String, Object> getinfo_MP() throws JsonRPCException, IOException {
-        Map<String, Object> result = (Map<String, Object>) send("getinfo_MP", null);
+        Map<String, Object> result = send("getinfo_MP", null);
         return result;
     }
 
     public List<SmartPropertyListInfo> listproperties_MP() throws JsonRPCException, IOException {
-        List<Map<String, Object>> result = (List<Map<String, Object>>)  send("listproperties_MP", null);
+        List<Map<String, Object>> result = send("listproperties_MP", null);
 
         List<SmartPropertyListInfo> propList = new ArrayList<SmartPropertyListInfo>();
         for (Map jsonProp : result) {
@@ -76,13 +76,13 @@ public class OmniClient extends BitcoinClient {
 
     public Map<String, Object> getproperty_MP(CurrencyID currency) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList((Object) currency.longValue());
-        Map<String, Object> result = (Map<String, Object>)  send("getproperty_MP", params);
+        Map<String, Object> result = send("getproperty_MP", params);
         return result;
     }
 
     public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList((Object) fromAddress.toString(), toAddress.toString(), currency.longValue(), amount.toPlainString());
-        String txid = (String) send("send_MP", params);
+        String txid = send("send_MP", params);
         Sha256Hash hash = new Sha256Hash(txid);
         return hash;
     }
@@ -97,18 +97,18 @@ public class OmniClient extends BitcoinClient {
         if (referenceAddress != null) {
             params.add(referenceAddress.toString());
         }
-        String txid = (String) send("sendrawtx_MP", params);
+        String txid = send("sendrawtx_MP", params);
         return new Sha256Hash(txid);
     }
 
     public List<Map<String, Object>> getactivedexsells_MP() throws JsonRPCException, IOException {
-        List<Map<String, Object>>  result = (List<Map<String, Object>>) send("getactivedexsells_MP", null);
+        List<Map<String, Object>>  result = send("getactivedexsells_MP", null);
         return result;
     }
 
     public MPBalanceEntry getbalance_MP(Address address, CurrencyID currency) throws JsonRPCException, IOException, ParseException {
         List<Object> params = Arrays.asList((Object) address.toString(), currency.longValue());
-        Map<String, String> result = (Map<String, String>)  send("getbalance_MP", params);
+        Map<String, String> result = send("getbalance_MP", params);
         BigDecimal balanceBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("balance"));
         BigDecimal reservedBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("reserved"));
         MPBalanceEntry entry = new MPBalanceEntry(address, balanceBTC, reservedBTC);
@@ -117,7 +117,7 @@ public class OmniClient extends BitcoinClient {
 
     public List<MPBalanceEntry> getallbalancesforid_MP(CurrencyID currency) throws JsonRPCException, IOException, ParseException, AddressFormatException {
         List<Object> params = Arrays.asList((Object) currency.longValue());
-        List<Map<String, Object>> untypedBalances = (List<Map<String, Object>>) send("getallbalancesforid_MP", params);
+        List<Map<String, Object>> untypedBalances = send("getallbalancesforid_MP", params);
         List<MPBalanceEntry> balances = new ArrayList<MPBalanceEntry>(untypedBalances.size());
         for (Map map : untypedBalances) {
             // TODO: Should this mapping be done by Jackson?
@@ -147,13 +147,13 @@ public class OmniClient extends BitcoinClient {
 
     public Map<String, Object> getTransactionMP(Sha256Hash txid) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList((Object) txid.toString());
-        Map<String, Object> transaction = (Map<String, Object>) send("gettransaction_MP", params);
+        Map<String, Object> transaction = send("gettransaction_MP", params);
         return transaction;
     }
 
     public Sha256Hash sendToOwnersMP(Address fromAddress, CurrencyID currency, BigDecimal amount) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList((Object) fromAddress.toString(), currency.longValue(), amount.toPlainString());
-        String txid = (String) send("sendtoowners_MP", params);
+        String txid = send("sendtoowners_MP", params);
         Sha256Hash hash = new Sha256Hash(txid);
         return hash;
     }

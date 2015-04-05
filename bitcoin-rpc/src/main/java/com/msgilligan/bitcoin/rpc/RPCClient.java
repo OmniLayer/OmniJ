@@ -135,7 +135,7 @@ public class RPCClient {
      * @throws IOException
      * @throws JsonRPCStatusException
      */
-    protected Object send(String method, List<Object> params) throws IOException, JsonRPCStatusException {
+    protected <T> T send(String method, List<Object> params) throws IOException, JsonRPCStatusException {
         Map<String, Object> request = new HashMap<String, Object>();
         request.put("jsonrpc", "1.0");
         request.put("method", method);
@@ -156,8 +156,9 @@ public class RPCClient {
 //        assert response.get("id").equals(Long.toString(requestId++));
 
         requestId++;
-
-        return response.get("result");
+        @SuppressWarnings("unchecked")
+        T result = (T) response.get("result");
+        return result;
     }
 
     /**
