@@ -10,7 +10,6 @@ import static foundation.omni.CurrencyID.*
 class SimpleSendSpec extends BaseRegTestSpec {
     // Need to make sure these variables are set up with values that match their names
     static final CurrencyID nonExistentCurrencyID = new CurrencyID(293487L)
-    def addressWith1MSC = getNewAddress() // Get an address with a balance of 1 MSC
     def richAddress = getNewAddress()  // Should be an address we know has a > 0 balance,
                                               //      ... otherwise it will fail
                                               // We need to seed the address with coins
