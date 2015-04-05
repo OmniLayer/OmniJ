@@ -89,19 +89,24 @@ public class RPCClient {
         int responseCode = connection.getResponseCode();
         log.debug("Response code: {}", responseCode);
 
-        Map<String, Object> responseJson = null;
+        Map<String, Object> responseJson;
         if (responseCode == 200) {
             // Read JSON and return responseJson
-            responseJson = mapper.readValue(connection.getInputStream(), Map.class);
+            @SuppressWarnings("unchecked")
+            Map<String,Object> response = mapper.readValue(connection.getInputStream(), Map.class);
+            responseJson = response;
         } else {
             // Prepare and throw JsonRPCStatusException with all relevant info
             String responseMessage = connection.getResponseMessage();
             String exceptionMessage = responseMessage;
-            Map<String, Object> bodyJson = null;    // Body as JSON if available
+            Map<String,Object> bodyJson = null;    // Body as JSON if available
             String bodyString = null;               // Body as String if not JSON
             if (connection.getContentType().equals("application/json")) {
                 // We got a JSON error response, parse it
-                bodyJson = mapper.readValue(connection.getErrorStream(), Map.class);
+                @SuppressWarnings("unchecked")
+                Map<String, Object>  body = mapper.readValue(connection.getErrorStream(), Map.class);
+                bodyJson = body;
+                @SuppressWarnings("unchecked")
                 Map <String, Object> error = (Map <String, Object>) bodyJson.get("error");
                 if (error != null) {
                     // If there's a more specific message in the JSON use it instead.
@@ -119,6 +124,7 @@ public class RPCClient {
         log.debug("Resp json: {}", responseJson);
 
         connection.disconnect();
+
         return responseJson;
     }
 
@@ -231,7 +237,6 @@ public class RPCClient {
      * Create a mutable param list (so send() can remove null parameters)
      */
     protected List<Object> createParamList(Object... parameters) {
-        List<Object> paramList = new ArrayList<Object>(Arrays.asList(parameters));
-        return paramList;
+        return new ArrayList<Object>(Arrays.asList(parameters));
     }
 }
