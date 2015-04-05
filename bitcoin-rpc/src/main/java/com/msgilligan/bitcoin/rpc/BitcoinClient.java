@@ -9,7 +9,6 @@ import org.bitcoinj.params.RegTestParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.SocketException;
@@ -39,7 +38,7 @@ public class BitcoinClient extends RPCClient {
     /**
      *
      * @param timeout Timeout in seconds
-     * @return
+     * @return true if ready, false if timeout
      */
     public Boolean waitForServer(Integer timeout) throws JsonRPCException {
         Integer seconds = 0;
@@ -124,7 +123,7 @@ public class BitcoinClient extends RPCClient {
 
     /**
      *
-     * @return
+     * @return current block height (count)
      * @throws IOException
      */
     public Integer getBlockCount() throws JsonRPCException, IOException {

@@ -11,7 +11,6 @@ import foundation.omni.CurrencyID;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
