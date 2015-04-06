@@ -228,18 +228,16 @@ public class BitcoinClient extends RPCClient {
      * Return a private key from the server
      * (must be in wallet mode with unlocked or unencrypted wallet)
      * @param address Address corresponding to private key to return
-     * @param netParams required for now - client should know it's netParams
      * @return the private key
      * @throws IOException
      * @throws JsonRPCStatusException
      */
-    public ECKey dumpPrivKey(Address address, NetworkParameters netParams) throws IOException, JsonRPCStatusException {
+    public ECKey dumpPrivKey(Address address) throws IOException, JsonRPCStatusException {
         List<Object> params = createParamList(address.toString());
         String base58Key = send("dumpprivkey", params);
         ECKey key;
         try {
-            // TODO: Make netParams a property of BitcoinClient
-            DumpedPrivateKey dumped = new DumpedPrivateKey(netParams, base58Key);
+            DumpedPrivateKey dumped = new DumpedPrivateKey(null, base58Key);
             key = dumped.getKey();
         } catch (AddressFormatException e) {
             throw new RuntimeException(e);  // Should never happen

@@ -69,7 +69,7 @@ class BitcoinSpec extends BaseRegTestSpec {
         when: "we create a new address and dump it's private key"
         def address = getNewAddress()
         def netParams = RegTestParams.get()
-        def key = dumpPrivKey(address, netParams)
+        def key = dumpPrivKey(address)
 
         then: "when we convert the dumped key to an address we get the same address"
         key.toAddress(netParams) == address
