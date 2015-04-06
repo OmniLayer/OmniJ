@@ -1,9 +1,9 @@
 package com.msgilligan.bitcoin
 
 import com.msgilligan.bitcoin.rpc.BitcoinClient
-import com.msgilligan.bitcoin.rpc.BitcoinClientDelegate
 import com.msgilligan.bitcoin.rpc.Loggable
 import com.msgilligan.bitcoin.rpc.RPCURI
+import com.msgilligan.bitcoin.test.BTCTestSupport
 import spock.lang.Specification
 import com.msgilligan.bitcoin.rpc.test.TestServers
 
@@ -11,7 +11,7 @@ import com.msgilligan.bitcoin.rpc.test.TestServers
 /**
  *
  */
-class BaseRegTestSpec extends Specification implements BitcoinClientDelegate, Loggable {
+class BaseRegTestSpec extends Specification implements BTCTestSupport, Loggable {
     static final BigDecimal minBTCForTests = 50.0;
 
     {
