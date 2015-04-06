@@ -80,26 +80,4 @@ trait ExtendedTransactions implements OmniClientDelegate, RawTxDelegate {
         Sha256Hash txid = sendrawtx_MP(address, rawTxHex)
         return txid
     }
-
-
-    /**
-     * Creates a raw transaction, sending {@code amount} from a single address to a destination, whereby no new change
-     * address is created, and remaining amounts are returned to {@code fromAddress}.
-     *
-     * Note: the transaction inputs are not signed, and the transaction is not stored in the wallet or transmitted to
-     * the network.
-     *
-     * @param fromAddress The source to spent from
-     * @param toAddress The destination
-     * @param amount The amount
-     * @return The hex-encoded raw transaction
-     */
-    String createRawTransaction(Address fromAddress, Address toAddress, BigDecimal amount) {
-        def outputs = new HashMap<Address, BigDecimal>()
-        outputs[toAddress] = amount
-        return createRawTransaction(fromAddress, outputs)
-    }
-
-
-
 }

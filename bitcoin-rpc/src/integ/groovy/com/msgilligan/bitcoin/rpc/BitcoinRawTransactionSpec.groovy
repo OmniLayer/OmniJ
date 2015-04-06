@@ -1,11 +1,12 @@
 package com.msgilligan.bitcoin.rpc
 
 import com.msgilligan.bitcoin.BaseRegTestSpec
-import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise
 
-@Ignore("Needs methods from TestSupport trait in omni-rpc project")
+/**
+ * Tests of creating and sending raw transactions via RPC
+ */
 @Stepwise
 class BitcoinRawTransactionSpec extends BaseRegTestSpec {
     final static BigDecimal fundingAmount = 10.0
