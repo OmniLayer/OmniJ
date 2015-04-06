@@ -3,7 +3,7 @@ package com.msgilligan.bitcoin.rpc;
 import org.bitcoinj.core.Sha256Hash;
 
 /**
- *
+ * Data class for Outpoint as used by RPC methods
  */
 public class Outpoint {
     private final Sha256Hash txid;

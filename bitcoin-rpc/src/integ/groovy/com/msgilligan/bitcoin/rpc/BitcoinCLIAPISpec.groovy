@@ -9,7 +9,7 @@ import spock.lang.Specification
  *
  * Test of CLI API methods (all lowercase, matching RPC as closely as possible)
  *
- * TODO: Un-ingnore
+ * TODO: Un-ignore
  */
 @Ignore("Until CLI Bitcoin client is implemented")
 class BitcoinCLIAPISpec extends BaseRegTestSpec {
