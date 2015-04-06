@@ -1,6 +1,7 @@
 package com.msgilligan.bitcoin.test
 
 import com.msgilligan.bitcoin.rpc.BitcoinClientDelegate
+import com.msgilligan.bitcoin.rpc.Outpoint
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Sha256Hash
 
@@ -24,7 +25,7 @@ trait BTCTestSupport implements BitcoinClientDelegate {
      */
     Sha256Hash requestBitcoin(Address toAddress, BigDecimal requestedBTC) {
         def amountGatheredSoFar = 0.0
-        def inputs = new ArrayList<Map<String, Object>>()
+        def inputs = new ArrayList<Outpoint>()
 
         // Newly mined coins need to mature to be spendable
         def minCoinAge = 100
@@ -45,8 +46,7 @@ trait BTCTestSupport implements BitcoinClientDelegate {
             if (txout && txout.containsKey("value")) {
                 def amountBTCd = txout.value as Double
                 amountGatheredSoFar += BigDecimal.valueOf(amountBTCd)
-                def coinbaseTxid = coinbaseTx.toString()
-                inputs << ["txid": coinbaseTxid, "vout": 0]
+                inputs << new Outpoint(coinbaseTx, 0)
             }
         }
 
@@ -79,16 +79,13 @@ trait BTCTestSupport implements BitcoinClientDelegate {
     String createRawTransaction(Address fromAddress, Map<Address, BigDecimal> outputs) {
         def amountIn = new BigDecimal(0)
         def amountOut = new BigDecimal(0)
-        def inputs = new ArrayList<Map<String, Object>>()
+        def inputs = new ArrayList<Outpoint>()
         def unspentOutputs = listUnspent(0, defaultMaxConf, [fromAddress])
 
         // Gather inputs
         for (unspentOutput in unspentOutputs) {
-            def outpoint = new HashMap<String, Object>()
-            def amountBTCd = unspentOutput["amount"] as Double // TODO: Don't use Double
-            amountIn += BigDecimal.valueOf(amountBTCd)
-            outpoint["txid"] = unspentOutput["txid"]
-            outpoint["vout"] = unspentOutput["vout"]
+            def outpoint = new Outpoint(unspentOutput.txid, unspentOutput.vout)
+            amountIn += unspentOutput.amount
             inputs.add(outpoint)
         }
 
@@ -165,11 +162,10 @@ trait BTCTestSupport implements BitcoinClientDelegate {
      */
     BigDecimal getBitcoinBalance(Address address, Integer minConf, Integer maxConf) {
         def btcBalance = new BigDecimal(0)
-        def unspentOutputs = (List<Map<String, Object>>) listUnspent(minConf, maxConf, [address])
+        def unspentOutputs = listUnspent(minConf, maxConf, [address])
 
         for (unspentOutput in unspentOutputs) {
-            def balanceBTCd = unspentOutput["amount"] as Double
-            btcBalance += BigDecimal.valueOf(balanceBTCd)
+            btcBalance += unspentOutput.amount
         }
 
         return btcBalance
@@ -222,14 +218,13 @@ trait BTCTestSupport implements BitcoinClientDelegate {
      */
     Boolean consolidateCoins() {
         def amountIn = new BigDecimal(0)
-        def inputs = new ArrayList<Map<String, Object>>()
+        def inputs = new ArrayList<Outpoint>()
         def unspentOutputs = listUnspent(0, defaultMaxConf)
 
         // Gather inputs
         for (unspentOutput in unspentOutputs) {
-            def amountBTCd = unspentOutput['amount'] as Double
-            amountIn += BigDecimal.valueOf(amountBTCd)
-            inputs << ['txid': unspentOutput['txid'], 'vout': unspentOutput['vout']]
+            amountIn += unspentOutput.amount
+            inputs << new Outpoint(unspentOutput.txid, unspentOutput.vout)
         }
 
         // Check if there is a sufficient high amount to sweep at all

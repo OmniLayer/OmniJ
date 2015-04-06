@@ -62,7 +62,7 @@ class BitcoinSpec extends BaseRegTestSpec {
         unspent.every { output -> output.confirmations == 0 }
 
         and: "they are associated with #destinationAddress"
-        unspent.every { output -> output.address == destinationAddress.toString() }
+        unspent.every { output -> output.address == destinationAddress }
     }
 
     def "We can get the correct private key for an address"() {

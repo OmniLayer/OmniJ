@@ -5,7 +5,6 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.params.RegTestParams;
@@ -19,6 +18,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -263,9 +263,16 @@ public class BitcoinClient extends RPCClient {
      * @throws JsonRPCException
      * @throws IOException
      */
-    public String createRawTransaction(List<Object> inputs, Map<Address, BigDecimal> outputs)
+    public String createRawTransaction(List<Outpoint> inputs, Map<Address, BigDecimal> outputs)
             throws JsonRPCException, IOException {
-        List<Object> params = Arrays.asList(inputs, outputs);
+        List<Map<String, Object>> inputsJson = new ArrayList<Map<String, Object>>();
+        for (Outpoint outpoint : inputs) {
+            Map<String, Object> outMap = new HashMap<String, Object>();
+            outMap.put("txid", outpoint.getTxid().toString());
+            outMap.put("vout", outpoint.getVout());
+            inputsJson.add(outMap);
+        }
+        List<Object> params = Arrays.asList(inputsJson, outputs);
         String transactionHex = send("createrawtransaction", params);
         return transactionHex;
     }
@@ -360,7 +367,7 @@ public class BitcoinClient extends RPCClient {
      * @throws JsonRPCException
      * @throws IOException
      */
-    public List<Map<String, Object>> listUnspent() throws JsonRPCException, IOException {
+    public List<UnspentOutput> listUnspent() throws JsonRPCException, IOException {
         return listUnspent(null, null, null);
     }
 
@@ -374,7 +381,7 @@ public class BitcoinClient extends RPCClient {
      * @throws JsonRPCException
      * @throws IOException
      */
-    public List<Map<String, Object>> listUnspent(Integer minConf, Integer maxConf)
+    public List<UnspentOutput> listUnspent(Integer minConf, Integer maxConf)
             throws JsonRPCException, IOException {
         return listUnspent(minConf, maxConf, null);
     }
@@ -390,7 +397,7 @@ public class BitcoinClient extends RPCClient {
      * @throws JsonRPCException
      * @throws IOException
      */
-    public List<Map<String, Object>> listUnspent(Integer minConf, Integer maxConf, Iterable<Address> filter)
+    public List<UnspentOutput> listUnspent(Integer minConf, Integer maxConf, Iterable<Address> filter)
             throws JsonRPCException, IOException {
         List<String> addressFilter = null;
         if (filter != null) {
@@ -398,7 +405,27 @@ public class BitcoinClient extends RPCClient {
         }
 
         List<Object> params = createParamList(minConf, maxConf, addressFilter);
-        List<Map<String, Object>> unspent = send("listunspent", params);
+        List<Map<String, Object>> unspentMaps = send("listunspent", params);
+        List<UnspentOutput> unspent = new ArrayList<UnspentOutput>();
+        for (Map<String, Object> uoMap : unspentMaps) {
+            String txstr = (String) uoMap.get("txid");
+            Sha256Hash txid = new Sha256Hash(txstr);
+            int vout = (Integer) uoMap.get("vout");
+            String addrStr = (String) uoMap.get("address");
+            Address addr = null;
+            try {
+                addr = new Address(null, addrStr);
+            } catch (AddressFormatException e) {
+                e.printStackTrace();
+            }
+            String account = (String) uoMap.get("account");
+            String scriptPubKey = (String) uoMap.get("scriptPubKey");
+            Double amountDb = (Double) uoMap.get("amount");
+            BigDecimal amount = BigDecimal.valueOf(amountDb);
+            int confirmations = (Integer) uoMap.get("confirmations");
+            UnspentOutput uo = new UnspentOutput(txid,vout,addr,account,scriptPubKey,amount,confirmations);
+            unspent.add(uo);
+        }
         return unspent;
     }
 
