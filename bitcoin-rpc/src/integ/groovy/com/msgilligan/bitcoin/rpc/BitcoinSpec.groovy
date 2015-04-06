@@ -1,6 +1,7 @@
 package com.msgilligan.bitcoin.rpc
 
 import com.msgilligan.bitcoin.BaseRegTestSpec
+import org.bitcoinj.params.RegTestParams
 
 class BitcoinSpec extends BaseRegTestSpec {
     static final BigDecimal testAmount = 2.0
@@ -62,5 +63,15 @@ class BitcoinSpec extends BaseRegTestSpec {
 
         and: "they are associated with #destinationAddress"
         unspent.every { output -> output.address == destinationAddress.toString() }
+    }
+
+    def "We can get the correct private key for an address"() {
+        when: "we create a new address and dump it's private key"
+        def address = getNewAddress()
+        def netParams = RegTestParams.get()
+        def key = dumpPrivKey(address, netParams)
+
+        then: "when we convert the dumped key to an address we get the same address"
+        key.toAddress(netParams) == address
     }
 }

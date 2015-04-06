@@ -3,6 +3,9 @@ package com.msgilligan.bitcoin.rpc;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.DumpedPrivateKey;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.params.RegTestParams;
@@ -199,7 +202,7 @@ public class BitcoinClient extends RPCClient {
 
     public Address getNewAddress(String account) throws JsonRPCException, IOException {
         List<Object> params = createParamList(account);
-        String addr = (String) send("getnewaddress", null);
+        String addr = send("getnewaddress", null);
         Address address = null;
         try {
             address = new Address(null, addr);
@@ -219,6 +222,29 @@ public class BitcoinClient extends RPCClient {
             throw new RuntimeException(e);
         }
         return address;
+    }
+
+    /**
+     * Return a private key from the server
+     * (must be in wallet mode with unlocked or unencrypted wallet)
+     * @param address Address corresponding to private key to return
+     * @param netParams required for now - client should know it's netParams
+     * @return the private key
+     * @throws IOException
+     * @throws JsonRPCStatusException
+     */
+    public ECKey dumpPrivKey(Address address, NetworkParameters netParams) throws IOException, JsonRPCStatusException {
+        List<Object> params = createParamList(address.toString());
+        String base58Key = send("dumpprivkey", params);
+        ECKey key;
+        try {
+            // TODO: Make netParams a property of BitcoinClient
+            DumpedPrivateKey dumped = new DumpedPrivateKey(netParams, base58Key);
+            key = dumped.getKey();
+        } catch (AddressFormatException e) {
+            throw new RuntimeException(e);  // Should never happen
+        }
+        return key;
     }
 
     public Boolean moveFunds(Address fromaccount, Address toaccount, BigDecimal amount, Integer minconf, String comment) throws JsonRPCException, IOException {
