@@ -6,14 +6,14 @@ import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
 import foundation.omni.tx.RawTxBuilder
 import foundation.omni.rpc.test.TestServers
-import foundation.omni.test.TestSupport
+import foundation.omni.test.OmniTestSupport
 import spock.lang.Specification
 
 
 /**
  * Base specification for integration tests on RegTest net
  */
-class BaseRegTestSpec extends Specification implements OmniClientDelegate, TestSupport, Loggable {
+class BaseRegTestSpec extends Specification implements OmniClientDelegate, OmniTestSupport, Loggable {
 
     static final BigDecimal minBTCForTests = 50.0;
 

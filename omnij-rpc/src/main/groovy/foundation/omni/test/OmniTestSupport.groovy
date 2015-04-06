@@ -13,7 +13,7 @@ import java.security.SecureRandom
 /**
  * Test support functions intended to be mixed-in to Spock test specs
  */
-trait TestSupport implements OmniClientDelegate, ExtendedTransactions {
+trait OmniTestSupport implements OmniClientDelegate, ExtendedTransactions {
     // TODO: set, or get and verify default values of the client
     final BigDecimal stdTxFee = new BigDecimal('0.00010000')
     final BigDecimal stdRelayTxFee = new BigDecimal('0.00001000')
