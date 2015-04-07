@@ -5,6 +5,7 @@ import com.msgilligan.bitcoin.rpc.BitcoinClientDelegate
 import com.msgilligan.bitcoin.rpc.Outpoint
 import com.msgilligan.bitcoin.rpc.UnspentOutput
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.Coin
 import org.bitcoinj.core.ECKey
 import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Sha256Hash
@@ -21,6 +22,7 @@ trait BTCTestSupport implements BitcoinClientDelegate {
     final BigDecimal stdTxFee = new BigDecimal('0.00010000')
     final BigDecimal stdRelayTxFee = new BigDecimal('0.00001000')
     final Integer defaultMaxConf = 9999999
+    final long stdTxFeeSatoshis = BTC.btcToCoin(stdTxFee).longValue()
 
     /**
      * Generate blocks and fund an address with requested amount of BTC
@@ -257,17 +259,17 @@ trait BTCTestSupport implements BitcoinClientDelegate {
             tx.addOutput(it)
         }
 
-        // Calculate change
-        BigDecimal amountIn     = unspentOutputs.sum { TransactionOutput it -> BTC.coinToBTC(it.value) }
-        BigDecimal amountOut    = outputs.sum { TransactionOutput it -> BTC.coinToBTC(it.value) }
-        BigDecimal amountChange = amountIn - amountOut - stdTxFee
+        // Calculate change (units are satoshis)
+        long amountIn     = unspentOutputs.sum { TransactionOutput it -> it.value }
+        long amountOut    = outputs.sum { TransactionOutput it -> it.value }
+        long amountChange = amountIn - amountOut - stdTxFeeSatoshis
         if (amountChange < 0) {
             // TODO: Throw Exception
-            println "Insufficient funds: ${amountIn} < ${amountOut + stdTxFee}"
+            println "Insufficient funds: ${amountIn} < ${amountOut + stdTxFeeSatoshis}"
         }
         if (amountChange > 0) {
             // Add a change output
-            tx.addOutput(BTC.btcToCoin(amountChange), fromAddress)
+            tx.addOutput(Coin.valueOf(amountChange), fromAddress)
         }
 
         // Add all UTXOs for fromAddress as inputs
@@ -278,8 +280,8 @@ trait BTCTestSupport implements BitcoinClientDelegate {
         return tx;
     }
 
-    Transaction createSignedTransaction(ECKey fromKey, Address toAddress, BigDecimal amount) {
-        def outputs = [new TransactionOutput(netParams, null, BTC.btcToCoin(amount),toAddress)]
+    Transaction createSignedTransaction(ECKey fromKey, Address toAddress, Coin amount) {
+        def outputs = [new TransactionOutput(netParams, null, amount, toAddress)]
         return createSignedTransaction(fromKey, outputs)
     }
 
