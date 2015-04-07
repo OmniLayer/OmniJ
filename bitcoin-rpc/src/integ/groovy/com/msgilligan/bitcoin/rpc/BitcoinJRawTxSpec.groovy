@@ -21,7 +21,6 @@ import spock.lang.Stepwise
  */
 @Stepwise
 class BitcoinJRawTxSpec extends BaseRegTestSpec {
-    static final NetworkParameters netParams = RegTestParams.get()
     final static BigDecimal fundingAmount = 10.0
     final static BigDecimal sendingAmount = 1.0
 
@@ -120,41 +119,5 @@ class BitcoinJRawTxSpec extends BaseRegTestSpec {
     }
 
 
-    Transaction createSignedTransaction(ECKey fromKey, List<TransactionOutput> outputs) {
-        Address fromAddress = fromKey.toAddress(netParams)
-        Transaction tx = new Transaction(netParams)
-        def unspentOutputs = listUnspent(0, defaultMaxConf, [fromAddress])
-
-        // Add outputs to the transaction
-        outputs.each {
-            tx.addOutput(it)
-        }
-
-        // Calculate change
-        BigDecimal amountIn     = unspentOutputs.sum { it.amount }
-        BigDecimal amountOut    = outputs.sum { BTC.coinToBTC(it.value) }
-        BigDecimal amountChange = amountIn - amountOut - stdTxFee
-        if (amountIn < (amountOut + stdTxFee)) {
-            println "Insufficient funds: ${amountIn} < ${amountOut + stdTxFee}"
-        }
-        if (amountChange > 0) {
-            // Add a change output
-            tx.addOutput(BTC.btcToCoin(amountChange), fromAddress)
-        }
-
-        // Add all UTXOs for fromAddress as inputs
-        unspentOutputs.each {
-            Transaction connectedTx = getRawTransaction(it.txid)
-            TransactionOutput output = connectedTx.getOutput(it.vout)
-            tx.addSignedInput(output, fromKey)
-        }
-
-        return tx;
-    }
-
-    Transaction createSignedTransaction(ECKey fromKey, Address toAddress, BigDecimal amount) {
-        def outputs = [new TransactionOutput(netParams, null, BTC.btcToCoin(amount),toAddress)]
-        return createSignedTransaction(fromKey, outputs)
-    }
 
 }

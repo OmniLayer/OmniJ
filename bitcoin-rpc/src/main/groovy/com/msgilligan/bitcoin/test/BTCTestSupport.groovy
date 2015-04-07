@@ -1,16 +1,23 @@
 package com.msgilligan.bitcoin.test
 
+import com.msgilligan.bitcoin.BTC
 import com.msgilligan.bitcoin.rpc.BitcoinClientDelegate
 import com.msgilligan.bitcoin.rpc.Outpoint
 import com.msgilligan.bitcoin.rpc.UnspentOutput
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.ECKey
+import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.core.Transaction
+import org.bitcoinj.core.TransactionOutput
+import org.bitcoinj.params.RegTestParams
 
 /**
  * Test support functions intended to be mixed-in to Spock test specs
  */
 trait BTCTestSupport implements BitcoinClientDelegate {
     // TODO: set, or get and verify default values of the client
+    final NetworkParameters netParams = RegTestParams.get()
     final BigDecimal stdTxFee = new BigDecimal('0.00010000')
     final BigDecimal stdRelayTxFee = new BigDecimal('0.00001000')
     final Integer defaultMaxConf = 9999999
@@ -238,4 +245,43 @@ trait BTCTestSupport implements BitcoinClientDelegate {
 
         return true
     }
+
+    Transaction createSignedTransaction(ECKey fromKey, List<TransactionOutput> outputs) {
+        Address fromAddress = fromKey.toAddress(netParams)
+        Transaction tx = new Transaction(netParams)
+        def unspentOutputs = listUnspent(0, defaultMaxConf, [fromAddress])
+
+        // Add outputs to the transaction
+        outputs.each {
+            tx.addOutput(it)
+        }
+
+        // Calculate change
+        BigDecimal amountIn     = unspentOutputs.sum { it.amount }
+        BigDecimal amountOut    = outputs.sum { BTC.coinToBTC(it.value) }
+        BigDecimal amountChange = amountIn - amountOut - stdTxFee
+        if (amountChange < 0) {
+            // TODO: Throw Exception
+            println "Insufficient funds: ${amountIn} < ${amountOut + stdTxFee}"
+        }
+        if (amountChange > 0) {
+            // Add a change output
+            tx.addOutput(BTC.btcToCoin(amountChange), fromAddress)
+        }
+
+        // Add all UTXOs for fromAddress as inputs
+        unspentOutputs.each {
+            Transaction connectedTx = getRawTransaction(it.txid)
+            TransactionOutput output = connectedTx.getOutput(it.vout)
+            tx.addSignedInput(output, fromKey)
+        }
+
+        return tx;
+    }
+
+    Transaction createSignedTransaction(ECKey fromKey, Address toAddress, BigDecimal amount) {
+        def outputs = [new TransactionOutput(netParams, null, BTC.btcToCoin(amount),toAddress)]
+        return createSignedTransaction(fromKey, outputs)
+    }
+
 }
