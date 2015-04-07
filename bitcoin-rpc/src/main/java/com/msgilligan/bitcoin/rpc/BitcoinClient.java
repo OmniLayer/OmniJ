@@ -265,6 +265,7 @@ public class BitcoinClient extends RPCClient {
      */
     public String createRawTransaction(List<Outpoint> inputs, Map<Address, BigDecimal> outputs)
             throws JsonRPCException, IOException {
+        // Convert inputs from typed list to list-of-maps for conversion to JSON
         List<Map<String, Object>> inputsJson = new ArrayList<Map<String, Object>>();
         for (Outpoint outpoint : inputs) {
             Map<String, Object> outMap = new HashMap<String, Object>();

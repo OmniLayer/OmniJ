@@ -2,6 +2,7 @@ package com.msgilligan.bitcoin.test
 
 import com.msgilligan.bitcoin.rpc.BitcoinClientDelegate
 import com.msgilligan.bitcoin.rpc.Outpoint
+import com.msgilligan.bitcoin.rpc.UnspentOutput
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Sha256Hash
 
@@ -72,30 +73,21 @@ trait BTCTestSupport implements BitcoinClientDelegate {
      * Note: the transaction inputs are not signed, and the transaction is not stored in the wallet or transmitted to
      * the network.
      *
-     * @param fromAddress The source to spent from
+     * @param fromAddress The source to spend from
      * @param outputs The destinations and amounts to transfer
      * @return The hex-encoded raw transaction
      */
     String createRawTransaction(Address fromAddress, Map<Address, BigDecimal> outputs) {
-        def amountIn = new BigDecimal(0)
-        def amountOut = new BigDecimal(0)
-        def inputs = new ArrayList<Outpoint>()
+        // Get unspent outputs via RPC
         def unspentOutputs = listUnspent(0, defaultMaxConf, [fromAddress])
 
         // Gather inputs
-        for (unspentOutput in unspentOutputs) {
-            def outpoint = new Outpoint(unspentOutput.txid, unspentOutput.vout)
-            amountIn += unspentOutput.amount
-            inputs.add(outpoint)
-        }
-
-        // Sum outgoing amount
-        for (entry in outputs.entrySet()) {
-            amountOut += entry.value
-        }
+        def inputs = unspentOutputs.collect { new Outpoint(it.txid, it.vout) }
 
         // Calculate change
-        def amountChange = amountIn - amountOut - stdTxFee
+        BigDecimal amountIn     = unspentOutputs.sum { it.amount }
+        BigDecimal amountOut    = outputs.values().sum()
+        BigDecimal amountChange = amountIn - amountOut - stdTxFee
         if (amountIn < (amountOut + stdTxFee)) {
             println "Insufficient funds: ${amountIn} < ${amountOut + stdTxFee}"
         }

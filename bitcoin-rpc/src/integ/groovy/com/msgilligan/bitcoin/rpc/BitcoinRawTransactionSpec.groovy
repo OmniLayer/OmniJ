@@ -1,6 +1,7 @@
 package com.msgilligan.bitcoin.rpc
 
 import com.msgilligan.bitcoin.BaseRegTestSpec
+import org.bitcoinj.core.Address
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -13,13 +14,13 @@ class BitcoinRawTransactionSpec extends BaseRegTestSpec {
     final static BigDecimal sendingAmount = 1.0
 
     @Shared
-    def fundingAddress
+    Address fundingAddress
 
     @Shared
-    def destinationAddress
+    Address destinationAddress
 
     @Shared
-    def rawTransactionHex
+    String rawTransactionHex
 
     def "Fund address as intermediate"() {
         when: "a new address is created"
@@ -49,7 +50,7 @@ class BitcoinRawTransactionSpec extends BaseRegTestSpec {
     }
 
     def "Sign unsigned raw transaction"() {
-        when: "the transaction is sigend"
+        when: "the transaction is signed"
         def result = signRawTransaction(rawTransactionHex)
         rawTransactionHex = result["hex"]
 
