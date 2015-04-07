@@ -260,8 +260,8 @@ trait BTCTestSupport implements BitcoinClientDelegate {
         }
 
         // Calculate change (units are satoshis)
-        long amountIn     = unspentOutputs.sum { TransactionOutput it -> it.value }
-        long amountOut    = outputs.sum { TransactionOutput it -> it.value }
+        long amountIn     = unspentOutputs.sum { TransactionOutput it -> it.value.longValue() }
+        long amountOut    = outputs.sum { TransactionOutput it -> it.value.longValue() }
         long amountChange = amountIn - amountOut - stdTxFeeSatoshis
         if (amountChange < 0) {
             // TODO: Throw Exception
