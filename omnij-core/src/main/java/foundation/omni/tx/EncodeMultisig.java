@@ -2,6 +2,7 @@ package foundation.omni.tx;
 
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.params.RegTestParams;
@@ -19,6 +20,8 @@ public class EncodeMultisig {
     private static final int maxKeys = 3;  /* Redeemable key + 2 data keys */
     private static final int maxDataKeys = maxKeys - 1;
     private static final int dustAmountInSatoshis = 100_000;
+
+    public static NetworkParameters netParams = RegTestParams.get();
 
     /**
      * Encode data into transaction outputs
@@ -42,7 +45,7 @@ public class EncodeMultisig {
             keysByOutput.add(group);
         }
 
-        Transaction classBTx = new Transaction(RegTestParams.get()); // Hard code regtest for now
+        Transaction txClassB = new Transaction(netParams);
 
         for (List<ECKey> group : keysByOutput) {
             // Add the redeemable key to the front of each group list
@@ -51,10 +54,10 @@ public class EncodeMultisig {
             redeemableGroup.addAll(group);
             Script script = ScriptBuilder.createMultiSigOutputScript(1, redeemableGroup); // 1 of group.size() multisig
             Coin amount = Coin.valueOf(dustAmountInSatoshis); // TODO: Make this dynamic
-            classBTx.addOutput(amount, script);
+            txClassB.addOutput(amount, script);
         }
 
-        return classBTx;
+        return txClassB;
     }
 
     public static Transaction encodeObfuscated(ECKey redeemingKey, byte[] data, String seed) {
