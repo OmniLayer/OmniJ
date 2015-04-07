@@ -4,6 +4,7 @@ import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
 import foundation.omni.PropertyType;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -176,7 +177,7 @@ public class RawTxBuilder {
      * @return The hexadecimal representation
      */
     String toHexString(String str) {
-        byte[] ba = new byte[0];
+        byte[] ba;
         try {
             ba = str.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -200,4 +201,14 @@ public class RawTxBuilder {
         return str.toString();
     }
 
+    /**
+     * Convert a hexadecimal string representation of binary data
+     * to byte array.
+     *
+     * @param hexString Hexadecimal string
+     * @return binary data
+     */
+    static byte[] hexToBinary(String hexString) {
+        return DatatypeConverter.parseHexBinary(hexString);
+    }
 }

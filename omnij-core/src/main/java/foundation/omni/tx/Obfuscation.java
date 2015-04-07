@@ -68,7 +68,7 @@ public class Obfuscation {
      * @return
      */
     private static byte[] xorHashMix(String string, byte[] bytes) {
-        byte[] strBytes = hexToBinary(string);
+        byte[] strBytes = RawTxBuilder.hexToBinary(string);
         return xor(strBytes, bytes);
     }
 
@@ -96,7 +96,4 @@ public class Obfuscation {
         return output;
     }
 
-    static byte[] hexToBinary(String hexString) {
-        return DatatypeConverter.parseHexBinary(hexString);
-    }
 }
