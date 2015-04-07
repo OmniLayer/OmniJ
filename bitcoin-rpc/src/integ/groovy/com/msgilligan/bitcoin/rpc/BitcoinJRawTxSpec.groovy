@@ -70,7 +70,7 @@ class BitcoinJRawTxSpec extends BaseRegTestSpec {
         when: "we get the signing key from the server"
         def key = dumpPrivKey(fundingAddress)
 
-        and: "we create an unsigned bitcoinj transaction, spending from fundingAddress to destinationAddress"
+        and: "we create an signed bitcoinj transaction, spending from fundingAddress to destinationAddress"
         tx = createSignedTransaction(key, destinationAddress, sendingAmount)
 
         then: "there should be a valid signed transaction"
