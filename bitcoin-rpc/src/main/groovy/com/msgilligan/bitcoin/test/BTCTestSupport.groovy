@@ -249,7 +249,8 @@ trait BTCTestSupport implements BitcoinClientDelegate {
     Transaction createSignedTransaction(ECKey fromKey, List<TransactionOutput> outputs) {
         Address fromAddress = fromKey.toAddress(netParams)
         Transaction tx = new Transaction(netParams)
-        def unspentOutputs = listUnspent(0, defaultMaxConf, [fromAddress])
+
+        List<TransactionOutput> unspentOutputs = listUnspentJ(fromAddress)
 
         // Add outputs to the transaction
         outputs.each {
@@ -257,8 +258,8 @@ trait BTCTestSupport implements BitcoinClientDelegate {
         }
 
         // Calculate change
-        BigDecimal amountIn     = unspentOutputs.sum { it.amount }
-        BigDecimal amountOut    = outputs.sum { BTC.coinToBTC(it.value) }
+        BigDecimal amountIn     = unspentOutputs.sum { TransactionOutput it -> BTC.coinToBTC(it.value) }
+        BigDecimal amountOut    = outputs.sum { TransactionOutput it -> BTC.coinToBTC(it.value) }
         BigDecimal amountChange = amountIn - amountOut - stdTxFee
         if (amountChange < 0) {
             // TODO: Throw Exception
@@ -271,9 +272,7 @@ trait BTCTestSupport implements BitcoinClientDelegate {
 
         // Add all UTXOs for fromAddress as inputs
         unspentOutputs.each {
-            Transaction connectedTx = getRawTransaction(it.txid)
-            TransactionOutput output = connectedTx.getOutput(it.vout)
-            tx.addSignedInput(output, fromKey)
+            tx.addSignedInput(it, fromKey)
         }
 
         return tx;
@@ -282,6 +281,24 @@ trait BTCTestSupport implements BitcoinClientDelegate {
     Transaction createSignedTransaction(ECKey fromKey, Address toAddress, BigDecimal amount) {
         def outputs = [new TransactionOutput(netParams, null, BTC.btcToCoin(amount),toAddress)]
         return createSignedTransaction(fromKey, outputs)
+    }
+
+    /**
+     * Build a list of bitcoinj <code>TransactionOutput</code>s using <code>listUnspent</code>
+     * and <code>getRawTransaction</code> RPCs
+     *
+     * @param fromAddress Address to get UTXOs for
+     * @return All unspent TransactionOutputs for fromAddress
+     */
+    List<TransactionOutput> listUnspentJ(Address fromAddress) {
+        List<UnspentOutput> unspentOutputsRPC = listUnspent(0, defaultMaxConf, [fromAddress]) // RPC objects
+        List<TransactionOutput> unspentOutputsJ = []                                          // bitcoinj objects
+        unspentOutputsRPC.each {
+            Transaction connectedTx = getRawTransaction(it.txid)
+            TransactionOutput output = connectedTx.getOutput(it.vout)
+            unspentOutputsJ << output
+        }
+        return unspentOutputsJ
     }
 
 }
