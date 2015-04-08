@@ -4,6 +4,7 @@ import com.msgilligan.bitcoin.BTC
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.tx.OmniTxBuilder
 import org.bitcoinj.core.TransactionOutput
+import org.bitcoinj.params.RegTestParams
 
 import static foundation.omni.CurrencyID.MSC
 
@@ -13,7 +14,7 @@ import static foundation.omni.CurrencyID.MSC
 class OmniTxBuilderIntegSpec extends BaseRegTestSpec {
     static final BigDecimal startBTC = 10.0
     static final BigDecimal startMSC = 1000.0
-    static final omniTxBuilder = new OmniTxBuilder()
+    static final omniTxBuilder = new OmniTxBuilder(RegTestParams.get())
 
     def "Can simple send amount MSC from one address to another using OmniTxBuilder and sendraw RPC"() {
         given: "a fundedAddress with BTC/MSC and a newly created toAddress"

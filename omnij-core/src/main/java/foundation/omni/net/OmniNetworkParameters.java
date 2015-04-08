@@ -22,6 +22,25 @@ public abstract class OmniNetworkParameters {
     protected OmniNetworkParameters() {
     }
 
+    /**
+     * Get Omni Network params given Bitcoin Network params
+     *
+     * @param btcNetParms Bitcoin network parameters
+     * @return Omni network params for specified Bitcoin network
+     */
+    public static OmniNetworkParameters fromBitcoinParms(NetworkParameters btcNetParms) {
+        switch (btcNetParms.getId()) {
+            case NetworkParameters.ID_MAINNET:
+                return OmniMainNetParams.get();
+            case NetworkParameters.ID_TESTNET:
+                return OmniTestNetParams.get();
+            case NetworkParameters.ID_REGTEST:
+                return OmniRegTestParams.get();
+            default:
+                throw new IllegalArgumentException("Unsupported NetworkParameters instance");
+        }
+    }
+
     public NetworkParameters getParams() {
         return params;
     }

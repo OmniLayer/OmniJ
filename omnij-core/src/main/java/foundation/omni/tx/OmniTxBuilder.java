@@ -21,9 +21,14 @@ import java.util.List;
  */
 public class OmniTxBuilder {
     private final long stdTxFee = 10_000;
-    private final NetworkParameters netParams = RegTestParams.get();
-    private final OmniNetworkParameters omniParams = OmniRegTestParams.get();
+    private final NetworkParameters netParams;
+    private final OmniNetworkParameters omniParams;
     private final RawTxBuilder builder = new RawTxBuilder();
+
+    public OmniTxBuilder(NetworkParameters netParams) {
+        this.netParams = netParams;
+        this.omniParams = OmniNetworkParameters.fromBitcoinParms(netParams);
+    }
 
     public Transaction createSignedSimpleSend(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address toAddress, CurrencyID currencyID, long amount) {
         String txHex = builder.createSimpleSendHex(currencyID, amount);
