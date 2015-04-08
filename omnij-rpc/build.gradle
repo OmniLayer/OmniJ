@@ -106,7 +106,7 @@ task regTest(type: Test) {
     testLogging.showStandardStreams = true
 
     systemProperty 'regtest', true
-    include 'foundation/omni/test/rpc/**'
+    include 'foundation/omni/test/rpc/**', 'foundation/omni/test/tx/**'
 }
 
 task consensusTest(type: Test) {
