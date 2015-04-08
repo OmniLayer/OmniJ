@@ -18,7 +18,7 @@ import org.bitcoinj.params.RegTestParams
  */
 trait BTCTestSupport implements BitcoinClientDelegate {
     // TODO: set, or get and verify default values of the client
-    final NetworkParameters netParams = RegTestParams.get()
+    private final NetworkParameters netParams = RegTestParams.get()
     final BigDecimal stdTxFee = new BigDecimal('0.00010000')
     final BigDecimal stdRelayTxFee = new BigDecimal('0.00001000')
     final Integer defaultMaxConf = 9999999
