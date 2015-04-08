@@ -2,14 +2,12 @@ package foundation.omni.tx;
 
 import foundation.omni.CurrencyID;
 import foundation.omni.net.OmniNetworkParameters;
-import foundation.omni.net.OmniRegTestParams;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionOutput;
-import org.bitcoinj.params.RegTestParams;
 
 import java.util.List;
 
@@ -20,7 +18,7 @@ import java.util.List;
  *
  */
 public class OmniTxBuilder {
-    private final long stdTxFee = 10_000;
+    private final long stdTxFee = 10000;
     private final NetworkParameters netParams;
     private final OmniNetworkParameters omniParams;
     private final RawTxBuilder builder = new RawTxBuilder();

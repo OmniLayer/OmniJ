@@ -19,7 +19,7 @@ public class EncodeMultisig {
 
     private static final int maxKeys = 3;  /* Redeemable key + 2 data keys */
     private static final int maxDataKeys = maxKeys - 1;
-    private static final int dustAmountInSatoshis = 100_000;
+    private static final int dustAmountInSatoshis = 100000;
 
     public static NetworkParameters netParams = RegTestParams.get();
 
