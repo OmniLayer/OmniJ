@@ -4,7 +4,6 @@ import com.msgilligan.bitcoin.BTC
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.tx.OmniTxBuilder
 import org.bitcoinj.core.TransactionOutput
-import org.bitcoinj.params.RegTestParams
 
 import static foundation.omni.CurrencyID.MSC
 
@@ -12,8 +11,6 @@ import static foundation.omni.CurrencyID.MSC
  * Test simple sends using send_MP and OmniTXBuilder and sendRawTransaction
  */
 class ClientSideRawTxSpec extends BaseRegTestSpec {
-    static final netParams = RegTestParams.get()
-
     static final BigDecimal startBTC = 10.0
     static final BigDecimal startMSC = 1000.0
 
