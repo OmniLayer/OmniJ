@@ -12,9 +12,7 @@ import org.bitcoinj.core.TransactionOutput;
 import java.util.List;
 
 /**
- * Builds signed Omni transactions in bitcoinj Transaction objects
- *
- * TODO: ability to create unsigned transactions
+ * Builds Omni transactions in bitcoinj Transaction objects
  *
  */
 public class OmniTxBuilder {
@@ -23,21 +21,42 @@ public class OmniTxBuilder {
     private final OmniNetworkParameters omniParams;
     private final RawTxBuilder builder = new RawTxBuilder();
 
+    /**
+     * @param netParams The Bitcoin network to construct transactions for
+     */
     public OmniTxBuilder(NetworkParameters netParams) {
         this.netParams = netParams;
         this.omniParams = OmniNetworkParameters.fromBitcoinParms(netParams);
     }
 
-    public Transaction createSignedSimpleSend(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address toAddress, CurrencyID currencyID, long amount) {
-        String txHex = builder.createSimpleSendHex(currencyID, amount);
-        byte[] payload = RawTxBuilder.hexToBinary(txHex);
-        return createSignedOmniTransaction(fromKey, unspentOutputs, toAddress, payload);
+    /**
+     * Create unsigned Omni transaction in a bitcoinj Transaction object
+     *
+     * TODO: Exact output amounts.
+     *
+     * @param redeemingKey Public key used for creating redeemable multisig data outputs
+     * @param refAddress The Omni reference address (for the reference output)
+     * @param payload Omni transaction payload as a raw byte array
+     * @return Incomplete Transaction, no inputs or change output
+     */
+    public Transaction createOmniTransaction(ECKey redeemingKey, Address refAddress, byte[] payload) {
+        Address redeemingAddress = redeemingKey.toAddress(netParams);
+
+        // Encode the Omni Protocol Payload as a Class B transaction
+        Transaction tx = EncodeMultisig.encodeObfuscated(redeemingKey, payload, redeemingAddress.toString());
+
+        // Add outputs to the transaction
+        tx.addOutput(Coin.MILLICOIN, omniParams.getExodusAddress());    // Add correct Exodus Output
+        tx.addOutput(Coin.CENT, refAddress);                            // Reference (destination) address output
+        return tx;
     }
 
     /**
      * Create a signed Omni transaction in a bitcoinj Transaction object
      *
-     * @param fromKey Private key/address to send from
+     * TODO: Calculate fee dynamically.
+     *
+     * @param fromKey Private key/address to send from and receive change to
      * @param unspentOutputs A list of unspent outputs for funding the transaction
      * @param refAddress The Omni reference address (for the reference output)
      * @param payload Omni transaction payload as a raw byte array
@@ -46,13 +65,43 @@ public class OmniTxBuilder {
     public Transaction createSignedOmniTransaction(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload) {
         Address fromAddress = fromKey.toAddress(netParams);
 
-        // Encode the Omni Protocol Payload as a Class B transaction
-        Transaction tx = EncodeMultisig.encodeObfuscated(fromKey, payload, fromAddress.toString());
+        Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 
-        // Add outputs to the transaction
-        tx.addOutput(Coin.MILLICOIN, omniParams.getExodusAddress());    // Add correct Exodus Output
-        tx.addOutput(Coin.CENT, refAddress);                            // Reference (destination) address output
+        makeChangeOutput(tx, fromAddress, unspentOutputs);  // Return change to the fromAddress
 
+        // Add all UTXOs for fromAddress as signed inputs
+        for (TransactionOutput output : unspentOutputs) {
+            tx.addSignedInput(output, fromKey);
+        }
+
+        return tx;
+    }
+
+    /**
+     * Create a signed simple send Transaction
+     *
+     * @param fromKey Private key/address to send from
+     * @param unspentOutputs A list of unspent outputs for funding the transaction
+     * @param toAddress The Omni reference address (for the reference output, destination address in this case)
+     * @param currencyID The Omni currency ID
+     * @param amount The currency amount in willets
+     * @return Signed and ready-to-send Transaction
+     */
+    public Transaction createSignedSimpleSend(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address toAddress, CurrencyID currencyID, long amount) {
+        String txHex = builder.createSimpleSendHex(currencyID, amount);
+        byte[] payload = RawTxBuilder.hexToBinary(txHex);
+        return createSignedOmniTransaction(fromKey, unspentOutputs, toAddress, payload);
+    }
+
+    /**
+     * Calculate change and create a change output
+     *
+     * @param tx Transaction with all non-change outputs attached
+     * @param changeAddress Address to receive the change
+     * @param unspentOutputs Unspent outputs for use in calculating change
+     * @return The modified transaction, still needs signed inputs
+     */
+    Transaction makeChangeOutput(Transaction tx, Address changeAddress, List<TransactionOutput> unspentOutputs) {
         // Calculate change
         long amountIn     = sum(unspentOutputs);    // Sum of available UTXOs
         long amountOut    = sum(tx.getOutputs());   // Sum of outputs, this transaction
@@ -62,17 +111,11 @@ public class OmniTxBuilder {
             // TODO: Throw Exception
             System.out.println("Insufficient funds");
         }
-        // If change is positive, return it all the the sending address
+        // If change is positive, return it all to the sending address
         if (amountChange > 0) {
             // Add a change output
-            tx.addOutput(Coin.valueOf(amountChange), fromAddress);
+            tx.addOutput(Coin.valueOf(amountChange), changeAddress);
         }
-
-        // Add all UTXOs for fromAddress as inputs
-        for (TransactionOutput output : unspentOutputs) {
-            tx.addSignedInput(output, fromKey);
-        }
-
         return tx;
     }
 
