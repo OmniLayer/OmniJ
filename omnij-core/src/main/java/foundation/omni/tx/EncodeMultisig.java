@@ -5,7 +5,6 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionOutput;
-import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
 
@@ -21,7 +20,11 @@ public class EncodeMultisig {
     private static final int maxDataKeys = maxKeys - 1;
     private static final int dustAmountInSatoshis = 100000;
 
-    public static NetworkParameters netParams = RegTestParams.get();
+    private final NetworkParameters netParams;
+
+    public EncodeMultisig(NetworkParameters netParams) {
+        this.netParams = netParams;
+    }
 
     /**
      * Encode data into transaction outputs
@@ -30,7 +33,7 @@ public class EncodeMultisig {
      * @param data
      * @return Incomplete transaction with TransactionOutputs
      */
-    public static Transaction encode(ECKey redeemingKey, byte[] data) {
+    public Transaction encode(ECKey redeemingKey, byte[] data) {
         List<TransactionOutput> outputs = null;
         List<ECKey> dataAsKeys = PubKeyConversion.convert(data);
         int numGroups = (dataAsKeys.size() + (maxDataKeys - 1)) / (maxDataKeys);
@@ -60,7 +63,7 @@ public class EncodeMultisig {
         return txClassB;
     }
 
-    public static Transaction encodeObfuscated(ECKey redeemingKey, byte[] data, String seed) {
+    public Transaction encodeObfuscated(ECKey redeemingKey, byte[] data, String seed) {
         byte[] sequenced = SequenceNumbers.add(data);
         byte[] obf = Obfuscation.obfuscate(sequenced, seed);
 

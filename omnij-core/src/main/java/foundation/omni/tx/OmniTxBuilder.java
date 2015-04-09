@@ -20,6 +20,7 @@ public class OmniTxBuilder {
     private final NetworkParameters netParams;
     private final OmniNetworkParameters omniParams;
     private final RawTxBuilder builder = new RawTxBuilder();
+    private final EncodeMultisig transactionEncoder;
 
     /**
      * @param netParams The Bitcoin network to construct transactions for
@@ -27,6 +28,7 @@ public class OmniTxBuilder {
     public OmniTxBuilder(NetworkParameters netParams) {
         this.netParams = netParams;
         this.omniParams = OmniNetworkParameters.fromBitcoinParms(netParams);
+        this.transactionEncoder = new EncodeMultisig(netParams);
     }
 
     /**
@@ -43,7 +45,7 @@ public class OmniTxBuilder {
         Address redeemingAddress = redeemingKey.toAddress(netParams);
 
         // Encode the Omni Protocol Payload as a Class B transaction
-        Transaction tx = EncodeMultisig.encodeObfuscated(redeemingKey, payload, redeemingAddress.toString());
+        Transaction tx = transactionEncoder.encodeObfuscated(redeemingKey, payload, redeemingAddress.toString());
 
         // Add outputs to the transaction
         tx.addOutput(Coin.MILLICOIN, omniParams.getExodusAddress());    // Add correct Exodus Output

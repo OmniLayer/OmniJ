@@ -9,6 +9,7 @@ import org.bitcoinj.core.TransactionInput
 import org.bitcoinj.core.TransactionOutPoint
 import org.bitcoinj.core.TransactionOutput
 import org.bitcoinj.params.MainNetParams
+import org.bitcoinj.params.RegTestParams
 import org.bitcoinj.script.Script
 import org.bitcoinj.script.ScriptBuilder
 import org.spongycastle.util.encoders.Hex
@@ -35,11 +36,14 @@ class BitcoinJTransactionBuilderSpec extends Specification {
     static final senderAddr = senderKey.toAddress(netParams)
 
     def "Build a transaction using EncodeMultisig.encodeObfuscated and BitcoinJ"() {
+        given:
+        EncodeMultisig encoder = new EncodeMultisig(RegTestParams.get())
+
         when:
         def toAddress = senderAddr
         def txHex = builder.createSimpleSendHex(MSC, Coin.COIN.longValue())
         def payload = hex(txHex)
-        Transaction tx = EncodeMultisig.encodeObfuscated(senderKey, payload, senderAddr.toString())
+        Transaction tx = encoder.encodeObfuscated(senderKey, payload, senderAddr.toString())
         tx.addOutput(Coin.MILLICOIN, omniParams.exodusAddress)
         tx.addOutput(Coin.CENT, toAddress)
         Script script = ScriptBuilder.createInputScript(null)
