@@ -205,6 +205,7 @@ public class BitcoinClient extends RPCClient {
         String addr = send("getnewaddress", null);
         Address address = null;
         try {
+            // TODO: Is it safe to use null for params here?
             address = new Address(null, addr);
         } catch (AddressFormatException e) {
             throw new RuntimeException(e);

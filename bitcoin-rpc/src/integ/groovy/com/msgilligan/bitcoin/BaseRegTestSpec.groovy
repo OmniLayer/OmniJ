@@ -33,4 +33,9 @@ class BaseRegTestSpec extends Specification implements BTCTestSupport, Loggable 
         }
     }
 
+    void cleanupSpec() {
+        // Spend almost all coins as fee, to sweep dust
+        consolidateCoins()
+    }
+
 }
