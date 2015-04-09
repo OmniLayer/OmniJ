@@ -101,5 +101,5 @@ task regTest(type: Test) {
     testLogging.showStandardStreams = true
 
     systemProperty 'regtest', true
-    include 'com/msgilligan/bitcoin/rpc/**', 'com/msgilligan/bitcoin/cli/**'
+    include 'com/msgilligan/bitcoin/rpc/**', 'com/msgilligan/bitcoin/cli/**', 'com/msgilligan/bitcoinj/**'
 }
