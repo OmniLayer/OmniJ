@@ -37,7 +37,7 @@ public class OmniTxBuilder {
      * TODO: Exact output amounts.
      *
      * @param redeemingKey Public key used for creating redeemable multisig data outputs
-     * @param refAddress The Omni reference address (for the reference output)
+     * @param refAddress (optional) Omni reference address (for the reference output) or null
      * @param payload Omni transaction payload as a raw byte array
      * @return Incomplete Transaction, no inputs or change output
      */
@@ -49,7 +49,9 @@ public class OmniTxBuilder {
 
         // Add outputs to the transaction
         tx.addOutput(Coin.MILLICOIN, omniParams.getExodusAddress());    // Add correct Exodus Output
-        tx.addOutput(Coin.CENT, refAddress);                            // Reference (destination) address output
+        if (refAddress != null) {
+            tx.addOutput(Coin.CENT, refAddress);                            // Reference (destination) address output
+        }
         return tx;
     }
 
