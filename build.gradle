@@ -10,6 +10,7 @@ subprojects {
 
     repositories {
         jcenter()
+        maven { url 'https://oss.jfrog.org/artifactory/oss-release-local' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/'}
     }
 
