@@ -7,12 +7,17 @@ import java.math.MathContext;
  * Omni "Number of Coins" (tokens) value
  *
  * Placeholder: Do not use - not ready yet!
+ *
+ * TODO: Implement all the unsupported methods
+ * TODO: Implement divisible and indivisible (as subclasses?)
  */
 public class OmniValue extends NumberValue {
+    private final long value;
+
+    // TODO: Should we allow negative values?
     public static final long   MIN_VALUE = 0; // Minimum value of 1 in transactions?
     public static final long   MAX_VALUE = 9223372036854775807L;
 
-    private final long value;
 
     public OmniValue(long value) {
         if (value < MIN_VALUE) {
@@ -31,17 +36,20 @@ public class OmniValue extends NumberValue {
 
     @Override
     public int getPrecision() {
-        return 0;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public int getScale() {
-        return 0;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public int intValueExact() {
-        return 0;
+        if (value > Integer.MAX_VALUE) {
+            throw new ArithmeticException("Value too big to be converted to integer");
+        }
+        return (int) value;
     }
 
     @Override
@@ -51,37 +59,40 @@ public class OmniValue extends NumberValue {
 
     @Override
     public double doubleValueExact() {
-        return 0;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public <T extends Number> T numberValue(Class<T> numberType) {
-        return null;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public NumberValue round(MathContext mathContext) {
-        return null;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public <T extends Number> T numberValueExact(Class<T> numberType) {
-        return null;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public long getAmountFractionNumerator() {
-        return 0;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public long getAmountFractionDenominator() {
-        return 0;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public int intValue() {
-        return 0;
+        if (value > Integer.MAX_VALUE) {
+            throw new ArithmeticException("Value too big to be converted to integer");
+        }
+        return (int) value;
     }
 
     @Override
@@ -91,11 +102,11 @@ public class OmniValue extends NumberValue {
 
     @Override
     public float floatValue() {
-        return 0;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public double doubleValue() {
-        return 0;
+        throw new UnsupportedOperationException("Operation not supported");
     }
 }
