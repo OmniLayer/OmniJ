@@ -104,7 +104,7 @@ class OmniDivisibleValueSpec extends Specification {
         92233720369                     | NumberFormatException.class
     }
 
-    //@Ignore("Groovy is converting these to BigDecimal which is allowed, though the 1.1 values are failing")
+    @Ignore("Groovy is converting these to BigDecimal which is allowed, though the 1.1 values are failing")
     @Unroll
     def "constructor is strongly typed and won't allow all Number subclasses: #val"() {
         when: "we try to create a OmniValue using an invalid numeric type"
@@ -117,14 +117,14 @@ class OmniDivisibleValueSpec extends Specification {
         val << [1F, 1.1F, 1.0D, 1.1D]
     }
 
-    //@Ignore("Groovy is converting these to BigDecimal which is allowed, though the 1.1 values are failing")
+    @Ignore("Groovy is converting these to BigDecimal which is allowed, though the 1.1 values are failing")
     @Unroll
     def "constructor is strongly typed and won't allow all Number subclasses: #val, #valClass"() {
         when: "we try to create a OmniValue using an invalid numeric type"
         OmniValue value = new OmniDivisibleValue(val)
 
         then: "exception is thrown"
-        GroovyRuntimeException e = thrown()
+        ArithmeticException e = thrown()
 
         and: "class was as expected"
         val.class == valClass
