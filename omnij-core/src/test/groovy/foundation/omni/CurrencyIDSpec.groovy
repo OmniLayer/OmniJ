@@ -57,7 +57,7 @@ class CurrencyIDSpec extends Specification {
     }
 
     def "constructor will allow a variety of integer types"() {
-        when: "we try to create an ecosystem using a valid numeric type"
+        when: "we try to create a CurrencyID using a valid numeric type"
         CurrencyID currencyID = new CurrencyID(id)
 
         then: "it is created correctly"
@@ -68,7 +68,7 @@ class CurrencyIDSpec extends Specification {
     }
 
     def "constructor will allow a variety of integer types (with class check)"() {
-        when: "we try to create an ecosystem using a valid numeric type"
+        when: "we try to create a CurrencyID using a valid numeric type"
         CurrencyID currencyID = new CurrencyID(id)
 
         then: "it is created correctly"
@@ -89,7 +89,7 @@ class CurrencyIDSpec extends Specification {
     }
 
     def "constructor is strongly typed and won't allow all Number subclasses"() {
-        when: "we try to create an ecosystem using an invalid numeric type"
+        when: "we try to create a CurrencyID using an invalid numeric type"
         CurrencyID currencyID = new CurrencyID(id)
 
         then: "exception is thrown"
@@ -100,7 +100,7 @@ class CurrencyIDSpec extends Specification {
     }
 
     def "constructor is strongly typed and won't allow all Number subclasses (with class check)"() {
-        when: "we try to create an ecosystem using an invalid numeric type"
+        when: "we try to create a CurrencyID using an invalid numeric type"
         CurrencyID currencyID = new CurrencyID(id)
 
         then: "exception is thrown"
