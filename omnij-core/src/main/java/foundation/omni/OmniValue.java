@@ -1,6 +1,7 @@
 package foundation.omni;
 
 import javax.money.NumberValue;
+import java.math.BigInteger;
 import java.math.MathContext;
 
 /**
@@ -11,22 +12,40 @@ import java.math.MathContext;
  * TODO: Implement all the unsupported methods
  * TODO: Implement divisible and indivisible (as subclasses?)
  */
-public class OmniValue extends NumberValue {
-    private final long value;
+public abstract class OmniValue extends NumberValue {
+    protected final long value; // internal format value (in willets)
 
     // TODO: Should we allow negative values?
-    public static final long   MIN_VALUE = 0; // Minimum value of 1 in transactions?
-    public static final long   MAX_VALUE = 9223372036854775807L;
-
+    // "Internal" max/min values, same as max/min for indivisible, but different than for divisible
+    private static final long   MIN_VALUE = 0; // Minimum value of 1 in transactions?
+    private static final long   MAX_VALUE = 9223372036854775807L;
 
     public OmniValue(long value) {
+        checkValue(value);
+        this.value = value;
+    }
+
+    public OmniValue(BigInteger value) {
+        checkValue(value);
+        this.value = value.longValue();
+    }
+
+    public static void checkValue(BigInteger value) {
+        if (value.compareTo(BigInteger.valueOf(MIN_VALUE)) == -1) {
+            throw new NumberFormatException();
+        }
+        if (value.compareTo(BigInteger.valueOf(MAX_VALUE)) == 1) {
+            throw new NumberFormatException();
+        }
+    }
+
+    public static void checkValue(long value) {
         if (value < MIN_VALUE) {
             throw new NumberFormatException();
         }
         if (value > MAX_VALUE) {
             throw new NumberFormatException();
         }
-        this.value = value;
     }
 
     @Override
