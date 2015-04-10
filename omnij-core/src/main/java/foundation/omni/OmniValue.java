@@ -88,16 +88,29 @@ public class OmniValue extends NumberValue {
     }
 
     @Override
-    public int intValue() {
-        if (value > Integer.MAX_VALUE) {
-            throw new ArithmeticException("Value too big to be converted to integer");
+    public byte byteValue() {
+        if (value > Byte.MAX_VALUE) {
+            throw new ArithmeticException("Value too big to be converted to byte");
         }
-        return (int) value;
+        return (byte) value;
+    }
+
+    @Override
+    public short shortValue() {
+        if (value > Short.MAX_VALUE) {
+            throw new ArithmeticException("Value too big to be converted to short");
+        }
+        return (short) value;
+    }
+
+    @Override
+    public int intValue() {
+        return intValueExact();
     }
 
     @Override
     public long longValue() {
-        return value;
+        return longValueExact();
     }
 
     @Override
@@ -107,6 +120,28 @@ public class OmniValue extends NumberValue {
 
     @Override
     public double doubleValue() {
-        throw new UnsupportedOperationException("Operation not supported");
+        return doubleValueExact();
     }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(value).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof OmniValue)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        return this.value == ((OmniValue)obj).value;
+    }
+
+    @Override
+    public String toString() {
+        return Long.toString(value);
+    }
+
 }
