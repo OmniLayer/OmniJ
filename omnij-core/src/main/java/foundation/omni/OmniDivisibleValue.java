@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.math.MathContext;
 
 /**
- *
+ * Numeric Value of Divisible Omni Token
  */
 public class OmniDivisibleValue extends OmniValue {
     public static final BigDecimal   MIN_VALUE = new BigDecimal(0); // Minimum value of 1 in transactions?

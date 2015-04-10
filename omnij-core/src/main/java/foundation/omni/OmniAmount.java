@@ -9,7 +9,7 @@ import javax.money.MonetaryQuery;
 import javax.money.NumberValue;
 
 /**
- * Omni Amount: A number of coins/tokens of a specified CurrencyID
+ * Omni Amount: A number of coins/tokens with a specified CurrencyID
  *
  * Placeholder: Do not use - not ready yet!
  *
@@ -18,6 +18,14 @@ import javax.money.NumberValue;
  *
  */
 public class OmniAmount implements MonetaryAmount {
+    private final OmniValue value;
+    private final CurrencyID currencyID;
+
+    public OmniAmount(OmniValue value, CurrencyID currencyID) {
+        this.value = value;
+        this.currencyID = currencyID;
+    }
+
     @Override
     public MonetaryContext getContext() {
         return null;
@@ -215,6 +223,6 @@ public class OmniAmount implements MonetaryAmount {
 
     @Override
     public NumberValue getNumber() {
-        return null;
+        return value;
     }
 }

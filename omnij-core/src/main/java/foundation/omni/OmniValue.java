@@ -5,12 +5,13 @@ import java.math.BigInteger;
 import java.math.MathContext;
 
 /**
- * Omni "Number of Coins" (tokens) value
+ * Numeric Value of Omni Token - base class for divisible and indivisible subclasses.
+ *
+ * Known as "Number of Coins" in the Specification
  *
  * Placeholder: Do not use - not ready yet!
  *
- * TODO: Implement all the unsupported methods
- * TODO: Implement divisible and indivisible (as subclasses?)
+ * TODO: Implement (all?) unsupported methods
  */
 public abstract class OmniValue extends NumberValue {
     protected final long value; // internal format value (in willets)
