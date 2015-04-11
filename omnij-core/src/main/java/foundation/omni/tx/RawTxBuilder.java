@@ -9,6 +9,9 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Build hex-encoded raw Omni transactions
+ *
+ * @author msgilligan
+ * @author dexX7
  */
 public class RawTxBuilder {
 

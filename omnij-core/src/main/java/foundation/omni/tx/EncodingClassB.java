@@ -2,6 +2,9 @@ package foundation.omni.tx;
 
 /**
  * Constants for Omni Class B Transaction encoding
+ *
+ * @author msgilligan
+ * @author dexX7
  */
 public class EncodingClassB {
     static final int chunkDataSize = 30;            // Data bytes per chunk

@@ -1,9 +1,9 @@
 package foundation.omni.tx;
 
 /**
- * Methods to add and remove sequence numbers from byte arrays.
+ * <p>Methods to add and remove sequence numbers from byte arrays.</p>
  *
- * For use in building Omni Protocol transactions.
+ * <p>For use in building Omni Protocol transactions.</p>
  *
  * @author msgilligan
  * @author dexX7

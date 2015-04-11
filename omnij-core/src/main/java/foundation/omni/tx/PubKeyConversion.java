@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Convert a stream of bytes to a list of ECKeys
+ * <p>Convert a stream of bytes to a list of ECKeys</p>
  *
- * Currently Assumes steam length is a whole number multiple of EncodingClassB.chunkSize
+ * <p>Currently Assumes steam length is a whole number multiple of EncodingClassB.chunkSize</p>
+ *
+ * @author msgilligan
+ * @author dexX7
  */
 public class PubKeyConversion {
     private static final int randSeed = 0x8987FEED; // TODO: Better seed

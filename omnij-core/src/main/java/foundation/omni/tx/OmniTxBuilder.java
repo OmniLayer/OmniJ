@@ -32,9 +32,9 @@ public class OmniTxBuilder {
     }
 
     /**
-     * Create unsigned Omni transaction in a bitcoinj Transaction object
+     * <p>Create unsigned Omni transaction in a bitcoinj Transaction object</p>
      *
-     * TODO: Exact output amounts.
+     * <p>TODO: Exact output amounts.</p>
      *
      * @param redeemingKey Public key used for creating redeemable multisig data outputs
      * @param refAddress (optional) Omni reference address (for the reference output) or null
@@ -56,9 +56,8 @@ public class OmniTxBuilder {
     }
 
     /**
-     * Create a signed Omni transaction in a bitcoinj Transaction object
+     * <p>Create a signed Omni transaction in a bitcoinj Transaction object</p>
      *
-     * TODO: Calculate fee dynamically.
      *
      * @param fromKey Private key/address to send from and receive change to
      * @param unspentOutputs A list of unspent outputs for funding the transaction
@@ -98,7 +97,9 @@ public class OmniTxBuilder {
     }
 
     /**
-     * Calculate change and create a change output
+     * <p>Calculate change and create a change output</p>
+     *
+     * <p>TODO: Calculate fee dynamically.</p>
      *
      * @param tx Transaction with all non-change outputs attached
      * @param changeAddress Address to receive the change

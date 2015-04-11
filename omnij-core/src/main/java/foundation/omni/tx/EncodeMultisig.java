@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * WIP
+ * <p>Encode Data into MultiSig transaction outputs e.g. for Omni Protocol Class B transactions.</p>
+ *
+ * @author msgilligan
+ * @author dexX7
  */
 public class EncodeMultisig {
 
