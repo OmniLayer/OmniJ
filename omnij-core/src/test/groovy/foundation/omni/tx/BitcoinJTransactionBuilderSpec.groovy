@@ -3,6 +3,7 @@ package foundation.omni.tx
 import foundation.omni.net.OmniNetworkParameters
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.ECKey
+import org.bitcoinj.core.InsufficientMoneyException
 import org.bitcoinj.core.Sha256Hash
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.TransactionInput
@@ -59,7 +60,7 @@ class BitcoinJTransactionBuilderSpec extends Specification {
         rawTx.encodeHex().toString() == "01000000014fc80ee90baa51dcfa12d1a77dbd0e3820694c52327a056741c379eceb71df2e010000000100ffffffff03a0860100000000006751410401de173aa944eacf7e44e5073baca93fb34fe4b7897a1c82c92dfdc8a1f75ef58cd1b06e8052096980cb6e1ad6d3df143c34b3d7394bae2782a4df570554c2fb2103667d08778ca7e25f4044f96377023127ce00000000000000000000000000000052aea0860100000000001976a914946cb2e08075bcbaf157e47bcb67eb2b2339d24288ac40420f00000000001976a914ae38fb8f96d6a430feda6ccc5bbdc944c80832cc88ac00000000"
     }
 
-    def "Build a transaction using OmniTxBuilder" () {
+    def "Build a transaction using OmniTxBuilder with insufficient funds throws InsufficientMoneyException" () {
         when:
         def toAddress = senderAddr
         // TODO: Are there mock UTXOs in bitcoinj?
@@ -70,10 +71,8 @@ class BitcoinJTransactionBuilderSpec extends Specification {
         byte[] rawTx = tx.bitcoinSerialize()
 
         then:
-        rawTx != null
-        rawTx.length > 20
-
-        // TODO: Emtpy utxo list should throw an exception
+        InsufficientMoneyException e = thrown()
+        e.message == "Insufficient Bitcoin to build Omni Transaction"
 
     }
 

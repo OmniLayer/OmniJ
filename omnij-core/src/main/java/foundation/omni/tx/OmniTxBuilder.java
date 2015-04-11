@@ -5,6 +5,7 @@ import foundation.omni.net.OmniNetworkParameters;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionOutput;
@@ -65,7 +66,7 @@ public class OmniTxBuilder {
      * @param payload Omni transaction payload as a raw byte array
      * @return Signed and ready-to-send Transaction
      */
-    public Transaction createSignedOmniTransaction(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload) {
+    public Transaction createSignedOmniTransaction(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload) throws InsufficientMoneyException {
         Address fromAddress = fromKey.toAddress(netParams);
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
@@ -90,7 +91,7 @@ public class OmniTxBuilder {
      * @param amount The currency amount in willets
      * @return Signed and ready-to-send Transaction
      */
-    public Transaction createSignedSimpleSend(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address toAddress, CurrencyID currencyID, long amount) {
+    public Transaction createSignedSimpleSend(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address toAddress, CurrencyID currencyID, long amount) throws InsufficientMoneyException {
         String txHex = builder.createSimpleSendHex(currencyID, amount);
         byte[] payload = RawTxBuilder.hexToBinary(txHex);
         return createSignedOmniTransaction(fromKey, unspentOutputs, toAddress, payload);
@@ -106,15 +107,15 @@ public class OmniTxBuilder {
      * @param unspentOutputs Unspent outputs for use in calculating change
      * @return The modified transaction, still needs signed inputs
      */
-    Transaction makeChangeOutput(Transaction tx, Address changeAddress, List<TransactionOutput> unspentOutputs) {
+    Transaction makeChangeOutput(Transaction tx, Address changeAddress, List<TransactionOutput> unspentOutputs) throws InsufficientMoneyException {
         // Calculate change
         long amountIn     = sum(unspentOutputs);    // Sum of available UTXOs
         long amountOut    = sum(tx.getOutputs());   // Sum of outputs, this transaction
         long amountChange = amountIn - amountOut - stdTxFee;
         // If change is negative, transaction is invalid
         if (amountChange < 0) {
-            // TODO: Throw Exception
-            System.out.println("Insufficient funds");
+            Coin missing = Coin.valueOf(-amountChange);
+            throw new InsufficientMoneyException(missing, "Insufficient Bitcoin to build Omni Transaction");
         }
         // If change is positive, return it all to the sending address
         if (amountChange > 0) {
