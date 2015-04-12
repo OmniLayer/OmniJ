@@ -5,21 +5,21 @@ import java.math.BigInteger;
 import java.math.MathContext;
 
 /**
- * Numeric Value of Omni Token - base class for divisible and indivisible subclasses.
+ * <p>Numeric Value of Omni Token - base class for divisible and indivisible subclasses.</p>
  *
- * Known as "Number of Coins" in the Specification
+ * <p>Known as "Number of Coins" in the Specification</p>
  *
- * Placeholder: Do not use - not ready yet!
+ * <p>Placeholder: Do not use - not ready yet!</p>
  *
- * TODO: Implement (all?) unsupported methods
+ * <p>TODO: Implement (all?) unsupported methods</p>
+ * <p>TODO: Should we allow negative values?</p>
  */
 public abstract class OmniValue extends NumberValue {
-    protected final long value; // internal format value (in willets)
+    protected final long value; // internal value format, in willets
 
-    // TODO: Should we allow negative values?
-    // "Internal" max/min values, same as max/min for indivisible, but different than for divisible
-    private static final long   MIN_VALUE = 0; // Minimum value of 1 in transactions?
-    private static final long   MAX_VALUE = 9223372036854775807L;
+    // Willet max/min values, same as max/min for indivisible, but different than for divisible
+    public static final long   MIN_VALUE = 0; // Minimum value of 1 in transactions?
+    public static final long   MAX_VALUE = Long.MAX_VALUE; // = 2^63 - 1 = 9223372036854775807L;
 
     public OmniValue(long value) {
         checkValue(value);
@@ -31,7 +31,13 @@ public abstract class OmniValue extends NumberValue {
         this.value = value.longValue();
     }
 
-    public static void checkValue(BigInteger value) {
+    /**
+     * <p>Make sure a BigInteger value is a valid Omni "number of coins" value</p>
+     *
+     * @param value
+     * @throws NumberFormatException
+     */
+    public static void checkValue(BigInteger value) throws NumberFormatException {
         if (value.compareTo(BigInteger.valueOf(MIN_VALUE)) == -1) {
             throw new NumberFormatException();
         }
@@ -40,11 +46,17 @@ public abstract class OmniValue extends NumberValue {
         }
     }
 
-    public static void checkValue(long value) {
+    /**
+     * <p>Make sure a long value is a valid Omni "number of coins" value</p>
+     *
+     * <p>Note: Since any positive long is valid, we just need to check that
+     * it's not less than MIN_VALUE</p>
+     *
+     * @param value value to check.
+     * @throws NumberFormatException
+     */
+    public static void checkValue(long value) throws NumberFormatException {
         if (value < MIN_VALUE) {
-            throw new NumberFormatException();
-        }
-        if (value > MAX_VALUE) {
             throw new NumberFormatException();
         }
     }
@@ -85,6 +97,13 @@ public abstract class OmniValue extends NumberValue {
     @Override
     public <T extends Number> T numberValue(Class<T> numberType) {
         throw new UnsupportedOperationException("Operation not supported");
+//        switch (numberType) {
+//            case (Class<T>) Long.class:
+//                return (T) new Long(0);
+//                break;
+//            default:
+//                throw new UnsupportedOperationException("unsupported type");
+//        }
     }
 
     @Override
