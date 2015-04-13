@@ -1,6 +1,6 @@
 = OmniJ Project (formerly bitcoin-spock)
 
-Note:: We're in the process of moving this repository from https://github.com/msgilligan/bitcoin-spock[msgilligan/bitcoin-spock] to https://github.com/OmniLayer/OmniJ[OmniLayer/OmniJ]. Since most of the current Issues currently are focused on Omni RPC testing and OmniJ development, it makes sense to move the whole repo. Some Bitcoin-specific portions of the repo may be extracted to another project or contributed to https://bitcoinj.github.io[bitcoinj].
+Note:: We're in the process of moving this repository from https://github.com/msgilligan/bitcoin-spock[msgilligan/bitcoin-spock] to https://github.com/OmniLayer/OmniJ[OmniLayer/OmniJ]. Since most of the current Issues are focused on Omni RPC testing and OmniJ development, it makes sense to move the whole repo. Some Bitcoin-specific portions of the repo may be extracted to another project or contributed to https://bitcoinj.github.io[bitcoinj].
 
 == OmniJ
 
