@@ -521,6 +521,48 @@ public class BitcoinClient extends RPCClient {
         return result;
     }
 
+    /**
+     * Returns a list of available commands.
+     *
+     * Commands which are unavailable will not be listed, such as wallet RPCs, if wallet support is disabled.
+     *
+     * @return The list of commands
+     */
+    public List<String> getCommands() throws JsonRPCException, IOException {
+        List<String> commands = new ArrayList<String>();
+        for (String entry : help().split("\n")) {
+            if (!entry.isEmpty() && !entry.matches("== (.+) ==")) {
+                String command = entry.split(" ")[0];
+                commands.add(command);
+            }
+        }
+        return commands;
+    }
+
+    /**
+     * Returns a human readable list of available commands.
+     *
+     * Bitcoin Core 0.9 returns an alphabetical list of commands, and Bitcoin Core 0.10 returns a categorized list of
+     * commands.
+     *
+     * @return The list of commands as string
+     */
+    public String help() throws JsonRPCException, IOException {
+        return help(null);
+    }
+
+    /**
+     * Returns helpful information for a specific command.
+     *
+     * @param command The name of the command to get help for
+     * @return The help text
+     */
+    public String help(String command) throws JsonRPCException, IOException {
+        List<Object> params = createParamList(command);
+        String result = send("help", params);
+        return result;
+    }
+
     public static byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
