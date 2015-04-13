@@ -18,8 +18,8 @@ public class OmniDivisibleValue extends OmniValue {
     /**
      * Create OmniDivisibleValue from willets/internal/wire format
      *
-     * @param willets
-     * @return
+     * @param willets number of willets
+     * @return OmniIndivisibleValue equal to number of willets
      */
     public static OmniDivisibleValue fromWillets(long willets) {
         return new OmniDivisibleValue(willets, true);
