@@ -16,6 +16,17 @@ class BitcoinSpec extends BaseRegTestSpec {
         info.protocolversion >= 70002
     }
 
+    def "Get a list of available commands"() {
+        given:
+        def commands = getCommands()
+
+        expect:
+        commands != null
+        commands.contains('getinfo')
+        commands.contains('help')
+        commands.contains('stop')
+    }
+
     def "Generate a block upon request"() {
         given: "a certain starting height"
         def startHeight = blockCount

@@ -30,8 +30,11 @@ class BaseRegTestSpec extends Specification implements OmniClientDelegate, OmniT
         }
         assert available
 
-        // Set a default transaction fee, so a known reference value can be used in tests
+        // Set and confirm default fees, so a known reference value can be used in tests
         assert client.setTxFee(stdTxFee)
+        def basicinfo = client.getinfo()
+        assert basicinfo['paytxfee'] == stdTxFee
+        assert basicinfo['relayfee'] == stdRelayTxFee
 
         // Make sure we have enough test coins
         while (getBalance() < minBTCForTests) {
