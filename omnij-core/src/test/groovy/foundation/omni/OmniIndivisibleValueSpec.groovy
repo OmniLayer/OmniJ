@@ -1,6 +1,7 @@
 package foundation.omni
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 
 /**
@@ -8,7 +9,26 @@ import spock.lang.Specification
  */
 class OmniIndivisibleValueSpec extends Specification {
 
-    def "constructor will allow a variety of integer types"() {
+    @Unroll
+    def "When created from willets, resulting value is unchanged #willets == #expectedValue" (Long willets, Long expectedValue) {
+        when: "we try to create an OmniValue using a valid numeric type"
+        OmniValue value = OmniIndivisibleValue.fromWillets(willets)
+
+        then: "it is created correctly"
+        value.longValue() == expectedValue
+
+        where:
+        willets                 | expectedValue
+        0                       | 0
+        1                       | 1
+        100                     | 100
+        10000000                | 10000000
+        100000000               | 100000000
+        9223372036854775807     | 9223372036854775807
+    }
+
+    @Unroll
+    def "constructor will allow a variety of integer types: #val (#type)" (Object val, Class type) {
         when: "we try to create an OmniValue using a valid numeric type"
         OmniValue value = new OmniIndivisibleValue(val)
 
@@ -17,6 +37,7 @@ class OmniIndivisibleValueSpec extends Specification {
 
         where:
         val << [1 as Short, 1, 1I, 1L]
+        type = val.class
     }
 
     def "constructor will allow a variety of integer types (with class check)"() {

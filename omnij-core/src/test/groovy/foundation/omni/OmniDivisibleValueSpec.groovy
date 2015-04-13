@@ -1,6 +1,5 @@
 package foundation.omni
 
-import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -10,7 +9,26 @@ import spock.lang.Unroll
  */
 class OmniDivisibleValueSpec extends Specification {
 
-    def "constructor will allow a variety of integer types"() {
+    @Unroll
+    def "When created from willets, resulting value is scaled correctly #willets -> #expectedValue" (Long willets, BigDecimal expectedValue) {
+        when: "we try to create an OmniValue using a valid numeric type"
+        OmniValue value = OmniDivisibleValue.fromWillets(willets)
+
+        then: "it is created correctly"
+        value.bigDecimalValue() == expectedValue
+
+        where:
+        willets                 | expectedValue
+        0                       | 0
+        1                       | 0.00000001
+        100                     | 0.00000100
+        10000000                | 0.1
+        100000000               | 1.0
+        9223372036854775807     | 92233720368.54775807
+    }
+
+    @Unroll
+    def "constructor will allow a variety of integer types: #val (#type)" (Object val, Class type) {
         when: "we try to create an OmniValue using a valid numeric type"
         OmniValue value = new OmniDivisibleValue(val)
 
@@ -19,6 +37,7 @@ class OmniDivisibleValueSpec extends Specification {
 
         where:
         val << [1 as Short, 1, 1I, 1L]
+        type = val.class
     }
 
     def "constructor will allow a variety of integer numeric types (with class check)"() {
@@ -102,39 +121,6 @@ class OmniDivisibleValueSpec extends Specification {
         1.000000001                     | ArithmeticException.class
         92233720368.54775808            | ArithmeticException.class
         92233720369                     | NumberFormatException.class
-    }
-
-    @Ignore("Groovy is converting these to BigDecimal which is allowed, though the 1.1 values are failing")
-    @Unroll
-    def "constructor is strongly typed and won't allow all Number subclasses: #val"() {
-        when: "we try to create a OmniValue using an invalid numeric type"
-        OmniValue value = new OmniDivisibleValue(val)
-
-        then: "exception is thrown"
-        ArithmeticException e = thrown()
-
-        where:
-        val << [1F, 1.1F, 1.0D, 1.1D]
-    }
-
-    @Ignore("Groovy is converting these to BigDecimal which is allowed, though the 1.1 values are failing")
-    @Unroll
-    def "constructor is strongly typed and won't allow all Number subclasses: #val, #valClass"() {
-        when: "we try to create a OmniValue using an invalid numeric type"
-        OmniValue value = new OmniDivisibleValue(val)
-
-        then: "exception is thrown"
-        ArithmeticException e = thrown()
-
-        and: "class was as expected"
-        val.class == valClass
-
-        where:
-        val  | valClass
-        1F   | Float.class
-        1.1F | Float.class
-        1.0D | Double.class
-        1.1D | Double.class
     }
 
     def "We can't create an OmniValue with an invalid value"() {
