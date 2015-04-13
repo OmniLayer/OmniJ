@@ -36,7 +36,7 @@ All other dependencies are automatically downloaded and cached by the test start
 
 . Check out this project using Git
 
-    $ git clone https://github.com/msgilligan/bitcoin-spock.git
+    $ git clone https://github.com/msgilligan/OmniJ.git
 
 . Start Omni Core (or bitcoind) on MainNet listening on the standard RPC port on `localhost`. The tests are configured to use the following username and password:
 
@@ -45,7 +45,7 @@ All other dependencies are automatically downloaded and cached by the test start
 
 . Open a shell and set the current working directory
 
-    cd bitcoin-spock
+    cd OmniJ
 
 . Run the tests with the provided Gradle wrapper scripts. For Unix/Mac:
 
@@ -90,7 +90,7 @@ Should "Send an amount to a newly created address"() {
 
 == Supporting Libraries API Documentation
 
-This project includes a variety of supporting classes necessary to implement the functional/integration tests. For an quick overview of these classes look at their http://ci.omni.foundation/job/bitcoin-spock/javadoc/[API documentation] (GroovyDoc).
+This project includes a variety of supporting classes necessary to implement the functional/integration tests. For an quick overview of these classes look at their http://ci.omni.foundation/job/OmniJ/javadoc/[API documentation] (GroovyDoc).
 
 == Additional Documentation
 
