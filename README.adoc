@@ -1,4 +1,4 @@
-= OmniJ Project (formerly bitcoin-spock)
+= OmniJ Project (includes bitcoin-spock)
 
 Note:: We've recently moved this repository from https://github.com/msgilligan/bitcoin-spock[msgilligan/bitcoin-spock] to https://github.com/OmniLayer/OmniJ[OmniLayer/OmniJ]. Since most of the issues in the Issue DB were focused on Omni RPC testing and OmniJ development, it made sense to move the whole repo. Some Bitcoin-specific portions of the repo may be extracted to another project or contributed to https://bitcoinj.github.io[bitcoinj].
 
@@ -6,7 +6,68 @@ Note:: We've recently moved this repository from https://github.com/msgilligan/b
 
 A Java/JVM implementation of the http://www.omnilayer.org[Omni Layer], an open-source, fully decentralized asset creation platform built on the Bitcoin blockchain.
 
-More documentation on OmniJ is coming soon.
+There are currently three subprojects of OmniJ. Each of which builds a JAR artifact.
+
+[options="header",frame="all"]
+|===
+| module | Description | Languages/Version
+
+| bitcoin-rpc
+| Bitcoin RPC library, command-line API/tools, integration tests
+| JDK 7+ Java & Groovy
+
+| omnij-core
+| Core Omni functionality
+| JDK 7+ Java-only, Android-compatible
+
+| omnij-rpc
+| Omni Core RPC library, command-line API/tools, integration tests
+| JDK 7+ Java & Groovy
+|===
+
+=== OmniJ Documentation and Build Reports
+
+* OmniJ http://ci.omni.foundation/job/OmniJ/javadoc/[API Doc]
+* OmniJ http://ci.omni.foundation/job/OmniJ/[Unit Test Results]
+
+=== OmniJ Maven Artifacts
+
+Coming https://github.com/OmniLayer/OmniJ/issues/66[soon].
+
+=== Building OmniJ
+
+. Check out this project using Git
+
+    $ git clone https://github.com/OmniLayer/OmniJ.git
+
+. Open a shell and set the current working directory
+
+    cd OmniJ
+
+. Build and test with the provided Gradle wrapper scripts. For Unix/Mac:
+
+    ./gradlew build
++
+or for Windows:
+
+    ./gradlew.bat build
+
+After a successful build, the jars will be in the following locations:
+
+[options="header",frame="all"]
+|===
+| module | jar path
+
+| bitcoin-rpc 
+| bitcoin-rpc/build/libs/bitcoin-rpc-_version_.jar
+
+| omnij-core
+| omnij-core/build/libs/omnij-core-_version_.jar
+
+| omnij-rpc
+| omnij-rpc/build/libs/omnij-rpc-_version_.jar
+|===
+
 
 == Integration Testing with bitcoin-spock
 
