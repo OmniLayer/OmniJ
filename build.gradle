@@ -82,8 +82,16 @@ subprojects {
     }
 
     test {
+        // Disable the test report for the individual test task
+//        reports.html.enabled = false
         // show standard out and standard error of the test JVM(s) on the console
         testLogging.showStandardStreams = true
     }
+}
+
+task testReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/allTests")
+    // Include the results from the `test` task in all subprojects
+    reportOn subprojects*.test
 }
 
