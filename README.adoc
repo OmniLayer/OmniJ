@@ -1,6 +1,9 @@
 = OmniJ Project (includes bitcoin-spock)
 
-Note:: We've recently moved this repository from https://github.com/msgilligan/bitcoin-spock[msgilligan/bitcoin-spock] to https://github.com/OmniLayer/OmniJ[OmniLayer/OmniJ]. Since most of the issues in the Issue DB were focused on Omni RPC testing and OmniJ development, it made sense to move the whole repo. Some Bitcoin-specific portions of the repo may be extracted to another project or contributed to https://bitcoinj.github.io[bitcoinj].
+Warning:: This software is EXPERIMENTAL software for **REGTEST and TESTNET TRANSACTIONS** only. *USE ON MAINNET AT YOUR OWN RISK.*
+
+Warning:: This is pre-release software and APIs may change without notice.
+
 
 == OmniJ
 
@@ -68,8 +71,9 @@ After a successful build, the jars will be in the following locations:
 | omnij-rpc/build/libs/omnij-rpc-_version_.jar
 |===
 
-
 == Integration Testing with bitcoin-spock
+
+Note:: We've recently moved this repository from https://github.com/msgilligan/bitcoin-spock[msgilligan/bitcoin-spock] to https://github.com/OmniLayer/OmniJ[OmniLayer/OmniJ]. Since most of the issues in the Issue DB were focused on Omni RPC testing and OmniJ development, it made sense to move the whole repo. Some Bitcoin-specific portions of the repo may be extracted to another project or contributed to https://bitcoinj.github.io[bitcoinj].
 
 Integration testing for https://bitcoin.org[Bitcoin] and http://omni.foundation[Omni Protocol] using the http://spockframework.org[Spock Framework].
 
