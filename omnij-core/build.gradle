@@ -1,6 +1,6 @@
 sourceCompatibility = 1.7
 group = 'foundation.omni'
-version = '0.2'
+version = '0.3-SNAPSHOT'
 
 dependencies {
 //    compile 'org.bitcoinj:bitcoinj-core:0.12.2'

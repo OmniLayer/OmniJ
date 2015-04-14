@@ -6,7 +6,7 @@ plugins {
 
 sourceCompatibility = 1.7
 group = 'foundation.omni'
-version = '0.2'
+version = '0.3-SNAPSHOT'
 
 configurations {
     robovm
