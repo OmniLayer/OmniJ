@@ -4,22 +4,24 @@
     <meta charset="UTF-8">
     <title>Bitcoin Spock</title>
 </head>
-<body>
-<p>A Java/JVM implementation of the http://www.omnilayer.org[Omni Layer], an open-source, fully decentralized asset creation platform built on the Bitcoin blockchain.</p>
+OmniLayer for Java: Omni Transaction support, Bitcoin Core and Omni Core RPC clients, CLI utilities, and integration tests.
+<p>OmniLayer for Java is a Java/JVM implementation of the <a href="http://www.omnilayer.org" target="_blank">Omni Layer</a>, an open-source, fully decentralized asset creation platform built on the Bitcoin blockchain.</p>
 
 <p>The OmniJ project was initially created for writing <a href="http://spockframework.org" target="_blank">Spock</a>
 tests of <a href="https://bitcoin.org/en/developer-reference#bitcoin-core-apis" target="_blank">Bitcoin RPC</a>
 and
 <a href="https://github.com/mastercoin-MSC/mastercore/blob/mscore-0.0.9/doc/apidocumentation.md" target="_blank">Omni Core RPC</a>
-(formerly Master Core) functions.</p>
+(formerly Master Core) functions. This means the initial focus was on RPC clients, command-line (CLI) tools, and integration tests.</p>
 
-In addition to the Spock specifications there is a collection
-of test support classes written in Java and Groovy.
+<p>OmniJ currently consists of three subprojects/JARs, each of which includes unit and integration tests:</p>
 
-OmniJ currently consists of three subprojects/JARs, each of which includes unit and integration tests:
-<br>
-<br>
-bitcoin-rpc:
+<p>omnij-core</p>
+<ul>
+    <li>Classes defining abstractions from the Omni Protocol Specification</li>
+    <li><code>OmniTxBuilder</code> and supporting classes to create and sign Omni Protocol transactions</li>
+</ul>
+
+<p>bitcoin-rpc</p>
 <ul>
     <li>A client library for talking to bitcoind via JSON-RPC</li>
     <li>A library for writing command-line tools that talk to bitcoind via JSON-RPC</li>
@@ -27,18 +29,12 @@ bitcoin-rpc:
     <li>Integration tests (Spock Specs) and test support classes for testing Bitcoin Core RPCs</li>
 </ul>
 
-omnij-rpc:
+<p>omnij-rpc</p>
 <ul>
     <li>Omni Protocol extensions to the JSON-RPC client for Omni Core</li>
     <li>Omni Protocol-specific command-line tools</li>
     <li>Classes for fetching, parsing, and comparing Omni Protocol consensus information</li>
     <li>Integration tests (Spock Specs) and test support classes for testing Omni Core RPCs</li>
-</ul>
-
-omnij-core:
-<ul>
-    <li>Classes defining abstractions from the Omni Protocol Specification</li>
-    <li><code>OmniTxBuilder</code> and supporting classes to create and sign Omni Protocol transactions</li>
 </ul>
 
 </body>
