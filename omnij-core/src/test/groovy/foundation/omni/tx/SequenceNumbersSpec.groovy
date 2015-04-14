@@ -8,7 +8,7 @@ import spock.lang.Specification
  * @author msgilligan
  * @author dexX7
  */
-class SequenceNumbersSpec extends Specification {
+class SequenceNumbersSpec extends BaseTxSpec {
 
     def "default sequence number is 0x01" () {
         expect:
@@ -66,9 +66,5 @@ class SequenceNumbersSpec extends Specification {
 
         then:
         IllegalArgumentException e = thrown()
-    }
-
-    byte[] hex(String string) {
-        return string.decodeHex()
     }
 }

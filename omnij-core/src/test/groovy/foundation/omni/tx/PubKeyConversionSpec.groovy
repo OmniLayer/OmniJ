@@ -6,7 +6,7 @@ import spock.lang.Specification
 /**
  *
  */
-class PubKeyConversionSpec extends Specification {
+class PubKeyConversionSpec extends BaseTxSpec {
 
     def "Can convert one string to a key" () {
         when:
@@ -25,9 +25,5 @@ class PubKeyConversionSpec extends Specification {
         then:
         list.size() == 1
         list[0].pubKey == hex("031234560000000000000000000000000000000000000000000000000000000001");
-    }
-
-    byte[] hex(String string) {
-        return string.decodeHex()
     }
 }

@@ -1,6 +1,7 @@
 package foundation.omni
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 /**
  * Specification for Omni Ecosystem class
@@ -42,7 +43,8 @@ class EcosystemSpec extends Specification {
         e1 == e2
     }
 
-    def "constructor is strongly typed and won't allow all Number subclasses"() {
+    @Unroll
+    def "constructor is strongly typed and won't allow all Number subclasses (#id)"() {
         when: "we try to create an ecosystem using an invalid numeric type"
         Ecosystem ecosystem = new Ecosystem(id)
 
@@ -64,7 +66,8 @@ class EcosystemSpec extends Specification {
         id << [0, -1, 3]
     }
 
-    def "An Ecosystem can be represented as String"() {
+    @Unroll
+    def "An Ecosystem can be represented as String (#id -> #ecosystemAsString)"() {
         expect:
         Ecosystem ecosystem = new Ecosystem(id)
         ecosystem.toString() == ecosystemAsString

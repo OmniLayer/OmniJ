@@ -9,7 +9,7 @@ import spock.lang.Specification
  * @author msgilligan
  * @author dexX7
  */
-class ObfuscationSpec extends Specification {
+class ObfuscationSpec extends BaseTxSpec {
 
     def "upper hash works"() {
         given:
@@ -73,10 +73,4 @@ class ObfuscationSpec extends Specification {
         // TODO: The expected result here is not necessarily valid
         enc == hex("1c9a3de5c2e22bf89b1e41e6fed84fb502f8a0c3ae14394a59366293dd130c")
     }
-
-
-    byte[] hex(String string) {
-        return string.decodeHex()
-    }
-
 }

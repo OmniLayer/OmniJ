@@ -4,16 +4,14 @@ import org.bitcoinj.core.ECKey
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.params.RegTestParams
 import spock.lang.Shared
-import spock.lang.Specification
-
 
 /**
  * WIP
  */
-class EncodeMultisigSpec extends Specification {
+class EncodeMultisigSpec extends BaseTxSpec {
     // the address of the sender, used as seed for hashing:
     @Shared
-    def senderAddr = "mvayzbj425X55kRLLPQiuCXWUED6LMP65C";
+    def sendingAddr = "mvayzbj425X55kRLLPQiuCXWUED6LMP65C";
     // public key of the sender, used to redeem dust later:
     @Shared
     def senderPubKey = ECKey.fromPublicOnly(hex("0347d08029b5cbc934f6079b650c50718eab5a56d51cf6b742ec9f865a41fcfca3"));
@@ -33,7 +31,7 @@ class EncodeMultisigSpec extends Specification {
 
     def "obfuscating payload produces expected result" () {
         when:
-        byte[] obf = Obfuscation.obfuscate(hex(expSeqPayload), senderAddr);
+        byte[] obf = Obfuscation.obfuscate(hex(expSeqPayload), sendingAddr);
 
         then:
         // TODO: The expected result here is not necessarily valid
@@ -45,7 +43,7 @@ class EncodeMultisigSpec extends Specification {
         EncodeMultisig encoder = new EncodeMultisig(RegTestParams.get())
 
         when:
-        Transaction tx = encoder.encodeObfuscated(senderPubKey, payload, senderAddr);
+        Transaction tx = encoder.encodeObfuscated(senderPubKey, payload, sendingAddr);
 
         then:
         tx != null
@@ -59,9 +57,4 @@ class EncodeMultisigSpec extends Specification {
 // TODO: The expected result here is not necessarily valid
         tx.bitcoinSerialize().encodeHex().toString() == "010000000002a0860100000000006951210347d08029b5cbc934f6079b650c50718eab5a56d51cf6b742ec9f865a41fcfca32103e2e98198f331c436644f88b5a6bc5c65df64d53457d624ed05e78dba40dd5e012103fac1e512bac2575554a5dee8a345fc773615af68a09d0291473316fe39087e0653aea0860100000000004751210347d08029b5cbc934f6079b650c50718eab5a56d51cf6b742ec9f865a41fcfca32103fabfe512bac2575554a5dee8a345fc773615af68a09d0291473316fe39087e0052ae00000000"
     }
-
-    byte[] hex(String string) {
-        return string.decodeHex()
-    }
-
 }

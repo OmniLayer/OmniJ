@@ -5,20 +5,26 @@
     <title>Bitcoin Spock</title>
 </head>
 <body>
-The OmniJ project was created for writing <a href="http://spockframework.org" target="_blank">Spock</a>
+<p>A Java/JVM implementation of the http://www.omnilayer.org[Omni Layer], an open-source, fully decentralized asset creation platform built on the Bitcoin blockchain.</p>
+
+<p>The OmniJ project was initially created for writing <a href="http://spockframework.org" target="_blank">Spock</a>
 tests of <a href="https://bitcoin.org/en/developer-reference#bitcoin-core-apis" target="_blank">Bitcoin RPC</a>
 and
 <a href="https://github.com/mastercoin-MSC/mastercore/blob/mscore-0.0.9/doc/apidocumentation.md" target="_blank">Omni Core RPC</a>
-(formerly Master Core) functions. In addition to the Spock specifications there is a collection
+(formerly Master Core) functions.</p>
+
+In addition to the Spock specifications there is a collection
 of test support classes written in Java and Groovy.
 
-We are in the process of breaking out these support classes into their own subprojects and JAR files, as follows:
+OmniJ currently consists of three subprojects/JARs, each of which includes unit and integration tests:
 <br>
 <br>
 bitcoin-rpc:
 <ul>
     <li>A client library for talking to bitcoind via JSON-RPC</li>
     <li>A library for writing command-line tools that talk to bitcoind via JSON-RPC</li>
+    <li>Some sample command-line tools</li>
+    <li>Integration tests (Spock Specs) and test support classes for testing Bitcoin Core RPCs</li>
 </ul>
 
 omnij-rpc:
@@ -26,11 +32,13 @@ omnij-rpc:
     <li>Omni Protocol extensions to the JSON-RPC client for Omni Core</li>
     <li>Omni Protocol-specific command-line tools</li>
     <li>Classes for fetching, parsing, and comparing Omni Protocol consensus information</li>
+    <li>Integration tests (Spock Specs) and test support classes for testing Omni Core RPCs</li>
 </ul>
 
 omnij-core:
 <ul>
     <li>Classes defining abstractions from the Omni Protocol Specification</li>
+    <li><code>OmniTxBuilder</code> and supporting classes to create and sign Omni Protocol transactions</li>
 </ul>
 
 </body>

@@ -39,7 +39,8 @@ class CurrencyIDSpec extends Specification {
         currency.ecosystem == Ecosystem.TMSC
     }
 
-    def "An instance knows which ecosystem it is in"() {
+    @Unroll
+    def "An instance knows which ecosystem it is in (#id in #ecosystem)"() {
         when: "we try to create a CurrencyID with the specified value"
         CurrencyID currency = new CurrencyID(id)
 
@@ -56,7 +57,8 @@ class CurrencyIDSpec extends Specification {
         4294967295 | Ecosystem.TMSC
     }
 
-    def "constructor will allow a variety of integer types"() {
+    @Unroll
+    def "constructor will allow a variety of integer types (#id)"() {
         when: "we try to create a CurrencyID using a valid numeric type"
         CurrencyID currencyID = new CurrencyID(id)
 
@@ -67,7 +69,8 @@ class CurrencyIDSpec extends Specification {
         id << [1 as Short, 1, 1I, 1L]
     }
 
-    def "constructor will allow a variety of integer types (with class check)"() {
+    @Unroll
+    def "constructor will allow a variety of integer types (#id / #idClass)"() {
         when: "we try to create a CurrencyID using a valid numeric type"
         CurrencyID currencyID = new CurrencyID(id)
 
@@ -88,7 +91,8 @@ class CurrencyIDSpec extends Specification {
         4294967295 | 4294967295L | Long.class
     }
 
-    def "constructor is strongly typed and won't allow all Number subclasses"() {
+    @Unroll
+    def "constructor is strongly typed and won't allow all Number subclasses (#id)"() {
         when: "we try to create a CurrencyID using an invalid numeric type"
         CurrencyID currencyID = new CurrencyID(id)
 
@@ -99,7 +103,8 @@ class CurrencyIDSpec extends Specification {
         id << [1F, 1.1F, 1.0D, 1.1D, 1.0, 1.1, 1.0G, 1.1G]
     }
 
-    def "constructor is strongly typed and won't allow all Number subclasses (with class check)"() {
+    @Unroll
+    def "constructor is strongly typed and won't allow all Number subclasses (#id / #idClass)"() {
         when: "we try to create a CurrencyID using an invalid numeric type"
         CurrencyID currencyID = new CurrencyID(id)
 
@@ -122,7 +127,8 @@ class CurrencyIDSpec extends Specification {
         1.1G | BigDecimal.class
     }
 
-    def "We can't create an CurrencyID with an invalid value"() {
+    @Unroll
+    def "We can't create an CurrencyID with an invalid value (#id)"() {
         when: "we try to create a CurrencyID with an invalid value"
         CurrencyID currencyID = new CurrencyID(id)
 
@@ -133,7 +139,8 @@ class CurrencyIDSpec extends Specification {
         id << [-1, 4294967296]
     }
 
-    def "A CurrencyID can be represented as String"() {
+    @Unroll
+    def "A CurrencyID can be represented as String (#id -> #currencyIdAsString)"() {
         expect:
         CurrencyID currency = new CurrencyID(id)
         currency.toString() == currencyIdAsString
