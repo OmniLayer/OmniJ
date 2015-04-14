@@ -1,12 +1,21 @@
-allprojects {
-    apply plugin: 'idea'
+ext.groovyVersion = '2.4.3'
+
+def groovydocSpec = {
+    use = true
+    if (project != rootProject) source = project.sourceSets.main.groovy + project.sourceSets.main.java
+    groovyClasspath = project.configurations.jansi
+
+    overview = rootProject.file('src/main/java/overview.html')
+    includePrivate = false
+    link 'http://docs.oracle.com/javase/7/docs/api/', 'java.', 'org.xml.', ' javax.xml.', 'javax.sql.', 'javax.net.', 'org.w3c.'
+    link 'http://commons.apache.org/proper/commons-cli/javadocs/api-release/', 'org.apache.commons.cli.'
+    link 'https://bitcoinj.github.io/javadoc/0.12.3/', 'org.bitcoin.', 'org.bitcoinj.'
 }
 
-subprojects {
+allprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
-
-    ext.groovyVersion = '2.4.3'
+    apply plugin: 'idea'
 
     repositories {
         jcenter()
@@ -23,7 +32,32 @@ subprojects {
     dependencies {
         jansi 'org.fusesource.jansi:jansi:1.11'         // Transitive dependency of GroovyDoc
         jansi "org.codehaus.groovy:groovy-ant:${groovyVersion}"    // used in Groovy doc
+    }
 
+    groovydoc groovydocSpec
+}
+
+dependencies {
+    compile "org.codehaus.groovy:groovy:${groovyVersion}"
+}
+
+task groovydocAll(type: Groovydoc)
+groovydocAll {
+    destinationDir = new File(buildDir, 'allgroovydoc')
+    source = groovydoc.source
+    classpath = groovydoc.classpath
+    groovyClasspath = groovydoc.groovyClasspath
+    subprojects.each { sp ->
+        source += sp.groovydoc.source
+        classpath += sp.groovydoc.classpath
+        groovyClasspath += sp.groovydoc.groovyClasspath
+    }
+}
+groovydocAll groovydocSpec
+
+subprojects {
+
+    dependencies {
         //    compile 'org.bitcoinj:bitcoinj-core:0.12.2'
         // Temporarily use snapshot and local jar, until Comparable address is in snapshot/release.
 //    compile 'org.bitcoinj:bitcoinj-core:0.13-SNAPSHOT'
@@ -50,13 +84,6 @@ subprojects {
     test {
         // show standard out and standard error of the test JVM(s) on the console
         testLogging.showStandardStreams = true
-    }
-
-    groovydoc {
-        // Create GroovyDoc for Groovy + Java classes
-        source = sourceSets.main.groovy + sourceSets.main.java
-        overview = "src/main/java/overview.html"
-        groovyClasspath = project.configurations.jansi
     }
 }
 
