@@ -53,6 +53,31 @@ trait ExtendedTransactions implements OmniClientDelegate, RawTxDelegate {
     }
 
     /**
+     * Creates an offer on the MetaDex exchange (aka Dex Phase II) (tx 21).
+     *
+     * <p>Note: Currently assumes divisible currencies</p>
+     * <p>Note: Untested</p>
+     *
+     * @param address        The address
+     * @param currencyId     The identifier of the currency for sale
+     * @param amountForSale  The amount of currency (BigDecimal coins)
+     * @param amountDesired  The amount of desired Currency (divisible token, decimal format)
+     * @param paymentWindow  The payment window measured in blocks
+     * @param action         The action applied to the offer (1 = new, 2 = update, 3 = cancel)
+     * @return The transaction hash
+     */
+    Sha256Hash createMetaDexSellOffer(Address address, CurrencyID currencyId, BigDecimal amountForSale,
+                                  BigDecimal amountDesired, Byte paymentWindow, BigDecimal commitmentFee,
+                                  Byte action) {
+        Long willetsForSale = BTC.btcToSatoshis(amountForSale)  // Assume divisible property
+        Long willetsDesired = BTC.btcToSatoshis(amountDesired)  // Assume divisible property
+        String rawTxHex = createMetaDexSellOfferHex(
+                currencyId, willetsForSale, willetsDesired, paymentWindow, action);
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex)
+        return txid
+    }
+
+    /**
      * Creates a smart property with fixed supply.
      *
      * @param address    The issuance address
