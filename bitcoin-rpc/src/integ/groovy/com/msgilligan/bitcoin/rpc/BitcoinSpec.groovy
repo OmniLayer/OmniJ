@@ -27,23 +27,26 @@ class BitcoinSpec extends BaseRegTestSpec {
         commands.contains('stop')
     }
 
-    def "Generate a block upon request"() {
+    def "Use RegTest mode to generate a block upon request"() {
         given: "a certain starting height"
         def startHeight = blockCount
 
         when: "we generate 1 new block"
-        generateBlocks(1)
+        generateBlock()
 
         then: "the block height is 1 higher"
         blockCount == startHeight + 1
-
     }
 
-    def "Send an amount to a newly created address"() {
-        when: "we create a new address and send testAmount to it"
+    def "When we send an amount to a newly created address, it arrives"() {
+        given: "A new, empty Bitcoin address"
         def destinationAddress = getNewAddress()
+
+        when: "we send it testAmount (from coins mined in RegTest mode)"
         sendToAddress(destinationAddress, testAmount, "comment", "comment-to")
-        generateBlocks(1)
+
+        and: "we generate 1 new block"
+        generateBlock()
 
         then: "the new address has a balance of testAmount"
         testAmount == getReceivedByAddress(destinationAddress)
