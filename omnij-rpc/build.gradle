@@ -104,8 +104,13 @@ task regTest(type: Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
     outputs.upToDateWhen { false }
     testLogging.showStandardStreams = true
+    beforeSuite { descriptor ->
+        if (descriptor.getClassName() != null) {
+            logger.lifecycle('\033[1m' + descriptor.getName() + "\033[0m") // bold
+        }
+    }
     beforeTest { descriptor ->
-        logger.lifecycle("\n** Running test: " + descriptor)
+        logger.lifecycle('    ' + descriptor.getName())
     }
 
     systemProperty 'regtest', true
