@@ -29,7 +29,7 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
      * Wait for RPC server to be responding and to be in sync with the Bitcoin Blockchain
      */
     void setupSpec() {
-        log.info "Waiting for server..."
+        log.debug "Waiting for server..."
         Boolean available = client.waitForServer(rpcWaitTimeoutSeconds)
         if (!available) {
             log.error "Timeout error."

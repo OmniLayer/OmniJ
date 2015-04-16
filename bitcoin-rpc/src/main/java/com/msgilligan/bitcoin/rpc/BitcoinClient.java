@@ -46,7 +46,7 @@ public class BitcoinClient extends RPCClient {
     public Boolean waitForServer(Integer timeout) throws JsonRPCException {
         Integer seconds = 0;
 
-        System.err.println("Waiting for server RPC ready:");
+        log.debug("Waiting for server RPC ready:");
 
         Integer block;
 
@@ -54,7 +54,7 @@ public class BitcoinClient extends RPCClient {
             try {
                 block = this.getBlockCount();
                 if (block != null ) {
-                    System.err.println("\nRPC Ready.");
+                    log.debug("\nRPC Ready.");
                     return true;
                 }
             } catch (SocketException se ) {
