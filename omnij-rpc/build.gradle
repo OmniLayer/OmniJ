@@ -104,6 +104,9 @@ task regTest(type: Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
     outputs.upToDateWhen { false }
     testLogging.showStandardStreams = true
+    beforeTest { descriptor ->
+        logger.lifecycle("\n** Running test: " + descriptor)
+    }
 
     systemProperty 'regtest', true
     include 'foundation/omni/test/rpc/**', 'foundation/omni/test/tx/**'
