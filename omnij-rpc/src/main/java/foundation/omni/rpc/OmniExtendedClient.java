@@ -1,21 +1,36 @@
-package foundation.omni.rpc
+package foundation.omni.rpc;
 
-import com.msgilligan.bitcoin.BTC
-import foundation.omni.CurrencyID
-import foundation.omni.Ecosystem
-import foundation.omni.PropertyType
-import groovy.transform.CompileStatic
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.Sha256Hash
+import com.msgilligan.bitcoin.BTC;
+import com.msgilligan.bitcoin.rpc.JsonRPCException;
+import com.msgilligan.bitcoin.rpc.RPCConfig;
+import foundation.omni.CurrencyID;
+import foundation.omni.Ecosystem;
+import foundation.omni.PropertyType;
+import foundation.omni.tx.RawTxBuilder;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.Sha256Hash;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URI;
 
 /**
- * Extended Omni Transactions without direct RPCs
+ * <p>OmniClient that adds "extended" methods for Omni transactions that lack
+ * RPCs in Omni Core 0.9.0</p>
  *
- * Raw transactions are created and sent via sendrawtx_MP
+ * <p>Raw transactions are created and sent via sendrawtx_MP
  *
  */
-//@CompileStatic
-trait ExtendedTransactions implements OmniClientDelegate, RawTxDelegate {
+public class OmniExtendedClient extends OmniClient {
+    RawTxBuilder builder = new RawTxBuilder();
+
+    public OmniExtendedClient(RPCConfig config) throws IOException {
+        super(config);
+    }
+
+    public OmniExtendedClient(URI server, String rpcuser, String rpcpassword) throws IOException {
+        super(server, rpcuser, rpcpassword);
+    }
 
     /**
      * Creates and broadcasts a "send to owners" transaction.
@@ -24,10 +39,10 @@ trait ExtendedTransactions implements OmniClientDelegate, RawTxDelegate {
      * @param amount      The number of tokens to distribute
      * @return The transaction hash
      */
-    Sha256Hash sendToOwners(Address address, CurrencyID currencyId, Long amount) {
-        String rawTxHex = createSendToOwnersHex(currencyId, amount);
-        Sha256Hash txid = sendrawtx_MP(address, rawTxHex)
-        return txid
+    Sha256Hash sendToOwners(Address address, CurrencyID currencyId, Long amount) throws JsonRPCException, IOException {
+        String rawTxHex = builder.createSendToOwnersHex(currencyId, amount);
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
+        return txid;
     }
 
     /**
@@ -44,14 +59,14 @@ trait ExtendedTransactions implements OmniClientDelegate, RawTxDelegate {
      */
     Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, BigDecimal amountForSale,
                                   BigDecimal amountDesired, Byte paymentWindow, BigDecimal commitmentFee,
-                                  Byte action) {
-        Long satoshisForSale = BTC.btcToSatoshis(amountForSale)
-        Long satoshisDesired = BTC.btcToSatoshis(amountDesired)
-        Long satoshisFee = BTC.btcToSatoshis(commitmentFee)
-        String rawTxHex = createDexSellOfferHex(
+                                  Byte action) throws JsonRPCException, IOException {
+        Long satoshisForSale = BTC.btcToSatoshis(amountForSale).longValue();
+        Long satoshisDesired = BTC.btcToSatoshis(amountDesired).longValue();
+        Long satoshisFee = BTC.btcToSatoshis(commitmentFee).longValue();
+        String rawTxHex = builder.createDexSellOfferHex(
                 currencyId, satoshisForSale, satoshisDesired, paymentWindow, satoshisFee, action);
-        Sha256Hash txid = sendrawtx_MP(address, rawTxHex)
-        return txid
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
+        return txid;
     }
 
     /**
@@ -68,16 +83,15 @@ trait ExtendedTransactions implements OmniClientDelegate, RawTxDelegate {
      * @param action            The action applied to the offer (1 = new, 2 = update, 3 = cancel)
      * @return The transaction hash
      */
-    Sha256Hash createMetaDexSellOffer(Address address,
-                                      CurrencyID currencyForSale, BigDecimal amountForSale,
+    Sha256Hash createMetaDexSellOffer(Address address, CurrencyID currencyForSale, BigDecimal amountForSale,
                                       CurrencyID currencyDesired, BigDecimal amountDesired,
-                                      Byte action) {
-        Long willetsForSale = BTC.btcToSatoshis(amountForSale)  // Assume divisible property
-        Long willetsDesired = BTC.btcToSatoshis(amountDesired)  // Assume divisible property
-        String rawTxHex = createMetaDexSellOfferHex(
+                                      Byte action) throws JsonRPCException, IOException {
+        Long willetsForSale = BTC.btcToSatoshis(amountForSale).longValue();  // Assume divisible property
+        Long willetsDesired = BTC.btcToSatoshis(amountDesired).longValue();  // Assume divisible property
+        String rawTxHex = builder.createMetaDexSellOfferHex(
                 currencyForSale, willetsForSale, currencyDesired, willetsDesired, action);
-        Sha256Hash txid = sendrawtx_MP(address, rawTxHex)
-        return txid
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
+        return txid;
     }
 
     /**
@@ -89,7 +103,7 @@ trait ExtendedTransactions implements OmniClientDelegate, RawTxDelegate {
      * @param amount     The number of units to create
      * @return The transaction hash
      */
-    Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount) {
+    Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount) throws JsonRPCException, IOException {
         return createProperty(address, ecosystem, type, amount, "SP");
     }
 
@@ -103,9 +117,9 @@ trait ExtendedTransactions implements OmniClientDelegate, RawTxDelegate {
      * @param label      The label or title of the property
      * @return The transaction hash
      */
-    Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount, String label) {
-        String rawTxHex = createPropertyHex(ecosystem, type, 0L, "", "", label, "", "", amount);
-        Sha256Hash txid = sendrawtx_MP(address, rawTxHex)
-        return txid
+    Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount, String label) throws JsonRPCException, IOException {
+        String rawTxHex = builder.createPropertyHex(ecosystem, type, 0L, "", "", label, "", "", amount);
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
+        return txid;
     }
 }
