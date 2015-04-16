@@ -23,7 +23,7 @@ class BaseRegTestSpec extends Specification implements OmniClientDelegate, OmniT
     }
 
     void setupSpec() {
-        log.info "Waiting for server..."
+        log.debug "Waiting for server..."
         Boolean available = client.waitForServer(60)   // Wait up to 1 minute
         if (!available) {
             log.error "Timeout error."
