@@ -114,6 +114,9 @@ task regTest(type: Test) {
     }
 
     systemProperty 'regtest', true
+    systemProperties ([ "omni.test.rpcTestUser": rpcTestUser,
+                        "omni.test.rpcTestPassword": rpcTestPassword,
+    ])
     include 'foundation/omni/test/rpc/**', 'foundation/omni/test/tx/**'
 }
 
@@ -124,6 +127,12 @@ task consensusTest(type: Test) {
     testLogging.showStandardStreams = true
 
     systemProperty 'regtest', false
+    systemProperties ([ "omni.test.rpcTestUser": rpcTestUser,
+                        "omni.test.rpcTestPassword": rpcTestPassword,
+                        "omni.test.stableOmniRpcHost": stableOmniRpcHost,
+                        "omni.test.stableOmniRpcUser": stableOmniRpcUser,
+                        "omni.test.stableOmniRpcPassword": stableOmniRpcPassword
+    ])
     include 'foundation/omni/test/consensus/**'
 }
 
