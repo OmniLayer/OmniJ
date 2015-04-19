@@ -11,8 +11,9 @@ import java.nio.charset.StandardCharsets
  */
 abstract class BaseCLISpec extends Specification {
 
-    static final protected String rpcUser = TestServers.instance.rpcTestUser
-    static final protected String rpcPassword = TestServers.instance.rpcTestPassword
+    static final private TestServers testServers = TestServers.instance;
+    static final protected String rpcUser = testServers.rpcTestUser
+    static final protected String rpcPassword = testServers.rpcTestPassword
 
     protected String[] parseCommandLine(String line) {
         String[] args = line.split(' ')     // (Overly?) simple parsing of string into args[]

@@ -20,8 +20,11 @@ import spock.lang.Specification
  */
 abstract class BaseMainNetSpec extends Specification implements OmniClientDelegate,
         BlockchainDotInfoSyncing, Loggable {
+    static final protected TestServers testServers = TestServers.instance
+    static final protected String rpcTestUser = testServers.rpcTestUser
+    static final protected String rpcTestPassword = testServers.rpcTestPassword;
     {
-        client = new OmniCLIClient(RPCURI.defaultMainNetURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
+        client = new OmniCLIClient(RPCURI.defaultMainNetURI, rpcTestUser, rpcTestPassword)
     }
     static final Integer rpcWaitTimeoutSeconds = 3*60*60  // Wait up to 3 hours for RPC response
 

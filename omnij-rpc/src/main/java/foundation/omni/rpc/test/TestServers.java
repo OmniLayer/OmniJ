@@ -8,14 +8,30 @@ import java.net.URISyntaxException;
 /**
  * Test Server Connection Data
  */
-public class TestServers {
-    public static final String rpcTestUser = System.getProperty("omni.test.rpcTestUser", "bitcoinrpc");
-    public static final String rpcTestPassword = System.getProperty("omni.test.rpcTestPassword", "pass");
-    public static final String stableOmniRpcHost = System.getProperty("omni.test.stableOmniRpcHost");
-    public static final String stableOmniRpcUser = System.getProperty("omni.test.stableOmniRpcUser");
-    public static final String stableOmniRpcPassword = System.getProperty("omni.test.stableOmniRpcPassword");
+public class TestServers extends com.msgilligan.bitcoin.rpc.test.TestServers {
+    private static final TestServers INSTANCE = new TestServers();
 
-    public static URI getStablePublicMainNetURI() {
+    private final String stableOmniRpcHost = System.getProperty("omni.test.stableOmniRpcHost");
+    private final String stableOmniRpcUser = System.getProperty("omni.test.stableOmniRpcUser");
+    private final String stableOmniRpcPassword = System.getProperty("omni.test.stableOmniRpcPassword");
+
+    public static TestServers getInstance() {
+        return INSTANCE;
+    }
+
+    public String getStableOmniRpcHost() {
+        return stableOmniRpcHost;
+    }
+
+    public String getStableOmniRpcUser() {
+        return stableOmniRpcUser;
+    }
+
+    public String getStableOmniRpcPassword() {
+        return stableOmniRpcPassword;
+    }
+
+    public URI getStablePublicMainNetURI() {
         try {
             return new URI(RPCURI.rpcssl, null, stableOmniRpcHost, RPCURI.RPCPORT_MAINNET, RPCURI.rpcfile, null, null);
         } catch (URISyntaxException e) {

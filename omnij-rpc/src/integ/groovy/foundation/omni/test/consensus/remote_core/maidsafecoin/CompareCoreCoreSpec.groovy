@@ -15,7 +15,7 @@ class CompareCoreCoreSpec extends BaseConsensusSpec {
 
     void setupSpec() {
 
-        OmniClient remoteClient = new OmniClient(TestServers.stablePublicMainNetURI, TestServers.stableOmniRpcUser, TestServers.stableOmniRpcPassword)
+        OmniClient remoteClient = new OmniClient(testServers.stablePublicMainNetURI, testServers.stableOmniRpcUser, testServers.stableOmniRpcPassword)
         setupComparisonForCurrency(new OmniCoreConsensusTool(remoteClient),
                 MaidSafeCoin)
     }

@@ -9,13 +9,16 @@ import com.msgilligan.bitcoin.rpc.test.TestServers
 
 
 /**
- *
+ * Abstract Base class for Spock tests of Bitcoin Core in RegTest mode
  */
-class BaseRegTestSpec extends Specification implements BTCTestSupport, Loggable {
-    static final BigDecimal minBTCForTests = 50.0;
+abstract class BaseRegTestSpec extends Specification implements BTCTestSupport, Loggable {
+    static final BigDecimal minBTCForTests = 50.0
+    static final private TestServers testServers = TestServers.instance
+    static final protected String rpcTestUser = testServers.rpcTestUser
+    static final protected String rpcTestPassword = testServers.rpcTestPassword;
 
     {
-        client = new BitcoinClient(RPCURI.defaultRegTestURI, TestServers.instance.rpcTestUser, TestServers.instance.rpcTestPassword)
+        client = new BitcoinClient(RPCURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
     }
 
     void setupSpec() {

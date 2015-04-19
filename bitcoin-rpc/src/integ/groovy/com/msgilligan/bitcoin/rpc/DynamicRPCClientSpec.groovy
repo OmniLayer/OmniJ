@@ -10,11 +10,15 @@ import spock.lang.Specification
  *
  */
 class DynamicRPCClientSpec extends Specification {
+    static final private TestServers testServers = TestServers.instance
+    static final protected String rpcTestUser = testServers.rpcTestUser
+    static final protected String rpcTestPassword = testServers.rpcTestPassword
+
     @Shared
     DynamicRPCClient client
 
     void setupSpec() {
-        client = new DynamicRPCClient(RPCURI.defaultRegTestURI, TestServers.instance.rpcTestUser, TestServers.instance.rpcTestPassword)
+        client = new DynamicRPCClient(RPCURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
 
 // TODO: Need to implement waitForServer()
 // waitForServer() is in BitcoinClient because it uses getBlockCount()

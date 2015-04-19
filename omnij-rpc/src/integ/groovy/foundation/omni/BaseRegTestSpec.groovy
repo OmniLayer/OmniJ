@@ -13,12 +13,15 @@ import spock.lang.Specification
 /**
  * Base specification for integration tests on RegTest net
  */
-class BaseRegTestSpec extends Specification implements OmniClientDelegate, OmniTestSupport, Loggable {
+abstract class BaseRegTestSpec extends Specification implements OmniClientDelegate, OmniTestSupport, Loggable {
 
+    static final private TestServers testServers = TestServers.instance
+    static final protected String rpcTestUser = testServers.rpcTestUser
+    static final protected String rpcTestPassword = testServers.rpcTestPassword
     static final BigDecimal minBTCForTests = 50.0;
 
     {
-        client = new OmniCLIClient(RPCURI.defaultRegTestURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
+        client = new OmniCLIClient(RPCURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
         builder = new RawTxBuilder()
     }
 

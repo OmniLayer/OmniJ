@@ -60,8 +60,8 @@ class WalletSendSpec extends BaseRegTestSpec {
         Integer walletHeight, rpcHeight
         while ( (walletHeight = wallet.getLastBlockSeenHeight()) < (rpcHeight = client.getBlockCount()) ) {
             // TODO: Figure out a way to do this without polling and sleeping
-            println "WalletHeight: ${walletHeight} -- Waiting..."
-            Thread.sleep(50)
+            println "WalletHeight < rpcHeight: ${walletHeight} < ${rpcHeight} -- Waiting..."
+            Thread.sleep(100)
         }
         println "WalletHeight: ${walletHeight} == RPC Height: ${rpcHeight}"
         // Is it safe to assume that if walletHeight == rpcHeight then our transaction has been processed?
