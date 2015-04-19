@@ -36,7 +36,7 @@ sleep 30
 
 # Run integration tests
 echo "Running Omni RPC integration tests in RegTest mode..."
-./gradlew :omnij-rpc:regTest
+./gradlew clean :omnij-rpc:regTest
 GRADLESTATUS=$?
 
 exit $GRADLESTATUS

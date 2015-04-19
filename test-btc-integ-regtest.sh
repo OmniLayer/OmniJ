@@ -36,7 +36,7 @@ sleep 30
 
 # Run integration tests
 echo "Running Bitcoin RPC integration tests in regtest mode..."
-./gradlew :bitcoin-rpc:regTest
+./gradlew clean :bitcoin-rpc:regTest
 GRADLESTATUS=$?
 
 exit $GRADLESTATUS

@@ -36,7 +36,7 @@ sleep 30
 
 # Run consensus tests
 echo "Running consensus tests..."
-./gradlew :omnij-rpc:consensusTest
+./gradlew clean :omnij-rpc:consensusTest
 GRADLESTATUS=$?
 
 exit $GRADLESTATUS
