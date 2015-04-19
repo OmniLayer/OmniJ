@@ -9,14 +9,15 @@ import spock.lang.Specification
  * Test Spec for OmniCoreConsensusTool
  */
 class OmniCoreConsensusToolSpec extends Specification {
+    static final private TestServers testServers = TestServers.instance
 
     def "Can access RPC given a URI and get block height"() {
         setup:
-        String user = TestServers.stableOmniRpcUser
-        String pass = TestServers.stableOmniRpcPassword
+        String user = testServers.stableOmniRpcUser
+        String pass = testServers.stableOmniRpcPassword
         String encUser = URLEncoder.encode(user, "UTF-8")
         String encPass = URLEncoder.encode(pass, "UTF-8")
-        String hostname = TestServers.stableOmniRpcHost
+        String hostname = testServers.stableOmniRpcHost
         URI uri = "https://${encUser}:${encPass}@${hostname}:8332".toURI()
 
         OmniCoreConsensusTool fetcher = new OmniCoreConsensusTool(uri)
