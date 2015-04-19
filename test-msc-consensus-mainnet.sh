@@ -32,7 +32,7 @@ BTCSTATUS=$?
 BTCPID=$!
 
 # Give server some time to start
-sleep 30
+#sleep 30
 
 # Run consensus tests
 echo "Running consensus tests..."
