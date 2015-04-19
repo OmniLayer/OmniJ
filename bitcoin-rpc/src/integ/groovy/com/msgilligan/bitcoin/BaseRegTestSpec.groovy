@@ -15,7 +15,7 @@ class BaseRegTestSpec extends Specification implements BTCTestSupport, Loggable 
     static final BigDecimal minBTCForTests = 50.0;
 
     {
-        client = new BitcoinClient(RPCURI.defaultRegTestURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
+        client = new BitcoinClient(RPCURI.defaultRegTestURI, TestServers.instance.rpcTestUser, TestServers.instance.rpcTestPassword)
     }
 
     void setupSpec() {

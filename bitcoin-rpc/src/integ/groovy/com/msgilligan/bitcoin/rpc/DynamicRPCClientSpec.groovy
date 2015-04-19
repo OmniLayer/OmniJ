@@ -14,7 +14,7 @@ class DynamicRPCClientSpec extends Specification {
     DynamicRPCClient client
 
     void setupSpec() {
-        client = new DynamicRPCClient(RPCURI.defaultRegTestURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
+        client = new DynamicRPCClient(RPCURI.defaultRegTestURI, TestServers.instance.rpcTestUser, TestServers.instance.rpcTestPassword)
 
 // TODO: Need to implement waitForServer()
 // waitForServer() is in BitcoinClient because it uses getBlockCount()
