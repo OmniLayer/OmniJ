@@ -6,13 +6,16 @@ import foundation.omni.rpc.OmniClient
 import foundation.omni.test.consensus.BaseConsensusSpec
 
 /**
- *
+ * Base class for Consensus tests between local and remote Omni Core instances
  */
-class CompareCoreCoreBaseSpec extends BaseConsensusSpec {
+abstract class CompareCoreCoreBaseSpec extends BaseConsensusSpec {
 
     void setupCoreCoreComparisonForCurrency(CurrencyID currencyID) {
+        // Create a client for the remote Omni Core instance
         OmniClient remoteClient = new OmniClient(testServers.stablePublicMainNetURI, testServers.stableOmniRpcUser, testServers.stableOmniRpcPassword)
+        // Use it to create a consensus tool
         OmniCoreConsensusTool remoteTool = new OmniCoreConsensusTool(remoteClient)
+        // Use consensus tool to create a consensus comparison for the specified currency ID
         setupComparisonForCurrency(remoteTool, currencyID)
     }
 
