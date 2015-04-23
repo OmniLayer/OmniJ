@@ -206,6 +206,18 @@ public class BitcoinClient extends RPCClient {
         send("invalidateblock", params);
     }
 
+    /**
+     * Removes invalidity status of a block and its descendants, reconsider them for activation.
+     *
+     * This can be used to undo the effects of "invalidateblock".
+     *
+     * @param hash The hash of the block to reconsider
+     */
+    public void reconsiderBlock(Sha256Hash hash)  throws JsonRPCException, IOException {
+        List<Object> params = createParamList(hash.toString());
+        send("reconsiderblock", params);
+    }
+
     public Address getNewAddress() throws JsonRPCException, IOException {
         return getNewAddress(null);
     }
