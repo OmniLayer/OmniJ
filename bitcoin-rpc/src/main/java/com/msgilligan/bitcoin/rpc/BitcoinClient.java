@@ -196,6 +196,16 @@ public class BitcoinClient extends RPCClient {
         return setGenerate(true, blocks);
     }
 
+    /**
+     * Permanently marks a block as invalid, as if it violated a consensus rule.
+     *
+     * @param hash The block hash
+     */
+    public void invalidateBlock(Sha256Hash hash)  throws JsonRPCException, IOException {
+        List<Object> params = createParamList(hash.toString());
+        send("invalidateblock", params);
+    }
+
     public Address getNewAddress() throws JsonRPCException, IOException {
         return getNewAddress(null);
     }
