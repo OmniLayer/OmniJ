@@ -196,6 +196,51 @@ public class BitcoinClient extends RPCClient {
         return setGenerate(true, blocks);
     }
 
+    /**
+     * Permanently marks a block as invalid, as if it violated a consensus rule.
+     *
+     * @param hash The block hash
+     */
+    public void invalidateBlock(Sha256Hash hash)  throws JsonRPCException, IOException {
+        List<Object> params = createParamList(hash.toString());
+        send("invalidateblock", params);
+    }
+
+    /**
+     * Removes invalidity status of a block and its descendants, reconsider them for activation.
+     *
+     * This can be used to undo the effects of "invalidateblock".
+     *
+     * @param hash The hash of the block to reconsider
+     */
+    public void reconsiderBlock(Sha256Hash hash)  throws JsonRPCException, IOException {
+        List<Object> params = createParamList(hash.toString());
+        send("reconsiderblock", params);
+    }
+
+    /**
+     * @return Information about all known tips in the block tree.
+     */
+    public List<Map<String, Object>> getChainTips()  throws JsonRPCException, IOException {
+        List<Map<String, Object>> tips = send("getchaintips", null);
+        return tips;
+    }
+
+    /**
+     * Clears the memory pool and returns a list of the removed transactions.
+     *
+     * @return A list of transaction hashes of the removed transactions
+     */
+    public List<Sha256Hash> clearMemPool() throws JsonRPCException, IOException {
+        List<String> hashesStr = send("clearmempool", null);
+        List<Sha256Hash> hashes = new ArrayList<Sha256Hash>();
+        for (String s : hashesStr) {
+            Sha256Hash hash = new Sha256Hash(s);
+            hashes.add(hash);
+        }
+        return hashes;
+    }
+
     public Address getNewAddress() throws JsonRPCException, IOException {
         return getNewAddress(null);
     }
