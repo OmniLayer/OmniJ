@@ -5,7 +5,7 @@ import foundation.omni.BaseRegTestSpec
 import org.bitcoinj.core.Sha256Hash
 import org.junit.internal.AssumptionViolatedException
 
-class BaseReorgSpec extends BaseRegTestSpec {
+abstract class BaseReorgSpec extends BaseRegTestSpec {
 
     static protected BigDecimal startBTC = 0.1
     static protected BigDecimal startMSC = 0.2
