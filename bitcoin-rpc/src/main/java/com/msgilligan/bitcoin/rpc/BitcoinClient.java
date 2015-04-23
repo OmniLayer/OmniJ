@@ -218,6 +218,14 @@ public class BitcoinClient extends RPCClient {
         send("reconsiderblock", params);
     }
 
+    /**
+     * @return Information about all known tips in the block tree.
+     */
+    public List<Map<String, Object>> getChainTips()  throws JsonRPCException, IOException {
+        List<Map<String, Object>> tips = send("getchaintips", null);
+        return tips;
+    }
+
     public Address getNewAddress() throws JsonRPCException, IOException {
         return getNewAddress(null);
     }
