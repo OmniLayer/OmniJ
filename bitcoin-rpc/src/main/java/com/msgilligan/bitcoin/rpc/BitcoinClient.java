@@ -226,6 +226,21 @@ public class BitcoinClient extends RPCClient {
         return tips;
     }
 
+    /**
+     * Clears the memory pool and returns a list of the removed transactions.
+     *
+     * @return A list of transaction hashes of the removed transactions
+     */
+    public List<Sha256Hash> clearMemPool() throws JsonRPCException, IOException {
+        List<String> hashesStr = send("clearmempool", null);
+        List<Sha256Hash> hashes = new ArrayList<Sha256Hash>();
+        for (String s : hashesStr) {
+            Sha256Hash hash = new Sha256Hash(s);
+            hashes.add(hash);
+        }
+        return hashes;
+    }
+
     public Address getNewAddress() throws JsonRPCException, IOException {
         return getNewAddress(null);
     }
