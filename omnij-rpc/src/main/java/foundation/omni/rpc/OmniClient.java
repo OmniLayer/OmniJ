@@ -95,53 +95,6 @@ public class OmniClient extends BitcoinClient {
     }
 
     /**
-     * Creates and broadcasts a "simple send" transaction.
-     *
-     * @param fromAddress The address to spent from
-     * @param toAddress   The address to send to
-     * @param currency    The identifier of the token to transfer
-     * @param amount      The amount to transfer
-     * @return The hash of the transaction
-     */
-    public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount)
-            throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress.toString(), toAddress.toString(), currency.longValue(),
-                                              amount.toPlainString());
-        String txid = send("send_MP", params);
-        Sha256Hash hash = new Sha256Hash(txid);
-        return hash;
-    }
-
-    /**
-     * Broadcasts a raw Omni Layer transaction.
-     *
-     * @param fromAddress The address to send from
-     * @param rawTxHex    The hex-encoded raw transaction
-     * @return The hash of the transaction
-     */
-    public Sha256Hash sendrawtx_MP(Address fromAddress, String rawTxHex) throws JsonRPCException, IOException {
-        return sendrawtx_MP(fromAddress, rawTxHex, null);
-    }
-
-    /**
-     * Broadcasts a raw Omni Layer transaction with reference address.
-     *
-     * @param fromAddress      The address to send from
-     * @param rawTxHex         The hex-encoded raw transaction
-     * @param referenceAddress The reference address
-     * @return The hash of the transaction
-     */
-    public Sha256Hash sendrawtx_MP(Address fromAddress, String rawTxHex, Address referenceAddress)
-            throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress.toString(), rawTxHex);
-        if (referenceAddress != null) {
-            params.add(referenceAddress.toString());
-        }
-        String txid = send("sendrawtx_MP", params);
-        return new Sha256Hash(txid);
-    }
-
-    /**
      * Lists currently active offers on the distributed BTC/MSC exchange.
      *
      * @return A list with information about the active offers
@@ -218,6 +171,53 @@ public class OmniClient extends BitcoinClient {
     }
 
     /**
+     * Broadcasts a raw Omni Layer transaction.
+     *
+     * @param fromAddress The address to send from
+     * @param rawTxHex    The hex-encoded raw transaction
+     * @return The hash of the transaction
+     */
+    public Sha256Hash sendrawtx_MP(Address fromAddress, String rawTxHex) throws JsonRPCException, IOException {
+        return sendrawtx_MP(fromAddress, rawTxHex, null);
+    }
+
+    /**
+     * Broadcasts a raw Omni Layer transaction with reference address.
+     *
+     * @param fromAddress      The address to send from
+     * @param rawTxHex         The hex-encoded raw transaction
+     * @param referenceAddress The reference address
+     * @return The hash of the transaction
+     */
+    public Sha256Hash sendrawtx_MP(Address fromAddress, String rawTxHex, Address referenceAddress)
+            throws JsonRPCException, IOException {
+        List<Object> params = createParamList(fromAddress.toString(), rawTxHex);
+        if (referenceAddress != null) {
+            params.add(referenceAddress.toString());
+        }
+        String txid = send("sendrawtx_MP", params);
+        return new Sha256Hash(txid);
+    }
+
+    /**
+     * Creates and broadcasts a "simple send" transaction.
+     *
+     * @param fromAddress The address to spent from
+     * @param toAddress   The address to send to
+     * @param currency    The identifier of the token to transfer
+     * @param amount      The amount to transfer
+     * @return The hash of the transaction
+     */
+    public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount)
+            throws JsonRPCException, IOException {
+        List<Object> params = createParamList(fromAddress.toString(), toAddress.toString(), currency.longValue(),
+                                              amount.toPlainString());
+        String txid = send("send_MP", params);
+        Sha256Hash hash = new Sha256Hash(txid);
+        return hash;
+    }
+
+    /**
      * Creates and broadcasts a "send to owners" transaction.
      *
      * @param fromAddress The address to spent from
@@ -231,6 +231,70 @@ public class OmniClient extends BitcoinClient {
         String txid = send("sendtoowners_MP", params);
         Sha256Hash hash = new Sha256Hash(txid);
         return hash;
+    }
+
+    /**
+     * Creates and broadcasts a "trade" transaction.
+     *
+     * @param fromAddress     The address to trade with
+     * @param amountForSale   The amount to trade
+     * @param propertyForSale The property for sale
+     * @param amountDesired   The desired amount for the trade
+     * @param propertyDesired The desired property
+     * @param action          New offer (1), cancel offer (2), cancel offers with currency pair (3), cancel all (4)
+     * @return The hash of the transaction
+     * @since Omni Core 0.0.10
+     */
+    public Sha256Hash trade_MP(Address fromAddress, BigDecimal amountForSale, CurrencyID propertyForSale,
+                               BigDecimal amountDesired, CurrencyID propertyDesired, Byte action)
+            throws JsonRPCException, IOException {
+        List<Object> params = createParamList(fromAddress.toString(), amountForSale.toPlainString(),
+                                              propertyForSale.longValue(), amountDesired.toPlainString(),
+                                              propertyDesired.longValue(), action);
+        String txid = send("trade_MP", params);
+        Sha256Hash hash = new Sha256Hash(txid);
+        return hash;
+    }
+
+    /**
+     * Returns information about an order on the distributed token exchange.
+     *
+     * @param txid The transaction hash of the order to look up
+     * @return Information about the order, trade, and order matches
+     * @since Omni Core 0.0.10
+     */
+    public Map<String, Object> gettrade_MP(Sha256Hash txid) throws JsonRPCException, IOException {
+        List<Object> params = createParamList(txid.toString());
+        Map<String, Object> trade = send("gettrade_MP", params);
+        return trade;
+    }
+
+    /**
+     * Lists orders on the distributed token exchange with the given token for sale.
+     *
+     * @param propertyForSale The identifier of the token for sale, used as filter
+     * @return A list of orders
+     * @since Omni Core 0.0.10
+     */
+    public List<Map<String, Object>> getorderbook_MP(CurrencyID propertyForSale) throws JsonRPCException, IOException {
+        List<Object> params = createParamList(propertyForSale.longValue());
+        List<Map<String, Object>> orders = send("getorderbook_MP", params);
+        return orders;
+    }
+
+    /**
+     * Lists orders on the distributed token exchange with the given token for sale, and token desired.
+     *
+     * @param propertyForSale The identifier of the token for sale, used as filter
+     * @param propertyDesired The identifier of the token desired, used as filter
+     * @return A list of orders
+     * @since Omni Core 0.0.10
+     */
+    public List<Map<String, Object>> getorderbook_MP(CurrencyID propertyForSale, CurrencyID propertyDesired)
+            throws JsonRPCException, IOException {
+        List<Object> params = createParamList(propertyForSale.longValue(), propertyDesired.longValue());
+        List<Map<String, Object>> orders = send("getorderbook_MP", params);
+        return orders;
     }
 
 }
