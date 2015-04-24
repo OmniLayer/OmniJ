@@ -15,12 +15,11 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Pure Java Bitcoin and Mastercoin JSON-RPC client with camelCase method names.
+ * Pure Java Bitcoin and Omni Core JSON-RPC client with camelCase method names.
  */
 public class OmniClient extends BitcoinClient {
 
@@ -42,11 +41,21 @@ public class OmniClient extends BitcoinClient {
         jsonDecimalFormat.setParseBigDecimal(true);
     }
 
+    /**
+     * Returns various state information of Omni Core and the Omni Layer protocol.
+     *
+     * @return An object with state information
+     */
     public Map<String, Object> getinfo_MP() throws JsonRPCException, IOException {
         Map<String, Object> result = send("getinfo_MP", null);
         return result;
     }
 
+    /**
+     * Lists all currencies, smart properties and tokens.
+     *
+     * @return A list with short information
+     */
     public List<SmartPropertyListInfo> listproperties_MP() throws JsonRPCException, IOException {
         List<Map<String, Object>> result = send("listproperties_MP", null);
 
@@ -73,26 +82,58 @@ public class OmniClient extends BitcoinClient {
         return propList;
     }
 
+    /**
+     * Returns information about the given currency, property, or token.
+     *
+     * @param currency The identifier to look up
+     * @return An object with detailed information
+     */
     public Map<String, Object> getproperty_MP(CurrencyID currency) throws JsonRPCException, IOException {
-        List<Object> params = Arrays.asList((Object) currency.longValue());
+        List<Object> params = createParamList(currency.longValue());
         Map<String, Object> result = send("getproperty_MP", params);
         return result;
     }
 
-    public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount) throws JsonRPCException, IOException {
-        List<Object> params = Arrays.asList((Object) fromAddress.toString(), toAddress.toString(), currency.longValue(), amount.toPlainString());
+    /**
+     * Creates and broadcasts a "simple send" transaction.
+     *
+     * @param fromAddress The address to spent from
+     * @param toAddress   The address to send to
+     * @param currency    The identifier of the token to transfer
+     * @param amount      The amount to transfer
+     * @return The hash of the transaction
+     */
+    public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount)
+            throws JsonRPCException, IOException {
+        List<Object> params = createParamList(fromAddress.toString(), toAddress.toString(), currency.longValue(),
+                                              amount.toPlainString());
         String txid = send("send_MP", params);
         Sha256Hash hash = new Sha256Hash(txid);
         return hash;
     }
-    
+
+    /**
+     * Broadcasts a raw Omni Layer transaction.
+     *
+     * @param fromAddress The address to send from
+     * @param rawTxHex    The hex-encoded raw transaction
+     * @return The hash of the transaction
+     */
     public Sha256Hash sendrawtx_MP(Address fromAddress, String rawTxHex) throws JsonRPCException, IOException {
         return sendrawtx_MP(fromAddress, rawTxHex, null);
     }
 
+    /**
+     * Broadcasts a raw Omni Layer transaction with reference address.
+     *
+     * @param fromAddress      The address to send from
+     * @param rawTxHex         The hex-encoded raw transaction
+     * @param referenceAddress The reference address
+     * @return The hash of the transaction
+     */
     public Sha256Hash sendrawtx_MP(Address fromAddress, String rawTxHex, Address referenceAddress)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList((Object) fromAddress.toString(), rawTxHex);
+        List<Object> params = createParamList(fromAddress.toString(), rawTxHex);
         if (referenceAddress != null) {
             params.add(referenceAddress.toString());
         }
@@ -100,13 +141,26 @@ public class OmniClient extends BitcoinClient {
         return new Sha256Hash(txid);
     }
 
+    /**
+     * Lists currently active offers on the distributed BTC/MSC exchange.
+     *
+     * @return A list with information about the active offers
+     */
     public List<Map<String, Object>> getactivedexsells_MP() throws JsonRPCException, IOException {
-        List<Map<String, Object>>  result = send("getactivedexsells_MP", null);
+        List<Map<String, Object>> result = send("getactivedexsells_MP", null);
         return result;
     }
 
-    public MPBalanceEntry getbalance_MP(Address address, CurrencyID currency) throws JsonRPCException, IOException, ParseException {
-        List<Object> params = Arrays.asList((Object) address.toString(), currency.longValue());
+    /**
+     * Returns the balance for a given address and property.
+     *
+     * @param address  The address to look up
+     * @param currency The identifier of the token to look up
+     * @return The available and reserved balance
+     */
+    public MPBalanceEntry getbalance_MP(Address address, CurrencyID currency)
+            throws JsonRPCException, IOException, ParseException {
+        List<Object> params = createParamList(address.toString(), currency.longValue());
         Map<String, String> result = send("getbalance_MP", params);
         BigDecimal balanceBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("balance"));
         BigDecimal reservedBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("reserved"));
@@ -114,8 +168,15 @@ public class OmniClient extends BitcoinClient {
         return entry;
     }
 
-    public List<MPBalanceEntry> getallbalancesforid_MP(CurrencyID currency) throws JsonRPCException, IOException, ParseException, AddressFormatException {
-        List<Object> params = Arrays.asList((Object) currency.longValue());
+    /**
+     * Returns a list of balances for a given identifier.
+     *
+     * @param currency The identifier of the token to look up
+     * @return A list containing addresses, and the associated available and reserved balances
+     */
+    public List<MPBalanceEntry> getallbalancesforid_MP(CurrencyID currency)
+            throws JsonRPCException, IOException, ParseException, AddressFormatException {
+        List<Object> params = createParamList(currency.longValue());
         List<Map<String, Object>> untypedBalances = send("getallbalancesforid_MP", params);
         List<MPBalanceEntry> balances = new ArrayList<MPBalanceEntry>(untypedBalances.size());
         for (Map map : untypedBalances) {
@@ -144,14 +205,29 @@ public class OmniClient extends BitcoinClient {
         return balances;
     }
 
+    /**
+     * Returns information about an Omni Layer transaction.
+     *
+     * @param txid The hash of the transaction to look up
+     * @return Information about the transaction
+     */
     public Map<String, Object> getTransactionMP(Sha256Hash txid) throws JsonRPCException, IOException {
-        List<Object> params = Arrays.asList((Object) txid.toString());
+        List<Object> params = createParamList(txid.toString());
         Map<String, Object> transaction = send("gettransaction_MP", params);
         return transaction;
     }
 
-    public Sha256Hash sendToOwnersMP(Address fromAddress, CurrencyID currency, BigDecimal amount) throws JsonRPCException, IOException {
-        List<Object> params = Arrays.asList((Object) fromAddress.toString(), currency.longValue(), amount.toPlainString());
+    /**
+     * Creates and broadcasts a "send to owners" transaction.
+     *
+     * @param fromAddress The address to spent from
+     * @param currency    The identifier of the token to distribute
+     * @param amount      The amount to distribute
+     * @return The hash of the transaction
+     */
+    public Sha256Hash sendToOwnersMP(Address fromAddress, CurrencyID currency, BigDecimal amount)
+            throws JsonRPCException, IOException {
+        List<Object> params = createParamList(fromAddress.toString(), currency.longValue(), amount.toPlainString());
         String txid = send("sendtoowners_MP", params);
         Sha256Hash hash = new Sha256Hash(txid);
         return hash;
