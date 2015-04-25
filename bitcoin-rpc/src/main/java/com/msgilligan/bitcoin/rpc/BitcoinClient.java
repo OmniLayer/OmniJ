@@ -587,6 +587,20 @@ public class BitcoinClient extends RPCClient {
     }
 
     /**
+     * Checks whether a command exists.
+     * <p/>
+     * This is done indirectly, by using {help(String) help} to get information about the command, and if information
+     * about the command is available, then the command exists. The absence of information does not necessarily imply
+     * the non-existence of a command.
+     *
+     * @param command The name of the command to check
+     * @return True if the command exists
+     */
+    public Boolean commandExists(String command) throws JsonRPCException, IOException {
+        return !help(command).contains("help: unknown command");
+    }
+
+    /**
      * Permanently marks a block as invalid, as if it violated a consensus rule.
      *
      * @param hash The block hash
