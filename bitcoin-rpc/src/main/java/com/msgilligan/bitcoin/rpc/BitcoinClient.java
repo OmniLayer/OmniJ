@@ -39,9 +39,10 @@ public class BitcoinClient extends RPCClient {
     }
 
     /**
+     * Wait until the server is available.
      *
      * @param timeout Timeout in seconds
-     * @return true if ready, false if timeout
+     * @return True if ready, false if timeout
      */
     public Boolean waitForServer(Integer timeout) throws JsonRPCException {
         Integer seconds = 0;
@@ -50,23 +51,23 @@ public class BitcoinClient extends RPCClient {
 
         Integer block;
 
-        while ( seconds < timeout ) {
+        while (seconds < timeout) {
             try {
                 block = this.getBlockCount();
-                if (block != null ) {
+                if (block != null) {
                     log.debug("\nRPC Ready.");
                     return true;
                 }
-            } catch (SocketException se ) {
+            } catch (SocketException se) {
                 // These are expected exceptions while waiting for a server
-                if (! ( se.getMessage().equals("Unexpected end of file from server") ||
+                if (!(se.getMessage().equals("Unexpected end of file from server") ||
                         se.getMessage().equals("Connection reset") ||
                         se.getMessage().equals("Connection refused") ||
                         se.getMessage().equals("recvfrom failed: ECONNRESET (Connection reset by peer)"))) {
                     se.printStackTrace();
                 }
 
-            } catch (java.io.EOFException e) {
+            } catch (java.io.EOFException ignored) {
                 /* Android exception, ignore */
                 // Expected exceptions on Android, RoboVM
             } catch (JsonRPCException e) {
@@ -90,11 +91,11 @@ public class BitcoinClient extends RPCClient {
     }
 
     /**
-     * Wait for RPC server to reach specified block height
+     * Wait for RPC server to reach specified block height.
      *
-     * @param blockHeight blockHeight to wait for
-     * @param timeout Timeout in seconds
-     * @return true if blockHeight reached, false if timeout
+     * @param blockHeight Block height to wait for
+     * @param timeout     Timeout in seconds
+     * @return True if blockHeight reached, false if timeout
      */
     public Boolean waitForBlock(Integer blockHeight, Integer timeout) throws JsonRPCException, IOException {
         Integer seconds = 0;
@@ -103,9 +104,9 @@ public class BitcoinClient extends RPCClient {
 
         Integer block;
 
-        while ( seconds < timeout ) {
+        while (seconds < timeout) {
             block = this.getBlockCount();
-            if (block >= blockHeight ) {
+            if (block >= blockHeight) {
                 log.info("Server is at block " + block + " returning 'true'.");
                 return true;
             } else {
@@ -125,9 +126,9 @@ public class BitcoinClient extends RPCClient {
     }
 
     /**
+     * Returns the number of blocks in the longest block chain.
      *
-     * @return current block height (count)
-     * @throws IOException
+     * @return The current block count
      */
     public Integer getBlockCount() throws JsonRPCException, IOException {
         Integer blockCount = send("getblockcount", null);
@@ -153,7 +154,7 @@ public class BitcoinClient extends RPCClient {
      * @param hash The block hash
      * @return The information about the block
      */
-    public Map<String,Object> getBlock(Sha256Hash hash) throws JsonRPCException, IOException {
+    public Map<String, Object> getBlock(Sha256Hash hash) throws JsonRPCException, IOException {
         // Use "verbose = true"
         List<Object> params = createParamList(hash.toString(), true);
         Map<String, Object> json = send("getblock", params);
@@ -166,7 +167,7 @@ public class BitcoinClient extends RPCClient {
      * @param index The block index
      * @return The information about the block
      */
-    public Map<String,Object> getBlock(Integer index) throws JsonRPCException, IOException {
+    public Map<String, Object> getBlock(Integer index) throws JsonRPCException, IOException {
         Sha256Hash blockHash = getBlockHash(index);
         return getBlock(blockHash);
     }
@@ -197,57 +198,23 @@ public class BitcoinClient extends RPCClient {
     }
 
     /**
-     * Permanently marks a block as invalid, as if it violated a consensus rule.
+     * Creates a new Bitcoin address for receiving payments, linked to the default account "".
      *
-     * @param hash The block hash
+     * @return A new Bitcoin address
      */
-    public void invalidateBlock(Sha256Hash hash)  throws JsonRPCException, IOException {
-        List<Object> params = createParamList(hash.toString());
-        send("invalidateblock", params);
-    }
-
-    /**
-     * Removes invalidity status of a block and its descendants, reconsider them for activation.
-     *
-     * This can be used to undo the effects of "invalidateblock".
-     *
-     * @param hash The hash of the block to reconsider
-     */
-    public void reconsiderBlock(Sha256Hash hash)  throws JsonRPCException, IOException {
-        List<Object> params = createParamList(hash.toString());
-        send("reconsiderblock", params);
-    }
-
-    /**
-     * @return Information about all known tips in the block tree.
-     */
-    public List<Map<String, Object>> getChainTips()  throws JsonRPCException, IOException {
-        List<Map<String, Object>> tips = send("getchaintips", null);
-        return tips;
-    }
-
-    /**
-     * Clears the memory pool and returns a list of the removed transactions.
-     *
-     * @return A list of transaction hashes of the removed transactions
-     */
-    public List<Sha256Hash> clearMemPool() throws JsonRPCException, IOException {
-        List<String> hashesStr = send("clearmempool", null);
-        List<Sha256Hash> hashes = new ArrayList<Sha256Hash>();
-        for (String s : hashesStr) {
-            Sha256Hash hash = new Sha256Hash(s);
-            hashes.add(hash);
-        }
-        return hashes;
-    }
-
     public Address getNewAddress() throws JsonRPCException, IOException {
         return getNewAddress(null);
     }
 
+    /**
+     * Creates a new Bitcoin address for receiving payments.
+     *
+     * @param account The account name for the address to be linked to.
+     * @return A new Bitcoin address
+     */
     public Address getNewAddress(String account) throws JsonRPCException, IOException {
         List<Object> params = createParamList(account);
-        String addr = send("getnewaddress", null);
+        String addr = send("getnewaddress", params);
         Address address = null;
         try {
             // TODO: Is it safe to use null for params here?
@@ -258,6 +225,12 @@ public class BitcoinClient extends RPCClient {
         return address;
     }
 
+    /**
+     * Returns the Bitcoin address linked to the given account.
+     *
+     * @param account The account name linked to the address.
+     * @return The Bitcoin address
+     */
     public Address getAccountAddress(String account) throws JsonRPCException, IOException {
         List<Object> params = createParamList(account);
         String addr = (String) send("getaccountaddress", params);
@@ -271,12 +244,12 @@ public class BitcoinClient extends RPCClient {
     }
 
     /**
-     * Return a private key from the server
-     * (must be in wallet mode with unlocked or unencrypted wallet)
-     * @param address Address corresponding to private key to return
-     * @return the private key
-     * @throws IOException
-     * @throws JsonRPCStatusException
+     * Return the private key from the server.
+     * <p/>
+     * Note: must be in wallet mode with unlocked or unencrypted wallet.
+     *
+     * @param address Address corresponding to the private key to return
+     * @return The private key
      */
     public ECKey dumpPrivKey(Address address) throws IOException, JsonRPCStatusException {
         List<Object> params = createParamList(address.toString());
@@ -291,7 +264,19 @@ public class BitcoinClient extends RPCClient {
         return key;
     }
 
-    public Boolean moveFunds(Address fromaccount, Address toaccount, BigDecimal amount, Integer minconf, String comment) throws JsonRPCException, IOException {
+    /**
+     * Move a specified amount from one account in your wallet to another.
+     *
+     * @param fromaccount The name of the account to move funds from, which may be the default account using ""
+     * @param toaccount   The name of the account to move funds to, which may be the default account using ""
+     * @param amount      The amount to move
+     * @param minconf     Only use funds with at least this many confirmations
+     * @param comment     An optional comment, stored in the wallet only
+     * @return True, if successful, and false otherwise
+     */
+    public Boolean moveFunds(Address fromaccount, Address toaccount, BigDecimal amount, Integer minconf, String comment)
+            throws JsonRPCException,
+            IOException {
         List<Object> params = createParamList(fromaccount, toaccount, amount, minconf, comment);
         Boolean result = (Boolean) send("move", params);
         return result;
@@ -299,15 +284,13 @@ public class BitcoinClient extends RPCClient {
 
     /**
      * Creates a raw transaction spending the given inputs to the given destinations.
-     *
+     * <p/>
      * Note: the transaction inputs are not signed, and the transaction is not stored in the wallet or transmitted to
      * the network.
      *
      * @param inputs  The outpoints to spent
      * @param outputs The destinations and amounts to transfer
      * @return The hex-encoded raw transaction
-     * @throws JsonRPCException
-     * @throws IOException
      */
     public String createRawTransaction(List<Outpoint> inputs, Map<Address, BigDecimal> outputs)
             throws JsonRPCException, IOException {
@@ -329,8 +312,6 @@ public class BitcoinClient extends RPCClient {
      *
      * @param unsignedTransaction The hex-encoded raw transaction
      * @return The signed transaction and information whether it has a complete set of signature
-     * @throws IOException
-     * @throws JsonRPCException
      */
     public Map<String, Object> signRawTransaction(String unsignedTransaction) throws IOException, JsonRPCException {
         List<Object> params = createParamList(unsignedTransaction);
@@ -401,7 +382,8 @@ public class BitcoinClient extends RPCClient {
         return balance;
     }
 
-    public List<Object> listReceivedByAddress(Integer minConf, Boolean includeEmpty ) throws JsonRPCException, IOException {
+    public List<Object> listReceivedByAddress(Integer minConf, Boolean includeEmpty)
+            throws JsonRPCException, IOException {
         List<Object> params = createParamList(minConf, includeEmpty);
         List<Object> addresses = send("listreceivedbyaddress", params);
         return addresses;
@@ -411,8 +393,6 @@ public class BitcoinClient extends RPCClient {
      * Returns a list of unspent transaction outputs with at least one confirmation.
      *
      * @return The unspent transaction outputs
-     * @throws JsonRPCException
-     * @throws IOException
      */
     public List<UnspentOutput> listUnspent() throws JsonRPCException, IOException {
         return listUnspent(null, null, null);
@@ -425,8 +405,6 @@ public class BitcoinClient extends RPCClient {
      * @param minConf The minimum confirmations to filter
      * @param maxConf The maximum confirmations to filter
      * @return The unspent transaction outputs
-     * @throws JsonRPCException
-     * @throws IOException
      */
     public List<UnspentOutput> listUnspent(Integer minConf, Integer maxConf)
             throws JsonRPCException, IOException {
@@ -441,8 +419,6 @@ public class BitcoinClient extends RPCClient {
      * @param maxConf The maximum confirmations to filter
      * @param filter  Include only transaction outputs to the specified addresses
      * @return The unspent transaction outputs
-     * @throws JsonRPCException
-     * @throws IOException
      */
     public List<UnspentOutput> listUnspent(Integer minConf, Integer maxConf, Iterable<Address> filter)
             throws JsonRPCException, IOException {
@@ -470,7 +446,7 @@ public class BitcoinClient extends RPCClient {
             Double amountDb = (Double) uoMap.get("amount");
             BigDecimal amount = BigDecimal.valueOf(amountDb);
             int confirmations = (Integer) uoMap.get("confirmations");
-            UnspentOutput uo = new UnspentOutput(txid,vout,addr,account,scriptPubKey,amount,confirmations);
+            UnspentOutput uo = new UnspentOutput(txid, vout, addr, account, scriptPubKey, amount, confirmations);
             unspent.add(uo);
         }
         return unspent;
@@ -483,19 +459,19 @@ public class BitcoinClient extends RPCClient {
      * @param vout The transaction output index
      * @return Details about an unspent output or nothing, if the output was already spent
      */
-    public Map<String,Object> getTxOut(Sha256Hash txid, Integer vout) throws JsonRPCException, IOException {
+    public Map<String, Object> getTxOut(Sha256Hash txid, Integer vout) throws JsonRPCException, IOException {
         return getTxOut(txid, vout, null);
     }
 
     /**
      * Returns details about an unspent transaction output.
      *
-     * @param txid The transaction hash
-     * @param vout The transaction output index
+     * @param txid              The transaction hash
+     * @param vout              The transaction output index
      * @param includeMemoryPool Whether to included the memory pool
      * @return Details about an unspent output or nothing, if the output was already spent
      */
-    public Map<String,Object> getTxOut(Sha256Hash txid, Integer vout, Boolean includeMemoryPool)
+    public Map<String, Object> getTxOut(Sha256Hash txid, Integer vout, Boolean includeMemoryPool)
             throws JsonRPCException, IOException {
         List<Object> params = createParamList(txid.toString(), vout, includeMemoryPool);
         Map<String, Object> json = send("gettxout", params);
@@ -522,14 +498,16 @@ public class BitcoinClient extends RPCClient {
         return sendToAddress(address, amount, null, null);
     }
 
-    public Sha256Hash sendToAddress(Address address, BigDecimal amount, String comment, String commentTo) throws JsonRPCException, IOException {
+    public Sha256Hash sendToAddress(Address address, BigDecimal amount, String comment, String commentTo)
+            throws JsonRPCException, IOException {
         List<Object> params = createParamList(address.toString(), amount, comment, commentTo);
         String txid = send("sendtoaddress", params);
         Sha256Hash hash = new Sha256Hash(txid);
         return hash;
     }
 
-    public Sha256Hash sendFrom(String account, Address address, BigDecimal amount) throws JsonRPCException, IOException {
+    public Sha256Hash sendFrom(String account, Address address, BigDecimal amount)
+            throws JsonRPCException, IOException {
         List<Object> params = createParamList(account, address.toString(), amount);
         String txid = send("sendfrom", params);
         Sha256Hash hash = new Sha256Hash(txid);
@@ -567,26 +545,8 @@ public class BitcoinClient extends RPCClient {
     }
 
     /**
-     * Returns a list of available commands.
-     *
-     * Commands which are unavailable will not be listed, such as wallet RPCs, if wallet support is disabled.
-     *
-     * @return The list of commands
-     */
-    public List<String> getCommands() throws JsonRPCException, IOException {
-        List<String> commands = new ArrayList<String>();
-        for (String entry : help().split("\n")) {
-            if (!entry.isEmpty() && !entry.matches("== (.+) ==")) {
-                String command = entry.split(" ")[0];
-                commands.add(command);
-            }
-        }
-        return commands;
-    }
-
-    /**
      * Returns a human readable list of available commands.
-     *
+     * <p/>
      * Bitcoin Core 0.9 returns an alphabetical list of commands, and Bitcoin Core 0.10 returns a categorized list of
      * commands.
      *
@@ -608,16 +568,113 @@ public class BitcoinClient extends RPCClient {
         return result;
     }
 
+    /**
+     * Returns a list of available commands.
+     * <p/>
+     * Commands which are unavailable will not be listed, such as wallet RPCs, if wallet support is disabled.
+     *
+     * @return The list of commands
+     */
+    public List<String> getCommands() throws JsonRPCException, IOException {
+        List<String> commands = new ArrayList<String>();
+        for (String entry : help().split("\n")) {
+            if (!entry.isEmpty() && !entry.matches("== (.+) ==")) {
+                String command = entry.split(" ")[0];
+                commands.add(command);
+            }
+        }
+        return commands;
+    }
+
+    /**
+     * Checks whether a command exists.
+     * <p/>
+     * This is done indirectly, by using {help(String) help} to get information about the command, and if information
+     * about the command is available, then the command exists. The absence of information does not necessarily imply
+     * the non-existence of a command.
+     *
+     * @param command The name of the command to check
+     * @return True if the command exists
+     */
+    public Boolean commandExists(String command) throws JsonRPCException, IOException {
+        return !help(command).contains("help: unknown command");
+    }
+
+    /**
+     * Permanently marks a block as invalid, as if it violated a consensus rule.
+     *
+     * @param hash The block hash
+     * @since Bitcoin Core 0.10
+     */
+    public void invalidateBlock(Sha256Hash hash) throws JsonRPCException, IOException {
+        List<Object> params = createParamList(hash.toString());
+        send("invalidateblock", params);
+    }
+
+    /**
+     * Removes invalidity status of a block and its descendants, reconsider them for activation.
+     * <p/>
+     * This can be used to undo the effects of {link invalidateBlock(Sha256Hash) invalidateBlock}.
+     *
+     * @param hash The hash of the block to reconsider
+     * @since Bitcoin Core 0.10
+     */
+    public void reconsiderBlock(Sha256Hash hash) throws JsonRPCException, IOException {
+        List<Object> params = createParamList(hash.toString());
+        send("reconsiderblock", params);
+    }
+
+    /**
+     * Return information about all known tips in the block tree, including the main chain as well as orphaned branches.
+     *
+     * @return A list of chain tip information
+     * @since Bitcoin Core 0.10
+     */
+    public List<Map<String, Object>> getChainTips() throws JsonRPCException, IOException {
+        List<Map<String, Object>> tips = send("getchaintips", null);
+        return tips;
+    }
+
+    /**
+     * Clears the memory pool and returns a list of the removed transactions.
+     * <p/>
+     * Note: this is a customized command, which is currently not part of Bitcoin Core.
+     *
+     * @return A list of transaction hashes of the removed transactions
+     * @see <a href="https://github.com/OmniLayer/OmniJ/pull/72">Additional information on GitHub</a>
+     */
+    public List<Sha256Hash> clearMemPool() throws JsonRPCException, IOException {
+        List<String> hashesStr = send("clearmempool", null);
+        List<Sha256Hash> hashes = new ArrayList<Sha256Hash>();
+        for (String s : hashesStr) {
+            Sha256Hash hash = new Sha256Hash(s);
+            hashes.add(hash);
+        }
+        return hashes;
+    }
+
+    /**
+     * Converts a hex-encoded string into a byte array.
+     *
+     * @param s A string to convert
+     * @return The byte array
+     */
     public static byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                    + Character.digit(s.charAt(i+1), 16));
+                    + Character.digit(s.charAt(i + 1), 16));
         }
         return data;
     }
 
+    /**
+     * Converts a transaction into a hex-encoded string.
+     *
+     * @param tx A transaction object
+     * @return The hex-encoded string
+     */
     private String transactionToHex(Transaction tx) {
         // From: http://bitcoin.stackexchange.com/questions/8475/how-to-get-hex-string-from-transaction-in-bitcoinj
         final StringBuilder sb = new StringBuilder();
