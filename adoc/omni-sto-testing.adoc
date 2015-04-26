@@ -2,27 +2,31 @@
 
 == Overview
 
-There is currently a https://docs.google.com/a/mastercoin.org/spreadsheets/d/1WslNWrzYN0XMCsauefBwHPaeSswgj9LO3yggVxTD3Vc[Send To Owners Tests] spreadsheet on Google Docs, that contains a thorough list of test cases for Send To Owners transactions.
+There is a https://docs.google.com/a/mastercoin.org/spreadsheets/d/1WslNWrzYN0XMCsauefBwHPaeSswgj9LO3yggVxTD3Vc[Send To Owners Tests] spreadsheet on Google Docs, that contains a thorough list of test cases for Send To Owners transactions. The tab-delimited data used by some of the tests below was extracted from this spreadsheet.
 
 == Spock Tests
 
-Work in progress STO tests are:
+The current STO tests are:
 
 [options="header",frame="all"]
 |===
 | Test "Spec" (link to source) | Latest Results | Notes
 
-| https://github.com/msgilligan/bitcoin-spock/blob/master/src/integ/groovy/foundation/omni/test/rpc/sto/MSCSendToOwnersTestPlanSpec.groovy[MSCSendToOwnersTestPlanSpec]
-| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/MSCSendToOwnersTestPlanSpec/[results]
-| Driven by https://github.com/msgilligan/bitcoin-spock/blob/master/src/integ/groovy/foundation/omni/test/rpc/sto/sto-testplan.tsv[Tab-delimited test data] 
+| https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/sto/SendToOwnersSpec.groovy[SendToOwnersSpec]
+| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/SendToOwnersSpec/[results]
+| Simple STO tests
 
-| https://github.com/msgilligan/bitcoin-spock/blob/master/src/integ/groovy/foundation/omni/test/rpc/sto/MSCSendToOwnersSpec.groovy[MSCSendToOwnersSpec]
-| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/MSCSendToOwnersSpec/[results]
-| Proof-of-concept STO tests
+| https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/sto/SendToManyOwnersSpec.groovy[SendToManyOwnersSpec]
+| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/SendToManyOwnersSpec/[results]
+| STO tests with a large (configurable) number of owners.
 
-| https://github.com/msgilligan/bitcoin-spock/blob/master/src/integ/groovy/foundation/omni/test/rpc/sto/MSCSendToOwnersConsensusComparisonSpec.groovy[MSCSendToOwnersConsensusComparisonSpec]
-| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/MSCSendToOwnersConsensusComparisonSpec/[results]
-| Experiment using consensus test classes for STO testing
+| https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/sto/SendToOwnersTestPlanSpec.groovy[SendToOwnersTestPlanSpec]
+| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/SendToOwnersTestPlanSpec/[results]
+| Transactions created and sent with `sendToOwnersMP` RPC method. Driven by https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/sto/sto-testplan.tsv[Tab-delimited test data] 
+
+| https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/sto/SendToOwnersTestPlanRawSpec.groovy[SendToOwnersTestPlanRawSpec]
+| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/SendToOwnersTestPlanRawSpec/[results]
+| Same tests as `SendToOwnersTestPlanSpec`, but transactions created client-side with OmniJ and sent with `sendrawtx_MP` RPC method. Driven by https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/sto/sto-testplan.tsv[Tab-delimited test data] 
 
 |===
 
