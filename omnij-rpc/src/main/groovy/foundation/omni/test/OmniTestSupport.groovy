@@ -1,7 +1,6 @@
 package foundation.omni.test
 
 import com.msgilligan.bitcoin.test.BTCTestSupport
-import foundation.omni.rpc.ExtendedTransactions
 import foundation.omni.rpc.RawTxDelegate
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Sha256Hash
