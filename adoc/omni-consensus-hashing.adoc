@@ -1,6 +1,7 @@
 Omni Protocol Consensus Hashing Proposal
 ========================================
 :toc:
+:toc-placement: manual
 :numbered:
 
 A draft proposal for using hashing of Omni Protocol balances for testing and validation.
@@ -8,6 +9,8 @@ A draft proposal for using hashing of Omni Protocol balances for testing and val
 == Abstract
 
 This is a preliminary proposal for using hashing of Omni Protocol consensus information to produce several types of hashes that can be used for Omni Protocol consensus checking.
+
+toc::[]
 
 == Background
 
