@@ -2,6 +2,7 @@ package foundation.omni.test
 
 import com.msgilligan.bitcoin.test.BTCTestSupport
 import foundation.omni.rpc.ExtendedTransactions
+import foundation.omni.rpc.RawTxDelegate
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Sha256Hash
 import foundation.omni.CurrencyID
@@ -14,7 +15,7 @@ import java.security.SecureRandom
 /**
  * Test support functions intended to be mixed-in to Spock test specs
  */
-trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, ExtendedTransactions {
+trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelegate {
 
 
     Sha256Hash requestMSC(Address toAddress, BigDecimal requestedMSC) {

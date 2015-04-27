@@ -22,7 +22,7 @@ abstract class BaseRegTestSpec extends Specification implements OmniClientDelega
 
     {
         client = new OmniCLIClient(RPCURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
-        builder = new RawTxBuilder()
+//        builder = new RawTxBuilder()
     }
 
     void setupSpec() {

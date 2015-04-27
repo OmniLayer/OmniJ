@@ -39,7 +39,7 @@ public class OmniExtendedClient extends OmniClient {
      * @param amount      The number of tokens to distribute
      * @return The transaction hash
      */
-    Sha256Hash sendToOwners(Address address, CurrencyID currencyId, Long amount) throws JsonRPCException, IOException {
+    public Sha256Hash sendToOwners(Address address, CurrencyID currencyId, Long amount) throws JsonRPCException, IOException {
         String rawTxHex = builder.createSendToOwnersHex(currencyId, amount);
         Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
         return txid;
@@ -57,7 +57,7 @@ public class OmniExtendedClient extends OmniClient {
      * @param action         The action applied to the offer (1 = new, 2 = update, 3 = cancel)
      * @return The transaction hash
      */
-    Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, BigDecimal amountForSale,
+    public Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, BigDecimal amountForSale,
                                   BigDecimal amountDesired, Byte paymentWindow, BigDecimal commitmentFee,
                                   Byte action) throws JsonRPCException, IOException {
         Long satoshisForSale = BTC.btcToSatoshis(amountForSale).longValue();
@@ -83,7 +83,7 @@ public class OmniExtendedClient extends OmniClient {
      * @param action            The action applied to the offer (1 = new, 2 = update, 3 = cancel)
      * @return The transaction hash
      */
-    Sha256Hash createMetaDexSellOffer(Address address, CurrencyID currencyForSale, BigDecimal amountForSale,
+    public Sha256Hash createMetaDexSellOffer(Address address, CurrencyID currencyForSale, BigDecimal amountForSale,
                                       CurrencyID currencyDesired, BigDecimal amountDesired,
                                       Byte action) throws JsonRPCException, IOException {
         Long willetsForSale = BTC.btcToSatoshis(amountForSale).longValue();  // Assume divisible property
@@ -103,7 +103,7 @@ public class OmniExtendedClient extends OmniClient {
      * @param amount     The number of units to create
      * @return The transaction hash
      */
-    Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount) throws JsonRPCException, IOException {
+    public Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount) throws JsonRPCException, IOException {
         return createProperty(address, ecosystem, type, amount, "SP");
     }
 
@@ -117,7 +117,7 @@ public class OmniExtendedClient extends OmniClient {
      * @param label      The label or title of the property
      * @return The transaction hash
      */
-    Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount, String label) throws JsonRPCException, IOException {
+    public Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount, String label) throws JsonRPCException, IOException {
         String rawTxHex = builder.createPropertyHex(ecosystem, type, 0L, "", "", label, "", "", amount);
         Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
         return txid;
