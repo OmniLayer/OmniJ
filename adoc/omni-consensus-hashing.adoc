@@ -1,4 +1,7 @@
-= Omni Protocol Consensus Hashing Proposal
+Omni Protocol Consensus Hashing Proposal
+========================================
+:toc:
+:numbered:
 
 A draft proposal for using hashing of Omni Protocol balances for testing and validation.
 

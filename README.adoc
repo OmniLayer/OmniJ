@@ -180,6 +180,7 @@ These sample Spock "feature tests" are from the file https://github.com/OmniLaye
 The `adoc` (AsciiDoctor) directory of this project contains some additional documents that might be of interest:
 
 . link:adoc/regtest-intro.adoc[Introduction to Regression Test Mode]
+. link:adoc/omnij-test-design-patterns.adoc[OmniJ Test Design Patterns]
 . link:adoc/omni-sto-testing.adoc[Omni Protocol Send To Owners Testing]
 . link:adoc/omni-consensus-hashing.adoc[Omni Protocol Consensus Hashing Proposal]
 

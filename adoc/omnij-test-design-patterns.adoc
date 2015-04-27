@@ -1,0 +1,106 @@
+OmniJ Test Architecture and Design Patterns
+============================================
+:toc:
+:numbered:
+
+== Overview
+
+The OmniJ project was initially created for the purpose of writing functional tests of Omni Core (then known as Master Core) via its JSON-RPC API. This section provides an overview of the test architecture and some of the design patterns that are used in the test classes.
+
+== Components
+
+For an overview, see the package-level documentation on the OmniJ http://ci.omni.foundation/job/OmniJ/javadoc/overview-summary.html[API overview page].
+
+=== OmniJ Core
+
+TBD.
+
+=== RPC Clients
+
+Although the initial focus was testing, it was always the intention to build general purpose JSON-RPC clients for Bitcoin and Omni to support a variety of possible applications.
+
+The core clients are written in pure Java are strongly typed using bitcoinj classes (e.g. Sha256Sum, Address) and use method overloading to create convenience methods with fewer parameters given that Java doesn't support optional parameters.
+
+More detail should be provided here. I've written about this elsewhere (Github Issue comments?) and some of that information should be consoolidated here.
+
+=== Test Support Classes
+
+Since all the tests are written in the Spock Framework and we want to support rapid development of expressive, non-verbose tests, most of of the test support code is in Groovy -- with much of it being in Groovy traits and in Spock base classes.
+
+As use cases beyond testing are discovered for functionality in test support components, it can be refactored into classes that can be used outside of the test framework and even into pure Java classes when we desire to support the largest possible set of run-time environments.
+
+== Test Framework Design Patterns
+
+A variety of approaches are made for aggregrating test framework functionality into the Spock integration tests. Each approach has advantages and disadvantages and we have been frequently refactoring the code to maximize readability and to make core functionality reusable within the tests and, when desired, outside the tests.
+
+When test support functionality is useful for (upstream) Bitcoin testing, we place it in a subpackage of `com.msgilligan.bitcoin`, when it is Omni specific we place it in a subpackage of `foundation.omni`.
+
+=== Spock Base Classes
+
+Putting common functionality in an (abstract) base class is the traditional object-oriented technique for directly sharing code between multiple classes and we use it when appropriate.
+
+The disadvantages to this approach are:
+
+. Common code limited to tests that can inherit from a single base class
+. Test Specs are not exported into any of the library JARs
+. Test Specs are not designed to run outside of test frameworks
+. Test Specs require Groovy and Spock
+
+=== Test Support Groovy Traits
+
+http://www.groovy-lang.org/objectorientation.html#_traits[Groovy traits] can be *implemented* by any Groovy class so that their methods are mixed-in to the implementing class at compile time (traits can also be http://www.groovy-lang.org/objectorientation.html#_runtime_implementation_of_traits[mixed-in at runtime], though we are not currently using that feature.)
+
+Advantage:
+
+. Not limited by single-inheritance.
+
+Disadvantages:
+
+. Traits must be written in Groovy and require Groovy runtime jars
+. Java classes may not directly implement Groovy traits, though they can call methods on Groovy classes that implement traits.
+
+
+==== Delegate Traits
+
+Groovy traits combined with the `@Delegate` transform are a powerful mechanism for mixing in methods from a helper class into a parent class. The helper class can be written in either Java or Groovy. An example of this is the `BitcoinClientDelegate` class which is used to directly mix-in methods from `BitcoinClient` to `bitcoin.BaseRegTestSpec` (via the "stacked" `BTCTestSupport` trait.)
+
+Advantages:
+
+. Functionality can be implemented in a standalone helper class
+. Helper class can be written in either Java or Groovy.
+
+Disadvantage:
+
+. Not a pure-Java solution, which may limit usage.  
+
+=== RPC Clients
+
+When there is functionality that will be useful to any application communicating with Bitcoin/Omni Core via JSON-RPC that functionality can be placed directly in one of the RPC client implementations. Currently all the RPC clients generally try to limit themselves to 1 RPC call per method and try to keep a 1-to-1 relationship betwen client object methods and JSON-RPC methods.
+
+(A minor exception to the 1-to-1 rule is the `OmniExtendedClient` which uses client-side transaction generation and the `sendrawtx_MP` method to create and send Omni transactions that are not supported in the current, stable version of Omni Core.)
+
+More detail on the various RPC clients and their design objectives has been written above and elsewhere.
+
+Advantages:
+
+. Functionality made directly available to almost all RPC applications
+
+Disadvantage:
+
+. Places too much functionality in these classes will clutter the API.
+
+=== Helper Classes
+
+Common functionality can be placed in Java or Groovy helper classes which may be placed in test framework packages or, if desired, in more general-purpose packages.
+
+Advantages:
+
+. Decoupled from other classes
+. Can be mixed in to test classes or Groovy-based RPC clients via "Delegate Traits".
+
+Disadvantage:
+
+. If a method or small group of methods doesn't have clear functionality or use cases, it is probably better to not create a new helper class.
+
+
+
