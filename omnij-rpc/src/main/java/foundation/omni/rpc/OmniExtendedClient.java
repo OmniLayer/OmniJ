@@ -15,8 +15,8 @@ import java.math.BigDecimal;
 import java.net.URI;
 
 /**
- * <p>OmniClient that adds "extended" methods for Omni transactions that lack
- * RPCs in Omni Core 0.9.0</p>
+ * OmniClient that adds "extended" methods for Omni transactions that lack
+ * RPCs in Omni Core 0.9.0
  *
  * <p>Raw transactions are created and sent via sendrawtx_MP
  *
