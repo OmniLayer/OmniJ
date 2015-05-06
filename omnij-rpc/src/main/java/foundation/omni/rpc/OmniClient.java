@@ -237,20 +237,20 @@ public class OmniClient extends BitcoinClient {
      * Creates and broadcasts a "trade" transaction.
      *
      * @param fromAddress     The address to trade with
-     * @param amountForSale   The amount to trade
      * @param propertyForSale The property for sale
-     * @param amountDesired   The desired amount for the trade
+     * @param amountForSale   The amount to trade
      * @param propertyDesired The desired property
+     * @param amountDesired   The desired amount for the trade
      * @param action          New offer (1), cancel offer (2), cancel offers with currency pair (3), cancel all (4)
      * @return The hash of the transaction
      * @since Omni Core 0.0.10
      */
-    public Sha256Hash trade_MP(Address fromAddress, BigDecimal amountForSale, CurrencyID propertyForSale,
-                               BigDecimal amountDesired, CurrencyID propertyDesired, Byte action)
+    public Sha256Hash trade_MP(Address fromAddress, CurrencyID propertyForSale, BigDecimal amountForSale,
+                               CurrencyID propertyDesired, BigDecimal amountDesired, Byte action)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress.toString(), amountForSale.toPlainString(),
-                                              propertyForSale.longValue(), amountDesired.toPlainString(),
-                                              propertyDesired.longValue(), action);
+        List<Object> params = createParamList(fromAddress.toString(), propertyForSale.longValue(),
+                                              amountForSale.toPlainString(), propertyDesired.longValue(),
+                                              amountDesired.toPlainString(), action);
         String txid = send("trade_MP", params);
         Sha256Hash hash = new Sha256Hash(txid);
         return hash;

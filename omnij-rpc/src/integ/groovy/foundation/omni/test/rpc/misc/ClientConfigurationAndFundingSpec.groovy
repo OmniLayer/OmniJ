@@ -2,6 +2,7 @@ package foundation.omni.test.rpc.misc
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import org.bitcoinj.core.Address
+import spock.lang.Ignore
 import spock.lang.Unroll
 
 class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
@@ -120,6 +121,7 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         dustAmount = ((((148 + 34) * 3) / 1000) * relayTxFee).setScale(8, BigDecimal.ROUND_UP)
     }
 
+    @Ignore
     @Unroll
     def "The client generates a \"simple send\" transaction with 2x #payToPubKeyDust + 1x #payloadDust BTC outputs"() {
         def startMSC = 1.0

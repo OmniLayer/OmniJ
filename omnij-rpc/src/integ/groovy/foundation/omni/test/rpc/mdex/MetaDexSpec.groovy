@@ -27,7 +27,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         getorderbook_MP(propertyForSale, propertyDesired).size() == 0
 
         when: "creating an offer with action = 1"
-        def txid = trade_MP(actorAddress, amountForSale, propertyForSale, amountDesired, propertyDesired, actionNew)
+        def txid = trade_MP(actorAddress, propertyForSale, amountForSale, propertyDesired, amountDesired, actionNew)
         generateBlock()
 
         then: "it is a valid transaction"
