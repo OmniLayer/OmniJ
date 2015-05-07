@@ -95,3 +95,11 @@ task testReport(type: TestReport) {
     reportOn subprojects*.test
 }
 
+idea {
+    project {
+        jdkName = '1.7'
+        languageLevel = '1.7'
+    }
+}
+
+
