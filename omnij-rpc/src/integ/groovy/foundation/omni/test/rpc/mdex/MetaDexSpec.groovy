@@ -163,18 +163,6 @@ class MetaDexSpec extends BaseRegTestSpec {
         PropertyType.INDIVISIBLE | new BigDecimal("9223372036854775807")  | CurrencyID.TMSC | new BigDecimal("0.00000021")
     }
 
-    CurrencyID fundNewProperty(Address address, BigDecimal amount, PropertyType type, Ecosystem ecosystem) {
-        if (type == PropertyType.DIVISIBLE) {
-            amount = BTC.btcToSatoshis(amount)
-        }
-        def txidCreation = createProperty(address, ecosystem, type, amount.longValue())
-        generateBlock()
-        def txCreation = getTransactionMP(txidCreation)
-        assert txCreation.valid == true
-        assert txCreation.confirmations == 1
-        return new CurrencyID(txCreation.propertyid as long)
-    }
-
     def setupSpec() {
         if (!commandExists("gettrade_MP")) {
             throw new AssumptionViolatedException('The client has no "gettrade_MP" command')

@@ -40,18 +40,8 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         def actorAddress = createFundedAddress(1.0, actorMSC)
 
         // Create property
-        def numberOfTokens = fundingSPT
-        if (propertyType == PropertyType.DIVISIBLE) {
-            numberOfTokens = numberOfTokens.multiply(COIN);
-        }
-        def fundingTxid = createProperty(actorAddress, Ecosystem.MSC, propertyType, numberOfTokens.longValue())
-        generateBlock()
-
         println String.format("Creating a new %s with %s units ...", propertyType.toString(), fundingSPT.toPlainString())
-
-        // Get property identifier
-        def fundingTx = getTransactionMP(fundingTxid)
-        def currencySPT = new CurrencyID(fundingTx.propertyid)
+        def currencySPT = fundNewProperty(actorAddress, fundingSPT, propertyType, Ecosystem.MSC)
 
         // Check funding balances of actor
         def startingBalanceMSC = getbalance_MP(actorAddress, MSC)
@@ -149,18 +139,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         def actorAddress = createFundedAddress(1.0, actorMSC)
 
         // Create property
-        def numberOfTokens = fundingSPT
-        if (propertyType == PropertyType.DIVISIBLE) {
-            numberOfTokens = numberOfTokens.multiply(COIN);
-        }
-        def fundingTxid = createProperty(actorAddress, Ecosystem.MSC, propertyType, numberOfTokens.longValue())
-        generateBlock()
-
-        // Get property identifier
-        def fundingTx = getTransactionMP(fundingTxid)
-        def currencySPT = new CurrencyID(fundingTx.propertyid)
-        assert fundingTx.valid == true
-        assert fundingTx.confirmations == 1
+        def currencySPT = fundNewProperty(actorAddress, fundingSPT, propertyType, Ecosystem.MSC)
 
         // Check funding balances of actor
         def startingBalanceMSC = getbalance_MP(actorAddress, MSC)
