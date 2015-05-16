@@ -16,7 +16,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
     // Print intermediate results
     final static Boolean EXTRA_DEBUG_ROUNDS = false
     // Number of owners to receive tokens
-    final static Integer NUM_OWNERS = 100
+    final static Integer NUM_OWNERS = 70
 
     final static BigDecimal stoFeePerAddress = 0.00000001
     final static BigDecimal COIN = 100000000.0
@@ -198,21 +198,21 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
 
         where:
         maxN       | amountStartPerOwner                    | amountDistributePerOwner               | propertyType
-        1          | new BigDecimal("1")                    | new BigDecimal("9223372036854775806")  | PropertyType.INDIVISIBLE
-        1          | new BigDecimal("9223372036854775806")  | new BigDecimal("1")                    | PropertyType.INDIVISIBLE
         NUM_OWNERS | new BigDecimal("1")                    | new BigDecimal("1")                    | PropertyType.INDIVISIBLE
         NUM_OWNERS | new BigDecimal("1")                    | new BigDecimal("3")                    | PropertyType.INDIVISIBLE
         NUM_OWNERS | new BigDecimal("1")                    | new BigDecimal("100000000")            | PropertyType.INDIVISIBLE
         NUM_OWNERS | new BigDecimal("100000000")            | new BigDecimal("1")                    | PropertyType.INDIVISIBLE
         NUM_OWNERS | new BigDecimal("100000000")            | new BigDecimal("3")                    | PropertyType.INDIVISIBLE
-        1          | new BigDecimal("0.00000001")           | new BigDecimal("92233720368.54775806") | PropertyType.DIVISIBLE
-        1          | new BigDecimal("92233720368.54775806") | new BigDecimal("0.00000001")           | PropertyType.DIVISIBLE
         NUM_OWNERS | new BigDecimal("0.00000001")           | new BigDecimal("1.00000000")           | PropertyType.DIVISIBLE
         NUM_OWNERS | new BigDecimal("0.00000001")           | new BigDecimal("2.00000000")           | PropertyType.DIVISIBLE
         NUM_OWNERS | new BigDecimal("1.00000000")           | new BigDecimal("0.00000001")           | PropertyType.DIVISIBLE
         NUM_OWNERS | new BigDecimal("1.00000000")           | new BigDecimal("0.00000002")           | PropertyType.DIVISIBLE
         NUM_OWNERS | new BigDecimal("1.00000000")           | new BigDecimal("0.50000000")           | PropertyType.DIVISIBLE
         NUM_OWNERS | new BigDecimal("1.00000000")           | new BigDecimal("3.00000000")           | PropertyType.DIVISIBLE
+        1          | new BigDecimal("1")                    | new BigDecimal("9223372036854775806")  | PropertyType.INDIVISIBLE
+        1          | new BigDecimal("9223372036854775806")  | new BigDecimal("1")                    | PropertyType.INDIVISIBLE
+        1          | new BigDecimal("0.00000001")           | new BigDecimal("92233720368.54775806") | PropertyType.DIVISIBLE
+        1          | new BigDecimal("92233720368.54775806") | new BigDecimal("0.00000001")           | PropertyType.DIVISIBLE
     }
 
 }
