@@ -2,6 +2,7 @@ package foundation.omni.test.rpc.mdex
 
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
+import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
 import org.junit.internal.AssumptionViolatedException
 import spock.lang.Unroll
@@ -14,6 +15,172 @@ class MetaDexSpec extends BaseRegTestSpec {
     final static BigDecimal startBTC = 0.001
     final static BigDecimal zeroAmount = 0.0
     final static Byte actionNew = 1
+
+    /**
+     * @see: https://github.com/OmniLayer/omnicore/issues/39
+     */
+    def "Orders are executed, if the effective price is within the accepted range of both"() {
+        def actorA = createFundedAddress(startBTC, 0.00000006, false)
+        def actorB = createFundedAddress(startBTC, zeroAmount, false)
+        def actorC = createFundedAddress(startBTC, 0.00000001, false)
+        def actorD = createFundedAddress(startBTC, 0.00000001, false)
+        def propertyMSC = CurrencyID.MSC
+        def propertySPX = fundNewProperty(actorB, 10, PropertyType.INDIVISIBLE, propertyMSC.ecosystem)
+
+        when:
+        def txidTradeA = trade_MP(actorA, propertyMSC, 0.00000006 , propertySPX, 6, actionNew)
+        generateBlock()
+        def txidTradeB = trade_MP(actorB, propertySPX, 10, propertyMSC, 0.00000001, actionNew)
+        generateBlock()
+        def txidTradeC = trade_MP(actorC, propertyMSC, 0.00000001, propertySPX, 10, actionNew)
+        generateBlock()
+        def txidTradeD = trade_MP(actorD, propertyMSC, 0.00000001, propertySPX, 4, actionNew)
+        generateBlock()
+
+        then:
+        gettrade_MP(txidTradeA).valid
+        gettrade_MP(txidTradeB).valid
+        gettrade_MP(txidTradeC).valid
+        gettrade_MP(txidTradeD).valid
+
+        and:
+        gettrade_MP(txidTradeA).status == "filled"
+        gettrade_MP(txidTradeB).status == "filled"
+        gettrade_MP(txidTradeC).status == "open"
+        gettrade_MP(txidTradeD).status == "filled"
+
+        and:
+        getorderbook_MP(propertyMSC, propertySPX).size() == 1
+        getorderbook_MP(propertySPX, propertyMSC).size() == 0
+
+        and:
+        getbalance_MP(actorC, propertyMSC).reserved == 0.00000001
+    }
+
+    /**
+     * @see: https://github.com/OmniLayer/omnicore/issues/37
+     */
+    def "Two orders can match, and both can be partially filled"() {
+        def actorA = createFundedAddress(startBTC, zeroAmount, false)
+        def actorB = createFundedAddress(startBTC, 0.55, false)
+        def propertyMSC = CurrencyID.MSC
+        def propertySPX = fundNewProperty(actorA, 25, PropertyType.INDIVISIBLE, propertyMSC.ecosystem)
+
+        when:
+        def txidTradeA = trade_MP(actorA, propertySPX, 25, propertyMSC, 2.50, actionNew)
+        generateBlock()
+        def txidTradeB = trade_MP(actorB, propertyMSC, 0.55, propertySPX, 5, actionNew)
+        generateBlock()
+
+        then:
+        gettrade_MP(txidTradeA).valid
+        gettrade_MP(txidTradeB).valid
+
+        and:
+        gettrade_MP(txidTradeA).status != "open"
+        gettrade_MP(txidTradeB).status != "open"
+        gettrade_MP(txidTradeA).status != "filled"
+        gettrade_MP(txidTradeB).status != "filled"
+
+        and:
+        getbalance_MP(actorA, propertyMSC).balance == 0.5
+        getbalance_MP(actorA, propertySPX).reserved == 20 as BigDecimal
+        getbalance_MP(actorB, propertySPX).balance == 5 as BigDecimal
+        getbalance_MP(actorB, propertyMSC).reserved == 0.05
+    }
+
+    /**
+     * @see: https://github.com/OmniLayer/omnicore/issues/38
+     */
+    def "Orders fill with the maximal amount at the best price possible"() {
+        def actorA = createFundedAddress(startBTC, 0.00000020, false)
+        def actorB = createFundedAddress(startBTC, zeroAmount, false)
+        def propertyMSC = CurrencyID.TMSC
+        def propertySPX = fundNewProperty(actorB, 12, PropertyType.INDIVISIBLE, propertyMSC.ecosystem)
+
+        when:
+        def txidTradeA = trade_MP(actorA, propertyMSC, 0.00000020 , propertySPX, 10, actionNew)
+        generateBlock()
+        def txidTradeB = trade_MP(actorB, propertySPX, 12, propertyMSC, 0.00000017, actionNew)
+        generateBlock()
+
+        then:
+        gettrade_MP(txidTradeA).valid
+        gettrade_MP(txidTradeB).valid
+
+        and:
+        gettrade_MP(txidTradeA).status == "filled"
+        gettrade_MP(txidTradeB).status != "open"
+        gettrade_MP(txidTradeB).status != "filled"
+
+        and:
+        getbalance_MP(actorA, propertySPX).balance == 10 as BigDecimal
+        getbalance_MP(actorA, propertyMSC).reserved == 0.0
+        getbalance_MP(actorB, propertyMSC).balance == 0.00000020
+        getbalance_MP(actorB, propertySPX).reserved == 2 as BigDecimal
+    }
+
+    /**
+     * @see: https://github.com/OmniLayer/omnicore/issues/41
+     */
+    def "Orders with inverted price and different amounts for sale match"() {
+        def actorA = createFundedAddress(startBTC, zeroAmount, false)
+        def actorB = createFundedAddress(startBTC, 1.66666666, false)
+        def propertyMSC = CurrencyID.MSC
+        def propertySPX = fundNewProperty(actorA, 1.0, PropertyType.DIVISIBLE, propertyMSC.ecosystem)
+
+        when:
+        def txidTradeA = trade_MP(actorA, propertySPX, 1.0, propertyMSC, 2.0, actionNew)
+        generateBlock()
+        def txidTradeB = trade_MP(actorB, propertyMSC, 1.66666666, propertySPX, 0.83333333, actionNew)
+        generateBlock()
+
+        then:
+        gettrade_MP(txidTradeA).valid
+        gettrade_MP(txidTradeB).valid
+
+        and:
+        gettrade_MP(txidTradeA).status != "open"
+        gettrade_MP(txidTradeA).status != "filled"
+        gettrade_MP(txidTradeB).status == "filled"
+
+        and:
+        getbalance_MP(actorA, propertyMSC).balance == 1.66666666
+        getbalance_MP(actorA, propertySPX).reserved == 0.16666667
+        getbalance_MP(actorB, propertySPX).balance == 0.83333333
+        getbalance_MP(actorB, propertyMSC).reserved == 0.0
+    }
+
+    /**
+     * @see: https://github.com/OmniLayer/omnicore/issues/40
+     */
+    def "Intermediate results are not truncated or rounded"() {
+        def actorA = createFundedAddress(startBTC, 23.0, false)
+        def actorB = createFundedAddress(startBTC, zeroAmount, false)
+        def propertyMSC = CurrencyID.TMSC
+        def propertySPX = fundNewProperty(actorB, 50.0, PropertyType.DIVISIBLE, propertyMSC.ecosystem)
+
+        when:
+        def txidTradeA = trade_MP(actorA, propertyMSC, 23.0 , propertySPX, 100.0, actionNew)
+        generateBlock()
+        def txidTradeB = trade_MP(actorB, propertySPX, 50.0, propertyMSC, 10.0, actionNew)
+        generateBlock()
+
+        then:
+        gettrade_MP(txidTradeA).valid
+        gettrade_MP(txidTradeB).valid
+
+        and:
+        gettrade_MP(txidTradeA).status != "open"
+        gettrade_MP(txidTradeA).status != "filled"
+        gettrade_MP(txidTradeB).status == "filled"
+
+        and:
+        getbalance_MP(actorA, propertySPX).balance == 50.0
+        getbalance_MP(actorA, propertyMSC).reserved == 11.5
+        getbalance_MP(actorB, propertyMSC).balance == 11.5
+        getbalance_MP(actorB, propertySPX).reserved == 0.0
+    }
 
     @Unroll
     def "Exact trade match: #amountMSC MSC for #amountSPX SPX"() {
