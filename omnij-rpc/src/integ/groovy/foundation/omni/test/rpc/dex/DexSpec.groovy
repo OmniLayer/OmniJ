@@ -17,7 +17,7 @@ class DexSpec extends BaseRegTestSpec {
 
     def "A new sell offer can be created with Action = 1 (New)"() {
         given:
-        def fundedAddress = createFundedAddress(startBTC, startMSC)
+        def fundedAddress = createFundedAddress(startBTC, startMSC, false)
         def activeOffersAtTheStart = getactivedexsells_MP()
 
         when: "creating an offer with action = 1"
@@ -45,7 +45,7 @@ class DexSpec extends BaseRegTestSpec {
         def startMSC = 2.5
         def amountOffered = 1.0
         def desiredBTC = 0.2
-        def fundedAddress = createFundedAddress(startBTC, startMSC)
+        def fundedAddress = createFundedAddress(startBTC, startMSC, false)
 
         when: "an offer of #currencyId is created"
         def offerTxid = createDexSellOffer(
@@ -109,7 +109,7 @@ class DexSpec extends BaseRegTestSpec {
 
     def "Receiving tokens doesn't increase the offered amount of a published offer"() {
         given:
-        def fundedAddress = createFundedAddress(startBTC, startMSC)
+        def fundedAddress = createFundedAddress(startBTC, startMSC, false)
 
         when: "the sell offer is published"
         def offerTxid = createDexSellOffer(
@@ -143,7 +143,7 @@ class DexSpec extends BaseRegTestSpec {
 
     def "There can be only one active offer that accepts BTC"() {
         given:
-        def fundedAddress = createFundedAddress(startBTC, startMSC)
+        def fundedAddress = createFundedAddress(startBTC, startMSC, false)
 
         when: "there is already an active offer accepting BTC"
         def firstOfferTxid = createDexSellOffer(

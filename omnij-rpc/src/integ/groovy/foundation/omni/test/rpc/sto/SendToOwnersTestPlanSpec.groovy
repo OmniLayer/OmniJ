@@ -42,7 +42,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         given:
         def startMSC = mscAvailable + mscReserved
-        def actorAddress = createFundedAddress(startBTC, startMSC)
+        def actorAddress = createFundedAddress(startBTC, startMSC, false)
         def currencyMSC = new CurrencyID(ecosystem.longValue())
         def currencySPT = getStoProperty(actorAddress, data)
 

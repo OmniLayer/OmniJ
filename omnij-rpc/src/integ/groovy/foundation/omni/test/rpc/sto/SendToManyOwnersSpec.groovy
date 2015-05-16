@@ -136,7 +136,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         def actorMSC = maxN * stoFeePerAddress
 
         // Create actor
-        def actorAddress = createFundedAddress(1.0, actorMSC)
+        def actorAddress = createFundedAddress(1.0, actorMSC, false)
 
         // Create property
         def currencySPT = fundNewProperty(actorAddress, fundingSPT, propertyType, Ecosystem.MSC)

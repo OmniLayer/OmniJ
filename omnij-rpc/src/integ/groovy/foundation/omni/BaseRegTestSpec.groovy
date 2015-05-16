@@ -4,7 +4,6 @@ import com.msgilligan.bitcoin.rpc.Loggable
 import com.msgilligan.bitcoin.rpc.RPCURI
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
-import foundation.omni.tx.RawTxBuilder
 import foundation.omni.rpc.test.TestServers
 import foundation.omni.test.OmniTestSupport
 import spock.lang.Specification
@@ -17,12 +16,10 @@ abstract class BaseRegTestSpec extends Specification implements OmniClientDelega
 
     static final private TestServers testServers = TestServers.instance
     static final protected String rpcTestUser = testServers.rpcTestUser
-    static final protected String rpcTestPassword = testServers.rpcTestPassword
-    static final BigDecimal minBTCForTests = 50.0;
+    static final protected String rpcTestPassword = testServers.rpcTestPassword;
 
     {
         client = new OmniCLIClient(RPCURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
-//        builder = new RawTxBuilder()
     }
 
     void setupSpec() {
@@ -38,12 +35,6 @@ abstract class BaseRegTestSpec extends Specification implements OmniClientDelega
         def basicinfo = client.getinfo()
         assert basicinfo['paytxfee'] == stdTxFee
         assert basicinfo['relayfee'] == stdRelayTxFee
-
-        // Make sure we have enough test coins
-        while (getBalance() < minBTCForTests) {
-            // Mine blocks until we have some coins to spend
-            client.generateBlocks(1)
-        }
     }
 
     void cleanupSpec() {

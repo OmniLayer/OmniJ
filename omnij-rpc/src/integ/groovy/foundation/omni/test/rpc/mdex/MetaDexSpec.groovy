@@ -18,8 +18,8 @@ class MetaDexSpec extends BaseRegTestSpec {
     @Unroll
     def "Exact trade match: #amountMSC MSC for #amountSPX SPX"() {
         when:
-        def traderA = createFundedAddress(startBTC, amountMSC)  // offers MSC
-        def traderB = createFundedAddress(startBTC, zeroAmount) // offers SPX
+        def traderA = createFundedAddress(startBTC, amountMSC, false)  // offers MSC
+        def traderB = createFundedAddress(startBTC, zeroAmount, false) // offers SPX
         def propertySPX = fundNewProperty(traderB, amountSPX, propertyTypeSPX, propertyMSC.ecosystem)
 
         then:
@@ -92,8 +92,8 @@ class MetaDexSpec extends BaseRegTestSpec {
     @Unroll
     def "Exact trade match: #amountSPX SPX for #amountMSC MSC"() {
         when:
-        def traderA = createFundedAddress(startBTC, zeroAmount) // offers SPX
-        def traderB = createFundedAddress(startBTC, amountMSC)  // offers MSC
+        def traderA = createFundedAddress(startBTC, zeroAmount, false) // offers SPX
+        def traderB = createFundedAddress(startBTC, amountMSC, false)  // offers MSC
         def propertySPX = fundNewProperty(traderA, amountSPX, propertyTypeSPX, propertyMSC.ecosystem)
 
         then:
