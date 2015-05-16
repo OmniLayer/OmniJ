@@ -95,6 +95,18 @@ public class OmniClient extends BitcoinClient {
     }
 
     /**
+     * Returns information about a crowdsale.
+     *
+     * @param currency The identifier of the crowdsale
+     * @return An object with detailed information
+     */
+    public Map<String, Object> getcrowdsale_MP(CurrencyID currency) throws JsonRPCException, IOException {
+        List<Object> params = createParamList(currency.longValue());
+        Map<String, Object> result = send("getcrowdsale_MP", params);
+        return result;
+    }
+
+    /**
      * Lists currently active offers on the distributed BTC/MSC exchange.
      *
      * @return A list with information about the active offers
