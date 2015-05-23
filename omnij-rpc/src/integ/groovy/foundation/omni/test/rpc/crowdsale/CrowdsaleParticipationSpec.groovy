@@ -30,8 +30,8 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
             }
         */
         def rawTx = "000000330100020000000000004d44697600000000000001000000000000000100000001ccd403f00000"
-        def issuerAddress = createFundedAddress(startBTC, startMSC)
-        def investorAddress = createFundedAddress(startBTC, amountToInvest)
+        def issuerAddress = createFundedAddress(startBTC, startMSC, false)
+        def investorAddress = createFundedAddress(startBTC, amountToInvest, false)
         def currencyMSC = CurrencyID.MSC
 
         when: "creating a new crowdsale with 0.00000001 MDiv per unit invested"
@@ -84,8 +84,8 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
             }
         */
         def rawTx = "000000330100020000000000004d446976000000000000017fffffffffffffff00000001ccd403f00000"
-        def issuerAddress = createFundedAddress(startBTC, startMSC)
-        def investorAddress = createFundedAddress(startBTC, amountToInvest)
+        def issuerAddress = createFundedAddress(startBTC, startMSC, false)
+        def investorAddress = createFundedAddress(startBTC, amountToInvest, false)
         def currencyMSC = CurrencyID.MSC
 
         when: "creating a new crowdsale with 0.00000001 MDiv per unit invested"
@@ -138,8 +138,8 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
             }
         */
         def rawTx = "0000003301000100000000000054496e646976000000000000020000000000000d4800000001ccd403f00000"
-        def issuerAddress = createFundedAddress(startBTC, startMSC)
-        def investorAddress = createFundedAddress(startBTC, amountToInvest)
+        def issuerAddress = createFundedAddress(startBTC, startMSC, false)
+        def investorAddress = createFundedAddress(startBTC, amountToInvest, false)
         def currencyMSC = CurrencyID.TMSC
 
         when: "creating a new crowdsale with 3400 TIndiv per unit invested"

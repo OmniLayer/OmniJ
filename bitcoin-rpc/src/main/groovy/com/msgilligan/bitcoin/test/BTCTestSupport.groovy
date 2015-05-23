@@ -220,7 +220,7 @@ trait BTCTestSupport implements BitcoinClientDelegate {
     Boolean consolidateCoins() {
         def amountIn = new BigDecimal(0)
         def inputs = new ArrayList<Outpoint>()
-        def unspentOutputs = listUnspent(0, defaultMaxConf)
+        def unspentOutputs = listUnspent(1, defaultMaxConf)
 
         // Gather inputs
         for (unspentOutput in unspentOutputs) {
