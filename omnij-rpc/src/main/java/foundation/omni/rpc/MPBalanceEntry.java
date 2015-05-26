@@ -28,8 +28,8 @@ public class MPBalanceEntry {
         MPBalanceEntry that = (MPBalanceEntry) o;
 
         if (!address.equals(that.address)) return false;
-        if (!balance.equals(that.balance)) return false;
-        if (!reserved.equals(that.reserved)) return false;
+        if (balance.compareTo(that.balance) != 0) return false;
+        if (reserved.compareTo(that.reserved) != 0) return false;
 
         return true;
     }
