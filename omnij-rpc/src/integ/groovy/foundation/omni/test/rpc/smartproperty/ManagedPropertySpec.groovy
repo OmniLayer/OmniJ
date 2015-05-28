@@ -19,11 +19,13 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     @Shared Address actorAddress
     @Shared Address otherAddress
     @Shared CurrencyID currencyID
+    @Shared CurrencyID nonManagedID
     @Shared Sha256Hash creationTxid
 
     def setupSpec() {
         actorAddress = createFundedAddress(startBTC, zeroAmount)
         otherAddress = createFundedAddress(startBTC, zeroAmount)
+        nonManagedID = fundNewProperty(actorAddress, 10.0, PropertyType.DIVISIBLE, Ecosystem.MSC)
     }
 
     def "A managed property can be created with transaction type 54"() {
@@ -139,6 +141,28 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         getbalance_MP(actorAddress, currencyID).balance == 270 as BigDecimal
     }
 
+    def "It's impossible to grant tokens for an non-existing property"() {
+        when:
+        def txid = grantTokens(otherAddress, new CurrencyID(CurrencyID.MAX_REAL_ECOSYSTEM_VALUE), 1)
+        generateBlock()
+
+        then:
+        getTransactionMP(txid).valid == false
+    }
+
+    def "Granting tokens for a property with fixed supply is invalid"() {
+        when:
+        def txid = grantTokens(actorAddress, nonManagedID, 1)
+        generateBlock()
+
+        then:
+        getTransactionMP(txid).valid == false
+
+        and:
+        getproperty_MP(nonManagedID).totaltokens == old(getproperty_MP(nonManagedID)).totaltokens
+        getbalance_MP(actorAddress, nonManagedID) == old(getbalance_MP(actorAddress, nonManagedID))
+    }
+
     def "Tokens can only be granted by the issuer on record"() {
         when:
         def txid = grantTokens(otherAddress, currencyID, 500)
@@ -240,6 +264,15 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         balance.balance == 1 as BigDecimal
     }
 
+    def "It's impossible to revoke tokens for an non-existing property"() {
+        when:
+        def txid = revokeTokens(otherAddress, new CurrencyID(CurrencyID.MAX_REAL_ECOSYSTEM_VALUE), 1)
+        generateBlock()
+
+        then:
+        getTransactionMP(txid).valid == false
+    }
+
     @Ignore
     def "Tokens can only be revoked by the issuer on record"() {
         when:
@@ -253,6 +286,19 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         getproperty_MP(currencyID).totaltokens == old(getproperty_MP(currencyID)).totaltokens
         getbalance_MP(actorAddress, currencyID) == old(getbalance_MP(actorAddress, currencyID))
         getbalance_MP(otherAddress, currencyID) == old(getbalance_MP(otherAddress, currencyID))
+    }
+
+    def "Revoking tokens for a property with fixed supply is invalid"() {
+        when:
+        def txid = revokeTokens(actorAddress, nonManagedID, 1)
+        generateBlock()
+
+        then:
+        getTransactionMP(txid).valid == false
+
+        and:
+        getproperty_MP(nonManagedID).totaltokens == old(getproperty_MP(nonManagedID)).totaltokens
+        getbalance_MP(actorAddress, nonManagedID) == old(getbalance_MP(actorAddress, nonManagedID))
     }
 
     def "Revoking more tokens than available is not possible"() {
