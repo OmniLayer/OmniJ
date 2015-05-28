@@ -112,6 +112,29 @@ public class OmniExtendedClient extends OmniClient {
     }
 
     /**
+     * Creates a crowdsale.
+     *
+     * @param address          The issuance address
+     * @param ecosystem        The ecosystem to create the crowdsale in
+     * @param propertyType     The property type
+     * @param propertyDesired  The desired property
+     * @param tokensPerUnit    The number of tokens per unit invested
+     * @param deadline         The deadline as UNIX timestamp
+     * @param earlyBirdBonus   The bonus percentage per week
+     * @param issuerBonus      The bonus for the issuer
+     * @return The transaction hash
+     */
+    public Sha256Hash createCrowdsale(Address address, Ecosystem ecosystem, PropertyType propertyType,
+                                      CurrencyID propertyDesired, Long tokensPerUnit, Long deadline,
+                                      Byte earlyBirdBonus, Byte issuerBonus)
+            throws JsonRPCException, IOException {
+        String rawTxHex = builder.createCrowdsaleHex(ecosystem, propertyType, 0L, "", "", "CS", "", "", propertyDesired,
+                                                     tokensPerUnit, deadline, earlyBirdBonus, issuerBonus);
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
+        return txid;
+    }
+
+    /**
      * Creates a smart property with fixed supply.
      *
      * @param address    The issuance address
@@ -138,6 +161,19 @@ public class OmniExtendedClient extends OmniClient {
     public Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount, String label)
             throws JsonRPCException, IOException {
         String rawTxHex = builder.createPropertyHex(ecosystem, type, 0L, "", "", label, "", "", amount);
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
+        return txid;
+    }
+
+    /**
+     * Closes a crowdsale.
+     *
+     * @param address     The issuance address
+     * @param currencyID  The identifier of the crowdsale
+     * @return The transaction hash
+     */
+    public Sha256Hash closeCrowdsale(Address address, CurrencyID currencyID) throws JsonRPCException, IOException {
+        String rawTxHex = builder.createCloseCrowdsaleHex(currencyID);
         Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
         return txid;
     }
@@ -191,6 +227,21 @@ public class OmniExtendedClient extends OmniClient {
             throws JsonRPCException, IOException {
         String rawTxHex = builder.createRevokeTokensHex(currencyID, amount, "");
         Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
+        return txid;
+    }
+
+    /**
+     * Changes the issuer on record of a managed property.
+     *
+     * @param fromAddress  The issuance address
+     * @param currencyID   The identifier of the property
+     * @param toAddress    The new issuer on record
+     * @return The transaction hash
+     */
+    public Sha256Hash changeIssuer(Address fromAddress, CurrencyID currencyID, Address toAddress)
+            throws JsonRPCException, IOException {
+        String rawTxHex = builder.createChangePropertyManagerHex(currencyID);
+        Sha256Hash txid = sendrawtx_MP(fromAddress, rawTxHex, toAddress);
         return txid;
     }
 
