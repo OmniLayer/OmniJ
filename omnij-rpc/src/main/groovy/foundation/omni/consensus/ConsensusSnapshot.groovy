@@ -1,5 +1,6 @@
 package foundation.omni.consensus
 
+import groovy.transform.CompileStatic
 import groovy.transform.Immutable
 import foundation.omni.CurrencyID
 import org.bitcoinj.core.Address
@@ -8,6 +9,7 @@ import org.bitcoinj.core.Address
  * Consensus data for a specified CurrencyID at a given blockHeight.
  */
 @Immutable
+@CompileStatic
 class ConsensusSnapshot {
     /**
      * The currency ID

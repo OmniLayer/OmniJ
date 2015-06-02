@@ -1,5 +1,6 @@
 package foundation.omni.consensus
 
+import groovy.transform.CompileStatic
 import groovy.transform.Immutable
 import foundation.omni.net.OmniMainNetParams
 import org.bitcoinj.core.Address
@@ -8,6 +9,7 @@ import org.bitcoinj.core.Address
  * A pair of ConsensusSnapshots with comparison iterators for Spock tests
  */
 @Immutable
+@CompileStatic
 class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
     final ConsensusSnapshot c1
     final ConsensusSnapshot c2
