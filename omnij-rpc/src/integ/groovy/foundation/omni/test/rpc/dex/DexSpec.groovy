@@ -14,6 +14,8 @@ class DexSpec extends BaseRegTestSpec {
     final static BigDecimal stdCommitFee = 0.0001
     final static Byte stdBlockSpan = 10
     final static Byte actionNew = 1
+    final static Byte actionUpdate = 2
+    final static Byte actionCancel = 3
 
     def "A new sell offer can be created with Action = 1 (New)"() {
         given:
@@ -163,5 +165,85 @@ class DexSpec extends BaseRegTestSpec {
         [startBTC, startMSC, currencyOffered, firstOfferMSC, firstOfferBTC,
          secondOfferMSC, secondOfferBTC] << [[0.1, 2.5, MSC, 1.0, 0.2, 1.5, 0.3]]
     }
+
+    def "An offer can be updated with action = 2, and cancelled with action = 3"() {
+        given:
+        def fundedAddress = createFundedAddress(startBTC, startMSC)
+        def balanceAtStart = getbalance_MP(fundedAddress, currencyOffered)
+        def offersAtStart = getactivedexsells_MP()
+
+        when: "creating an offer with action 1"
+        def offerTxid = createDexSellOffer(
+                fundedAddress, currencyOffered, offeredMSC, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
+        generateBlock()
+
+        then:
+        getTransactionMP(offerTxid).valid
+        getTransactionMP(offerTxid).amount as BigDecimal == offeredMSC
+
+        and:
+        getbalance_MP(fundedAddress, currencyOffered).balance == balanceAtStart.balance - offeredMSC
+        getbalance_MP(fundedAddress, currencyOffered).reserved == balanceAtStart.reserved + offeredMSC
+
+        and: "a new offer is listed"
+        getactivedexsells_MP().size() == offersAtStart.size() + 1
+
+        when: "updating an offer with action = 2"
+        def updateTxid = createDexSellOffer(
+                fundedAddress, currencyOffered, updatedMSC, updatedBTC, stdBlockSpan, stdCommitFee, actionUpdate)
+        generateBlock()
+
+        then: "the offered amount is updated"
+        getTransactionMP(updateTxid).valid
+        getTransactionMP(updateTxid).amount as BigDecimal == updatedMSC
+
+        and: "the total amount offered is reserved"
+        getbalance_MP(fundedAddress, currencyOffered).balance == balanceAtStart.balance - updatedMSC
+        getbalance_MP(fundedAddress, currencyOffered).reserved == balanceAtStart.reserved + updatedMSC
+
+        when: "cancelling an offer with action = 3"
+        def cancelTxid = createDexSellOffer(
+                fundedAddress, currencyOffered, 0.0, 0.0, 0 as Byte, 0.0, actionCancel)
+        generateBlock()
+
+        then:
+        getTransactionMP(cancelTxid).valid
+
+        and: "the original balance is restored"
+        getbalance_MP(fundedAddress, currencyOffered).balance == balanceAtStart.balance
+        getbalance_MP(fundedAddress, currencyOffered).reserved == balanceAtStart.reserved
+        getbalance_MP(fundedAddress, currencyOffered) == balanceAtStart
+
+        and: "the offer is no longer listed"
+        getactivedexsells_MP().size() == offersAtStart.size()
+
+        where:
+        [startBTC, startMSC, currencyOffered, offeredMSC, desiredBTC, updatedMSC, updatedBTC] <<
+                [[0.1, 1.0, MSC, 0.5, 0.5, 1.0, 2.0]]
+    }
+
+    def "An offer can be accepted with an accept transaction of type 22"() {
+        given:
+        def actorA = createFundedAddress(startBTC, startMSC)
+        def actorB = createFundedAddress(startBTC, 0.0)
+
+        when: "A offers MSC"
+        def offerTxid = createDexSellOffer(
+                actorA, currencyOffered, offeredMSC, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
+        generateBlock()
+
+        and: "B accepts the offer"
+        def acceptTxid = acceptDexOffer(actorB, currencyOffered, offeredMSC, actorA)
+        generateBlock()
+
+        then:
+        getTransactionMP(offerTxid).valid
+        getTransactionMP(acceptTxid).valid
+
+        where:
+        [startBTC, startMSC, currencyOffered, offeredMSC, desiredBTC] << [[0.1, 0.1, MSC, 0.05, 0.07]]
+    }
+
+    // TODO: actual payment (requires BTC transaction with marker)
 
 }

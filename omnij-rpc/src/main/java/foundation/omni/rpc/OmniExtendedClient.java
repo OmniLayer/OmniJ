@@ -70,6 +70,23 @@ public class OmniExtendedClient extends OmniClient {
     }
 
     /**
+     * Accepts an offer on the traditional distributed exchange.
+     *
+     * @param fromAddress  The address used for the purchase
+     * @param currencyId   The token to purchase
+     * @param amount       The amount of tokens to purchase
+     * @param toAddress    The address of the offer
+     * @return The transaction hash
+     */
+    public Sha256Hash acceptDexOffer(Address fromAddress, CurrencyID currencyId, BigDecimal amount, Address toAddress)
+            throws JsonRPCException, IOException {
+        Long satoshis = BTC.btcToSatoshis(amount).longValue();
+        String rawTxHex = builder.createAcceptDexOfferHex(currencyId, satoshis);
+        Sha256Hash txid = sendrawtx_MP(fromAddress, rawTxHex, toAddress);
+        return txid;
+    }
+
+    /**
      * Creates an offer on the MetaDex exchange (aka Dex Phase II) (tx 21).
      *
      * <p>Note: Currently assumes divisible currencies</p>
@@ -95,6 +112,29 @@ public class OmniExtendedClient extends OmniClient {
     }
 
     /**
+     * Creates a crowdsale.
+     *
+     * @param address          The issuance address
+     * @param ecosystem        The ecosystem to create the crowdsale in
+     * @param propertyType     The property type
+     * @param propertyDesired  The desired property
+     * @param tokensPerUnit    The number of tokens per unit invested
+     * @param deadline         The deadline as UNIX timestamp
+     * @param earlyBirdBonus   The bonus percentage per week
+     * @param issuerBonus      The bonus for the issuer
+     * @return The transaction hash
+     */
+    public Sha256Hash createCrowdsale(Address address, Ecosystem ecosystem, PropertyType propertyType,
+                                      CurrencyID propertyDesired, Long tokensPerUnit, Long deadline,
+                                      Byte earlyBirdBonus, Byte issuerBonus)
+            throws JsonRPCException, IOException {
+        String rawTxHex = builder.createCrowdsaleHex(ecosystem, propertyType, 0L, "", "", "CS", "", "", propertyDesired,
+                                                     tokensPerUnit, deadline, earlyBirdBonus, issuerBonus);
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
+        return txid;
+    }
+
+    /**
      * Creates a smart property with fixed supply.
      *
      * @param address    The issuance address
@@ -103,7 +143,8 @@ public class OmniExtendedClient extends OmniClient {
      * @param amount     The number of units to create
      * @return The transaction hash
      */
-    public Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount) throws JsonRPCException, IOException {
+    public Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount)
+            throws JsonRPCException, IOException {
         return createProperty(address, ecosystem, type, amount, "SP");
     }
 
@@ -117,9 +158,91 @@ public class OmniExtendedClient extends OmniClient {
      * @param label      The label or title of the property
      * @return The transaction hash
      */
-    public Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount, String label) throws JsonRPCException, IOException {
+    public Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount, String label)
+            throws JsonRPCException, IOException {
         String rawTxHex = builder.createPropertyHex(ecosystem, type, 0L, "", "", label, "", "", amount);
         Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
         return txid;
     }
+
+    /**
+     * Closes a crowdsale.
+     *
+     * @param address     The issuance address
+     * @param currencyID  The identifier of the crowdsale
+     * @return The transaction hash
+     */
+    public Sha256Hash closeCrowdsale(Address address, CurrencyID currencyID) throws JsonRPCException, IOException {
+        String rawTxHex = builder.createCloseCrowdsaleHex(currencyID);
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
+        return txid;
+    }
+
+    /**
+     * Creates a manged property.
+     *
+     * @param address      The issuance address
+     * @param ecosystem    The ecosystem to create the property in
+     * @param type         The property type
+     * @param category     The category
+     * @param subCategory  The subcategory
+     * @param label        The label or title of the property to create
+     * @param website      The website website
+     * @param info         Additional information
+     * @return The transaction hash
+     */
+    public Sha256Hash createManagedProperty(Address address, Ecosystem ecosystem, PropertyType type, String category,
+                                            String subCategory, String label, String website, String info)
+            throws JsonRPCException, IOException {
+        String rawTxHex = builder.createManagedPropertyHex(ecosystem, type, 0L, category, subCategory, label, website,
+                                                           info);
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
+        return txid;
+    }
+
+    /**
+     * Grants tokens for a managed property.
+     *
+     * @param address     The issuance address
+     * @param currencyID  The identifier of the property
+     * @param amount      The number of tokens to grant
+     * @return The transaction hash
+     */
+    public Sha256Hash grantTokens(Address address, CurrencyID currencyID, Long amount)
+            throws JsonRPCException, IOException {
+        String rawTxHex = builder.createGrantTokensHex(currencyID, amount, "");
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
+        return txid;
+    }
+
+    /**
+     * Revokes tokens for a managed property.
+     *
+     * @param address     The issuance address
+     * @param currencyID  The identifier of the property
+     * @param amount      The number of tokens to revoke
+     * @return The transaction hash
+     */
+    public Sha256Hash revokeTokens(Address address, CurrencyID currencyID, Long amount)
+            throws JsonRPCException, IOException {
+        String rawTxHex = builder.createRevokeTokensHex(currencyID, amount, "");
+        Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
+        return txid;
+    }
+
+    /**
+     * Changes the issuer on record of a managed property.
+     *
+     * @param fromAddress  The issuance address
+     * @param currencyID   The identifier of the property
+     * @param toAddress    The new issuer on record
+     * @return The transaction hash
+     */
+    public Sha256Hash changeIssuer(Address fromAddress, CurrencyID currencyID, Address toAddress)
+            throws JsonRPCException, IOException {
+        String rawTxHex = builder.createChangePropertyManagerHex(currencyID);
+        Sha256Hash txid = sendrawtx_MP(fromAddress, rawTxHex, toAddress);
+        return txid;
+    }
+
 }

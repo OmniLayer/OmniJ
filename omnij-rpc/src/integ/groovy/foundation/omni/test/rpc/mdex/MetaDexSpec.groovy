@@ -182,6 +182,25 @@ class MetaDexSpec extends BaseRegTestSpec {
         getbalance_MP(actorB, propertySPX).reserved == 0.0
     }
 
+    def "One side of the trade must either be MSC or TMSC"() {
+        def actorAdress = createFundedAddress(startBTC, zeroAmount, false)
+        def propertySPA = fundNewProperty(actorAdress, 20.0, PropertyType.DIVISIBLE, Ecosystem.TMSC)
+        def propertySPB = fundNewProperty(actorAdress, 10.0, PropertyType.DIVISIBLE, Ecosystem.TMSC)
+
+        when:
+        def txidTrade = trade_MP(actorAdress, propertySPA, 1.0, propertySPB, 1.0, actionNew)
+        generateBlock()
+
+        then:
+        gettrade_MP(txidTrade).valid == false
+
+        and:
+        getbalance_MP(actorAdress, propertySPA).balance == 20.0
+        getbalance_MP(actorAdress, propertySPB).balance == 10.0
+        getbalance_MP(actorAdress, propertySPA).reserved == zeroAmount
+        getbalance_MP(actorAdress, propertySPB).reserved == zeroAmount
+    }
+
     @Unroll
     def "Exact trade match: #amountMSC MSC for #amountSPX SPX"() {
         when:
