@@ -13,7 +13,7 @@ import org.bitcoinj.core.Address
 class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
     final ConsensusSnapshot c1
     final ConsensusSnapshot c2
-    private TreeSet<Address> unionAddresses = null
+    private Set<Address> unionAddresses = null
 
     /**
      * Return an iterator that will iterate through the union of addresses
