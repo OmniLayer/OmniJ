@@ -13,24 +13,24 @@ The current STO tests are:
 | Test "Spec" (link to source) | Latest Results | Notes
 
 | https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/sto/SendToOwnersSpec.groovy[SendToOwnersSpec]
-| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/SendToOwnersSpec/[results]
+| https://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/SendToOwnersSpec/[results]
 | Simple STO tests
 
 | https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/sto/SendToManyOwnersSpec.groovy[SendToManyOwnersSpec]
-| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/SendToManyOwnersSpec/[results]
+| https://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/SendToManyOwnersSpec/[results]
 | STO tests with a large (configurable) number of owners.
 
 | https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/sto/SendToOwnersTestPlanSpec.groovy[SendToOwnersTestPlanSpec]
-| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/SendToOwnersTestPlanSpec/[results]
+| https://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/SendToOwnersTestPlanSpec/[results]
 | Transactions created and sent with `sendToOwnersMP` RPC method. Driven by https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/sto/sto-testplan.tsv[Tab-delimited test data] 
 
 | https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/sto/SendToOwnersTestPlanRawSpec.groovy[SendToOwnersTestPlanRawSpec]
-| http://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/SendToOwnersTestPlanRawSpec/[results]
+| https://ci.omni.foundation/job/msc-integ-regtest/lastCompletedBuild/testReport/foundation.omni.test.rpc.sto/SendToOwnersTestPlanRawSpec/[results]
 | Same tests as `SendToOwnersTestPlanSpec`, but transactions created client-side with OmniJ and sent with `sendrawtx_MP` RPC method. Driven by https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/sto/sto-testplan.tsv[Tab-delimited test data] 
 
 |===
 
 == Omni Foundation Jenkins Server Info
 
-An overview of the http://ci.omni.foundation[Omni Foundation Continuous Integration Server] and the jobs it's currently running can be read in the https://github.com/mastercoin-MSC/omni-devops/blob/master/adoc/jenkins.adoc[Jenkins Continuous Integration Server] page on the https://github.com/mastercoin-MSC/omni-devops[omni-devops repository].
+An overview of the https://ci.omni.foundation[Omni Foundation Continuous Integration Server] and the jobs it's currently running can be read in the https://github.com/OmniLayer/omni-devops/blob/master/adoc/jenkins.adoc[Jenkins Continuous Integration Server] page on the https://github.com/OmniLayer/omni-devops[omni-devops repository].
 

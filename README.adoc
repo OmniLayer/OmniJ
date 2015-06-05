@@ -32,8 +32,8 @@ There are currently three subprojects of OmniJ. Each of which builds a JAR artif
 
 === OmniJ Documentation and Build Reports
 
-* OmniJ http://ci.omni.foundation/job/OmniJ/javadoc/[API Doc]
-* OmniJ http://ci.omni.foundation/job/OmniJ/[Unit Test Results]
+* OmniJ https://ci.omni.foundation/job/OmniJ/javadoc/[API Doc]
+* OmniJ https://ci.omni.foundation/job/OmniJ/[Unit Test Results]
 
 === OmniJ Maven Artifacts
 
@@ -88,13 +88,13 @@ Bitcoin RegTest Tests::
 Test Bitcoin RPC calls against an instance of `bitcoind` running in RegTest mode.
 
 Omni RegTest Tests::
-Test Bitcoin and Omni Core RPC calls against an instance of `mastercored` running in RegTest mode.
+Test Bitcoin and Omni Core RPC calls against an instance of `omnicored` running in RegTest mode.
 
 Omni Consensus Tests::
 Use the `getallbalancesforid_MP` RPC to get balances for multiple Omni Protocol currencies and compare them against balance information from several well-known public Omni Protocol servers with consensus-checking Web APIs.
 
 [NOTE]
-Omni Core was formerly known as Master Core and the binary is still named `mastercored`, though that should change in a future release. The Omni Protocol was formerly Master Protocol.
+Omni Core was formerly known as Master Core and the binary is still named `mastercored` (release version, it is still `bitcoind` on the current development branch), though that should change in a future release. The Omni Protocol was formerly Master Protocol.
 
 == Installing pre-requisites
 
@@ -135,10 +135,10 @@ test-btc-integ-regtest.sh::
 Runs BTC RPC RegTest tests against a built executable of `bitcoind` in `copied-artifacts/src` directory.
 
 test-msc-integ-regtest.sh::
-Runs Omni Core RPC regtest test against a built executable of `mastercored` in `copied-artifacts/src` directory.
+Runs Omni Core RPC regtest test against a built executable of `omnicored` in `copied-artifacts/src` directory.
 
 test-msc-consensus-mainnet.sh::
-Runs consensus tests against a built executable of `mastercored` in `copied-artifacts/src` directory.
+Runs consensus tests against a built executable of `omnicored` in `copied-artifacts/src` directory.
 
 [CAUTION]
 Read the scripts carefully to make sure you understand how they work. Take special care to notice the `rm -rf` commands.

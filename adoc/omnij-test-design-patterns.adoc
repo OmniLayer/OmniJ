@@ -12,7 +12,7 @@ The OmniJ project was initially created for the purpose of writing functional te
 
 == Components
 
-For an overview, see the package-level documentation on the OmniJ http://ci.omni.foundation/job/OmniJ/javadoc/overview-summary.html[API overview page].
+For an overview, see the package-level documentation on the OmniJ https://ci.omni.foundation/job/OmniJ/javadoc/overview-summary.html[API overview page].
 
 === OmniJ Core
 
