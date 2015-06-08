@@ -71,12 +71,12 @@ public class BitcoinClient extends RPCClient {
                 /* Android exception, ignore */
                 // Expected exceptions on Android, RoboVM
             } catch (JsonRPCException e) {
-                if ((e.getMessage().equals("Parsing Omni Layer transactions...") ||
-                        e.getMessage().equals("Verifying blocks..."))) {
+                if ((e.getMessage().startsWith("Parsing Omni Layer transactions") ||
+                        e.getMessage().startsWith("Verifying blocks"))) {
                     // Swallow
                     log.debug("Waiting for server: " + e.getMessage());
                 } else {
-                    e.printStackTrace();
+//                    e.printStackTrace();
                     throw e;
                 }
             } catch (IOException e) {
