@@ -49,12 +49,12 @@ class EncodeMultisigSpec extends BaseTxSpec {
         tx != null
         tx.inputs.size() == 0       // No inputs yet
         tx.outputs.size() == 2
-        tx.outputs[0].value.value == 100_000
+        tx.outputs[0].value.value == 684
         tx.outputs[0].scriptBytes.encodeHex().toString() == "51210347d08029b5cbc934f6079b650c50718eab5a56d51cf6b742ec9f865a41fcfca32103e2e98198f331c436644f88b5a6bc5c65df64d53457d624ed05e78dba40dd5e012103fac1e512bac2575554a5dee8a345fc773615af68a09d0291473316fe39087e0653ae"
-        tx.outputs[1].value.value == 100_000
+        tx.outputs[1].value.value == 684
 // TODO: The expected result here is not necessarily valid
         tx.outputs[1].scriptBytes.encodeHex().toString() == "51210347d08029b5cbc934f6079b650c50718eab5a56d51cf6b742ec9f865a41fcfca32103fabfe512bac2575554a5dee8a345fc773615af68a09d0291473316fe39087e0052ae"
 // TODO: The expected result here is not necessarily valid
-        tx.bitcoinSerialize().encodeHex().toString() == "010000000002a0860100000000006951210347d08029b5cbc934f6079b650c50718eab5a56d51cf6b742ec9f865a41fcfca32103e2e98198f331c436644f88b5a6bc5c65df64d53457d624ed05e78dba40dd5e012103fac1e512bac2575554a5dee8a345fc773615af68a09d0291473316fe39087e0653aea0860100000000004751210347d08029b5cbc934f6079b650c50718eab5a56d51cf6b742ec9f865a41fcfca32103fabfe512bac2575554a5dee8a345fc773615af68a09d0291473316fe39087e0052ae00000000"
+        tx.bitcoinSerialize().encodeHex().toString() == "010000000002ac020000000000006951210347d08029b5cbc934f6079b650c50718eab5a56d51cf6b742ec9f865a41fcfca32103e2e98198f331c436644f88b5a6bc5c65df64d53457d624ed05e78dba40dd5e012103fac1e512bac2575554a5dee8a345fc773615af68a09d0291473316fe39087e0653aeac020000000000004751210347d08029b5cbc934f6079b650c50718eab5a56d51cf6b742ec9f865a41fcfca32103fabfe512bac2575554a5dee8a345fc773615af68a09d0291473316fe39087e0052ae00000000"
     }
 }
