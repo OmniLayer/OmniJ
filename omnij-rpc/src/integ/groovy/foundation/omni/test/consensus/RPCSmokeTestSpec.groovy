@@ -7,7 +7,7 @@ import static foundation.omni.CurrencyID.*
 
 class RPCSmokeTestSpec extends BaseMainNetSpec {
 
-    def "Master Core RPC is working" () {
+    def "Omni Core RPC is working" () {
         setup: "no setup required here"
 
         expect: "client is not null"
@@ -21,7 +21,7 @@ class RPCSmokeTestSpec extends BaseMainNetSpec {
         info.version >= 90000
     }
 
-    def "Can get Mastercore consensus data"() {
+    def "Can get Omni Core consensus data"() {
         setup:
         def mscFetcher = new OmniCoreConsensusTool(client)
 
