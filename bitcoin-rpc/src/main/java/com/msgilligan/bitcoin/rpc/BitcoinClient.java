@@ -72,7 +72,6 @@ public class BitcoinClient extends RPCClient {
                         se.getMessage().equals("recvfrom failed: ECONNRESET (Connection reset by peer)")) {
                     status = se.getMessage();
                 } else {
-//                    status = "Semi-unexpected exception: " + se.getMessage();
                     throw new JsonRPCException("Unexpected exception in waitForServer", se ) ;
                 }
 
@@ -85,7 +84,8 @@ public class BitcoinClient extends RPCClient {
             } catch (JsonRPCStatusException e) {
                 if (    e.getMessage().contains("Verifying blocks") ||
                         e.getMessage().contains("Parsing Omni Layer transactions") ||
-                        e.getMessage().contains("Still scanning.. at block") ) {
+                        e.getMessage().contains("Still scanning.. at block") |
+                        e.getMessage().contains("Loading addresses...")) {
                     // Swallow
                     status = e.getMessage();
                 } else {
