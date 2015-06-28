@@ -212,8 +212,8 @@ trait BTCTestSupport implements BitcoinClientDelegate {
      * to a new address, as fee, to sweep dust and to minimize the number of unspent outputs, to avoid creating too
      * large transactions. No new block is generated afterwards.
      *
-     * @see foundation.omni.BaseRegTestSpec#cleanup()
-     * @see <a href="https://github.com/msgilligan/bitcoin-spock/issues/50">Issue #50 on GitHub</a>
+     * @see foundation.omni.BaseRegTestSpec#cleanupSpec()
+     * @see <a href="https://github.com/OmniLayer/OmniJ/issues/50">Issue #50 on GitHub</a>
      *
      * @return True, if enough outputs with a value of at least {@code stdRelayTxFee} were spent
      */
