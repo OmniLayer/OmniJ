@@ -1,25 +1,20 @@
 package com.msgilligan.bitcoin.rpc
 
 import com.msgilligan.bitcoin.BaseRegTestSpec
+import org.bitcoinj.core.Address
 import spock.lang.Shared
-
-import java.security.SecureRandom
 
 class BitcoinStepwiseSpec extends BaseRegTestSpec {
     final static BigDecimal sendAmount = 10.0
     final static BigDecimal extraAmount = 0.10
 
-    @Shared
-    def accountname
 
     @Shared
-    def wealthyAddress
+    Address wealthyAddress
 
     def setupSpec() {
-        // Create a new, unique address in a dedicated account
-        def random = new SecureRandom();
-        accountname = "msc" + new BigInteger(130, random).toString(32)
-        wealthyAddress = getAccountAddress(accountname)
+        // Create a new, unique address
+        wealthyAddress = getNewAddress()
     }
 
 
@@ -29,24 +24,24 @@ class BitcoinStepwiseSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "we have the correct amount of BTC there"
-        getBalance(accountname) >= 2*sendAmount + extraAmount
+        getBitcoinBalance(wealthyAddress) >= 2*sendAmount + extraAmount
     }
 
     def "Send an amount to a newly created address"() {
         setup: "initial balance"
-        def wealthyStartBalance = client.getBalance(accountname)
+        def wealthyStartBalance = getBitcoinBalance(wealthyAddress)
         def testAmount = 1.0
 
         when: "we create a new address and send testAmount to it"
         def destinationAddress = getNewAddress()
-        sendFrom(accountname, destinationAddress, testAmount)
-        generateBlocks(1)
+        sendBitcoin(wealthyAddress, destinationAddress, testAmount)
+        generateBlock()
 
         then: "the new address has a balance of testAmount"
-        getReceivedByAddress(destinationAddress) == testAmount
+        getBitcoinBalance(destinationAddress) == testAmount
 
         and: "the source address is poorer"
-        getBalance(accountname) <= wealthyStartBalance - testAmount
+        getBitcoinBalance(wealthyAddress) <= wealthyStartBalance - testAmount
     }
 
 }
