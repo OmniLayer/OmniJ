@@ -134,10 +134,10 @@ To run the test from Jenkins we are using the following (UNIX) shell scripts:
 test-btc-integ-regtest.sh::
 Runs BTC RPC RegTest tests against a built executable of `bitcoind` in `copied-artifacts/src` directory.
 
-test-msc-integ-regtest.sh::
+test-omni-integ-regtest.sh::
 Runs Omni Core RPC regtest test against a built executable of `omnicored` in `copied-artifacts/src` directory.
 
-test-msc-consensus-mainnet.sh::
+test-omni-consensus-mainnet.sh::
 Runs consensus tests against a built executable of `omnicored` in `copied-artifacts/src` directory.
 
 [CAUTION]
