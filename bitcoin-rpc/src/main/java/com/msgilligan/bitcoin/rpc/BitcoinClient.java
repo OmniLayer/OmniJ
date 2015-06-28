@@ -28,7 +28,9 @@ import java.util.Map;
 public class BitcoinClient extends RPCClient {
     private static final Logger log = LoggerFactory.getLogger(BitcoinClient.class);
 
-    private static final Integer SECOND = 1000;
+    private static final int SECOND_IN_MSEC = 1000;
+    private static final int RETRY_SECONDS = 1;
+    private static final int MESSAGE_SECONDS = 10;
 
     public BitcoinClient(URI server, String rpcuser, String rpcpassword) {
         super(server, rpcuser, rpcpassword);
@@ -40,63 +42,70 @@ public class BitcoinClient extends RPCClient {
 
     /**
      * Wait until the server is available.
+     * <p>
+     * Keep trying, ignoring (and logging) a known list of exception conditions that may occur while waiting for
+     * a <code>bitcoind</code> server to start up. This is similar to the behavior enabled by the <code>-rpcwait</code>
+     * option to the <code>bitcoin-cli</code> command-line tool.
      *
      * @param timeout Timeout in seconds
      * @return True if ready, false if timeout
      */
-    public Boolean waitForServer(Integer timeout) throws JsonRPCException {
-        Integer seconds = 0;
+    public Boolean waitForServer(int timeout) throws JsonRPCException {
 
-        log.debug("Waiting for server RPC ready:");
+        log.warn("Waiting for server RPC ready:");
 
-        Integer block;
-
+        String status;          // Status message for logging
+        int seconds = 0;
         while (seconds < timeout) {
             try {
-                block = this.getBlockCount();
+                Integer block = this.getBlockCount();
                 if (block != null) {
-                    log.debug("\nRPC Ready.");
+                    log.warn("\nRPC Ready.");
                     return true;
                 }
+                status = "getBlock returned null";
             } catch (SocketException se) {
                 // These are expected exceptions while waiting for a server
-                if (!(se.getMessage().equals("Unexpected end of file from server") ||
+                if (se.getMessage().equals("Unexpected end of file from server") ||
                         se.getMessage().equals("Connection reset") ||
                         se.getMessage().equals("Connection refused") ||
-                        se.getMessage().equals("recvfrom failed: ECONNRESET (Connection reset by peer)"))) {
-                    se.printStackTrace();
+                        se.getMessage().equals("recvfrom failed: ECONNRESET (Connection reset by peer)")) {
+                    status = se.getMessage();
+                } else {
+//                    status = "Semi-unexpected exception: " + se.getMessage();
+                    throw new JsonRPCException("Unexpected exception in waitForServer", se ) ;
                 }
 
             } catch (java.io.EOFException ignored) {
                 /* Android exception, ignore */
                 // Expected exceptions on Android, RoboVM
+                status = ignored.getMessage();
+            } catch (IOException e) {
+                status = e.getMessage();
             } catch (JsonRPCStatusException e) {
                 if (    e.getMessage().contains("Verifying blocks") ||
                         e.getMessage().contains("Parsing Omni Layer transactions") ||
                         e.getMessage().contains("Still scanning.. at block") ) {
                     // Swallow
-                    log.warn("Waiting for server: " + e.getMessage());
+                    status = e.getMessage();
                 } else {
-//                    e.printStackTrace();
                     throw e;
                 }
             } catch (JsonRPCException e) {
-//                    e.printStackTrace();
                     throw e;
-            } catch (IOException e) {
-                e.printStackTrace();
             }
             try {
-                System.err.print(".");      // Every second print a '.'
-                seconds++;
-                if (seconds % 60 == 0) {    // Every minute start a new line
-                    System.err.println();
+                if (seconds % MESSAGE_SECONDS == 0) {
+                    log.warn("RPC Status: " + status);
                 }
-                Thread.sleep(SECOND);
+                Thread.sleep(RETRY_SECONDS * SECOND_IN_MSEC);
+                seconds += RETRY_SECONDS;
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error(e.toString());
             }
         }
+
+        log.warn("waitForServer() timed out.");
         return false;
     }
 
@@ -107,31 +116,30 @@ public class BitcoinClient extends RPCClient {
      * @param timeout     Timeout in seconds
      * @return True if blockHeight reached, false if timeout
      */
-    public Boolean waitForBlock(Integer blockHeight, Integer timeout) throws JsonRPCException, IOException {
-        Integer seconds = 0;
+    public Boolean waitForBlock(int blockHeight, int timeout) throws JsonRPCException, IOException {
 
-        log.info("Waiting for server to reach block " + blockHeight);
+        log.warn("Waiting for server to reach block " + blockHeight);
 
-        Integer block;
-
+        int seconds = 0;
         while (seconds < timeout) {
-            block = this.getBlockCount();
+            Integer block = this.getBlockCount();
             if (block >= blockHeight) {
-                log.info("Server is at block " + block + " returning 'true'.");
+                log.warn("Server is at block " + block + " returning 'true'.");
                 return true;
             } else {
                 try {
-                    seconds++;
-                    if (seconds % 60 == 0) {
-                        log.info("Server at block " + block);
+                    if (seconds % MESSAGE_SECONDS == 0) {
+                        log.warn("Server at block " + block);
                     }
-                    Thread.sleep(SECOND);
+                    Thread.sleep(RETRY_SECONDS * SECOND_IN_MSEC);
+                    seconds += RETRY_SECONDS;
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.error(e.toString());
                 }
-
             }
         }
+
+        log.warn("Timeout waiting for block " + blockHeight );
         return false;
     }
 
