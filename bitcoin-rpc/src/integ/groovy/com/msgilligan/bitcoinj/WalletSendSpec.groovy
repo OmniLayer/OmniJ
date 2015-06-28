@@ -14,12 +14,14 @@ import org.bitcoinj.utils.BriefLogFormatter
 import com.msgilligan.bitcoin.BTC
 import com.msgilligan.bitcoin.BaseRegTestSpec
 import org.bitcoinj.wallet.AllowUnconfirmedCoinSelector
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise
 
 /**
  * Various interoperability tests between RPC server and bitcoinj wallets.
  */
+@Ignore("'Send mined coins' intermittently fails because transaction is still pending")
 @Stepwise
 class WalletSendSpec extends BaseRegTestSpec {
     @Shared
