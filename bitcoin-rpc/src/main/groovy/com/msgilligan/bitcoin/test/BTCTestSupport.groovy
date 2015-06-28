@@ -10,6 +10,7 @@ import org.bitcoinj.core.ECKey
 import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Sha256Hash
 import org.bitcoinj.core.Transaction
+import org.bitcoinj.core.TransactionOutPoint
 import org.bitcoinj.core.TransactionOutput
 import org.bitcoinj.params.RegTestParams
 
@@ -297,6 +298,13 @@ trait BTCTestSupport implements BitcoinClientDelegate {
         List<TransactionOutput> unspentOutputsJ = unspentOutputsRPC.collect {
             getRawTransaction(it.txid).getOutput(it.vout) }  // bitcoinj TransactionOutput objects
         return unspentOutputsJ
+    }
+
+    List<TransactionOutPoint> listUnspentOutPoints(Address fromAddress) {
+        List<UnspentOutput> unspentOutputsRPC = listUnspent(0, defaultMaxConf, [fromAddress]) // RPC UnspentOutput objects
+        List<TransactionOutPoint> unspentOutPoints = unspentOutputsRPC.collect {
+            new TransactionOutPoint(netParams, it.vout, it.txid) } // bitcoinj TransactionOutPoint objects
+        return unspentOutPoints
     }
 
 }
