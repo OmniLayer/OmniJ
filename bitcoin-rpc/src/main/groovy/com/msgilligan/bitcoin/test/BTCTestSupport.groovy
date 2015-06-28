@@ -293,13 +293,9 @@ trait BTCTestSupport implements BitcoinClientDelegate {
      * @return All unspent TransactionOutputs for fromAddress
      */
     List<TransactionOutput> listUnspentJ(Address fromAddress) {
-        List<UnspentOutput> unspentOutputsRPC = listUnspent(0, defaultMaxConf, [fromAddress]) // RPC objects
-        List<TransactionOutput> unspentOutputsJ = []                                          // bitcoinj objects
-        unspentOutputsRPC.each {
-            Transaction connectedTx = getRawTransaction(it.txid)
-            TransactionOutput output = connectedTx.getOutput(it.vout)
-            unspentOutputsJ << output
-        }
+        List<UnspentOutput> unspentOutputsRPC = listUnspent(0, defaultMaxConf, [fromAddress]) // RPC UnspentOutput objects
+        List<TransactionOutput> unspentOutputsJ = unspentOutputsRPC.collect {
+            getRawTransaction(it.txid).getOutput(it.vout) }  // bitcoinj TransactionOutput objects
         return unspentOutputsJ
     }
 
