@@ -7,13 +7,14 @@ import spock.lang.Shared
 class BitcoinStepwiseSpec extends BaseRegTestSpec {
     final static BigDecimal sendAmount = 10.0
     final static BigDecimal extraAmount = 0.10
+    final static String testAccountName = "BitcoinStepwiseSpec"
 
     @Shared
     Address wealthyAddress
 
     def "Be able to fund wealthy account from mining profits"() {
         when: "we send some BTC to an address"
-        wealthyAddress = getNewAddress()
+        wealthyAddress = getNewAddress(testAccountName)
         sendToAddress(wealthyAddress, 2*sendAmount + extraAmount)
         generateBlock()
 
@@ -27,7 +28,7 @@ class BitcoinStepwiseSpec extends BaseRegTestSpec {
         def testAmount = 1.0
 
         when: "we create a new address and send testAmount to it"
-        Address destinationAddress = getNewAddress()
+        Address destinationAddress = getNewAddress(testAccountName)
         sendBitcoin(wealthyAddress, destinationAddress, testAmount)
         generateBlock()
 
