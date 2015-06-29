@@ -82,11 +82,9 @@ public class BitcoinClient extends RPCClient {
             } catch (IOException e) {
                 status = e.getMessage();
             } catch (JsonRPCStatusException e) {
-                if (    e.getMessage().contains("Verifying blocks") ||
-                        e.getMessage().contains("Parsing Omni Layer transactions") ||
-                        e.getMessage().contains("Still scanning.. at block") |
-                        e.getMessage().contains("Loading addresses...")) {
-                    // Swallow
+                // If server is in "warmup" mode, e.g. validating/parsing the blockchain...
+                if ( e.jsonRPCCode == -28) {
+                    // ...then grab text message for status logging
                     status = e.getMessage();
                 } else {
                     throw e;

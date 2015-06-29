@@ -99,6 +99,7 @@ public class RPCClient {
             // Prepare and throw JsonRPCStatusException with all relevant info
             String responseMessage = connection.getResponseMessage();
             String exceptionMessage = responseMessage;
+            Integer jsonRPCCode = 0;
             Map<String,Object> bodyJson = null;    // Body as JSON if available
             String bodyString = null;               // Body as String if not JSON
             if (connection.getContentType().equals("application/json")) {
@@ -111,6 +112,7 @@ public class RPCClient {
                 if (error != null) {
                     // If there's a more specific message in the JSON use it instead.
                     exceptionMessage = (String) error.get("message");
+                    jsonRPCCode = (Integer) error.get("code");
                 }
             } else {
                 // No JSON, read response body as string
@@ -118,7 +120,7 @@ public class RPCClient {
                 bodyString = new Scanner(errorStream,"UTF-8").useDelimiter("\\A").next();
                 errorStream.close();
             }
-            throw new JsonRPCStatusException(exceptionMessage, responseCode, responseMessage, bodyString, bodyJson);
+            throw new JsonRPCStatusException(exceptionMessage, responseCode, responseMessage, jsonRPCCode, bodyString, bodyJson);
         }
 
         log.debug("Resp json: {}", responseJson);
