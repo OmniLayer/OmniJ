@@ -30,6 +30,10 @@ There are currently three subprojects of OmniJ. Each of which builds a JAR artif
 | JDK 7+ Java & Groovy
 |===
 
+=== OmniLayer Documentation
+
+* https://github.com/OmniLayer/spec[Omni Protocol Specification]
+
 === OmniJ Documentation and Build Reports
 
 * OmniJ https://ci.omni.foundation/job/OmniJ/javadoc/[API Doc]
