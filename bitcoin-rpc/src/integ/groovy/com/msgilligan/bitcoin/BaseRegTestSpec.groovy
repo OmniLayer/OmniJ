@@ -22,7 +22,6 @@ abstract class BaseRegTestSpec extends Specification implements BTCTestSupport, 
     }
 
     void setupSpec() {
-        log.debug "Waiting for server..."
         Boolean available = client.waitForServer(60)   // Wait up to 1 minute
         if (!available) {
             log.error "Timeout error."
