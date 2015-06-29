@@ -52,7 +52,7 @@ public class BitcoinClient extends RPCClient {
      */
     public Boolean waitForServer(int timeout) throws JsonRPCException {
 
-        log.warn("Waiting for server RPC ready...");
+        log.info("Waiting for server RPC ready...");
 
         String status;          // Status message for logging
         int seconds = 0;
@@ -60,7 +60,7 @@ public class BitcoinClient extends RPCClient {
             try {
                 Integer block = this.getBlockCount();
                 if (block != null) {
-                    log.warn("RPC Ready.");
+                    log.info("RPC Ready.");
                     return true;
                 }
                 status = "getBlock returned null";
@@ -94,7 +94,7 @@ public class BitcoinClient extends RPCClient {
             }
             try {
                 if (seconds % MESSAGE_SECONDS == 0) {
-                    log.warn("RPC Status: " + status);
+                    log.debug("RPC Status: " + status);
                 }
                 Thread.sleep(RETRY_SECONDS * SECOND_IN_MSEC);
                 seconds += RETRY_SECONDS;
@@ -103,7 +103,7 @@ public class BitcoinClient extends RPCClient {
             }
         }
 
-        log.warn("waitForServer() timed out.");
+        log.error("waitForServer() timed out.");
         return false;
     }
 
@@ -116,18 +116,18 @@ public class BitcoinClient extends RPCClient {
      */
     public Boolean waitForBlock(int blockHeight, int timeout) throws JsonRPCException, IOException {
 
-        log.warn("Waiting for server to reach block " + blockHeight);
+        log.info("Waiting for server to reach block " + blockHeight);
 
         int seconds = 0;
         while (seconds < timeout) {
             Integer block = this.getBlockCount();
             if (block >= blockHeight) {
-                log.warn("Server is at block " + block + " returning 'true'.");
+                log.info("Server is at block " + block + " returning 'true'.");
                 return true;
             } else {
                 try {
                     if (seconds % MESSAGE_SECONDS == 0) {
-                        log.warn("Server at block " + block);
+                        log.debug("Server at block " + block);
                     }
                     Thread.sleep(RETRY_SECONDS * SECOND_IN_MSEC);
                     seconds += RETRY_SECONDS;
@@ -137,7 +137,7 @@ public class BitcoinClient extends RPCClient {
             }
         }
 
-        log.warn("Timeout waiting for block " + blockHeight );
+        log.error("Timeout waiting for block " + blockHeight );
         return false;
     }
 
