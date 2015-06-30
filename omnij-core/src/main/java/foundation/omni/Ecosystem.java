@@ -1,7 +1,7 @@
 package foundation.omni;
 
 /**
- * Number type to represent a Master Protocol Ecosystem
+ * Number type to represent a Omni Protocol Ecosystem
  */
 public class Ecosystem extends Number {
     private final short value;

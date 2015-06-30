@@ -5,7 +5,7 @@ import groovy.transform.TypeChecked
 import org.bitcoinj.core.Address
 
 /**
- * Base class for fetching Master Protocol consensus data
+ * Base class for fetching Omni Protocol consensus data
  */
 @TypeChecked
 abstract class ConsensusTool implements ConsensusFetcher {

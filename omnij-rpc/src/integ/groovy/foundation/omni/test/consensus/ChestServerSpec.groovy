@@ -55,12 +55,7 @@ class ChestServerSpec extends Specification {
 
         then: "MSC and TMSC are not returned in Chest property list"
         props[MSC] == null
-//        props[MSC].id == MSC
-//        props[MSC].name == "Mastercoin" // Note: Omni Core returns "MasterCoin" with a capital-C
-
         props[TMSC] == null
-//        props[TMSC].id == MSC
-//        props[TMSC].name == "Mastercoin" // Note: Omni Core returns "MasterCoin" with a capital-C
 
     }
 }

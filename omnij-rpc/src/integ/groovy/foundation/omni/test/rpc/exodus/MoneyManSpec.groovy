@@ -29,7 +29,7 @@ class MoneyManSpec extends BaseRegTestSpec {
 
     def "Send BTC to an address to get MSC and TMSC"() {
         // This test is truly a test of MoneyMan functionality
-        when: "we create a new address for Mastercoins and send some BTC to it"
+        when: "we create a new address for Omni and send some BTC to it"
         Address testAddress = getNewAddress()
         def txid = sendToAddress(testAddress, sendAmount + extraAmount + stdTxFee)
 

@@ -8,7 +8,7 @@ import static foundation.omni.CurrencyID.MSC
 /**
  * Local Omni Core vs Remote Omni Core consensus comparison for <code>MSC</code>
  */
-@Title("Compare Master Core vs. Remote Master Core (e.g. stable/last revision)")
+@Title("Compare Omni Core vs. Remote Omni Core (e.g. stable/last revision)")
 class CompareCoreCoreSpec extends CompareCoreCoreBaseSpec {
 
     void setupSpec() {

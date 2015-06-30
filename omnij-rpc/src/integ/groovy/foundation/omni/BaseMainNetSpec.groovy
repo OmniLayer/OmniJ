@@ -12,7 +12,7 @@ import spock.lang.Specification
 /**
  * Base specification for integration tests on Main net
  *
- * Creates an RPC client (currently <code>MastercoinCLIClient</code>), waits for
+ * Creates an RPC client (currently <code>OmniCLIClient</code>), waits for
  * RPC server to be responding (typical integration/functional requests require starting
  * an RPC server which can take minutes or even hours) and to be in sync with the main
  * Bitcoin Blockchain.

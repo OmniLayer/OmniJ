@@ -8,7 +8,7 @@ import static foundation.omni.CurrencyID.TetherUS
 
 /**
  */
-@Title("Compare Master Core vs. Omnichest API for TetherUS currency")
+@Title("Compare Omni Core vs. Omnichest API for TetherUS currency")
 class CompareCoreChestSpec extends BaseConsensusSpec {
 
     void setupSpec() {

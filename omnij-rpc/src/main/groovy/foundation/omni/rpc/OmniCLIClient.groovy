@@ -6,10 +6,10 @@ import org.bitcoinj.core.Transaction
 import groovy.transform.CompileStatic
 
 /**
- * Bitcoin and Mastercoin JSON-RPC client that closely mirrors JSON-RPC API.
+ * Bitcoin and Omni JSON-RPC client that closely mirrors JSON-RPC API.
  *
  * <p>
- * A JSON-RPC client for Bitcoin/Mastercoin with JVM method names that match
+ * A JSON-RPC client for Bitcoin/Omni with JVM method names that match
  * the RPC method names and bitcoin-cli method names exactly.
  * (in other words, all lowercase and underscores)
  *

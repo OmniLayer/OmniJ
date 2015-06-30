@@ -19,11 +19,11 @@ class OmniSpec extends BaseRegTestSpec {
         entry.balance == 0
     }
 
-    def "Return Master Core version field using getinfo_MP" () {
+    def "Return Omni Core version field using getinfo_MP" () {
         when: "we request info"
         def mpInfo = getinfo_MP()
 
-        then: "we get back a Mastercoin version, too"
+        then: "we get back an Omni version, too"
         mpInfo != null
         mpInfo.mastercoreversion != null
         mpInfo.mastercoreversion != ""

@@ -8,7 +8,7 @@ import static foundation.omni.CurrencyID.MaidSafeCoin
 
 /**
  */
-@Title("Compare Master Core vs. Omnichest API for MaidSafeCoin currency")
+@Title("Compare Omni Core vs. Omnichest API for MaidSafeCoin currency")
 class CompareCoreChestSpec extends BaseConsensusSpec {
 
     void setupSpec() {

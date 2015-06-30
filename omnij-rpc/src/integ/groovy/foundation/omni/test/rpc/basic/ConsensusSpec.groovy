@@ -7,7 +7,7 @@ import static foundation.omni.CurrencyID.*
 class ConsensusSpec extends BaseRegTestSpec {
 
     def "Check all balances"() {
-        when: "we check Mastercoin balances"
+        when: "we check Omni balances"
         def balances = getallbalancesforid_MP(MSC)
 
         then: "we get a list of size >= 0"
@@ -16,7 +16,7 @@ class ConsensusSpec extends BaseRegTestSpec {
     }
 
     def "Check all balances, raw CLI, type Long"() {
-        when: "we check Mastercoin balances"
+        when: "we check Omni balances"
         def balances = cliSend("getallbalancesforid_MP", MSC as Long)
 
         then: "we get a list of size >= 0"
@@ -25,7 +25,7 @@ class ConsensusSpec extends BaseRegTestSpec {
     }
 
     def "Throw exception checking all balances, raw CLI, type String"() {
-        when: "we check Mastercoin balances"
+        when: "we check Omni balances"
         cliSend("getallbalancesforid_MP", "1")
 
         then: "Exception is thrown"

@@ -22,7 +22,7 @@ class OmniwalletServerSpec extends Specification {
         def blockHeight = omniFetcher.currentBlockHeight()
 
         then: "it looks valid"
-        /* TODO:  Check to make sure it's within 15 blocks of Master Core, or something like that? */
+        /* TODO:  Check to make sure it's within 15 blocks of Omni Core, or something like that? */
         blockHeight >= 315121
     }
 

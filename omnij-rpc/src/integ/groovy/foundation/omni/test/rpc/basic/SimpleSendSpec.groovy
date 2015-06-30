@@ -43,7 +43,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
 
     def "When the amount to transfer is zero Simple Sends are rejected by the RPC"() {
         // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
-        // treated as invalid by the Master Core parser
+        // treated as invalid by the Omni Core parser
         given: "a new, empty destination address"
         def fundedAddress = createFundedAddress(faucetBTC, faucetMSC)
         def toAddress = getNewAddress()
@@ -63,7 +63,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
 
     def "When the amount to transfer is negative, Simple Sends are rejected by the RPC"() {
         // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
-        // treated as invalid by the Master Core parser
+        // treated as invalid by the Omni Core parser
 
         given: "a new, empty destination address"
         def fundedAddress = createFundedAddress(faucetBTC, faucetMSC)
@@ -84,7 +84,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
 
     def "When the sending address has zero coins in its available balance for the specified currency identifier are rejected by the RPC"() {
         // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
-        // treated as invalid by the Master Core parser
+        // treated as invalid by the Omni Core parser
 
         given: "an empty source address and a new, empty destination address"
         def emptyAddress = getNewAddress()
@@ -99,7 +99,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
 
     def "When the amount to transfer exceeds the number owned and available by the sending address are rejected by the RPC"() {
         // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
-        // treated as invalid by the Master Core parser
+        // treated as invalid by the Omni Core parser
 
         given: "a new, empty destination address"
         def fundedAddress = createFundedAddress(faucetBTC, 1.0)
@@ -114,7 +114,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
 
     def "When the specified currency identifier is non-existent are rejected by the RPC"() {
         // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
-        // treated as invalid by the Master Core parser
+        // treated as invalid by the Omni Core parser
 
         given: "a new, empty destination address"
         def fundedAddress = createFundedAddress(faucetBTC, 1.0)

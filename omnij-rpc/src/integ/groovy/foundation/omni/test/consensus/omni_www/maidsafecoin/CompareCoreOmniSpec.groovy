@@ -8,7 +8,7 @@ import static foundation.omni.CurrencyID.MaidSafeCoin
 
 /**
  */
-@Title("Compare Master Core vs. Omniwallet www host API for MaidSafeCoin currency")
+@Title("Compare Omni Core vs. Omniwallet www host API for MaidSafeCoin currency")
 class CompareCoreOmniSpec extends BaseConsensusSpec {
 
     void setupSpec() {

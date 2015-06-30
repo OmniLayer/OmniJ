@@ -8,7 +8,7 @@ import static foundation.omni.CurrencyID.MSC
 
 /**
  */
-@Title("Compare Master Core vs. Omniwallet www host API for MSC currency")
+@Title("Compare Omni Core vs. Omniwallet www host API for MSC currency")
 class CompareCoreOmniSpec extends BaseConsensusSpec {
 
     void setupSpec() {
