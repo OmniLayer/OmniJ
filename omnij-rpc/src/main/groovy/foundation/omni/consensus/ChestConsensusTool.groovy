@@ -107,7 +107,7 @@ class ChestConsensusTool extends ConsensusTool {
 
     @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
-        String httpFile = "${file}?currencyid=${currencyID as Long}"
+        String httpFile = "${file}?currencyid=${currencyID.longValue()}"
         def consensusURL = new URL(proto, host, port, httpFile)
 
         /* Since getConsensusForCurrency can't return the blockHeight, we have to check
