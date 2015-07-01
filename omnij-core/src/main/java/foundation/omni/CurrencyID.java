@@ -3,7 +3,7 @@ package foundation.omni;
 /**
  * Number type to represent a Omni Protocol Currency ID
  */
-public final class CurrencyID extends Number implements Cloneable {
+public final class CurrencyID implements Cloneable {
     private final long value;
 
     public static final long   MIN_VALUE = 0;
@@ -62,43 +62,8 @@ public final class CurrencyID extends Number implements Cloneable {
         }
     }
 
-    @Override
-    public byte byteValue() {
-        if (value > Byte.MAX_VALUE) {
-            throw new ArithmeticException("Value too big to be converted to byte");
-        }
-        return (byte) value;
-    }
-
-    @Override
-    public short shortValue() {
-        if (value > Short.MAX_VALUE) {
-            throw new ArithmeticException("Value too big to be converted to short");
-        }
-        return (short) value;
-    }
-
-    @Override
-    public int intValue() {
-        if (value > Integer.MAX_VALUE) {
-            throw new ArithmeticException("Value too big to be converted to integer");
-        }
-        return (int) value;
-    }
-
-    @Override
     public long longValue() {
         return value;
-    }
-
-    @Override
-    public float floatValue() {
-        throw new UnsupportedOperationException("Operation not supported");
-    }
-
-    @Override
-    public double doubleValue() {
-        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override

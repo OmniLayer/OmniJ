@@ -41,7 +41,7 @@ class DexSpec extends BaseRegTestSpec {
     }
 
     @Unroll
-    def "An accepted currency identifier for sell offers is #currencyOffered"() {
+    def "An accepted currency identifier for sell offers is #currencyOffered"(CurrencyID currencyOffered) {
         given:
         def startBTC = 0.1
         def startMSC = 2.5
@@ -57,10 +57,10 @@ class DexSpec extends BaseRegTestSpec {
         then: "the transaction should be a valid offering of #currencyOffered"
         def offerTx = getTransactionMP(offerTxid)
         offerTx.valid == true
-        offerTx.propertyid == currencyOffered
+        offerTx.propertyid == currencyOffered.longValue()
 
         where: "the currency identifier is either MSC or TMSC"
-        currencyOffered << [new CurrencyID(1), new CurrencyID(2)]
+        currencyOffered << [CurrencyID.MSC, CurrencyID.TMSC]
     }
 
     def "Offering more tokens than available puts up an offer with the available amount"() {
