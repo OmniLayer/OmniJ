@@ -32,7 +32,7 @@ class ChestConsensusTool extends ConsensusTool {
 
     private SortedMap<Address, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
         def slurper = new JsonSlurper()
-        String httpFile = "${file}?currencyid=${currencyID as Long}"
+        String httpFile = "${file}?currencyid=${currencyID.longValue()}"
         def consensusURL = new URL(proto, host, port, httpFile)
 //        def balancesText =  consensusURL.getText()
         def balances = slurper.parse(consensusURL)
