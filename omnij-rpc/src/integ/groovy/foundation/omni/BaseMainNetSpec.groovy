@@ -58,6 +58,6 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
             mscVersion = info.mastercoreversion
         }
         log.info "Bitcoin version: ${info.version}"
-        log.info "Mastercore version: ${mscVersion}"
+        log.info "Omni Core version: ${mscVersion}"
     }
 }
