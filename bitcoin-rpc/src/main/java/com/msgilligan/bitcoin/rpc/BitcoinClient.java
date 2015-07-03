@@ -52,15 +52,16 @@ public class BitcoinClient extends RPCClient {
      */
     public Boolean waitForServer(int timeout) throws JsonRPCException {
 
-        log.info("Waiting for server RPC ready...");
+        log.debug("Waiting for server RPC ready...");
 
         String status;          // Status message for logging
+        String statusLast = null;
         int seconds = 0;
         while (seconds < timeout) {
             try {
                 Integer block = this.getBlockCount();
                 if (block != null) {
-                    log.info("RPC Ready.");
+                    log.debug("RPC Ready.");
                     return true;
                 }
                 status = "getBlock returned null";
@@ -72,7 +73,7 @@ public class BitcoinClient extends RPCClient {
                         se.getMessage().equals("recvfrom failed: ECONNRESET (Connection reset by peer)")) {
                     status = se.getMessage();
                 } else {
-                    throw new JsonRPCException("Unexpected exception in waitForServer", se ) ;
+                    throw new JsonRPCException("Unexpected exception in waitForServer", se) ;
                 }
 
             } catch (java.io.EOFException ignored) {
@@ -83,7 +84,7 @@ public class BitcoinClient extends RPCClient {
                 status = e.getMessage();
             } catch (JsonRPCStatusException e) {
                 // If server is in "warmup" mode, e.g. validating/parsing the blockchain...
-                if ( e.jsonRPCCode == -28) {
+                if (e.jsonRPCCode == -28) {
                     // ...then grab text message for status logging
                     status = e.getMessage();
                 } else {
@@ -93,8 +94,10 @@ public class BitcoinClient extends RPCClient {
                     throw e;
             }
             try {
-                if (seconds % MESSAGE_SECONDS == 0) {
-                    log.debug("RPC Status: " + status);
+                // Log status messages only once, if new or updated
+                if (!status.equals(statusLast)) {
+                    log.info("RPC Status: " + status);
+                    statusLast = status;
                 }
                 Thread.sleep(RETRY_SECONDS * SECOND_IN_MSEC);
                 seconds += RETRY_SECONDS;
@@ -103,7 +106,7 @@ public class BitcoinClient extends RPCClient {
             }
         }
 
-        log.error("waitForServer() timed out.");
+        log.error("waitForServer() timed out after {} seconds.", timeout);
         return false;
     }
 
