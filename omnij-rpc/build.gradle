@@ -145,25 +145,25 @@ groovydoc {
 
 def currencyID = 1
 
-task getMasterConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'foundation.omni.MasterCoreConsensusTool'
+task getCoreConsensus(dependsOn: 'classes',  type: JavaExec) {
+    main = 'foundation.omni.consensus.OmniCoreConsensusTool'
     args = [currencyID, 'build/mastercore_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task getOmniConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'foundation.omni.OmniwalletConsensusTool'
+    main = 'foundation.omni.consensus.OmniwalletConsensusTool'
     args = [currencyID, 'build/omniwallet_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task getChestConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'foundation.omni.ChestConsensusTool'
+    main = 'foundation.omni.consensus.ChestConsensusTool'
     args = [currencyID, 'build/chest_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
-task getConsensus(dependsOn: ['getMasterConsensus', 'getOmniConsensus', 'getChestConsensus']) << {
+task getConsensus(dependsOn: ['getCoreConsensus', 'getOmniConsensus', 'getChestConsensus']) << {
     logger.info "Consensus files are in build/*_consensus.txt"
 }
 

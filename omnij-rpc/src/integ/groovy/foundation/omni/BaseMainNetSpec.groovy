@@ -45,7 +45,7 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
 
         def info = client.getinfo()
 
-        def mscVersion
+        def omniVersion
         def infoMP
         try {
             infoMP = client.getinfo_MP()
@@ -53,11 +53,11 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
             /* swallow */
         }
         if (infoMP?.mastercoreversion) {
-            mscVersion = infoMP.mastercoreversion.toString()
+            omniVersion = infoMP.mastercoreversion.toString()
         } else {
-            mscVersion = info.mastercoreversion
+            omniVersion = info.mastercoreversion
         }
         log.info "Bitcoin version: ${info.version}"
-        log.info "Omni Core version: ${mscVersion}"
+        log.info "Omni Core version: ${omniVersion}"
     }
 }
