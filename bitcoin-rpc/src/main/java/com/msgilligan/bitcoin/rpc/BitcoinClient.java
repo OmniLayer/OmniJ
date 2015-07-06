@@ -163,7 +163,7 @@ public class BitcoinClient extends RPCClient {
     public Sha256Hash getBlockHash(Integer index) throws JsonRPCException, IOException {
         List<Object> params = createParamList(index);
         String hashStr = send("getblockhash", params);
-        Sha256Hash hash = new Sha256Hash(hashStr);
+        Sha256Hash hash = Sha256Hash.wrap(hashStr);
         return hash;
     }
 
@@ -666,7 +666,7 @@ public class BitcoinClient extends RPCClient {
         List<String> hashesStr = send("clearmempool", null);
         List<Sha256Hash> hashes = new ArrayList<Sha256Hash>();
         for (String s : hashesStr) {
-            Sha256Hash hash = new Sha256Hash(s);
+            Sha256Hash hash = Sha256Hash.wrap(s);
             hashes.add(hash);
         }
         return hashes;

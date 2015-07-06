@@ -58,14 +58,14 @@ groovydocAll groovydocSpec
 subprojects {
 
     dependencies {
-        //    compile 'org.bitcoinj:bitcoinj-core:0.12.2'
-        // Temporarily use snapshot and local jar, until Comparable address is in snapshot/release.
-//    compile 'org.bitcoinj:bitcoinj-core:0.13-SNAPSHOT'
-        compile files('../omnij-rpc/lib/bitcoinj-core-0.13-SNAPSHOT.jar')
-        compile 'com.google.guava:guava:16.0.1'
-        compile 'com.madgag.spongycastle:core:1.51.0.0'
-        compile 'com.google.protobuf:protobuf-java:2.5.0'
-        compile 'org.bitcoinj:orchid:1.1'
+        compile 'org.bitcoinj:bitcoinj-core:0.13-SNAPSHOT'
+        // Temporarily use snapshot and local jar instead of bitcoinj snapshot
+        // We can safely delete this (and the checked in jar) once 0.13 final is released.
+//        compile files('../omnij-rpc/lib/bitcoinj-core-0.13-SNAPSHOT.jar')
+//        compile 'com.google.guava:guava:16.0.1'
+//        compile 'com.madgag.spongycastle:core:1.51.0.0'
+//        compile 'com.google.protobuf:protobuf-java:2.5.0'
+//        compile 'org.bitcoinj:orchid:1.1'
 
         compile 'org.slf4j:slf4j-api:1.7.6'
         runtime 'org.slf4j:slf4j-jdk14:1.7.5'             // Transitive runtime dependency of bitcoinj

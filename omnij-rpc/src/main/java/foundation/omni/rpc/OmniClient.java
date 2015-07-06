@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class OmniClient extends BitcoinClient {
 
-    public static Sha256Hash zeroHash = new Sha256Hash("0000000000000000000000000000000000000000000000000000000000000000");
+    public static Sha256Hash zeroHash = Sha256Hash.wrap("0000000000000000000000000000000000000000000000000000000000000000");
     private DecimalFormat jsonDecimalFormat;
 
     public OmniClient(RPCConfig config) throws IOException {
@@ -208,7 +208,7 @@ public class OmniClient extends BitcoinClient {
             params.add(referenceAddress.toString());
         }
         String txid = send("sendrawtx_MP", params);
-        return new Sha256Hash(txid);
+        return Sha256Hash.wrap(txid);
     }
 
     /**
@@ -225,7 +225,7 @@ public class OmniClient extends BitcoinClient {
         List<Object> params = createParamList(fromAddress.toString(), toAddress.toString(), currency.longValue(),
                                               amount.toPlainString());
         String txid = send("send_MP", params);
-        Sha256Hash hash = new Sha256Hash(txid);
+        Sha256Hash hash = Sha256Hash.wrap(txid);
         return hash;
     }
 
@@ -241,7 +241,7 @@ public class OmniClient extends BitcoinClient {
             throws JsonRPCException, IOException {
         List<Object> params = createParamList(fromAddress.toString(), currency.longValue(), amount.toPlainString());
         String txid = send("sendtoowners_MP", params);
-        Sha256Hash hash = new Sha256Hash(txid);
+        Sha256Hash hash = Sha256Hash.wrap(txid);
         return hash;
     }
 
@@ -264,7 +264,7 @@ public class OmniClient extends BitcoinClient {
                                               amountForSale.toPlainString(), propertyDesired.longValue(),
                                               amountDesired.toPlainString(), action);
         String txid = send("trade_MP", params);
-        Sha256Hash hash = new Sha256Hash(txid);
+        Sha256Hash hash = Sha256Hash.wrap(txid);
         return hash;
     }
 
