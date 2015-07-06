@@ -113,7 +113,7 @@ class ChestConsensusTool extends ConsensusTool {
         /* Since getConsensusForCurrency can't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
          *
-         * Note: Omni blockheight lags behind Blockchain.info and Omni Core and this
+         * Note: OmniChest blockheight can lag behind Blockchain.info and Omni Core and this
          * loop does not resolve that issue, it only makes sure the reported block height
          * matches the data returned.
          */
