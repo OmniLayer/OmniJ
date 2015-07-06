@@ -6,7 +6,7 @@ function cleanup {
 }
 trap cleanup EXIT
 
-BTCD=copied-artifacts/src/bitcoind
+BTCD=copied-artifacts/src/omnicored
 DATADIR=$HOME/.bitcoin
 LOGDIR=logs
 MSCLOG=/tmp/mastercore.log
