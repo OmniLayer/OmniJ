@@ -30,15 +30,13 @@ allprojects {
     }
 
     dependencies {
+        compile "org.codehaus.groovy:groovy:${groovyVersion}"
+
         jansi 'org.fusesource.jansi:jansi:1.11'         // Transitive dependency of GroovyDoc
         jansi "org.codehaus.groovy:groovy-ant:${groovyVersion}"    // used in Groovy doc
     }
 
     groovydoc groovydocSpec
-}
-
-dependencies {
-    compile "org.codehaus.groovy:groovy:${groovyVersion}"
 }
 
 task groovydocAll(type: Groovydoc)
@@ -59,18 +57,11 @@ subprojects {
 
     dependencies {
         compile 'org.bitcoinj:bitcoinj-core:0.13-SNAPSHOT'
-        // Temporarily use snapshot and local jar instead of bitcoinj snapshot
-        // We can safely delete this (and the checked in jar) once 0.13 final is released.
-//        compile files('../omnij-rpc/lib/bitcoinj-core-0.13-SNAPSHOT.jar')
-//        compile 'com.google.guava:guava:16.0.1'
-//        compile 'com.madgag.spongycastle:core:1.51.0.0'
-//        compile 'com.google.protobuf:protobuf-java:2.5.0'
-//        compile 'org.bitcoinj:orchid:1.1'
-
         compile 'org.slf4j:slf4j-api:1.7.7'
-        runtime 'org.slf4j:slf4j-jdk14:1.7.7'             // Runtime implementation of slf4j
 
-        testRuntime 'org.slf4j:slf4j-jdk14:1.7.7'          // Runtime implementation of slf4j
+        runtime 'org.slf4j:slf4j-jdk14:1.7.7'               // Runtime implementation of slf4j
+
+        testRuntime 'org.slf4j:slf4j-jdk14:1.7.7'           // Runtime implementation of slf4j
 
         testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
             exclude module: "groovy-all"
