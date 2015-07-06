@@ -3,14 +3,7 @@ group = 'foundation.omni'
 version = '0.3-SNAPSHOT'
 
 dependencies {
-//    compile 'org.bitcoinj:bitcoinj-core:0.12.2'
-
-    compile 'org.slf4j:slf4j-api:1.7.6'
-    runtime 'org.slf4j:slf4j-jdk14:1.7.5'
-
     compile 'javax.money:money-api-bp:1.0'
 
     testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
-
-    testRuntime 'org.slf4j:slf4j-jdk14:1.7.5'         // Transitive runtime dependency of bitcoinj
 }

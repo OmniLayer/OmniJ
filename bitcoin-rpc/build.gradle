@@ -1,5 +1,4 @@
 plugins {
-    id 'groovy'
     id 'application'
     id 'maven'
     id 'com.github.johnrengelman.shadow' version '1.2.1'
@@ -22,17 +21,8 @@ dependencies {
 
     compile "org.codehaus.groovy:groovy:${groovyVersion}"
     compile "org.codehaus.groovy:groovy-json:${groovyVersion}"
-//    compile 'org.bitcoinj:bitcoinj-core:0.12.2'
-
-    testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
-        exclude module: "groovy-all"
-    }
-
 }
 
-//compileJava {
-//    options.compilerArgs << '-Xlint:unchecked'
-//}
 
 mainClassName = "com.msgilligan.bitcoin.cli.BitcoinJCli"
 def roboExeName = "bitcoinj-cli"

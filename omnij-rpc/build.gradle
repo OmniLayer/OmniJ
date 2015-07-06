@@ -27,10 +27,6 @@ dependencies {
     testCompile 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests
 }
 
-//compileJava {
-//    options.compilerArgs << '-Xlint:unchecked'
-//}
-
 mainClassName = "foundation.omni.cli.ConsensusCLI"
 def roboExeName = "btcstatus"
 
