@@ -3,7 +3,6 @@ package foundation.omni.tx;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Sha256Hash;
 
-import javax.xml.bind.DatatypeConverter;
 import java.util.Arrays;
 
 /**
@@ -35,7 +34,7 @@ public class Obfuscation {
         byte[] output = new byte[input.length];
         byte[] curChunk = new byte[EncodingClassB.chunkSize];
 
-        int pos = 0;
+        int pos;
 
         for (int n = 0; n < nChunks ; n++) {
             pos = n * EncodingClassB.chunkSize;
@@ -58,7 +57,7 @@ public class Obfuscation {
     }
 
     private static String upperSha256(String string) {
-        return Sha256Hash.create(string.getBytes()).toString().toUpperCase();
+        return Sha256Hash.of(string.getBytes()).toString().toUpperCase();
     }
 
     /**

@@ -387,7 +387,7 @@ public class BitcoinClient extends RPCClient {
     public Sha256Hash sendRawTransaction(String hexTx, Boolean allowHighFees) throws JsonRPCException, IOException {
         List<Object> params = createParamList(hexTx, allowHighFees);
         String txid = send("sendrawtransaction", params);
-        Sha256Hash hash = new Sha256Hash(txid);
+        Sha256Hash hash = Sha256Hash.wrap(txid);
         return hash;
     }
 
@@ -451,7 +451,7 @@ public class BitcoinClient extends RPCClient {
         List<UnspentOutput> unspent = new ArrayList<UnspentOutput>();
         for (Map<String, Object> uoMap : unspentMaps) {
             String txstr = (String) uoMap.get("txid");
-            Sha256Hash txid = new Sha256Hash(txstr);
+            Sha256Hash txid = Sha256Hash.wrap(txstr);
             int vout = (Integer) uoMap.get("vout");
             String addrStr = (String) uoMap.get("address");
             Address addr = null;
@@ -521,7 +521,7 @@ public class BitcoinClient extends RPCClient {
             throws JsonRPCException, IOException {
         List<Object> params = createParamList(address.toString(), amount, comment, commentTo);
         String txid = send("sendtoaddress", params);
-        Sha256Hash hash = new Sha256Hash(txid);
+        Sha256Hash hash = Sha256Hash.wrap(txid);
         return hash;
     }
 
@@ -529,14 +529,14 @@ public class BitcoinClient extends RPCClient {
             throws JsonRPCException, IOException {
         List<Object> params = createParamList(account, address.toString(), amount);
         String txid = send("sendfrom", params);
-        Sha256Hash hash = new Sha256Hash(txid);
+        Sha256Hash hash = Sha256Hash.wrap(txid);
         return hash;
     }
 
     public Sha256Hash sendMany(String account, Map<Address, BigDecimal> amounts) throws JsonRPCException, IOException {
         List<Object> params = Arrays.asList(account, amounts);
         String txid = send("sendmany", params);
-        Sha256Hash hash = new Sha256Hash(txid);
+        Sha256Hash hash = Sha256Hash.wrap(txid);
         return hash;
     }
 
