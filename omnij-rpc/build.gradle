@@ -1,22 +1,15 @@
 plugins {
-    id 'application'
     id 'maven'
-    id 'com.github.johnrengelman.shadow' version '1.2.1'
 }
 
 sourceCompatibility = 1.7
 group = 'foundation.omni'
 version = '0.3-SNAPSHOT'
 
-configurations {
-    robovm
-}
 
 dependencies {
     compile project(':bitcoin-rpc')
     compile project(':omnij-core')
-
-    robovm  "org.codehaus.groovy:groovy:${groovyVersion}:grooid"
 
     compile "org.codehaus.groovy:groovy:${groovyVersion}"
     compile "org.codehaus.groovy:groovy-json:${groovyVersion}"
@@ -27,49 +20,12 @@ dependencies {
     testCompile 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests
 }
 
-mainClassName = "foundation.omni.cli.ConsensusCLI"
-def roboExeName = "btcstatus"
-
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'BTC/MSC Status', 'Implementation-Version': version, 'Consensus-Class': mainClassName
-    }
-}
-
-shadowJar {
-    baseName = 'omni-consensus'
-    classifier = ''
-}
 
 test {
     // show standard out and standard error of the test JVM(s) on the console
     testLogging.showStandardStreams = true
 }
 
-def homePath = System.properties['user.home']
-def roboVMHome = "${homePath}/robovm-1.0.0-beta-04"
-def roboLibPath = "robolib"
-
-task copyToRoboLib(type: Copy) {
-    into roboLibPath
-    from configurations.runtime
-}
-
-task roboCompile(type:Exec, dependsOn: [classes, copyToRoboLib]) {
-    executable "${roboVMHome}/bin/robovm"
-    args '-verbose', '-debug',
-            '-cp', "build/classes/main:${roboLibPath}/commons-cli-1.2.jar:${roboLibPath}/jackson-core-2.3.3.jar:${roboLibPath}/jackson-databind-2.3.3.jar:${roboLibPath}/jackson-annotations-2.3.0.jar",
-            '-d', 'build',
-            '-forcelinkclasses', 'com.android.okhttp.HttpHandler:com.android.org.conscrypt.OpenSSLSocketFactoryImpl',
-
-            '-o', "${roboExeName}",
-            "${mainClassName}"
-}
-
-task roboRun(type:Exec, dependsOn: roboCompile) {
-    executable "build/${roboExeName}"
-    args '-rvm:log=debug'
-}
 
 // Test Structure
 sourceSets {
@@ -132,40 +88,4 @@ task consensusTest(type: Test) {
     include 'foundation/omni/test/consensus/**'
 }
 
-groovydoc {
-    // Create GroovyDoc for Groovy + Java classes
-    source = sourceSets.main.groovy + sourceSets.main.java
-    overview = "src/main/java/overview.html"
-    groovyClasspath = project.configurations.jansi
-}
-
-def currencyID = 1
-
-task getCoreConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'foundation.omni.consensus.OmniCoreConsensusTool'
-    args = [currencyID, 'build/mastercore_consensus.txt']
-    classpath = sourceSets.main.runtimeClasspath
-}
-
-task getOmniConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'foundation.omni.consensus.OmniwalletConsensusTool'
-    args = [currencyID, 'build/omniwallet_consensus.txt']
-    classpath = sourceSets.main.runtimeClasspath
-}
-
-task getChestConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'foundation.omni.consensus.ChestConsensusTool'
-    args = [currencyID, 'build/chest_consensus.txt']
-    classpath = sourceSets.main.runtimeClasspath
-}
-
-task getConsensus(dependsOn: ['getCoreConsensus', 'getOmniConsensus', 'getChestConsensus']) << {
-    logger.info "Consensus files are in build/*_consensus.txt"
-}
-
-task runOmniConsensusCLI(dependsOn: 'classes',  type: JavaExec) {
-    main = 'foundation.omni.cli.ConsensusCLI'
-    args = ['-regtest', '-rpcwait', '-rpcconnect=127.0.0.1', "-property=${currencyID}"]
-    classpath = sourceSets.main.runtimeClasspath
-}
 
