@@ -9,12 +9,7 @@ allprojects {
 
     repositories {
         jcenter()
-        maven { url 'https://oss.jfrog.org/artifactory/oss-release-local' }
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/'}
-    }
-
-    dependencies {
-        compile "org.codehaus.groovy:groovy:${groovyVersion}"
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/'}  // bitcoinj snapshots
     }
 }
 
@@ -25,7 +20,6 @@ subprojects {
         compile 'org.slf4j:slf4j-api:1.7.7'
 
         runtime 'org.slf4j:slf4j-jdk14:1.7.7'               // Runtime implementation of slf4j
-        testRuntime 'org.slf4j:slf4j-jdk14:1.7.7'           // Runtime implementation of slf4j
 
         testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
             exclude module: "groovy-all"
@@ -37,9 +31,6 @@ subprojects {
     }
 
     test {
-        // Disable the test report for the individual test task
-//        reports.html.enabled = false
-        // show standard out and standard error of the test JVM(s) on the console
         testLogging.showStandardStreams = true
     }
 }
