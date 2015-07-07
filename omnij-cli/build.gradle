@@ -1,3 +1,4 @@
+// Work-in-progress support for building CLI tools with ShadowJar and RoboVM
 plugins {
     id 'application'
     id 'com.github.johnrengelman.shadow' version '1.2.1'

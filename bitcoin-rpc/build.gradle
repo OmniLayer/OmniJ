@@ -17,7 +17,6 @@ dependencies {
     compile "org.codehaus.groovy:groovy-json:${groovyVersion}"
 }
 
-
 // Test Structure
 sourceSets {
     integrationTest {

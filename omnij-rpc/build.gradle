@@ -20,13 +20,6 @@ dependencies {
     testCompile 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests
 }
 
-
-test {
-    // show standard out and standard error of the test JVM(s) on the console
-    testLogging.showStandardStreams = true
-}
-
-
 // Test Structure
 sourceSets {
     integrationTest {
