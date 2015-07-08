@@ -1,7 +1,10 @@
 package foundation.omni.cli
 
+import com.msgilligan.bitcoin.test.CLICommandResult
+import com.msgilligan.bitcoin.test.CLITestSupport
 import foundation.omni.rpc.test.TestServers
 import spock.lang.Ignore
+import spock.lang.Shared
 import spock.lang.Specification
 
 
@@ -9,8 +12,8 @@ import spock.lang.Specification
  * Integration test of ConsensusCLI in RegTest mode
  * Assumes bitcoind running on localhost in RegTest mode.
  */
-@Ignore("Need to refactor functions from BaseCLISpec into a class or trait")
-class ConsensusCLISpec extends Specification {
+class ConsensusCLISpec extends Specification implements CLITestSupport {
+
 
     def "help option"() {
         when:
@@ -64,40 +67,18 @@ class ConsensusCLISpec extends Specification {
         result.error == "JSON-RPC Exception: Authorization Required\n"
     }
 
-    @Ignore("Too slow")
-    def "comparison"() {
-        setup:
-        def rpcHost = '127.0.0.1'
-        def rpcUser = TestServers.rpcTestUser
-        def rpcPass = TestServers.rpcTestPassword
-        String remoteUser = URLEncoder.encode(TestServers.stableOmniRpcUser, "UTF-8")
-        String remotePass = URLEncoder.encode(TestServers.stableOmniRpcPassword, "UTF-8")
-        String hostname = TestServers.stableOmniRpcHost
-        URI remoteURI = "https://${remoteUser}:${remotePass}@${hostname}:8332".toURI()
-
-        def remoteCoreURI = TestServers.getStablePublicMainNetURI()
-
-        when:
-        def result = command "-compare -rpcconnect=${rpcHost} -rpcssl -rpcuser=${rpcUser} -rpcpassword=${rpcPass} -core=${remoteURI} -p 1"
-
-        then:
-        result.status == 0
-        result.output.length() >= 0
-        result.error.length() == 0
-    }
-
     /**
      * Helper method to create and run a command
      *
      * @param line The command args in a single string, separated by spaces
      * @return  status and output streams in Strings
      */
-//    protected CommandResult command(String line) {
-//        String[] args = parseCommandLine(line)     // Parse line into separate args
-//
-//        // Run the command
-//        ConsensusCLI cli = new ConsensusCLI(args)
-//        return runCommand(cli)
-//    }
+    protected CLICommandResult command(String line) {
+        String[] args = parseCommandLine(line)     // Parse line into separate args
+
+        // Run the command
+        ConsensusCLI cli = new ConsensusCLI(args)
+        return runCommand(cli)
+    }
 
 }

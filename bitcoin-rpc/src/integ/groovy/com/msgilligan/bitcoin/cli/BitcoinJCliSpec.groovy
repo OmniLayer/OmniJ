@@ -1,11 +1,16 @@
 package com.msgilligan.bitcoin.cli
+
+import com.msgilligan.bitcoin.test.CLICommandResult
+import com.msgilligan.bitcoin.test.CLITestSupport
+import spock.lang.Specification
+
 /**
  * Integration Test Spec for the bitcoinj-cli tool
  * Assumes bitcoind running on localhost in RegTest mode.
  *
  * TODO: We should probably check the command output (eventually)
  */
-class BitcoinJCliSpec extends BaseCLISpec {
+class BitcoinJCliSpec extends Specification implements CLITestSupport {
 
     def "help option"() {
         when:
@@ -44,7 +49,7 @@ class BitcoinJCliSpec extends BaseCLISpec {
      * @param line The command args in a single string, separated by spaces
      * @return  status and output streams in Strings
      */
-    protected CommandResult command(String line) {
+    protected CLICommandResult command(String line) {
         String[] args = parseCommandLine(line)     // Parse line into separate args
 
         // Run the command

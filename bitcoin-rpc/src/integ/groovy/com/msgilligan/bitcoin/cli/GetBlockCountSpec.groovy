@@ -1,10 +1,14 @@
 package com.msgilligan.bitcoin.cli
 
+import com.msgilligan.bitcoin.test.CLICommandResult
+import com.msgilligan.bitcoin.test.CLITestSupport
+import spock.lang.Specification
+
 /**
  * Integration Spec for GetBlockCount command-line tool
  * Assumes bitcoind running on localhost in RegTest mode.
  */
-class GetBlockCountSpec extends BaseCLISpec {
+class GetBlockCountSpec extends Specification implements CLITestSupport {
 
     def "run against local RegTest RPC"() {
         when:
@@ -22,7 +26,7 @@ class GetBlockCountSpec extends BaseCLISpec {
      * @param line The command args in a single string, separated by spaces
      * @return  status and output streams in Strings
      */
-    protected CommandResult command(String line) {
+    protected CLICommandResult command(String line) {
         String[] args = parseCommandLine(line)     // Parse line into separate args
 
         // Run the command

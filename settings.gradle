@@ -1,3 +1,5 @@
 include 'bitcoin-rpc'
 include 'omnij-core'
 include 'omnij-rpc'
+include 'omnij-cli'
+

@@ -1,21 +1,20 @@
-package com.msgilligan.bitcoin.cli
+package com.msgilligan.bitcoin.test
 
+import com.msgilligan.bitcoin.cli.CliCommand
 import com.msgilligan.bitcoin.rpc.test.TestServers
-import spock.lang.Specification
 
 import java.nio.charset.StandardCharsets
 
-
 /**
- * Base Spec for testing CLICommand subclasses
+ * Support functions for Command Line tool Spock test specifications
  */
-abstract class BaseCLISpec extends Specification {
+trait CLITestSupport {
 
-    static final private TestServers testServers = TestServers.instance;
-    static final protected String rpcUser = testServers.rpcTestUser
-    static final protected String rpcPassword = testServers.rpcTestPassword
+    final TestServers testServers = TestServers.instance
+    final String rpcUser = testServers.rpcTestUser
+    final String rpcPassword = testServers.rpcTestPassword
 
-    protected String[] parseCommandLine(String line) {
+    String[] parseCommandLine(String line) {
         String[] args = line.split(' ')     // (Overly?) simple parsing of string into args[]
         return args
     }
@@ -26,9 +25,9 @@ abstract class BaseCLISpec extends Specification {
      * @param command
      * @return
      */
-    protected CommandResult runCommand(CliCommand command) {
+    CLICommandResult runCommand(CliCommand command) {
         // Setup CommandResult to capture status and streams
-        CommandResult result = new CommandResult()
+        CLICommandResult result = new CLICommandResult()
         InputStream is = new ByteArrayInputStream(new byte[0])
         ByteArrayOutputStream bos = new ByteArrayOutputStream()
         PrintStream cos = new PrintStream(bos)
@@ -45,11 +44,4 @@ abstract class BaseCLISpec extends Specification {
 
         return result
     }
-
-    protected class CommandResult {
-        Integer status
-        String  output
-        String  error
-    }
-
 }
