@@ -32,15 +32,4 @@ class ConsensusSnapshot {
      * Consensus entries for all addresses, sorted by address
      */
     SortedMap<Address, ConsensusEntry> entries
-
-    /**
-     * Return all entries excluding a single address
-     * @param address Address to exclude (e.g. Exodus address)
-     * @return A map of consensus entries sorted by address
-     */
-    SortedMap<Address, ConsensusEntry> getEntriesExcluding(Address address) {
-        SortedMap<Address, ConsensusEntry> temp = new TreeMap<Address, ConsensusEntry>(entries)
-        temp.remove(address)
-        return temp
-    }
 }

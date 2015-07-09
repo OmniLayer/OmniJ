@@ -8,14 +8,17 @@ import org.bitcoinj.core.Address
 /**
  * A pair of ConsensusSnapshots with comparison iterators for Spock tests
  */
-@Immutable
 @CompileStatic
 class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
     final ConsensusSnapshot c1
     final ConsensusSnapshot c2
-    private Set<Address> unionAddresses = null
+    private transient Set<Address> unionAddresses = null
 
-    /**
+    ConsensusComparison(ConsensusSnapshot c1, ConsensusSnapshot c2) {
+        this.c1 = c1
+        this.c2 = c2
+    }
+/**
      * Return an iterator that will iterate through the union of addresses
      * from the two ConsensusSnapshot objects, sorted by address
      * @return the iterator

@@ -59,19 +59,15 @@ class ConsensusCLI extends CliCommand {
         String property = line.getOptionValue("property")
         Long currencyIDNum =  property ? Long.parseLong(property, 10) : 1
         CurrencyID currencyID = new CurrencyID(currencyIDNum)
-        boolean compareReserved = true
 
         String fileName = line.getOptionValue("output")
 
         ConsensusTool tool1, tool2
         if (line.hasOption("omnicore-url")) {
-            URI toolURI = line.getOptionValue("omnicore-url").toURI()
-            println "URI: ${toolURI}"
             tool1 = new OmniCoreConsensusTool(line.getOptionValue("omnicore-url").toURI())
         } else if (line.hasOption("omniwallet-url")) {
             tool1 = new OmniwalletConsensusTool(line.getOptionValue("omniwallet-url").toURI())
         } else if (line.hasOption("omnichest-url")) {
-            compareReserved = false
             tool1 = new ChestConsensusTool(line.getOptionValue("omnichest-url").toURI())
         } else {
             tool1 = new OmniCoreConsensusTool(this.getClient())
@@ -80,7 +76,7 @@ class ConsensusCLI extends CliCommand {
         if (line.hasOption("compare")) {
             tool2 = new OmniCoreConsensusTool(this.getClient())
             pwerr.println "Comparing ${tool2.serverURI} with ${tool1.serverURI}"
-            MultiPropertyComparison multiComparison = new MultiPropertyComparison(tool2, tool1, compareReserved);
+            MultiPropertyComparison multiComparison = new MultiPropertyComparison(tool2, tool1);
             multiComparison.compareAllProperties()
         } else {
             def consensus = tool1.getConsensusSnapshot(currencyID)

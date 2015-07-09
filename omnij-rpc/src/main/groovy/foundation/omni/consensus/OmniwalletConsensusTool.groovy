@@ -92,7 +92,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
             } catch (NumberFormatException e) {
                 id = null
             }
-            if (id != null) {
+            if (id != null && id != CurrencyID.BTC) {
                 String name = (String) jsonProp.get("name")
                 String category = ""
                 String subCategory = ""
