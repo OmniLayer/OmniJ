@@ -11,10 +11,17 @@ import javax.sql.DataSource
  * Command-line tool and class for fetching consensus data from OmniEngine DB
  */
 class DBConsensusTool extends ConsensusTool {
-    private Sql sql = null;
+    private final PGSimpleDataSource dataSource
+    private final Sql sql = null
 
     DBConsensusTool(DataSource dataSource) {
-        sql = new Sql(dataSource)
+        this.dataSource = dataSource
+        this.sql = new Sql(dataSource)
+    }
+
+    @Override
+    URI getServerURI() {
+        return new URI(dataSource.getUrl().toURI())
     }
 
     public static void main(String[] args) {

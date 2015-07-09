@@ -50,6 +50,12 @@ public class RPCClient {
         this(config.getURI(), config.getUsername(), config.getPassword());
     }
 
+    /**
+     *
+     * @param server server URI should not contain username/password
+     * @param rpcuser
+     * @param rpcpassword
+     */
     public RPCClient(URI server, final String rpcuser, final String rpcpassword) {
         serverURI = server;
         username = rpcuser;

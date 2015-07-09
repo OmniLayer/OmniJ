@@ -44,6 +44,11 @@ class OmniCoreConsensusTool extends ConsensusTool {
         this.client = client
     }
 
+    @Override
+    URI getServerURI() {
+        return this.client.getServerURI()
+    }
+
     public static void main(String[] args) {
         OmniClient client = new OmniClient(RPCURI.defaultMainNetURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
         OmniCoreConsensusTool tool = new OmniCoreConsensusTool(client)

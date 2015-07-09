@@ -95,13 +95,17 @@ public abstract class CliCommand {
         formatter.printHelp(pwout, helpWidth, usage, header, options, leftPad, descPad, footer, false);
     }
 
-    /**
-     * Check Options and Arguments
-     *
-     * Override to customize behavior.
-     *
-     * @return status code
-     */
+    public void printError(String str) {
+        pwout.println(str);
+    }
+
+        /**
+         * Check Options and Arguments
+         *
+         * Override to customize behavior.
+         *
+         * @return status code
+         */
     public Integer checkArgs() {
         if (line.hasOption("?")) {
             printHelp();

@@ -227,14 +227,12 @@ The tools command-line options use the https://en.bitcoin.it/wiki/Running_Bitcoi
 
 Currently there is no way to do a consensus dump of all properties, or a comparison of a single property. To do a consensus comparison one server must be an Omni Core server specified with bitcoin-style `-rpcconnect` command-line options and the second server must be specified with the `-omnicore-url`, `-omnichest-url`, or `-omniwallet-url` options.
 
-NOTE:: The `-p` _id_ option must be specified when using `-compare` even though all properties will be compared.
-
 === Example
 
 To do a consensus comparison between an Omni Core server and https://www.omniwallet.org, use the following:
 
     java -jar omnij-cli/build/libs/omni-consensus-0.3-SNAPSHOT.jar \
-        -compare -p 1 -rpcssl -rpcconnect=core.host.com  \
+        -compare -rpcssl -rpcconnect=core.host.com  \
         -rpcuser=user -rpcpassword=pass \
         -omniwallet-url=https://www.omniwallet.org
 

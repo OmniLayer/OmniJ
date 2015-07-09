@@ -44,7 +44,10 @@ class ConsensusCLI extends CliCommand {
             printHelp()
             return 1
         }
-        if (!line.hasOption('p') ) {
+        // Must have -p (property id) or -x (compare), but not both
+        // TODO: This will change when we allow download of all property ids or comparison of a single one
+        if (!(line.hasOption('p') ^ line.hasOption('x'))) {
+            printError("Must either specify a property id with -p or the -x/-compare option, but not both")
             printHelp()
             return 1
         }
@@ -54,7 +57,7 @@ class ConsensusCLI extends CliCommand {
     @Override
     public Integer runImpl() throws IOException, JsonRPCException {
         String property = line.getOptionValue("property")
-        Long currencyIDNum =  Long.parseLong(property, 10)
+        Long currencyIDNum =  property ? Long.parseLong(property, 10) : 1
         CurrencyID currencyID = new CurrencyID(currencyIDNum)
         boolean compareReserved = true
 
@@ -76,6 +79,7 @@ class ConsensusCLI extends CliCommand {
 
         if (line.hasOption("compare")) {
             tool2 = new OmniCoreConsensusTool(this.getClient())
+            pwerr.println "Comparing ${tool2.serverURI} with ${tool1.serverURI}"
             MultiPropertyComparison multiComparison = new MultiPropertyComparison(tool2, tool1, compareReserved);
             multiComparison.compareAllProperties()
         } else {
@@ -143,8 +147,6 @@ class ConsensusCLI extends CliCommand {
                 .addOption(OptionBuilder.withLongOpt('compare')
                     .withDescription('Compare properties from two URLs')
                     .create('x'))
-                // Technically the -rpc* options should also be mutually exclusive with these
-                // but the current implementation just ignores them if -ow or -oc is present.
                 .addOptionGroup(new OptionGroup()
                     .addOption(OptionBuilder.withLongOpt('omnicore-url')
                         .withDescription('Use Omni Core API via URL')

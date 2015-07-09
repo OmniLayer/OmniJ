@@ -11,9 +11,9 @@ import org.bitcoinj.core.Address
  */
 class OmniwalletConsensusTool extends ConsensusTool {
     static URI OmniHost_Live = new URI("https://www.omniwallet.org");
-    private String proto
-    private String host
-    private int port
+    private final String proto
+    private final String host
+    private final int port
     static String file = "/v1/mastercoin_verify/addresses"
     static String revisionFile = "/v1/system/revision.json"
     static String listFile = "/v1/mastercoin_verify/properties"
@@ -22,6 +22,11 @@ class OmniwalletConsensusTool extends ConsensusTool {
         proto = "https"
         port = 443;
         host = hostURI.host;
+    }
+
+    @Override
+    URI getServerURI() {
+        return new URI(proto, null, host, port, null, null, null)
     }
 
     public static void main(String[] args) {

@@ -12,9 +12,9 @@ import org.bitcoinj.core.Address
 class ChestConsensusTool extends ConsensusTool {
     // omnichest.info doesn't have https:// support (yet?)
     static URI ChestHost_Live = new URI("http://omnichest.info");
-    private String proto
-    private String host
-    private int port
+    private final String proto
+    private final String host
+    private final int port
     static String file = "/mastercoin_verify/addresses.aspx"
     static String listFile = "/mastercoin_verify/properties.aspx/"
     static String blockHeightFile = "/apireq.aspx?stat=customapireq_lastblockprocessed"
@@ -23,6 +23,11 @@ class ChestConsensusTool extends ConsensusTool {
         proto = chestURI.scheme
         port = chestURI.port
         host = chestURI.host
+    }
+
+    @Override
+    URI getServerURI() {
+        return new URI(proto, null, host, port, null, null, null)
     }
 
     public static void main(String[] args) {

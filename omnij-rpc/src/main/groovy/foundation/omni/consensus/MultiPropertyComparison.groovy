@@ -3,10 +3,12 @@ package foundation.omni.consensus
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.rpc.SmartPropertyListInfo
+import groovy.util.logging.Slf4j
 
 /**
- *
+ * Consensus comparison across all properties
  */
+@Slf4j
 class MultiPropertyComparison {
     ConsensusFetcher f1
     ConsensusFetcher f2
@@ -26,11 +28,11 @@ class MultiPropertyComparison {
 
     def compareProperties(List<CurrencyID> propertiesToCompare) {
         propertiesToCompare.each { id ->
-            println "fetching ${id} from fetcher 1"
+            log.debug("fetching ID:${id} from fetcher 1")
             ConsensusSnapshot ss1 = f1.getConsensusSnapshot(id)
-            println "fetching ${id} from fetcher 2"
+            log.debug("fetching ID:${id} from fetcher 2")
             ConsensusSnapshot ss2 = f2.getConsensusSnapshot(id)
-            println "comparing ${id} (${ss1.blockHeight}/${ss2.blockHeight})"
+            log.debug("comparing ${id} h1:${ss1.blockHeight} h2:${ss2.blockHeight}")
             ConsensusComparison comparison = new ConsensusComparison(ss1, ss2)
             for (pair in comparison) {
                 if (pair.entry1 != pair.entry2) {
