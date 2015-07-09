@@ -31,7 +31,7 @@ class ConsensusCLISpec extends Specification implements CLITestSupport {
 
         then:
         result.status == 0
-        result.output.length() > 0
+        result.output.length() >= 0
         result.error.length() == 0
     }
 
@@ -51,7 +51,7 @@ class ConsensusCLISpec extends Specification implements CLITestSupport {
 
         then:
         result.status == 0
-        result.output.length() > 0
+        result.output.length() >= 0
         result.error.length() == 0
     }
 
