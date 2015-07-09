@@ -26,6 +26,8 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
             def c1Keys = c1.entries.keySet()
             def c2Keys = c2.entries.keySet()
             unionAddresses = c1Keys + c2Keys
+            // TODO: Do we really want to remove the exodusAddress here?
+            // And what about TestNet, etc?
             unionAddresses.remove(OmniMainNetParams.get().exodusAddress)
         }
         return new PairIterator(unionAddresses.iterator())
@@ -35,9 +37,9 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
      * Iterates a ConsensusComparison pair-by-pair
      */
     class PairIterator implements Iterator<ConsensusEntryPair> {
-        java.util.Iterator<Address> keyIterator
+        Iterator<Address> keyIterator
 
-        PairIterator(java.util.Iterator<Address> keyIterator) {
+        PairIterator(Iterator<Address> keyIterator) {
             this.keyIterator = keyIterator
         }
 
