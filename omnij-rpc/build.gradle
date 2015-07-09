@@ -62,7 +62,7 @@ task regTest(type: Test) {
     systemProperties ([ "omni.test.rpcTestUser": rpcTestUser,
                         "omni.test.rpcTestPassword": rpcTestPassword,
     ])
-    include 'foundation/omni/test/rpc/**', 'foundation/omni/test/tx/**'
+    include 'foundation/omni/test/rpc/**', 'foundation/omni/test/tx/**', 'foundation/omni/cli/**'
 }
 
 task consensusTest(type: Test) {
