@@ -9,14 +9,14 @@ allprojects {
 
     repositories {
         jcenter()
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/'}  // bitcoinj snapshots
+//      maven { url 'https://oss.sonatype.org/content/repositories/snapshots/'}  // bitcoinj snapshots
     }
 }
 
 subprojects {
 
     dependencies {
-        compile 'org.bitcoinj:bitcoinj-core:0.13'
+        compile 'org.bitcoinj:bitcoinj-core:0.13.1'
         compile 'org.slf4j:slf4j-api:1.7.7'
 
         runtime 'org.slf4j:slf4j-jdk14:1.7.7'               // Runtime implementation of slf4j
