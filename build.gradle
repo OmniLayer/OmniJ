@@ -1,4 +1,4 @@
-ext.groovyVersion = '2.4.3'
+ext.groovyVersion = '2.4.4'
 
 apply from: 'gradle/groovydoc.gradle'
 apply from: 'gradle/idea.gradle'
