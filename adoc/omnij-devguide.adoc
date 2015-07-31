@@ -5,6 +5,7 @@ v0.1, July 30, 2015: Early draft
 :toc:
 :toclevels: 3
 :linkattrs:
+:imagesdir: images
 
 Paragraph TBD.
 
