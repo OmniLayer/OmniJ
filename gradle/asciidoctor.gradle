@@ -1,0 +1,38 @@
+// Plugin so we can render AsciiDoc documents.
+apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+// Plugin so we can use Ruby gems when rendering documents.
+apply plugin: 'com.github.jruby-gradle.base'
+
+dependencies {
+    // gems dependency configuration is added by
+    // jruby-gradle-plugin. Here we define
+    // the gems we need in our build.
+    gems 'rubygems:asciidoctor-diagram:1.2.1'
+}
+
+asciidoctorj {
+    // We can change the AsciidoctorJ 
+    // dependency version.
+    version = '1.5.2'
+}
+
+asciidoctor {
+    sourceDir = file('adoc')
+    outputDir = file("$buildDir/adoc")
+    separateOutputDirs = false
+
+    // jrubyPrepareGems task is added by the JRuby 
+    // plugin and will download Ruby gems we have
+    // defined in the gems dependency configuration.
+    dependsOn jrubyPrepare
+
+    // Asciidoctor task needs the
+    // asciidoctor-diagram gem, we installed
+    // with the jrubyPrepareGems task and
+    // gems dependency configuration.
+    requires  'asciidoctor-diagram'
+
+    // Set path to find gems to directory
+    // used by jrubyPrepareGems task.
+    gemPath = file('build/gems')
+}

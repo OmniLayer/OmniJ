@@ -1,6 +1,18 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
+        classpath 'com.github.jruby-gradle:jruby-gradle-plugin:0.4.0'
+    }
+}
+
 ext.groovyVersion = '2.4.4'
 
 apply from: 'gradle/groovydoc.gradle'
+apply from: 'gradle/asciidoctor.gradle'
 apply from: 'gradle/idea.gradle'
 
 allprojects {
@@ -40,4 +52,6 @@ task testReport(type: TestReport) {
     // Include the results from the `test` task in all subprojects
     reportOn subprojects*.test
 }
+
+task jenkinsBuild(dependsOn: [build, testReport, groovydocAll, asciidoctor])
 

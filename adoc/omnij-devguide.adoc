@@ -1,0 +1,38 @@
+= OmniJ Developer's Guide
+Sean Gilligan
+v0.1, July 30, 2015: Early draft
+:numbered:
+:toc:
+:toclevels: 3
+:linkattrs:
+
+Paragraph TBD.
+
+== Introduction to OmniJ
+
+This section is TBD. For now the project http://github.com/OmniLayer/OmniJ/README.adoc[README] is the best place to get started.
+
+== JSON-RPC Clients
+
+[plantuml, diagram-classes, svg]
+....
+skinparam packageStyle Rect
+skinparam shadowing false
+hide empty members
+
+namespace com.msgilligan.bitcoin.rpc {
+    class RPCClient
+    RPCClient <|-- class DynamicRPCClient << Groovy >>
+    RPCClient <|-- BitcoinClient
+    BitcoinClient <|-- class BitcoinCLIClient << Groovy >>
+}
+
+namespace foundation.omni.rpc {
+    com.msgilligan.bitcoin.rpc.BitcoinClient <|-- OmniClient
+    OmniClient <|-- OmniExtendedClient
+    OmniExtendedClient <|-- class OmniCLIClient << Groovy >>
+}
+....
+
+
+
