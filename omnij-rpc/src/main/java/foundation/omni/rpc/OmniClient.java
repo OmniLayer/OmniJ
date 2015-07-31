@@ -246,6 +246,21 @@ public class OmniClient extends BitcoinClient {
     }
 
     /**
+     * Creates and broadcasts a "send all" transaction.
+     *
+     * @param fromAddress The address to spent from
+     * @param toAddress   The address to send to
+     * @return The hash of the transaction
+     */
+    public Sha256Hash sendAll(Address fromAddress, Address toAddress)
+            throws JsonRPCException, IOException {
+        List<Object> params = createParamList(fromAddress.toString(), toAddress.toString());
+        String txid = send("omni_sendall", params);
+        Sha256Hash hash = Sha256Hash.wrap(txid);
+        return hash;
+    }
+
+    /**
      * Creates and broadcasts a "trade" transaction.
      *
      * @param fromAddress     The address to trade with
