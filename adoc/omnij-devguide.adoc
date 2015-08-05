@@ -11,7 +11,7 @@ Paragraph TBD.
 
 == Introduction to OmniJ
 
-This section is TBD. For now the project http://github.com/OmniLayer/OmniJ/README.adoc[README] is the best place to get started.
+This section is TBD. For now the project https://github.com/OmniLayer/OmniJ#omnij-project[README] is the best place to get started.
 
 == JSON-RPC Clients
 
