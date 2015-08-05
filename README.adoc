@@ -1,4 +1,4 @@
-= OmniJ Project (includes bitcoin-spock)
+= OmniJ Project
 
 [WARNING]
 This software is EXPERIMENTAL software for **REGTEST and TESTNET TRANSACTIONS** only. *USE ON MAINNET AT YOUR OWN RISK.*
