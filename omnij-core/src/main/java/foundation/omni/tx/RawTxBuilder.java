@@ -179,7 +179,7 @@ public class RawTxBuilder {
      * @param str The string
      * @return The hexadecimal representation
      */
-    String toHexString(String str) {
+    static String toHexString(String str) {
         byte[] ba;
         try {
             ba = str.getBytes("UTF-8");
@@ -196,7 +196,7 @@ public class RawTxBuilder {
      * @param ba The byte array
      * @return The hexadecimal representation
      */
-    String toHexString(byte[] ba) {
+    static String toHexString(byte[] ba) {
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < ba.length; i++) {
             str.append(String.format("%x", ba[i]));
