@@ -1,12 +1,13 @@
 package foundation.omni.rpc;
 
+import com.msgilligan.bitcoin.rpc.BitcoinClient;
+import com.msgilligan.bitcoin.rpc.JsonRPCException;
 import com.msgilligan.bitcoin.rpc.RPCConfig;
+import foundation.omni.CurrencyID;
+import foundation.omni.Ecosystem;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Sha256Hash;
-import com.msgilligan.bitcoin.rpc.BitcoinClient;
-import com.msgilligan.bitcoin.rpc.JsonRPCException;
-import foundation.omni.CurrencyID;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -250,11 +251,12 @@ public class OmniClient extends BitcoinClient {
      *
      * @param fromAddress The address to spent from
      * @param toAddress   The address to send to
+     * @param ecosystem   The ecosystem of the tokens to send
      * @return The hash of the transaction
      */
-    public Sha256Hash sendAll(Address fromAddress, Address toAddress)
+    public Sha256Hash sendAll(Address fromAddress, Address toAddress, Ecosystem ecosystem)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress.toString(), toAddress.toString());
+        List<Object> params = createParamList(fromAddress.toString(), toAddress.toString(), ecosystem.byteValue());
         String txid = send("omni_sendall", params);
         Sha256Hash hash = Sha256Hash.wrap(txid);
         return hash;
