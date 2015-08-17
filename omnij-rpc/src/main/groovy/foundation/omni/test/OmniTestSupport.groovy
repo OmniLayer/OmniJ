@@ -3,6 +3,9 @@ package foundation.omni.test
 import com.msgilligan.bitcoin.BTC
 import com.msgilligan.bitcoin.test.BTCTestSupport
 import foundation.omni.Ecosystem
+import foundation.omni.OmniDivisibleValue
+import foundation.omni.OmniIndivisibleValue
+import foundation.omni.OmniValue
 import foundation.omni.PropertyType
 import foundation.omni.rpc.RawTxDelegate
 import org.bitcoinj.core.Address
@@ -89,11 +92,9 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
         return fundedAddress
     }
 
-    CurrencyID fundNewProperty(Address address, BigDecimal amount, PropertyType type, Ecosystem ecosystem) {
-        if (type == PropertyType.DIVISIBLE) {
-            amount = BTC.btcToSatoshis(amount)
-        }
-        def txidCreation = createProperty(address, ecosystem, type, amount.longValue())
+    CurrencyID fundNewProperty(Address address, BigDecimal amountBD, PropertyType type, Ecosystem ecosystem) {
+        OmniValue amount = OmniValue.of(amountBD, type);
+        def txidCreation = createProperty(address, ecosystem, type, amount.asWillets())
         generateBlock()
         def txCreation = getTransactionMP(txidCreation)
         assert txCreation.valid == true

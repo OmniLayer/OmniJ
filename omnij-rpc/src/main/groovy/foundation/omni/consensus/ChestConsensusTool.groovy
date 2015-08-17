@@ -37,7 +37,7 @@ class ChestConsensusTool extends ConsensusTool {
 
     private SortedMap<Address, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
         def slurper = new JsonSlurper()
-        String httpFile = "${file}?currencyid=${currencyID.longValue()}"
+        String httpFile = "${file}?currencyid=${currencyID.getValue()}"
         def consensusURL = new URL(proto, host, port, httpFile)
 //        def balancesText =  consensusURL.getText()
         def balances = slurper.parse(consensusURL)
@@ -112,7 +112,7 @@ class ChestConsensusTool extends ConsensusTool {
 
     @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
-        String httpFile = "${file}?currencyid=${currencyID.longValue()}"
+        String httpFile = "${file}?currencyid=${currencyID.getValue()}"
         def consensusURL = new URL(proto, host, port, httpFile)
 
         /* Since getConsensusForCurrency can't return the blockHeight, we have to check

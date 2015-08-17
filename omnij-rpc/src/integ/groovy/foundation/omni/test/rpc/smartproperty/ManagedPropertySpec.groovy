@@ -56,7 +56,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         def propertyInfo = getproperty_MP(currencyID)
 
         then:
-        propertyInfo.propertyid == currencyID.longValue()
+        propertyInfo.propertyid == currencyID.getValue()
         propertyInfo.divisible == false
         propertyInfo.name == "ManagedTokens"
         propertyInfo.category == "Test Category"
@@ -101,7 +101,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         getTransactionMP(txid).txid == txid.toString()
         getTransactionMP(txid).valid
         getTransactionMP(txid).type_int == 55
-        getTransactionMP(txid).propertyid == currencyID.longValue()
+        getTransactionMP(txid).propertyid == currencyID.getValue()
         getTransactionMP(txid).divisible == false
         getTransactionMP(txid).amount as Integer == 100
     }
@@ -132,7 +132,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         getTransactionMP(txid).txid == txid.toString()
         getTransactionMP(txid).valid
         getTransactionMP(txid).type_int == 55
-        getTransactionMP(txid).propertyid == currencyID.longValue()
+        getTransactionMP(txid).propertyid == currencyID.getValue()
         getTransactionMP(txid).divisible == false
         getTransactionMP(txid).amount as Integer == 170
 
@@ -241,7 +241,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         getTransactionMP(txid).txid == txid.toString()
         getTransactionMP(txid).valid
         getTransactionMP(txid).type_int == 56
-        getTransactionMP(txid).propertyid == currencyID.longValue()
+        getTransactionMP(txid).propertyid == currencyID.getValue()
         getTransactionMP(txid).divisible == false
         getTransactionMP(txid).amount as Long == new Long("9223372036854775805")
     }

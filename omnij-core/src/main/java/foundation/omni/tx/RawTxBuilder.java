@@ -19,7 +19,7 @@ public class RawTxBuilder {
      * Creates a hex-encoded raw transaction of type 0: "simple send".
      */
     public String createSimpleSendHex(CurrencyID currencyId, Long amount) {
-        String rawTxHex = String.format("00000000%08x%016x", currencyId.longValue(), amount);
+        String rawTxHex = String.format("00000000%08x%016x", currencyId.getValue(), amount);
         return rawTxHex;
     }
 
@@ -27,7 +27,7 @@ public class RawTxBuilder {
      * Creates a hex-encoded raw transaction of type 3: "send to owners".
      */
     public String createSendToOwnersHex(CurrencyID currencyId, Long amount) {
-        String rawTxHex = String.format("00000003%08x%016x", currencyId.longValue(), amount);
+        String rawTxHex = String.format("00000003%08x%016x", currencyId.getValue(), amount);
         return rawTxHex;
     }
 
@@ -47,7 +47,7 @@ public class RawTxBuilder {
     public String createDexSellOfferHex(CurrencyID currencyId, Long amountForSale, Long amountDesired,
                                         Byte paymentWindow, Long commitmentFee, Byte action) {
         String rawTxHex = String.format("00010014%08x%016x%016x%02x%016x%02x",
-                currencyId.longValue(),
+                currencyId.getValue(),
                 amountForSale,
                 amountDesired,
                 paymentWindow.byteValue(),
@@ -62,9 +62,9 @@ public class RawTxBuilder {
     public String createMetaDexSellOfferHex(CurrencyID currencyForSale, Long amountForSale, CurrencyID currencyDesired,
                                             Long amountDesired, Byte action) {
         String rawTxHex = String.format("00000015%08x%016x%08x%016x%02x",
-                currencyForSale.longValue(),
+                currencyForSale.getValue(),
                 amountForSale,
-                currencyDesired.longValue(),
+                currencyDesired.getValue(),
                 amountDesired,
                 action.byteValue());
         return rawTxHex;
@@ -75,7 +75,7 @@ public class RawTxBuilder {
      */
     public String createAcceptDexOfferHex(CurrencyID currencyId, Long amount) {
         String rawTxHex = String.format("00000016%08x%016x",
-                currencyId.longValue(),
+                currencyId.getValue(),
                 amount);
         return rawTxHex;
     }
@@ -87,8 +87,8 @@ public class RawTxBuilder {
                                     String category, String subCategory, String label, String website, String info,
                                     Long amount) {
         String rawTxHex = String.format("00000032%02x%04x%08x%s00%s00%s00%s00%s00%016x",
-                ecosystem.byteValue(),
-                propertyType.intValue(),
+                ecosystem.getValue(),
+                propertyType.getValue(),
                 previousPropertyId,
                 toHexString(category),
                 toHexString(subCategory),
@@ -107,15 +107,15 @@ public class RawTxBuilder {
                                      CurrencyID propertyDesired, Long tokensPerUnit, Long deadline, Byte earlyBirdBonus,
                                      Byte issuerBonus) {
         String rawTxHex = String.format("00000033%02x%04x%08x%s00%s00%s00%s00%s00%08x%016x%016x%02x%02x",
-                ecosystem.byteValue(),
-                propertyType.intValue(),
+                ecosystem.getValue(),
+                propertyType.getValue(),
                 previousPropertyId,
                 toHexString(category),
                 toHexString(subCategory),
                 toHexString(label),
                 toHexString(website),
                 toHexString(info),
-                propertyDesired.longValue(),
+                propertyDesired.getValue(),
                 tokensPerUnit,
                 deadline,
                 earlyBirdBonus.byteValue(),
@@ -127,7 +127,7 @@ public class RawTxBuilder {
      * Creates a hex-encoded raw transaction of type 53: "close a crowdsale manually".
      */
     public String createCloseCrowdsaleHex(CurrencyID currencyId) {
-        String rawTxHex = String.format("00000035%08x", currencyId.longValue());
+        String rawTxHex = String.format("00000035%08x", currencyId.getValue());
         return rawTxHex;
     }
 
@@ -138,8 +138,8 @@ public class RawTxBuilder {
                                            String category, String subCategory, String label, String website,
                                            String info) {
         String rawTxHex = String.format("00000036%02x%04x%08x%s00%s00%s00%s00%s00",
-                ecosystem.byteValue(),
-                propertyType.intValue(),
+                ecosystem.getValue(),
+                propertyType.getValue(),
                 previousPropertyId,
                 toHexString(category),
                 toHexString(subCategory),
@@ -153,7 +153,7 @@ public class RawTxBuilder {
      * Creates a hex-encoded raw transaction of type 55: "grant tokens for a managed property".
      */
     public String createGrantTokensHex(CurrencyID currencyId, Long amount, String memo) {
-        String rawTxHex = String.format("00000037%08x%016x%s00", currencyId.longValue(), amount, toHexString(memo));
+        String rawTxHex = String.format("00000037%08x%016x%s00", currencyId.getValue(), amount, toHexString(memo));
         return rawTxHex;
     }
 
@@ -161,7 +161,7 @@ public class RawTxBuilder {
      * Creates a hex-encoded raw transaction of type 56: "revoke tokens of a managed property".
      */
     public String createRevokeTokensHex(CurrencyID currencyId, Long amount, String memo) {
-        String rawTxHex = String.format("00000038%08x%016x%s00", currencyId.longValue(), amount, toHexString(memo));
+        String rawTxHex = String.format("00000038%08x%016x%s00", currencyId.getValue(), amount, toHexString(memo));
         return rawTxHex;
     }
 
@@ -169,7 +169,7 @@ public class RawTxBuilder {
      * Creates a hex-encoded raw transaction of type 70: "change manager of a managed property".
      */
     public String createChangePropertyManagerHex(CurrencyID currencyId) {
-        String rawTxHex = String.format("00000046%08x", currencyId.longValue());
+        String rawTxHex = String.format("00000046%08x", currencyId.getValue());
         return rawTxHex;
     }
 

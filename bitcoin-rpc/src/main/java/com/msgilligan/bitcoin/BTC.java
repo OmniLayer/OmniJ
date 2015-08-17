@@ -4,29 +4,36 @@ import org.bitcoinj.core.Coin;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 
 /**
- * Utility class for converting from satoshis (BigInteger) to bitcoins (BigDecimal) and vice-versa
+ * Utility class for converting BTC (BigDecimal) to satoshis (Coin class)
  */
 public class BTC  {
-    public static final long satoshisPerBitcoin = 100000000;
-    public static final BigInteger satoshisPerBTC = BigInteger.valueOf(satoshisPerBitcoin);
-    public static final BigDecimal satoshisPerBTCDecimal = new BigDecimal(satoshisPerBTC);
+    private static final BigDecimal satoshisPerBTCDecimal = new BigDecimal(Coin.COIN.value);
 
-    public static BigDecimal satoshisToBTC(BigInteger satoshis) {
-        BigDecimal decimalSatoshis = new BigDecimal(satoshis);
-        return decimalSatoshis.divide(satoshisPerBTCDecimal);
-    }
-    public static BigInteger btcToSatoshis(BigDecimal btc) {
+    private static long btcToSatoshisLong(final BigDecimal btc) {
         BigDecimal satoshisDecimal = btc.multiply(BTC.satoshisPerBTCDecimal);
-        return satoshisDecimal.toBigInteger();
+        return satoshisDecimal.longValueExact();
     }
-    public static Coin btcToCoin(BigDecimal btc) {
-        return Coin.valueOf(BTC.btcToSatoshis(btc).longValue());
+
+    /**
+     * Convert from BigDecimal BTC value to Satoshis <code>BigInteger</code>.
+     * @param btc
+     * @return
+     * @deprecated Use {@link BTC#btcToCoin(BigDecimal)}.
+     */
+    @Deprecated
+    public static BigInteger btcToSatoshis(final BigDecimal btc) {
+        return BigInteger.valueOf(btcToSatoshisLong(btc));
     }
-    public static BigDecimal coinToBTC(Coin coin) {
-        BigInteger satoshis = BigInteger.valueOf(coin.longValue());
-        return BTC.satoshisToBTC(satoshis);
+
+    /**
+     * Convert from BigDecimal BTC value to <code>Coin</code> type.
+     *
+     * @param btc Bitcoin amount in BTC units
+     * @return bitcoinj <code>Coin</code> type (uses Satoshis internally)
+     */
+    public static Coin btcToCoin(final BigDecimal btc) {
+        return Coin.valueOf(btcToSatoshisLong(btc));
     }
 }

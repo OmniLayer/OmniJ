@@ -44,7 +44,7 @@ class SendAllSpec extends BaseRegTestSpec {
         and:
         List<Map<String, Object>> subSends = sendTx['subsends']
         subSends.size() == 1
-        subSends[0].propertyid == ecosystem.longValue()
+        subSends[0].propertyid == ecosystem.getValue()
         subSends[0].divisible
         subSends[0].amount as BigDecimal == startMSC
 
@@ -103,7 +103,7 @@ class SendAllSpec extends BaseRegTestSpec {
         def actorAddress = createFundedAddress(startBTC, zeroAmount)
         def otherAddress = createFundedAddress(startBTC, zeroAmount)
         def nonManagedID = fundNewProperty(actorAddress, 10.0, PropertyType.DIVISIBLE, ecosystem)
-        def tradeCurrency = new CurrencyID(ecosystem.longValue())
+        def tradeCurrency = new CurrencyID(ecosystem.getValue())
 
         then:
         getbalance_MP(actorAddress, nonManagedID).balance == 10.0
