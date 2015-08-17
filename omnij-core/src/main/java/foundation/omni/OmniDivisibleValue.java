@@ -1,5 +1,7 @@
 package foundation.omni;
 
+import org.bitcoinj.core.Coin;
+
 import javax.money.NumberValue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -7,13 +9,33 @@ import java.math.MathContext;
 
 /**
  * Numeric Value of Divisible Omni Token
+ * An Omni Divisible token is typically represented to the user as a decimal amount and hence
+ * you can have a fractional number of tokens. Internally it uses the same format as a divisible token.
+ *
  */
-public class OmniDivisibleValue extends OmniValue {
+public final class OmniDivisibleValue extends OmniValue {
     public static final BigDecimal   MIN_VALUE = new BigDecimal(0); // Minimum value of 1 in transactions?
     public static final BigDecimal   MAX_VALUE = new BigDecimal("92233720368.54775807");
-    public static final long willetsPerCoin = 100000000; // 10^8
-    private static final BigInteger biWilletsPerCoin = BigInteger.valueOf(willetsPerCoin);
+    public static final long willetsPerCoin = Coin.COIN.value; // 10^8 (Omni equivalent of Satoshis
     private static final BigDecimal bdWilletsPerCoin = new BigDecimal(willetsPerCoin);
+
+    /**
+     * Create OmniDivisibleValue of the specified amount
+     * @param amount Number of Omni tokens
+     * @return
+     */
+    public static OmniDivisibleValue of(long amount) {
+        return OmniDivisibleValue.of(BigDecimal.valueOf(amount));
+    }
+
+    /**
+     * Create OmniDivisibleValue of the specified amount
+     * @param amount Number of Omni tokens
+     * @return
+     */
+    public static OmniDivisibleValue of(BigDecimal amount) {
+        return new OmniDivisibleValue(amount.multiply(bdWilletsPerCoin).longValueExact());
+    }
 
     /**
      * Create OmniDivisibleValue from willets/internal/wire format
@@ -21,30 +43,13 @@ public class OmniDivisibleValue extends OmniValue {
      * @param willets number of willets
      * @return OmniIndivisibleValue equal to number of willets
      */
-    public static OmniDivisibleValue fromWillets(long willets) {
-        return new OmniDivisibleValue(willets, true);
+    public static OmniDivisibleValue ofWillets(long willets) {
+        return new OmniDivisibleValue(willets);
     }
 
-    public OmniDivisibleValue(long value) {
-        this(BigInteger.valueOf(value));
-    }
 
-    public OmniDivisibleValue(BigInteger value) {
-        super(value.multiply(biWilletsPerCoin));
-    }
-
-    public OmniDivisibleValue(BigDecimal value) {
-        super(value.multiply(bdWilletsPerCoin).longValueExact());
-    }
-
-    /**
-     * This is a hidden mechanism to implement the fromWillets static method.
-     *
-     * @param number initial value in willets or in coins
-     * @param internalFormat true if number is internal/willets/"wire" format
-     */
-    private OmniDivisibleValue(long number, boolean internalFormat) {
-        super(internalFormat ? number : number * willetsPerCoin);
+    private OmniDivisibleValue(long value) {
+        super(value);
     }
 
     @Override
@@ -144,6 +149,7 @@ public class OmniDivisibleValue extends OmniValue {
 
     public BigDecimal bigDecimalValue() {
         BigDecimal willets = new BigDecimal(value);
+        //TODO: Add rounding mode?
         return willets.divide(bdWilletsPerCoin);
     }
 }

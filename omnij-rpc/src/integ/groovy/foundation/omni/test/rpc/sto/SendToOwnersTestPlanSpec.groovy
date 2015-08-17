@@ -43,7 +43,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         given:
         def startMSC = mscAvailable + mscReserved
         def actorAddress = createFundedAddress(startBTC, startMSC, false)
-        def currencyMSC = new CurrencyID(ecosystem.longValue())
+        def currencyMSC = new CurrencyID(ecosystem.getValue())
         def currencySPT = getStoProperty(actorAddress, data)
 
         // Create a DEx offer to reserve an amount
@@ -121,7 +121,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def expectedValidity = false
 
         def actorAddress = createFundedAddress(startBTC, startMSC)
-        def currencyMSC = new CurrencyID(ecosystem.longValue())
+        def currencyMSC = new CurrencyID(ecosystem.getValue())
         def currencySPT = new CurrencyID(4294967295L) // does not exist
 
         given: "the actor starts with #startMSC #currencyMSC"
@@ -151,7 +151,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def startMSC = 2.0
         def expectException = true
         def expectedValidity = false
-        def currencyMSC = new CurrencyID(ecosystem.longValue())
+        def currencyMSC = new CurrencyID(ecosystem.getValue())
 
         when: "there is a well funded actor and two owners with bitcoin"
         def actorAddress = createFundedAddress(btcAvailable, startMSC)
@@ -191,7 +191,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def startMSC = 1.0
         def expectException = false
         def expectedValidity = false
-        def currencyMSC = new CurrencyID(ecosystem.longValue())
+        def currencyMSC = new CurrencyID(ecosystem.getValue())
 
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def ownerA = createFundedAddress(startBTC, startMSC)
@@ -261,7 +261,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def reservedOwnerC = 0.0
         def expectException = false
         def expectedValidity = true
-        def currencyMSC = new CurrencyID(ecosystem.longValue())
+        def currencyMSC = new CurrencyID(ecosystem.getValue())
 
         def numberOfAllOwners = getproperty_MP(currencyMSC).size()
         if (BTC.btcToSatoshis(startMSC - amountSTO) < (numberOfAllOwners - 1)) {

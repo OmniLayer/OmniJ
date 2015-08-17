@@ -62,7 +62,7 @@ public final class CurrencyID implements Cloneable {
         }
     }
 
-    public long longValue() {
+    public long getValue() {
         return value;
     }
 

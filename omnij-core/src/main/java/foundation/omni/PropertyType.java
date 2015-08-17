@@ -1,9 +1,11 @@
 package foundation.omni;
 
 /**
- * Number type to represent an Omni protocol property type.
+ * Omni Protocol Property Type.
+ *
+ * TODO: Should PropertyType be made an enum?
  */
-public class PropertyType extends Number {
+public class PropertyType {
     private final int value;
 
     public static final int INDIVISIBLE_VALUE = 1;
@@ -12,7 +14,7 @@ public class PropertyType extends Number {
     public static final PropertyType INDIVISIBLE = new PropertyType(INDIVISIBLE_VALUE);
     public static final PropertyType DIVISIBLE = new PropertyType(DIVISIBLE_VALUE);
 
-    public PropertyType(int value) {
+    private PropertyType(int value) {
         if (!(value == INDIVISIBLE_VALUE ||
               value == DIVISIBLE_VALUE)) {
             throw new NumberFormatException();
@@ -20,24 +22,8 @@ public class PropertyType extends Number {
         this.value = value;
     }
 
-    @Override
-    public int intValue() {
+    public int getValue() {
         return value;
-    }
-
-    @Override
-    public long longValue() {
-        return (long) value;
-    }
-
-    @Override
-    public float floatValue() {
-        throw new UnsupportedOperationException("Operation not supported");
-    }
-
-    @Override
-    public double doubleValue() {
-        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override

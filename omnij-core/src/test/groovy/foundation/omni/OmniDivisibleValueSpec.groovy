@@ -12,7 +12,7 @@ class OmniDivisibleValueSpec extends Specification {
     @Unroll
     def "When created from willets, resulting value is scaled correctly #willets -> #expectedValue" (Long willets, BigDecimal expectedValue) {
         when: "we try to create an OmniValue using a valid numeric type"
-        OmniValue value = OmniDivisibleValue.fromWillets(willets)
+        OmniValue value = OmniDivisibleValue.ofWillets(willets)
 
         then: "it is created correctly"
         value.bigDecimalValue() == expectedValue
@@ -30,7 +30,7 @@ class OmniDivisibleValueSpec extends Specification {
     @Unroll
     def "constructor will allow a variety of integer types: #val (#type)" (Object val, Class type) {
         when: "we try to create an OmniValue using a valid numeric type"
-        OmniValue value = new OmniDivisibleValue(val)
+        OmniValue value = OmniDivisibleValue.of(val)
 
         then: "it is created correctly"
         value.longValue() == 1
@@ -42,7 +42,7 @@ class OmniDivisibleValueSpec extends Specification {
 
     def "constructor will allow a variety of integer numeric types (with class check)"() {
         when: "we try to create a OmniValue using a valid numeric type"
-        OmniValue value = new OmniDivisibleValue(val)
+        OmniValue value = OmniDivisibleValue.of(val)
 
         then: "it is created correctly"
         value.longValue() == longValue
@@ -64,10 +64,10 @@ class OmniDivisibleValueSpec extends Specification {
 
     def "constructor will allow a variety of decimal numeric types (with class check)"() {
         when: "we try to create a OmniValue using a valid numeric type"
-        OmniValue value = new OmniDivisibleValue(val)
+        OmniValue value = OmniDivisibleValue.of(val)
 
         then: "it is created correctly"
-        value.bigDecimalValue() == decimalValue
+        value.bigDecimalValue().toBigInteger() == decimalValue
 
         and: "class was as expected"
         val.class == valClass
@@ -87,7 +87,7 @@ class OmniDivisibleValueSpec extends Specification {
 
     def "constructor works with a range of values"() {
         when: "we try to create a OmniValue using a valid numeric type"
-        OmniDivisibleValue value = new OmniDivisibleValue(val)
+        OmniDivisibleValue value = OmniDivisibleValue.of(val)
 
         then: "it is created correctly"
         value.bigDecimalValue() == val
@@ -102,7 +102,7 @@ class OmniDivisibleValueSpec extends Specification {
     @Unroll
     def "constructor invalid value: #val throws #exception"() {
         when: "we try to create a OmniValue using a value that is out of range"
-        OmniDivisibleValue value = new OmniDivisibleValue(val)
+        OmniDivisibleValue value = OmniDivisibleValue.of(val)
 
         then: "Exception is thrown"
         Exception e = thrown()
@@ -110,9 +110,9 @@ class OmniDivisibleValueSpec extends Specification {
 
         where:
         val                             | exception
-        -1                              | NumberFormatException.class
+        -1                              | ArithmeticException.class
         -0.000000001                    | ArithmeticException.class
-        -0.00000001                     | NumberFormatException.class
+        -0.00000001                     | ArithmeticException.class
         0.00000000999                   | ArithmeticException.class
         0.000000009999999999999999999   | ArithmeticException.class
         0.000000001                     | ArithmeticException.class
@@ -120,15 +120,15 @@ class OmniDivisibleValueSpec extends Specification {
         1.000000009999999999999999999   | ArithmeticException.class
         1.000000001                     | ArithmeticException.class
         92233720368.54775808            | ArithmeticException.class
-        92233720369                     | NumberFormatException.class
+        92233720369                     | ArithmeticException.class
     }
 
     def "We can't create an OmniValue with an invalid value"() {
         when: "we try to create a OmniValue with an invalid value"
-        OmniValue value = new OmniDivisibleValue(val)
+        OmniValue value = OmniDivisibleValue.of(val)
 
         then: "exception is thrown"
-        NumberFormatException e = thrown()
+        ArithmeticException e = thrown()
 
         where:
         val << [-1, 9223372036854775808L]
@@ -154,20 +154,20 @@ class OmniDivisibleValueSpec extends Specification {
 
     def "Exception is thrown when converting to int would throw exception"() {
         when:
-        OmniValue value = new OmniDivisibleValue(OmniValue.MAX_VALUE)
+        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_VALUE)
         def v = value.intValue()
 
         then:
-        NumberFormatException e = thrown()
+        ArithmeticException e = thrown()
     }
 
     def "Exception is thrown when converting to int (via Groovy 'as') would throw exception"() {
         when:
-        OmniValue value = new OmniDivisibleValue(OmniValue.MAX_VALUE)
+        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_VALUE)
         def v = value as Integer
 
         then:
-        NumberFormatException e = thrown()
+        ArithmeticException e = thrown()
     }
 
 }

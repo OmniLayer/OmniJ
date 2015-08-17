@@ -13,8 +13,8 @@ class CurrencyIDSpec extends Specification {
 
         then: "the value is 1"
         currency == CurrencyID.MSC
-        currency.longValue() == CurrencyID.MSC_VALUE
-        currency.longValue() == 1L
+        currency.getValue() == CurrencyID.MSC_VALUE
+        currency.getValue() == 1L
 
         and: "it is in the right ecosystem"
         currency.ecosystem == Ecosystem.MSC
@@ -26,8 +26,8 @@ class CurrencyIDSpec extends Specification {
 
         then: "the value is 2"
         currency == CurrencyID.TMSC
-        currency.longValue() == CurrencyID.TMSC_VALUE
-        currency.longValue() == 2L
+        currency.getValue() == CurrencyID.TMSC_VALUE
+        currency.getValue() == 2L
 
         and: "it is in the right ecosystem"
         currency.ecosystem == Ecosystem.TMSC
@@ -57,7 +57,7 @@ class CurrencyIDSpec extends Specification {
         CurrencyID currencyID = new CurrencyID(id)
 
         then: "it is created correctly"
-        currencyID.longValue() == 1
+        currencyID.getValue() == 1
 
         where:
         id << [1 as Short, 1, 1I, 1L]
@@ -69,7 +69,7 @@ class CurrencyIDSpec extends Specification {
         CurrencyID currencyID = new CurrencyID(id)
 
         then: "it is created correctly"
-        currencyID.longValue() == longValue
+        currencyID.getValue() == longValue
 
         and: "class was as expected"
         id.class == idClass
@@ -153,7 +153,7 @@ class CurrencyIDSpec extends Specification {
 
         expect:
         CurrencyID currency = CurrencyID.valueOf(str)
-        currency.longValue() == value
+        currency.getValue() == value
 
         where:
         str            | value

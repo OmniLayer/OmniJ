@@ -29,13 +29,13 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         if (lastMainPropertyID == CurrencyID.MSC) {
             nextMainPropertyID = new CurrencyID(CurrencyID.TMSC_VALUE + 1)
         } else {
-            nextMainPropertyID = new CurrencyID(lastMainPropertyID.longValue() + 1)
+            nextMainPropertyID = new CurrencyID(lastMainPropertyID.getValue() + 1)
         }
 
         if (lastTestPropertyID == CurrencyID.TMSC) {
             nextTestPropertyID = new CurrencyID(2147483651L)
         } else {
-            nextTestPropertyID = new CurrencyID(lastTestPropertyID.longValue() + 1)
+            nextTestPropertyID = new CurrencyID(lastTestPropertyID.getValue() + 1)
         }
     }
 

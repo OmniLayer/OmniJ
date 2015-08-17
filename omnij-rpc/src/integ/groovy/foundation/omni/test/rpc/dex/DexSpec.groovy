@@ -57,7 +57,7 @@ class DexSpec extends BaseRegTestSpec {
         then: "the transaction should be a valid offering of #currencyOffered"
         def offerTx = getTransactionMP(offerTxid)
         offerTx.valid == true
-        offerTx.propertyid == currencyOffered.longValue()
+        offerTx.propertyid == currencyOffered.getValue()
 
         where: "the currency identifier is either MSC or TMSC"
         currencyOffered << [CurrencyID.MSC, CurrencyID.TMSC]

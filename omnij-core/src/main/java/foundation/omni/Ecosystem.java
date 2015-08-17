@@ -1,9 +1,11 @@
 package foundation.omni;
 
 /**
- * Number type to represent a Omni Protocol Ecosystem
+ * Type to represent Omni Protocol Ecosystem
+ *
+ * TODO: Should Ecosystem be made an enum?
  */
-public class Ecosystem extends Number {
+public class Ecosystem {
     private final short value;
 
     public static final short   MIN_VALUE = 1;
@@ -15,34 +17,18 @@ public class Ecosystem extends Number {
     public static final Ecosystem   MSC = new Ecosystem(MSC_VALUE);
     public static final Ecosystem   TMSC = new Ecosystem(TMSC_VALUE);
 
-    public Ecosystem(int value) {
+    private Ecosystem(short value) {
         if (value < MIN_VALUE) {
             throw new NumberFormatException();
         }
         if (value > MAX_VALUE) {
             throw new NumberFormatException();
         }
-        this.value = (short) value;
+        this.value = value;
     }
 
-    @Override
-    public int intValue() {
-        return (int) value;
-    }
-
-    @Override
-    public long longValue() {
-        return (long) value;
-    }
-
-    @Override
-    public float floatValue() {
-        throw new UnsupportedOperationException("Operation not supported");
-    }
-
-    @Override
-    public double doubleValue() {
-        throw new UnsupportedOperationException("Operation not supported");
+    public short getValue() {
+        return value;
     }
 
     @Override

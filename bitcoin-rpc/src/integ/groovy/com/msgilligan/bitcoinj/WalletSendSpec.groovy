@@ -70,7 +70,7 @@ class WalletSendSpec extends BaseRegTestSpec {
 
         then: "the coins arrive"
         client.getReceivedByAddress(walletAddr) == amount
-        wallet.getBalance().longValue() == BTC.btcToSatoshis(amount).longValue()
+        wallet.getBalance() == BTC.btcToCoin(amount)
     }
 
     def "Send from BitcoinJ wallet to the Bitcoin Core wallet"() {
@@ -91,7 +91,7 @@ class WalletSendSpec extends BaseRegTestSpec {
 
         then: "the new address has a balance of amount"
         getReceivedByAddress(rpcAddress) == amount
-        wallet.getBalance().longValue() == BTC.btcToSatoshis(startAmount) - BTC.btcToSatoshis(amount) - Transaction.REFERENCE_DEFAULT_MIN_TX_FEE.longValue()
+        wallet.getBalance() == BTC.btcToCoin(startAmount) - BTC.btcToCoin(amount) - Transaction.REFERENCE_DEFAULT_MIN_TX_FEE
     }
 
     def "create and send a transaction from BitcoinJ using wallet.completeTx"() {

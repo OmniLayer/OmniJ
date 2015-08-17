@@ -9,7 +9,7 @@ import spock.lang.Specification
 class OmniAmountSpec extends Specification {
     def "can create with value and currency id"() {
         given:
-        OmniValue value = new OmniDivisibleValue(1.0)
+        OmniValue value = OmniDivisibleValue.of(1.0)
 
         when: "we create an OmniAmount"
         OmniAmount amount = new OmniAmount(value, CurrencyID.MSC)

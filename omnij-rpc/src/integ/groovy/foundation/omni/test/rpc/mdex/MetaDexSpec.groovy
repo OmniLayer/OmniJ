@@ -221,8 +221,8 @@ class MetaDexSpec extends BaseRegTestSpec {
         then: "it is a valid open order"
         gettrade_MP(txidOfferA).valid
         gettrade_MP(txidOfferA).status == "open"
-        gettrade_MP(txidOfferA).propertyidforsale == propertyMSC.longValue()
-        gettrade_MP(txidOfferA).propertyiddesired == propertySPX.longValue()
+        gettrade_MP(txidOfferA).propertyidforsale == propertyMSC.getValue()
+        gettrade_MP(txidOfferA).propertyiddesired == propertySPX.getValue()
 
         and: "there is an offering for the new property in the orderbook"
         getorderbook_MP(propertyMSC, propertySPX).size() == 1
@@ -238,8 +238,8 @@ class MetaDexSpec extends BaseRegTestSpec {
         then: "the order is filled"
         gettrade_MP(txidOfferB).valid
         gettrade_MP(txidOfferB).status == "filled"
-        gettrade_MP(txidOfferB).propertyidforsale == propertySPX.longValue()
-        gettrade_MP(txidOfferB).propertyiddesired == propertyMSC.longValue()
+        gettrade_MP(txidOfferB).propertyidforsale == propertySPX.getValue()
+        gettrade_MP(txidOfferB).propertyiddesired == propertyMSC.getValue()
 
         and: "the offering is no longer listed in the orderbook"
         getorderbook_MP(propertyMSC, propertySPX).size() == 0
@@ -295,8 +295,8 @@ class MetaDexSpec extends BaseRegTestSpec {
         then: "it is a valid open order"
         gettrade_MP(txidOfferA).valid
         gettrade_MP(txidOfferA).status == "open"
-        gettrade_MP(txidOfferA).propertyidforsale == propertySPX.longValue()
-        gettrade_MP(txidOfferA).propertyiddesired == propertyMSC.longValue()
+        gettrade_MP(txidOfferA).propertyidforsale == propertySPX.getValue()
+        gettrade_MP(txidOfferA).propertyiddesired == propertyMSC.getValue()
 
         and: "there is an offering for the new property in the orderbook"
         getorderbook_MP(propertySPX, propertyMSC).size() == 1
@@ -312,8 +312,8 @@ class MetaDexSpec extends BaseRegTestSpec {
         then: "the order is filled"
         gettrade_MP(txidOfferB).valid
         gettrade_MP(txidOfferB).status == "filled"
-        gettrade_MP(txidOfferB).propertyidforsale == propertyMSC.longValue()
-        gettrade_MP(txidOfferB).propertyiddesired == propertySPX.longValue()
+        gettrade_MP(txidOfferB).propertyidforsale == propertyMSC.getValue()
+        gettrade_MP(txidOfferB).propertyiddesired == propertySPX.getValue()
 
         and: "the offering is no longer listed in the orderbook"
         getorderbook_MP(propertySPX, propertyMSC).size() == 0

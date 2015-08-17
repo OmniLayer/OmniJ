@@ -26,8 +26,8 @@ class OmniValueSpec extends Specification {
         when: "we check the value"
         OmniValue.checkValue(val)
 
-        then: "NumberFormatException is thrown"
-        NumberFormatException e = thrown()
+        then: "ArithmeticException is thrown"
+        ArithmeticException e = thrown()
 
         where:
         val << [-1, -2, -9223372036854775807L, -9223372036854775808L]
@@ -50,8 +50,8 @@ class OmniValueSpec extends Specification {
         when: "we check the value"
         OmniValue.checkValue(val)
 
-        then: "NumberFormatException is thrown"
-        NumberFormatException e = thrown()
+        then: "ArithmeticException is thrown"
+        ArithmeticException e = thrown()
 
         where:
         val << [-99999999999999999999999999G, -9223372036854775808G, -9223372036854775807G, -2, -1,

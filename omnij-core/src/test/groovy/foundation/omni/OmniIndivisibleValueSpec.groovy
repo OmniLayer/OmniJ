@@ -12,7 +12,7 @@ class OmniIndivisibleValueSpec extends Specification {
     @Unroll
     def "When created from willets, resulting value is unchanged #willets == #expectedValue" (Long willets, Long expectedValue) {
         when: "we try to create an OmniValue using a valid numeric type"
-        OmniValue value = OmniIndivisibleValue.fromWillets(willets)
+        OmniValue value = OmniIndivisibleValue.ofWillets(willets)
 
         then: "it is created correctly"
         value.longValue() == expectedValue
@@ -30,7 +30,7 @@ class OmniIndivisibleValueSpec extends Specification {
     @Unroll
     def "constructor will allow a variety of integer types: #val (#type)" (Object val, Class type) {
         when: "we try to create an OmniValue using a valid numeric type"
-        OmniValue value = new OmniIndivisibleValue(val)
+        OmniValue value = OmniIndivisibleValue.of(val)
 
         then: "it is created correctly"
         value.longValue() == 1
@@ -42,7 +42,7 @@ class OmniIndivisibleValueSpec extends Specification {
 
     def "constructor will allow a variety of integer types (with class check)"() {
         when: "we try to create a OmniValue using a valid numeric type"
-        OmniValue value = new OmniIndivisibleValue(val)
+        OmniValue value = OmniIndivisibleValue.of(val)
 
         then: "it is created correctly"
         value.longValue() == longValue
@@ -59,15 +59,14 @@ class OmniIndivisibleValueSpec extends Specification {
         2147483647 | 2147483647L | Integer.class
         2147483648 | 2147483648L | Long.class
         4294967295 | 4294967295L | Long.class
-        1G         | 1L          | BigInteger.class
     }
 
     def "constructor is strongly typed and won't allow all Number subclasses"() {
         when: "we try to create a OmniValue using an invalid numeric type"
-        OmniValue value = new OmniIndivisibleValue(val)
+        OmniValue value = OmniIndivisibleValue.of(val)
 
         then: "exception is thrown"
-        groovy.lang.GroovyRuntimeException e = thrown()
+        GroovyRuntimeException e = thrown()
 
         where:
         val << [1F, 1.1F, 1.0D, 1.1D, 1.0, 1.1, 1.0G, 1.1G]
@@ -75,7 +74,7 @@ class OmniIndivisibleValueSpec extends Specification {
 
     def "constructor is strongly typed and won't allow all Number subclasses (with class check)"() {
         when: "we try to create a OmniValue using an invalid numeric type"
-        OmniValue value = new OmniIndivisibleValue(val)
+        OmniValue value = OmniIndivisibleValue.of(val)
 
         then: "exception is thrown"
         GroovyRuntimeException e = thrown()
@@ -97,10 +96,10 @@ class OmniIndivisibleValueSpec extends Specification {
 
     def "We can't create an OmniValue with an invalid value"() {
         when: "we try to create a OmniValue with an invalid value"
-        OmniValue value = new OmniIndivisibleValue(val)
+        OmniValue value = OmniIndivisibleValue.of(val)
 
         then: "exception is thrown"
-        NumberFormatException e = thrown()
+        ArithmeticException e = thrown()
 
         where:
         val << [-1, 9223372036854775808L]
@@ -126,7 +125,7 @@ class OmniIndivisibleValueSpec extends Specification {
 
     def "Exception is thrown when converting to int would throw exception"() {
         when:
-        OmniValue value = new OmniIndivisibleValue(OmniValue.MAX_VALUE)
+        OmniValue value = OmniIndivisibleValue.of(OmniValue.MAX_VALUE)
         def v = value.intValue()
 
         then:
@@ -135,7 +134,7 @@ class OmniIndivisibleValueSpec extends Specification {
 
     def "Exception is thrown when converting to int (via Groovy 'as') would throw exception"() {
         when:
-        OmniValue value = new OmniIndivisibleValue(OmniValue.MAX_VALUE)
+        OmniValue value = OmniIndivisibleValue.of(OmniValue.MAX_VALUE)
         def v = value as Integer
 
         then:
