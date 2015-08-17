@@ -5,6 +5,7 @@ import com.msgilligan.bitcoin.rpc.JsonRPCException;
 import com.msgilligan.bitcoin.rpc.RPCConfig;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
+import foundation.omni.OmniDivisibleValue;
 import foundation.omni.PropertyType;
 import foundation.omni.tx.RawTxBuilder;
 import org.bitcoinj.core.Address;
@@ -61,11 +62,11 @@ public class OmniExtendedClient extends OmniClient {
     public Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, BigDecimal amountForSale,
                                   BigDecimal amountDesired, Byte paymentWindow, BigDecimal commitmentFee,
                                   Byte action) throws JsonRPCException, IOException {
-        Coin satoshisForSale = BTC.btcToCoin(amountForSale);
+        OmniDivisibleValue quantityForSale = OmniDivisibleValue.of(amountForSale);
         Coin satoshisDesired = BTC.btcToCoin(amountDesired);
         Coin satoshisFee = BTC.btcToCoin(commitmentFee);
         String rawTxHex = builder.createDexSellOfferHex(
-                currencyId, satoshisForSale.value, satoshisDesired.value, paymentWindow, satoshisFee.value, action);
+                currencyId, quantityForSale.asWillets(), satoshisDesired.value, paymentWindow, satoshisFee.value, action);
         Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
         return txid;
     }
@@ -81,8 +82,8 @@ public class OmniExtendedClient extends OmniClient {
      */
     public Sha256Hash acceptDexOffer(Address fromAddress, CurrencyID currencyId, BigDecimal amount, Address toAddress)
             throws JsonRPCException, IOException {
-        Coin satoshis = BTC.btcToCoin(amount);
-        String rawTxHex = builder.createAcceptDexOfferHex(currencyId, satoshis.value);
+        OmniDivisibleValue quantity = OmniDivisibleValue.of(amount);
+        String rawTxHex = builder.createAcceptDexOfferHex(currencyId, quantity.asWillets());
         Sha256Hash txid = sendrawtx_MP(fromAddress, rawTxHex, toAddress);
         return txid;
     }
@@ -104,10 +105,10 @@ public class OmniExtendedClient extends OmniClient {
     public Sha256Hash createMetaDexSellOffer(Address address, CurrencyID currencyForSale, BigDecimal amountForSale,
                                       CurrencyID currencyDesired, BigDecimal amountDesired,
                                       Byte action) throws JsonRPCException, IOException {
-        Coin willetsForSale = BTC.btcToCoin(amountForSale);  // Assume divisible property
-        Coin willetsDesired = BTC.btcToCoin(amountDesired);  // Assume divisible property
+        OmniDivisibleValue qtyForSale = OmniDivisibleValue.of(amountForSale);  // Assume divisible property
+        OmniDivisibleValue qtyDesired = OmniDivisibleValue.of(amountDesired);  // Assume divisible property
         String rawTxHex = builder.createMetaDexSellOfferHex(
-                currencyForSale, willetsForSale.value, currencyDesired, willetsDesired.value, action);
+                currencyForSale, qtyForSale.asWillets(), currencyDesired, qtyDesired.asWillets(), action);
         Sha256Hash txid = sendrawtx_MP(address, rawTxHex);
         return txid;
     }
