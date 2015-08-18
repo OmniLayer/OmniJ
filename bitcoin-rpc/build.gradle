@@ -4,8 +4,6 @@ plugins {
 
 sourceCompatibility = 1.7
 group = 'com.msgilligan'
-version = '0.3-SNAPSHOT'
-
 
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.3.2'

@@ -1,6 +1,5 @@
 sourceCompatibility = 1.7
 group = 'foundation.omni'
-version = '0.3-SNAPSHOT'
 
 dependencies {
     compile 'javax.money:money-api-bp:1.0'

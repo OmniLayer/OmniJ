@@ -19,6 +19,8 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
 
+    version = '0.3-SNAPSHOT'
+
     repositories {
         jcenter()
 //      maven { url 'https://oss.sonatype.org/content/repositories/snapshots/'}  // bitcoinj snapshots
