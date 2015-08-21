@@ -9,6 +9,7 @@ DexX7
 :numbered:
 :toc: macro
 :toclevels: 1
+:imagesdir: images
 
 toc::[]
 
@@ -93,15 +94,14 @@ section of the protocol specification or on the developer mailing list:
 NOTE: Some general words about the lifecycle of pull requests etc. ... what
 exactly?
 
-----------------------------------------------------------------------------
-submission --> work in progress --> tests and peer review --> ack  --> merge
-                     ^                      |             \
-                     |----------------------/              -> nack --> close
-                     |                                         |
-                     \-----------------------------------------/
-----------------------------------------------------------------------------
-
-[This might be converted into an actual image.]
+[graphviz, svg]
+....
+digraph { 
+submission -> "work in progress" -> "tests and peer review" -> { "work in progress", nack, ack }
+ack -> merge
+nack -> {close, "work in progress"}
+}
+....
 
 [[contributors-1]]
 === Contributors
