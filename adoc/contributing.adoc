@@ -1,0 +1,234 @@
+[[contributing-to-omni-core]]
+= Contributing to Omni Core
+DexX7
+2015-08-18
+:jbake-type: page
+:jbake-status: published
+:jbake-tags: omni, contributing, guidelines
+:idprefix:
+:numbered:
+:toc: macro
+:toclevels: 1
+
+toc::[]
+
+// AsciiDoc supports comments that are not rendered.
+
+NOTE: THIS IS A COPY OF THE OMNI CORE CONTRIBUTING GUIDE. I'M JUST EXPERIMENTING WITH ASCIIDOC DIAGRAMS.
+
+
+[[reporting-security-issues]]
+== Reporting Security Issues
+
+Issues with potential security implications should not be published, but
+instead communicated via email to [... where?].
+
+This includes especially defects and potential exploits, and other
+pitfalls that may break consensus of the Omni Layer.
+
+Please don't hesitate, if you are unsure, whether your observation
+qualifies as security related issue.
+
+NOTE: It should quickly be described what happens after a report was filed. It should be mentioned that reports can be send encrypted (list keys).
+It should probably be mentioned that we confirm the receipt of a
+report, but likely won't confirm, whether it was a false alarm or not. +
+We should mention that findings are going to be disclosed after they
+were fixed, and the contributor might be notified in such a case, if desired?
+
+[[reporting-other-issues]]
+== Reporting Other Issues
+
+[[contributors]]
+=== Contributors
+
+1.  contributors should try to describe the observed behavior of the
+potential issue +
+2.  if possible, including steps to reproduce an issue is usually
+extremely helpful +
+3.  contributors should provide a context, if applicable, e.g. the Omni
+Core version, operating system, whether the issue was observed on
+mainnet, testnet, ... +
+4.  stating the use of Omni Core may be helpful ("exchange operator" vs.
+"home user") +
+5.  logs, or excerpts of logs, can be useful, and may be provided +
+6.  if logs are very long, they should be embedded via
+https://gist.github.com/[Gist], http://pastebin.com/[Pastebin], ... +
+7.  if logs are sensitive, or the contributor simply doesn't feel
+comfortable publishing them, they may also be provided via email to [..
+where?]
+
+NOTE: It might be noted that issues can always be submitted via email. It might be described that we intend to resolve issues (which is kind of
+obvious, but still).
+
+[[maintainers]]
+=== Maintainers
+
+1.  maintainers should react within 24-48 hours (?) (whereby a response
+such as "... I'm going to look into it, and will keep you updated within
+[some timespan]" is perfectly fine) +
+2.  maintainers should classify and label new issues +
+3.  it should not be assumed that either party (maintainer or
+contributor) is familiar with the use case or role of the other +
+4.  to keep the contributor in the loop, maintainers should frequently
+communicate the progress on an issue, even if there was no substantial
+progress +
+5.  issues, which are abandoned (i.e. the original contributor is gone),
+non-producible and likely not verifiable without further input, should
+(may?) be closed after [... what timespan?]
+
+[[requesting-features]]
+== Requesting features
+
+Proposals, feature requests and new ideas for Omni Core are welcome!
+
+Changes to the Omni Layer protocol may also be discussed in the issue
+section of the protocol specification or on the developer mailing list:
+
+* dev@omnilayer.org (registration necessary?) +
+* https://github.com/OmniLayer/spec/issues
+
+[[submitting-and-working-on-pull-requests]]
+== Submitting and Working on Pull Requests
+
+NOTE: Some general words about the lifecycle of pull requests etc. ... what
+exactly?
+
+----------------------------------------------------------------------------
+submission --> work in progress --> tests and peer review --> ack  --> merge
+                     ^                      |             \
+                     |----------------------/              -> nack --> close
+                     |                                         |
+                     \-----------------------------------------/
+----------------------------------------------------------------------------
+
+[This might be converted into an actual image.]
+
+[[contributors-1]]
+=== Contributors
+
+.  communication is key, and contributors should not hesitate to ask
+for assistance +
+.  consensus critical changes should be discussed with a broader
+audience first, which ideally includes stakeholders (e.g. Tether in the
+context of "send-all", or Mastercoin holders, ...)
+.  pull requests should be submitted with an
+http://chris.beams.io/posts/git-commit/#seven-rules[expressive subject
+line], which may be used for change logs
+.  pull requests should include a description of what the pull request
+does, or intends to do (not necessarily how, which is usually visible
+due to the code)
+.  however, complex changes, or changes that are difficult to review,
+should be described
+.  if a pull request
+https://help.github.com/articles/closing-issues-via-commit-messages[resolves
+an issue], it should be noted in the description
+.  unrelated changes should be split into more than one submission
+.  ideally code should be documented in a
+http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#cppblock[doxygen
+compatible format]
+.  tests, or a few notes and ideas about how the submission might be
+tested, would be awesome, but not mandatory
+. ideally commits are
+https://git-scm.com/book/tr/v2/Git-Tools-Signing-Your-Work[GPG signed]
+. pull requests that don't pass the automated tests should be refined,
+unless failures are caused by incompatibilities inherited from the
+changes (in case of an API change, ...) (very rare)
+. the contributors should explicitly indicate, if a submission is
+still work in progress, and post an update, once the status changes,
+otherwise maintainers will assume the submission is ready for review,
+while it actually isn't
+. pending pull requests should be kept conflict free and rebased
+within reasonable time (what is reasonable?), unless they are on hold
+. if the submission is still "work in progress", but the contributor
+no longer wants to continue, then this should be communicated, so that
+someone else can pick it up
+
+NOTE: It might be noted that maintainers may ask for refinements during the review. Include other links to test resources maybe?
+
+[[maintainers-1]]
+=== Maintainers
+
+1.  maintainers should welcome and encourage submissions, especially
+from new users +
+2.  maintainers should label pull requests with "ready for review",
+"work in progress" or "on hold", and update the labels accordingly, once
+the status changes +
+maintainers may signal a first impression early, especially if it's
+foreseeable that a submission won't be accepted +
+3.  maintainers should upgrade the label attached to the pull request to
+"ready for review", once the author considers the pull request as
+ready +
+4.  stalled pull requests should either be put "on hold" or closed after
+[... what timespan?]
+
+[[reviewing-contributions]]
+== Reviewing Contributions
+
+[Maybe some general words on this..? If so, what?]
+
+[[contributors-2]]
+=== Contributors
+
+1.  "work in progress" may be left alone until the status is upgraded,
+but comments are nevertheless welcome (?) +
+2.  comments on pull requests should primarily focus on the code, and
+concepts should be discussed in one or more (newly created) related
+issues +
+3.  nit picking is welcome, and should not considered as offense (it's
+by no means intended as such!)
+
+[[maintainers-2]]
+=== Maintainers
+
+1.  maintainers should signal the time needed for review, in case it
+takes longer (which threshold? how long is "longer"? 48 hours, ...?) +
+2.  in more lengthy, or time consuming cases, maintainers, and likewise
+contributors, should frequently signal the ongoing progress, including
+some rough time estimates, and what may still be needed +
+3.  maintainers should not ask for improvements that are not directly
+related to the PR (?) +
+4.  "ready for review" marked PRs can be merged after peer-review and
+ACKs of at least two maintainers (unless it's really trivial) (?) +
+5.  NACKs are perfectly fine, but should include a few words what lead
+to the NACK, so that contributors have a chance to either improve a PR,
+or gain an insight for future submissions
+
+[[whats-next]]
+== What's next?
+
+[NOTE]
+====
+(This is an admonition block)
+
+What else?
+
+* Some words to explicitly clarify what happens after the review, or would this be more appropriate in the initial lifecycle
+description?
+* Some words that contributions are very appreciated?
+* Contributors should get some special notes in release notes
+etc.?
+
+I think it would be good to include some references, for example to the
+other docs, or related Omni projects? We may also note that actually using and testing the software is helpful (e.g. point to the MetaDEx test guide),
+and it may also be noted that posting on Reddit etc. is also a form of
+contribution, however that's probably better for the introduction.
+====
+
+[glossary]
+== Glossary
+
+From time to time contributors or maintainers use abbreviations, and
+it's likely that you stumble over one of the following at some point:
+
+[glossary]
+ACK:: agreement with an idea, change or submission
+NACK:: disagreement or rejection of a proposal
+NIT:: comment on an almost trivial issue
+PR:: pull request
+WIP:: work in progress
+maintainer:: project administrator, collaborator
+contributor:: someone who submits pull requests, issues, comments, etc.
+
+NOTE: The glossary may not be used at all. It could be useful, given that the words are frequently used in the
+wild.  I'm using them in this document, too, but ideally we don't use them here.
+
