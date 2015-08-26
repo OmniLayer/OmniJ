@@ -638,6 +638,24 @@ public class OmniClient extends BitcoinClient {
     }
 
     /**
+     * Activates a protocol feature.
+     *
+     * @param fromAddress  The address to send from
+     * @param featureId    The identifier of the feature to activate
+     * @param block        The activation block
+     * @param minVersion   The minimum supported client version
+     * @return The hash of the transaction
+     * @since Omni Core 0.0.10
+     */
+    public Sha256Hash omniSendActivation(Address fromAddress, Short featureId, Integer block, Integer minVersion)
+            throws JsonRPCException, IOException {
+        List<Object> params = createParamList(fromAddress.toString(), featureId, block, minVersion);
+        String txid = send("omni_sendactivation", params);
+        Sha256Hash hash = Sha256Hash.wrap(txid);
+        return hash;
+    }
+
+    /**
      * Returns information about an order on the distributed token exchange.
      *
      * @param txid The transaction hash of the order to look up
