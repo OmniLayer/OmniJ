@@ -1,7 +1,7 @@
 package foundation.omni.cli
 
-import com.msgilligan.bitcoin.test.CLICommandResult
-import com.msgilligan.bitcoin.test.CLITestSupport
+import com.msgilligan.bitcoinj.test.CLICommandResult
+import com.msgilligan.bitcoinj.test.CLITestSupport
 import spock.lang.Specification
 
 

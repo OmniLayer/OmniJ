@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.reorgs
 
-import com.msgilligan.bitcoin.rpc.JsonRPCStatusException
+import com.msgilligan.bitcoinj.rpc.JsonRPCStatusException
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType

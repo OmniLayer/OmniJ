@@ -1,6 +1,6 @@
 package foundation.omni.consensus
 
-import com.msgilligan.bitcoin.rpc.RPCURI
+import com.msgilligan.bitcoinj.rpc.RPCURI
 import foundation.omni.CurrencyID
 import foundation.omni.rpc.MPBalanceEntry
 import foundation.omni.rpc.OmniClient

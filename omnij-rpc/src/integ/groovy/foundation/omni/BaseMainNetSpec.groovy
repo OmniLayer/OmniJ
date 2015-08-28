@@ -1,9 +1,9 @@
 package foundation.omni
 
-import com.msgilligan.bitcoin.rpc.BlockchainDotInfoSyncing
-import com.msgilligan.bitcoin.rpc.JsonRPCStatusException
-import com.msgilligan.bitcoin.rpc.Loggable
-import com.msgilligan.bitcoin.rpc.RPCURI
+import com.msgilligan.bitcoinj.rpc.BlockchainDotInfoSyncing
+import com.msgilligan.bitcoinj.rpc.JsonRPCStatusException
+import com.msgilligan.bitcoinj.rpc.Loggable
+import com.msgilligan.bitcoinj.rpc.RPCURI
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
 import foundation.omni.rpc.test.TestServers

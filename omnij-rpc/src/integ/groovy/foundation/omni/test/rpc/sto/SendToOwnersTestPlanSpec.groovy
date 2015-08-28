@@ -2,7 +2,7 @@ package foundation.omni.test.rpc.sto
 
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Sha256Hash
-import com.msgilligan.bitcoin.BTC
+import com.msgilligan.bitcoinj.BTC
 import com.xlson.groovycsv.CsvParser
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID

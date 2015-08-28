@@ -15,7 +15,7 @@ dependencies {
 }
 
 
-mainClassName = "com.msgilligan.bitcoin.cli.BitcoinJCli"
+mainClassName = "com.msgilligan.bitcoinj.cli.BitcoinJCli"
 def roboExeName = "bitcoinj-cli"
 
 jar {

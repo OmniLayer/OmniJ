@@ -1,6 +1,6 @@
 package foundation.omni.test.tx
 
-import com.msgilligan.bitcoin.BTC
+import com.msgilligan.bitcoinj.BTC
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.tx.OmniTxBuilder
 import org.bitcoinj.core.TransactionOutput

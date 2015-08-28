@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.basic
 
-import com.msgilligan.bitcoin.rpc.JsonRPCStatusException
+import com.msgilligan.bitcoinj.rpc.JsonRPCStatusException
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import spock.lang.Unroll

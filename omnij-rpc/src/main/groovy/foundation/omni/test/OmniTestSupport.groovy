@@ -1,6 +1,6 @@
 package foundation.omni.test
 
-import com.msgilligan.bitcoin.test.BTCTestSupport
+import com.msgilligan.bitcoinj.test.BTCTestSupport
 import foundation.omni.Ecosystem
 import foundation.omni.OmniValue
 import foundation.omni.PropertyType

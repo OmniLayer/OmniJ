@@ -1,8 +1,8 @@
 package foundation.omni.rpc;
 
-import com.msgilligan.bitcoin.rpc.BitcoinClient;
-import com.msgilligan.bitcoin.rpc.JsonRPCException;
-import com.msgilligan.bitcoin.rpc.RPCConfig;
+import com.msgilligan.bitcoinj.rpc.BitcoinClient;
+import com.msgilligan.bitcoinj.rpc.JsonRPCException;
+import com.msgilligan.bitcoinj.rpc.RPCConfig;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
 import org.bitcoinj.core.Address;

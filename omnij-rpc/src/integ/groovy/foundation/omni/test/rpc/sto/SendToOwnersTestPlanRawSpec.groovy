@@ -2,7 +2,7 @@ package foundation.omni.test.rpc.sto
 
 import foundation.omni.CurrencyID
 import org.bitcoinj.core.Address
-import com.msgilligan.bitcoin.BTC
+import com.msgilligan.bitcoinj.BTC
 import foundation.omni.PropertyType
 
 /**
