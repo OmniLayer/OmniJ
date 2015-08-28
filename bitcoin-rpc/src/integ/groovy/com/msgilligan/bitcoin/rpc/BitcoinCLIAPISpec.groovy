@@ -2,8 +2,6 @@ package com.msgilligan.bitcoin.rpc
 
 import com.msgilligan.bitcoin.BaseRegTestSpec
 import spock.lang.Ignore
-import spock.lang.Specification
-
 
 /**
  *

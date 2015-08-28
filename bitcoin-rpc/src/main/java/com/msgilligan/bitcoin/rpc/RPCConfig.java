@@ -1,8 +1,6 @@
 package com.msgilligan.bitcoin.rpc;
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 
 /**
  * Configuration class for JSON-RPC client

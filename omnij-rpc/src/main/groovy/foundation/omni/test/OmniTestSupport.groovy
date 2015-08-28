@@ -1,10 +1,7 @@
 package foundation.omni.test
 
-import com.msgilligan.bitcoin.BTC
 import com.msgilligan.bitcoin.test.BTCTestSupport
 import foundation.omni.Ecosystem
-import foundation.omni.OmniDivisibleValue
-import foundation.omni.OmniIndivisibleValue
 import foundation.omni.OmniValue
 import foundation.omni.PropertyType
 import foundation.omni.rpc.RawTxDelegate
@@ -14,8 +11,6 @@ import foundation.omni.CurrencyID
 import foundation.omni.net.OmniNetworkParameters
 import foundation.omni.net.OmniRegTestParams
 import foundation.omni.rpc.OmniClientDelegate
-
-import java.security.SecureRandom
 
 /**
  * Test support functions intended to be mixed-in to Spock test specs

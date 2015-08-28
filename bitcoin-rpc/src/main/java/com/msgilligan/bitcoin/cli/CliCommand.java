@@ -11,10 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import com.msgilligan.bitcoin.rpc.BitcoinClient;
 import com.msgilligan.bitcoin.rpc.RPCConfig;

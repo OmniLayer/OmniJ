@@ -2,9 +2,6 @@ package foundation.omni.cli
 
 import com.msgilligan.bitcoin.test.CLICommandResult
 import com.msgilligan.bitcoin.test.CLITestSupport
-import foundation.omni.rpc.test.TestServers
-import spock.lang.Ignore
-import spock.lang.Shared
 import spock.lang.Specification
 
 

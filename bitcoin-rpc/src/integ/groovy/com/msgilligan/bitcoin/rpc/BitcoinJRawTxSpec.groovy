@@ -3,11 +3,7 @@ package com.msgilligan.bitcoin.rpc
 import com.msgilligan.bitcoin.BTC
 import com.msgilligan.bitcoin.BaseRegTestSpec
 import org.bitcoinj.core.Address
-import org.bitcoinj.core.ECKey
-import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Transaction
-import org.bitcoinj.core.TransactionOutput
-import org.bitcoinj.params.RegTestParams
 import spock.lang.Shared
 import spock.lang.Stepwise
 
