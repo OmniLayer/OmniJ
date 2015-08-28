@@ -1,4 +1,4 @@
-package com.msgilligan.bitcoinj
+package com.msgilligan.bitcoinj.integ
 
 import com.msgilligan.bitcoin.rpc.JsonRPCStatusException
 import org.bitcoinj.core.Address
