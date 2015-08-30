@@ -54,5 +54,5 @@ task regTest(type: Test) {
     systemProperties ([ "omni.test.rpcTestUser": rpcTestUser,
                         "omni.test.rpcTestPassword": rpcTestPassword,
     ])
-    include 'com/msgilligan/bitcoin/rpc/**', 'com/msgilligan/bitcoin/cli/**', 'com/msgilligan/bitcoinj/**'
+    include 'com/msgilligan/bitcoinj/**'
 }
