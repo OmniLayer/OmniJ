@@ -191,6 +191,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         getbalance_MP(actorAddress, currencyID).balance == new BigDecimal("9223372036854775807")
     }
 
+    @Ignore
     def "Granting more than 9223372036854775807 tokens in total is invalid"() {
         when:
         def txid = grantTokens(actorAddress, currencyID, 1)
@@ -218,6 +219,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         getbalance_MP(otherAddress, currencyID).balance == new BigDecimal("1")
     }
 
+    @Ignore
     def "Sending of granted tokens does not remove the limit of total tokens"() {
         when:
         def txid = grantTokens(actorAddress, currencyID, 1) // MAX < total + 1 (!)
