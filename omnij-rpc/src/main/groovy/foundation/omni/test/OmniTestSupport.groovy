@@ -97,4 +97,13 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
         return new CurrencyID(txCreation.propertyid as long)
     }
 
+    CurrencyID fundManagedProperty(Address address, PropertyType type, Ecosystem ecosystem) {
+        def txidCreation = createManagedProperty(address, ecosystem, type, "", "", "MSP", "", "")
+        generateBlock()
+        def txCreation = getTransactionMP(txidCreation)
+        assert txCreation.valid == true
+        assert txCreation.confirmations == 1
+        return new CurrencyID(txCreation.propertyid as long)
+    }
+
 }
