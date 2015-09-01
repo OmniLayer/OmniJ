@@ -26,7 +26,7 @@ class SendAllSpec extends BaseRegTestSpec {
         getbalance_MP(otherAddress, CurrencyID.TMSC).balance == zeroAmount
 
         when:
-        def sendTxid = sendAll(actorAddress, otherAddress, ecosystem)
+        def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
         generateBlock()
         def sendTx = getTransactionMP(sendTxid)
 
@@ -81,7 +81,7 @@ class SendAllSpec extends BaseRegTestSpec {
         getbalance_MP(otherAddress, CurrencyID.TMSC).balance == startMSC
 
         when:
-        def sendTxid = sendAll(actorAddress, otherAddress, ecosystem)
+        def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
         generateBlock()
 
         then:
@@ -120,7 +120,7 @@ class SendAllSpec extends BaseRegTestSpec {
         getbalance_MP(actorAddress, nonManagedID).reserved == 4.0
 
         when:
-        def sendTxid = sendAll(actorAddress, otherAddress, ecosystem)
+        def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
         generateBlock()
         def sendTx = getTransactionMP(sendTxid)
 

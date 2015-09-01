@@ -37,20 +37,20 @@ class MetaDexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        gettrade_MP(txidTradeA).valid
-        gettrade_MP(txidTradeB).valid
-        gettrade_MP(txidTradeC).valid
-        gettrade_MP(txidTradeD).valid
+        omniGetTrade(txidTradeA).valid
+        omniGetTrade(txidTradeB).valid
+        omniGetTrade(txidTradeC).valid
+        omniGetTrade(txidTradeD).valid
 
         and:
-        gettrade_MP(txidTradeA).status == "filled"
-        gettrade_MP(txidTradeB).status == "filled"
-        gettrade_MP(txidTradeC).status == "open"
-        gettrade_MP(txidTradeD).status == "filled"
+        omniGetTrade(txidTradeA).status == "filled"
+        omniGetTrade(txidTradeB).status == "filled"
+        omniGetTrade(txidTradeC).status == "open"
+        omniGetTrade(txidTradeD).status == "filled"
 
         and:
-        getorderbook_MP(propertyMSC, propertySPX).size() == 1
-        getorderbook_MP(propertySPX, propertyMSC).size() == 0
+        omniGetOrderbook(propertyMSC, propertySPX).size() == 1
+        omniGetOrderbook(propertySPX, propertyMSC).size() == 0
 
         and:
         getbalance_MP(actorC, propertyMSC).reserved == 0.00000001
@@ -72,14 +72,14 @@ class MetaDexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        gettrade_MP(txidTradeA).valid
-        gettrade_MP(txidTradeB).valid
+        omniGetTrade(txidTradeA).valid
+        omniGetTrade(txidTradeB).valid
 
         and:
-        gettrade_MP(txidTradeA).status != "open"
-        gettrade_MP(txidTradeB).status != "open"
-        gettrade_MP(txidTradeA).status != "filled"
-        gettrade_MP(txidTradeB).status != "filled"
+        omniGetTrade(txidTradeA).status != "open"
+        omniGetTrade(txidTradeB).status != "open"
+        omniGetTrade(txidTradeA).status != "filled"
+        omniGetTrade(txidTradeB).status != "filled"
 
         and:
         getbalance_MP(actorA, propertyMSC).balance == 0.5
@@ -104,13 +104,13 @@ class MetaDexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        gettrade_MP(txidTradeA).valid
-        gettrade_MP(txidTradeB).valid
+        omniGetTrade(txidTradeA).valid
+        omniGetTrade(txidTradeB).valid
 
         and:
-        gettrade_MP(txidTradeA).status == "filled"
-        gettrade_MP(txidTradeB).status != "open"
-        gettrade_MP(txidTradeB).status != "filled"
+        omniGetTrade(txidTradeA).status == "filled"
+        omniGetTrade(txidTradeB).status != "open"
+        omniGetTrade(txidTradeB).status != "filled"
 
         and:
         getbalance_MP(actorA, propertySPX).balance == 10 as BigDecimal
@@ -135,13 +135,13 @@ class MetaDexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        gettrade_MP(txidTradeA).valid
-        gettrade_MP(txidTradeB).valid
+        omniGetTrade(txidTradeA).valid
+        omniGetTrade(txidTradeB).valid
 
         and:
-        gettrade_MP(txidTradeA).status != "open"
-        gettrade_MP(txidTradeA).status != "filled"
-        gettrade_MP(txidTradeB).status == "filled"
+        omniGetTrade(txidTradeA).status != "open"
+        omniGetTrade(txidTradeA).status != "filled"
+        omniGetTrade(txidTradeB).status == "filled"
 
         and:
         getbalance_MP(actorA, propertyMSC).balance == 1.66666666
@@ -166,13 +166,13 @@ class MetaDexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        gettrade_MP(txidTradeA).valid
-        gettrade_MP(txidTradeB).valid
+        omniGetTrade(txidTradeA).valid
+        omniGetTrade(txidTradeB).valid
 
         and:
-        gettrade_MP(txidTradeA).status != "open"
-        gettrade_MP(txidTradeA).status != "filled"
-        gettrade_MP(txidTradeB).status == "filled"
+        omniGetTrade(txidTradeA).status != "open"
+        omniGetTrade(txidTradeA).status != "filled"
+        omniGetTrade(txidTradeB).status == "filled"
 
         and:
         getbalance_MP(actorA, propertySPX).balance == 50.0
@@ -191,7 +191,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        gettrade_MP(txidTrade).valid == false
+        omniGetTrade(txidTrade).valid == false
 
         and:
         getbalance_MP(actorAdress, propertySPA).balance == 20.0
@@ -218,13 +218,13 @@ class MetaDexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "it is a valid open order"
-        gettrade_MP(txidOfferA).valid
-        gettrade_MP(txidOfferA).status == "open"
-        gettrade_MP(txidOfferA).propertyidforsale == propertyMSC.getValue()
-        gettrade_MP(txidOfferA).propertyiddesired == propertySPX.getValue()
+        omniGetTrade(txidOfferA).valid
+        omniGetTrade(txidOfferA).status == "open"
+        omniGetTrade(txidOfferA).propertyidforsale == propertyMSC.getValue()
+        omniGetTrade(txidOfferA).propertyiddesired == propertySPX.getValue()
 
         and: "there is an offering for the new property in the orderbook"
-        getorderbook_MP(propertyMSC, propertySPX).size() == 1
+        omniGetOrderbook(propertyMSC, propertySPX).size() == 1
 
         and: "the offered amount is now reserved"
         getbalance_MP(traderA, propertyMSC).balance == zeroAmount
@@ -235,13 +235,13 @@ class MetaDexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "the order is filled"
-        gettrade_MP(txidOfferB).valid
-        gettrade_MP(txidOfferB).status == "filled"
-        gettrade_MP(txidOfferB).propertyidforsale == propertySPX.getValue()
-        gettrade_MP(txidOfferB).propertyiddesired == propertyMSC.getValue()
+        omniGetTrade(txidOfferB).valid
+        omniGetTrade(txidOfferB).status == "filled"
+        omniGetTrade(txidOfferB).propertyidforsale == propertySPX.getValue()
+        omniGetTrade(txidOfferB).propertyiddesired == propertyMSC.getValue()
 
         and: "the offering is no longer listed in the orderbook"
-        getorderbook_MP(propertyMSC, propertySPX).size() == 0
+        omniGetOrderbook(propertyMSC, propertySPX).size() == 0
 
         and:
         getbalance_MP(traderA, propertyMSC).balance == zeroAmount
@@ -292,13 +292,13 @@ class MetaDexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "it is a valid open order"
-        gettrade_MP(txidOfferA).valid
-        gettrade_MP(txidOfferA).status == "open"
-        gettrade_MP(txidOfferA).propertyidforsale == propertySPX.getValue()
-        gettrade_MP(txidOfferA).propertyiddesired == propertyMSC.getValue()
+        omniGetTrade(txidOfferA).valid
+        omniGetTrade(txidOfferA).status == "open"
+        omniGetTrade(txidOfferA).propertyidforsale == propertySPX.getValue()
+        omniGetTrade(txidOfferA).propertyiddesired == propertyMSC.getValue()
 
         and: "there is an offering for the new property in the orderbook"
-        getorderbook_MP(propertySPX, propertyMSC).size() == 1
+        omniGetOrderbook(propertySPX, propertyMSC).size() == 1
 
         and: "the offered amount is now reserved"
         getbalance_MP(traderA, propertySPX).balance == zeroAmount
@@ -309,13 +309,13 @@ class MetaDexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "the order is filled"
-        gettrade_MP(txidOfferB).valid
-        gettrade_MP(txidOfferB).status == "filled"
-        gettrade_MP(txidOfferB).propertyidforsale == propertyMSC.getValue()
-        gettrade_MP(txidOfferB).propertyiddesired == propertySPX.getValue()
+        omniGetTrade(txidOfferB).valid
+        omniGetTrade(txidOfferB).status == "filled"
+        omniGetTrade(txidOfferB).propertyidforsale == propertyMSC.getValue()
+        omniGetTrade(txidOfferB).propertyiddesired == propertySPX.getValue()
 
         and: "the offering is no longer listed in the orderbook"
-        getorderbook_MP(propertySPX, propertyMSC).size() == 0
+        omniGetOrderbook(propertySPX, propertyMSC).size() == 0
 
         and:
         getbalance_MP(traderA, propertyMSC).balance == amountMSC

@@ -349,7 +349,7 @@ public class OmniClient extends BitcoinClient {
      * @return The hash of the transaction
      * @since Omni Core 0.0.10
      */
-    public Sha256Hash sendAll(Address fromAddress, Address toAddress, Ecosystem ecosystem)
+    public Sha256Hash omniSendAll(Address fromAddress, Address toAddress, Ecosystem ecosystem)
             throws JsonRPCException, IOException {
         List<Object> params = createParamList(fromAddress.toString(), toAddress.toString(), ecosystem.getValue());
         String txid = send("omni_sendall", params);
@@ -646,9 +646,9 @@ public class OmniClient extends BitcoinClient {
      * @return Information about the order, trade, and order matches
      * @since Omni Core 0.0.10
      */
-    public Map<String, Object> gettrade_MP(Sha256Hash txid) throws JsonRPCException, IOException {
+    public Map<String, Object> omniGetTrade(Sha256Hash txid) throws JsonRPCException, IOException {
         List<Object> params = createParamList(txid.toString());
-        Map<String, Object> trade = send("gettrade_MP", params);
+        Map<String, Object> trade = send("omni_gettrade", params);
         return trade;
     }
 
@@ -659,9 +659,9 @@ public class OmniClient extends BitcoinClient {
      * @return A list of orders
      * @since Omni Core 0.0.10
      */
-    public List<Map<String, Object>> getorderbook_MP(CurrencyID propertyForSale) throws JsonRPCException, IOException {
+    public List<Map<String, Object>> omniGetOrderbook(CurrencyID propertyForSale) throws JsonRPCException, IOException {
         List<Object> params = createParamList(propertyForSale.getValue());
-        List<Map<String, Object>> orders = send("getorderbook_MP", params);
+        List<Map<String, Object>> orders = send("omni_getorderbook", params);
         return orders;
     }
 
@@ -673,10 +673,10 @@ public class OmniClient extends BitcoinClient {
      * @return A list of orders
      * @since Omni Core 0.0.10
      */
-    public List<Map<String, Object>> getorderbook_MP(CurrencyID propertyForSale, CurrencyID propertyDesired)
+    public List<Map<String, Object>> omniGetOrderbook(CurrencyID propertyForSale, CurrencyID propertyDesired)
             throws JsonRPCException, IOException {
         List<Object> params = createParamList(propertyForSale.getValue(), propertyDesired.getValue());
-        List<Map<String, Object>> orders = send("getorderbook_MP", params);
+        List<Map<String, Object>> orders = send("omni_getorderbook", params);
         return orders;
     }
 
