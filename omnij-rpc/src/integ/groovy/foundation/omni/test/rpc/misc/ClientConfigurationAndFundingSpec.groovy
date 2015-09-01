@@ -12,8 +12,8 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         def pristineAddress = newAddress
 
         def balanceBTC = getBitcoinBalance(pristineAddress, 0, 9999999)
-        def balanceMSC = getbalance_MP(pristineAddress, CurrencyID.MSC)
-        def balanceTMSC = getbalance_MP(pristineAddress, CurrencyID.TMSC)
+        def balanceMSC = omniGetBalance(pristineAddress, CurrencyID.MSC)
+        def balanceTMSC = omniGetBalance(pristineAddress, CurrencyID.TMSC)
 
         expect: "zero balances"
         balanceBTC == 0.0
@@ -138,11 +138,11 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         then:
         getBitcoinBalance(receiverAddress) == 0.0
         getBitcoinBalance(senderAddress) == startBTC
-        getbalance_MP(receiverAddress, CurrencyID.MSC).balance == 0.0
-        getbalance_MP(senderAddress, CurrencyID.MSC).balance == startMSC
+        omniGetBalance(receiverAddress, CurrencyID.MSC).balance == 0.0
+        omniGetBalance(senderAddress, CurrencyID.MSC).balance == startMSC
 
         when:
-        def txid = send_MP(senderAddress, receiverAddress, CurrencyID.MSC, startMSC)
+        def txid = omniSend(senderAddress, receiverAddress, CurrencyID.MSC, startMSC)
         generateBlock()
 
         then:
@@ -150,11 +150,11 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         getBitcoinBalance(senderAddress) == 0.0
 
         and:
-        def sendTx = getTransactionMP(txid)
+        def sendTx = omniGetTransaction(txid)
         sendTx.confirmations == 1
         sendTx.valid == true
-        getbalance_MP(receiverAddress, CurrencyID.MSC).balance == startMSC
-        getbalance_MP(senderAddress, CurrencyID.MSC).balance == 0.0
+        omniGetBalance(receiverAddress, CurrencyID.MSC).balance == startMSC
+        omniGetBalance(senderAddress, CurrencyID.MSC).balance == 0.0
 
         where:
         relayTxFee = stdRelayTxFee
@@ -166,7 +166,7 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
     def "Requesting #requestedMSC MSC adds exactly that amount to the receivers MSC balance"() {
         given:
         def fundedAddress = newAddress
-        def balanceAtStart = getbalance_MP(fundedAddress, CurrencyID.MSC)
+        def balanceAtStart = omniGetBalance(fundedAddress, CurrencyID.MSC)
 
         when:
         def txid = requestMSC(fundedAddress, requestedMSC)
@@ -174,7 +174,7 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
 
         then:
         def fundingTx = getTransaction(txid)
-        def balanceConfirmed = getbalance_MP(fundedAddress, CurrencyID.MSC)
+        def balanceConfirmed = omniGetBalance(fundedAddress, CurrencyID.MSC)
 
         fundingTx.confirmations > 0
         balanceConfirmed.balance == balanceAtStart.balance + requestedMSC

@@ -39,7 +39,7 @@ abstract class BaseReorgSpec extends BaseRegTestSpec {
             return false
         }
         try {
-            def transaction = getTransactionMP(txid)
+            def transaction = omniGetTransaction(txid)
             if (transaction.valid != true) {
                 return false
             }

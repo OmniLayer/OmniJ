@@ -1,7 +1,6 @@
 package foundation.omni.test.rpc.sto
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
-import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
 import spock.lang.Unroll
@@ -44,8 +43,8 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         def currencySPT = fundNewProperty(actorAddress, fundingSPT, propertyType, Ecosystem.MSC)
 
         // Check funding balances of actor
-        def startingBalanceMSC = getbalance_MP(actorAddress, MSC)
-        def startingBalanceSPT = getbalance_MP(actorAddress, currencySPT)
+        def startingBalanceMSC = omniGetBalance(actorAddress, MSC)
+        def startingBalanceSPT = omniGetBalance(actorAddress, currencySPT)
 
         print "\n"
         println String.format("The actor was funded with: %s MSC", startingBalanceMSC.balance.toPlainString())
@@ -59,7 +58,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         for (n in 1..maxN) {
             BigDecimal starting = n * amountStartPerOwner
             owners[n] = newAddress
-            send_MP(actorAddress, owners[n], currencySPT, starting)
+            omniSend(actorAddress, owners[n], currencySPT, starting)
             println String.format("Sending %s SPT to owner #%d ...", starting.toPlainString(), n)
             if (n % 500 == 0) {
                 generateBlock()
@@ -69,8 +68,8 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         generateBlock()
 
         // Check starting balances of actor
-        def reallyBalanceMSC = getbalance_MP(actorAddress, MSC)
-        def reallyBalanceSPT = getbalance_MP(actorAddress, currencySPT)
+        def reallyBalanceMSC = omniGetBalance(actorAddress, MSC)
+        def reallyBalanceSPT = omniGetBalance(actorAddress, currencySPT)
 
         print "\n"
         println String.format("The actor now has: %s MSC and should have %s MSC",
@@ -82,7 +81,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         // Check owner balances
         for (n in 1..maxN) {
             def expectedBalanceOwnerSPT = n * amountStartPerOwner
-            def startingBalanceOwnerSPT = getbalance_MP(owners[n], currencySPT)
+            def startingBalanceOwnerSPT = omniGetBalance(owners[n], currencySPT)
 
             println String.format("Owner #%d starts with: %s SPT and should have: %s SPT %s",
                     n, startingBalanceOwnerSPT.balance.toPlainString(), expectedBalanceOwnerSPT.toPlainString(),
@@ -94,13 +93,13 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         print "\n"
 
         // Send to owners
-        def stoTxid = sendToOwnersMP(actorAddress, currencySPT, actorSPT)
+        def stoTxid = omniSendSTO(actorAddress, currencySPT, actorSPT)
         generateBlock()
 
         // Check updated owner balances
         for (n in 1..maxN) {
             def expectedFinalBalanceOwnerSPT = n * (amountStartPerOwner + amountDistributePerOwner)
-            def finalBalanceOwnerSPT = getbalance_MP(owners[n], currencySPT)
+            def finalBalanceOwnerSPT = omniGetBalance(owners[n], currencySPT)
 
             println String.format("Owner #%d ends up with: %s SPT and should have: %s SPT %s",
                     n, finalBalanceOwnerSPT.balance.toPlainString(), expectedFinalBalanceOwnerSPT.toPlainString(),
@@ -108,8 +107,8 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         }
 
         // Check final balances of actor
-        def finalBalanceMSC = getbalance_MP(actorAddress, MSC)
-        def finalBalanceSPT = getbalance_MP(actorAddress, currencySPT)
+        def finalBalanceMSC = omniGetBalance(actorAddress, MSC)
+        def finalBalanceSPT = omniGetBalance(actorAddress, currencySPT)
 
         print "\n"
         println String.format(
@@ -142,8 +141,8 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         def currencySPT = fundNewProperty(actorAddress, fundingSPT, propertyType, Ecosystem.MSC)
 
         // Check funding balances of actor
-        def startingBalanceMSC = getbalance_MP(actorAddress, MSC)
-        def startingBalanceSPT = getbalance_MP(actorAddress, currencySPT)
+        def startingBalanceMSC = omniGetBalance(actorAddress, MSC)
+        def startingBalanceSPT = omniGetBalance(actorAddress, currencySPT)
         assert startingBalanceMSC.balance == actorMSC
         assert startingBalanceSPT.balance == fundingSPT
 
@@ -154,7 +153,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         for (n in 1..maxN) {
             BigDecimal starting = n * amountStartPerOwner
             owners[n] = newAddress
-            send_MP(actorAddress, owners[n], currencySPT, starting)
+            omniSend(actorAddress, owners[n], currencySPT, starting)
             if (n % 500 == 0) {
                 generateBlock()
             }
@@ -163,36 +162,36 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         generateBlock()
 
         // Check starting balances of actor
-        def reallyBalanceMSC = getbalance_MP(actorAddress, MSC)
-        def reallyBalanceSPT = getbalance_MP(actorAddress, currencySPT)
+        def reallyBalanceMSC = omniGetBalance(actorAddress, MSC)
+        def reallyBalanceSPT = omniGetBalance(actorAddress, currencySPT)
         assert reallyBalanceMSC.balance == actorMSC
         assert reallyBalanceSPT.balance == actorSPT
 
         // Check owner balances
         for (n in 1..maxN) {
             def expectedBalanceOwnerSPT = n * amountStartPerOwner
-            def startingBalanceOwnerSPT = getbalance_MP(owners[n], currencySPT)
+            def startingBalanceOwnerSPT = omniGetBalance(owners[n], currencySPT)
             assert startingBalanceOwnerSPT.balance == expectedBalanceOwnerSPT
         }
 
         // Send to owners
-        def stoTxid = sendToOwnersMP(actorAddress, currencySPT, actorSPT)
+        def stoTxid = omniSendSTO(actorAddress, currencySPT, actorSPT)
         generateBlock()
 
-        def stoTx = getTransactionMP(stoTxid)
+        def stoTx = omniGetTransaction(stoTxid)
         assert stoTx.valid == true
         assert stoTx.confirmations == 1
 
         // Check updated owner balances
         for (n in 1..maxN) {
             def expectedFinalBalanceOwnerSPT = n * (amountStartPerOwner + amountDistributePerOwner)
-            def finalBalanceOwnerSPT = getbalance_MP(owners[n], currencySPT)
+            def finalBalanceOwnerSPT = omniGetBalance(owners[n], currencySPT)
             assert finalBalanceOwnerSPT.balance == expectedFinalBalanceOwnerSPT
         }
 
         // Check final balances of actor
-        def finalBalanceMSC = getbalance_MP(actorAddress, MSC)
-        def finalBalanceSPT = getbalance_MP(actorAddress, currencySPT)
+        def finalBalanceMSC = omniGetBalance(actorAddress, MSC)
+        def finalBalanceSPT = omniGetBalance(actorAddress, currencySPT)
         assert finalBalanceMSC.balance == 0.0
         assert finalBalanceSPT.balance == 0.0
 

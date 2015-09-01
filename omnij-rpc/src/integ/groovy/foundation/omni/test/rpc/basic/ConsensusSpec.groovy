@@ -8,7 +8,7 @@ class ConsensusSpec extends BaseRegTestSpec {
 
     def "Check all balances"() {
         when: "we check Omni balances"
-        def balances = getallbalancesforid_MP(MSC)
+        def balances = omniGetAllBalancesForId(MSC)
 
         then: "we get a list of size >= 0"
         balances != null

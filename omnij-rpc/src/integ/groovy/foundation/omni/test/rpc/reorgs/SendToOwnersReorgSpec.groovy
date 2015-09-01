@@ -14,7 +14,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         def dummyOwnerAddress = createFundedAddress(startBTC, startMSC)
 
         when: "broadcasting and confirming a send to owners transaction"
-        def txid = sendToOwnersMP(senderAddress, CurrencyID.TMSC, sendAmount)
+        def txid = omniSendSTO(senderAddress, CurrencyID.TMSC, sendAmount)
         def blockHashOfSend = generateAndGetBlockHash()
 
         then: "the transaction is valid"
@@ -43,37 +43,37 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
 
         def txidCreation = createProperty(senderAddress, ecosystem, propertyType, amountToCreate.longValue())
         generateBlock()
-        def txCreation = getTransactionMP(txidCreation)
+        def txCreation = omniGetTransaction(txidCreation)
         def currencyID = new CurrencyID(txCreation.propertyid as long)
 
         when: "funding the owners with a new property"
-        send_MP(senderAddress, dummyOwnerA, currencyID, new BigDecimal("1"))
-        send_MP(senderAddress, dummyOwnerB, currencyID, new BigDecimal("1"))
-        send_MP(senderAddress, dummyOwnerC, currencyID, new BigDecimal("1"))
+        omniSend(senderAddress, dummyOwnerA, currencyID, new BigDecimal("1"))
+        omniSend(senderAddress, dummyOwnerB, currencyID, new BigDecimal("1"))
+        omniSend(senderAddress, dummyOwnerC, currencyID, new BigDecimal("1"))
         def blockHashOfOwnerFunding = generateAndGetBlockHash()
 
         then: "the owners have some balance"
-        getbalance_MP(dummyOwnerA, currencyID).balance == new BigDecimal("1")
-        getbalance_MP(dummyOwnerB, currencyID).balance == new BigDecimal("1")
-        getbalance_MP(dummyOwnerC, currencyID).balance == new BigDecimal("1")
+        omniGetBalance(dummyOwnerA, currencyID).balance == new BigDecimal("1")
+        omniGetBalance(dummyOwnerB, currencyID).balance == new BigDecimal("1")
+        omniGetBalance(dummyOwnerC, currencyID).balance == new BigDecimal("1")
 
         and: "the sender has less"
-        getbalance_MP(senderAddress, currencyID).balance == new BigDecimal("150")
+        omniGetBalance(senderAddress, currencyID).balance == new BigDecimal("150")
 
         when: "sending to the owners"
-        def txidSTO = sendToOwnersMP(senderAddress, currencyID, new BigDecimal("150"))
+        def txidSTO = omniSendSTO(senderAddress, currencyID, new BigDecimal("150"))
         def blockHashOfSend = generateAndGetBlockHash()
 
         then: "the send to owners transaction is valid"
         checkTransactionValidity(txidSTO)
 
         and: "the owners received the tokens"
-        getbalance_MP(dummyOwnerA, currencyID).balance == new BigDecimal("51")
-        getbalance_MP(dummyOwnerB, currencyID).balance == new BigDecimal("51")
-        getbalance_MP(dummyOwnerC, currencyID).balance == new BigDecimal("51")
+        omniGetBalance(dummyOwnerA, currencyID).balance == new BigDecimal("51")
+        omniGetBalance(dummyOwnerB, currencyID).balance == new BigDecimal("51")
+        omniGetBalance(dummyOwnerC, currencyID).balance == new BigDecimal("51")
 
         and: "the sender has no more tokens"
-        getbalance_MP(senderAddress, currencyID).balance == new BigDecimal("0")
+        omniGetBalance(senderAddress, currencyID).balance == new BigDecimal("0")
 
         when: "invalidating the block and send to owners transaction"
         invalidateBlock(blockHashOfSend)
@@ -84,12 +84,12 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         !checkTransactionValidity(txidSTO)
 
         and: "the owners no longer have the tokens they received"
-        getbalance_MP(dummyOwnerA, currencyID).balance == new BigDecimal("1")
-        getbalance_MP(dummyOwnerB, currencyID).balance == new BigDecimal("1")
-        getbalance_MP(dummyOwnerC, currencyID).balance == new BigDecimal("1")
+        omniGetBalance(dummyOwnerA, currencyID).balance == new BigDecimal("1")
+        omniGetBalance(dummyOwnerB, currencyID).balance == new BigDecimal("1")
+        omniGetBalance(dummyOwnerC, currencyID).balance == new BigDecimal("1")
 
         and: "the sender has the balance from before the send to owners transaction"
-        getbalance_MP(senderAddress, currencyID).balance == new BigDecimal("150")
+        omniGetBalance(senderAddress, currencyID).balance == new BigDecimal("150")
 
         when: "rolling back until before the funding of the owners"
         invalidateBlock(blockHashOfOwnerFunding)
@@ -97,12 +97,12 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         generateBlock()
 
         then: "the owners have no tokens"
-        getbalance_MP(dummyOwnerA, currencyID).balance == new BigDecimal("0")
-        getbalance_MP(dummyOwnerB, currencyID).balance == new BigDecimal("0")
-        getbalance_MP(dummyOwnerC, currencyID).balance == new BigDecimal("0")
+        omniGetBalance(dummyOwnerA, currencyID).balance == new BigDecimal("0")
+        omniGetBalance(dummyOwnerB, currencyID).balance == new BigDecimal("0")
+        omniGetBalance(dummyOwnerC, currencyID).balance == new BigDecimal("0")
 
         and: "the sender has the initial amount that was created"
-        getbalance_MP(senderAddress, currencyID).balance == amountToCreate
+        omniGetBalance(senderAddress, currencyID).balance == amountToCreate
     }
 
 }

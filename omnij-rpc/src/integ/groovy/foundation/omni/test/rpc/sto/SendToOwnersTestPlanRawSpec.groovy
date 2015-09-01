@@ -23,7 +23,7 @@ class SendToOwnersTestPlanRawSpec extends SendToOwnersTestPlanSpec {
         }
 
         def rawTxHex = createSendToOwnersHex(currency, numberOfTokens.longValue());
-        def txid = sendrawtx_MP(address, rawTxHex)
+        def txid = omniSendRawTx(address, rawTxHex)
         return txid
     }
 

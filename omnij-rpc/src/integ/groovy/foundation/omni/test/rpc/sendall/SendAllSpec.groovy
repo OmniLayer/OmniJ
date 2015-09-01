@@ -20,15 +20,15 @@ class SendAllSpec extends BaseRegTestSpec {
         def otherAddress = newAddress
 
         then:
-        getbalance_MP(actorAddress, CurrencyID.MSC).balance == startMSC
-        getbalance_MP(actorAddress, CurrencyID.TMSC).balance == startMSC
-        getbalance_MP(otherAddress, CurrencyID.MSC).balance == zeroAmount
-        getbalance_MP(otherAddress, CurrencyID.TMSC).balance == zeroAmount
+        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC
+        omniGetBalance(actorAddress, CurrencyID.TMSC).balance == startMSC
+        omniGetBalance(otherAddress, CurrencyID.MSC).balance == zeroAmount
+        omniGetBalance(otherAddress, CurrencyID.TMSC).balance == zeroAmount
 
         when:
         def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
         generateBlock()
-        def sendTx = getTransactionMP(sendTxid)
+        def sendTx = omniGetTransaction(sendTxid)
 
         then: "the transaction is valid"
         sendTx.valid
@@ -50,15 +50,15 @@ class SendAllSpec extends BaseRegTestSpec {
 
         and:
         if (ecosystem == Ecosystem.MSC) {
-            assert getbalance_MP(actorAddress, CurrencyID.MSC).balance == zeroAmount
-            assert getbalance_MP(actorAddress, CurrencyID.TMSC).balance == startMSC
-            assert getbalance_MP(otherAddress, CurrencyID.MSC).balance == startMSC
-            assert getbalance_MP(otherAddress, CurrencyID.TMSC).balance == zeroAmount
+            assert omniGetBalance(actorAddress, CurrencyID.MSC).balance == zeroAmount
+            assert omniGetBalance(actorAddress, CurrencyID.TMSC).balance == startMSC
+            assert omniGetBalance(otherAddress, CurrencyID.MSC).balance == startMSC
+            assert omniGetBalance(otherAddress, CurrencyID.TMSC).balance == zeroAmount
         } else {
-            assert getbalance_MP(actorAddress, CurrencyID.MSC).balance == startMSC
-            assert getbalance_MP(actorAddress, CurrencyID.TMSC).balance == zeroAmount
-            assert getbalance_MP(otherAddress, CurrencyID.MSC).balance == zeroAmount
-            assert getbalance_MP(otherAddress, CurrencyID.TMSC).balance == startMSC
+            assert omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC
+            assert omniGetBalance(actorAddress, CurrencyID.TMSC).balance == zeroAmount
+            assert omniGetBalance(otherAddress, CurrencyID.MSC).balance == zeroAmount
+            assert omniGetBalance(otherAddress, CurrencyID.TMSC).balance == startMSC
         }
 
         where:
@@ -70,28 +70,28 @@ class SendAllSpec extends BaseRegTestSpec {
         when:
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def otherAddress = newAddress
-        send_MP(actorAddress, otherAddress, CurrencyID.MSC, startMSC)
-        send_MP(actorAddress, otherAddress, CurrencyID.TMSC, startMSC)
+        omniSend(actorAddress, otherAddress, CurrencyID.MSC, startMSC)
+        omniSend(actorAddress, otherAddress, CurrencyID.TMSC, startMSC)
         generateBlock()
 
         then:
-        getbalance_MP(actorAddress, CurrencyID.MSC).balance == zeroAmount
-        getbalance_MP(actorAddress, CurrencyID.TMSC).balance == zeroAmount
-        getbalance_MP(otherAddress, CurrencyID.MSC).balance == startMSC
-        getbalance_MP(otherAddress, CurrencyID.TMSC).balance == startMSC
+        omniGetBalance(actorAddress, CurrencyID.MSC).balance == zeroAmount
+        omniGetBalance(actorAddress, CurrencyID.TMSC).balance == zeroAmount
+        omniGetBalance(otherAddress, CurrencyID.MSC).balance == startMSC
+        omniGetBalance(otherAddress, CurrencyID.TMSC).balance == startMSC
 
         when:
         def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
         generateBlock()
 
         then:
-        getTransactionMP(sendTxid).valid == false
+        omniGetTransaction(sendTxid).valid == false
 
         and:
-        getbalance_MP(actorAddress, CurrencyID.MSC).balance == zeroAmount
-        getbalance_MP(actorAddress, CurrencyID.TMSC).balance == zeroAmount
-        getbalance_MP(otherAddress, CurrencyID.MSC).balance == startMSC
-        getbalance_MP(otherAddress, CurrencyID.TMSC).balance == startMSC
+        omniGetBalance(actorAddress, CurrencyID.MSC).balance == zeroAmount
+        omniGetBalance(actorAddress, CurrencyID.TMSC).balance == zeroAmount
+        omniGetBalance(otherAddress, CurrencyID.MSC).balance == startMSC
+        omniGetBalance(otherAddress, CurrencyID.TMSC).balance == startMSC
 
         where:
         ecosystem << [Ecosystem.MSC, Ecosystem.TMSC]
@@ -106,29 +106,29 @@ class SendAllSpec extends BaseRegTestSpec {
         def tradeCurrency = new CurrencyID(ecosystem.getValue())
 
         then:
-        getbalance_MP(actorAddress, nonManagedID).balance == 10.0
-        getbalance_MP(otherAddress, nonManagedID).balance == zeroAmount
+        omniGetBalance(actorAddress, nonManagedID).balance == 10.0
+        omniGetBalance(otherAddress, nonManagedID).balance == zeroAmount
 
         when:
         def tradeTxid = omniSendTrade(actorAddress, nonManagedID, 4.0, tradeCurrency, 4.0)
         generateBlock()
-        def tradeTx = getTransactionMP(tradeTxid)
+        def tradeTx = omniGetTransaction(tradeTxid)
 
         then:
         tradeTx.valid
-        getbalance_MP(actorAddress, nonManagedID).balance == 6.0
-        getbalance_MP(actorAddress, nonManagedID).reserved == 4.0
+        omniGetBalance(actorAddress, nonManagedID).balance == 6.0
+        omniGetBalance(actorAddress, nonManagedID).reserved == 4.0
 
         when:
         def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
         generateBlock()
-        def sendTx = getTransactionMP(sendTxid)
+        def sendTx = omniGetTransaction(sendTxid)
 
         then:
         sendTx.valid
-        getbalance_MP(actorAddress, nonManagedID).balance == zeroAmount
-        getbalance_MP(actorAddress, nonManagedID).reserved == 4.0
-        getbalance_MP(otherAddress, nonManagedID).balance == 6.0
+        omniGetBalance(actorAddress, nonManagedID).balance == zeroAmount
+        omniGetBalance(actorAddress, nonManagedID).reserved == 4.0
+        omniGetBalance(otherAddress, nonManagedID).balance == 6.0
 
         where:
         ecosystem << [Ecosystem.MSC, Ecosystem.TMSC]

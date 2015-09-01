@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-// TODO: rename methods
-
 // TODO: add missing RPCs:
 // - listtransactions_MP
 // - getsto_MP
@@ -79,7 +77,7 @@ public class OmniClient extends BitcoinClient {
      *
      * @return An object with state information
      */
-    public Map<String, Object> getinfo_MP() throws JsonRPCException, IOException {
+    public Map<String, Object> omniGetInfo() throws JsonRPCException, IOException {
         Map<String, Object> result = send("getinfo_MP", null);
         return result;
     }
@@ -89,7 +87,7 @@ public class OmniClient extends BitcoinClient {
      *
      * @return A list with short information
      */
-    public List<SmartPropertyListInfo> listproperties_MP() throws JsonRPCException, IOException {
+    public List<SmartPropertyListInfo> omniListProperties() throws JsonRPCException, IOException {
         List<Map<String, Object>> result = send("listproperties_MP", null);
 
         List<SmartPropertyListInfo> propList = new ArrayList<SmartPropertyListInfo>();
@@ -121,7 +119,7 @@ public class OmniClient extends BitcoinClient {
      * @param currency The identifier to look up
      * @return An object with detailed information
      */
-    public Map<String, Object> getproperty_MP(CurrencyID currency) throws JsonRPCException, IOException {
+    public Map<String, Object> omniGetProperty(CurrencyID currency) throws JsonRPCException, IOException {
         List<Object> params = createParamList(currency.getValue());
         Map<String, Object> result = send("getproperty_MP", params);
         return result;
@@ -133,7 +131,7 @@ public class OmniClient extends BitcoinClient {
      * @param currency The identifier of the crowdsale
      * @return An object with detailed information
      */
-    public Map<String, Object> getcrowdsale_MP(CurrencyID currency) throws JsonRPCException, IOException {
+    public Map<String, Object> omniGetCrowdsale(CurrencyID currency) throws JsonRPCException, IOException {
         List<Object> params = createParamList(currency.getValue());
         Map<String, Object> result = send("getcrowdsale_MP", params);
         return result;
@@ -154,7 +152,7 @@ public class OmniClient extends BitcoinClient {
      *
      * @return A list with information about the active offers
      */
-    public List<Map<String, Object>> getactivedexsells_MP() throws JsonRPCException, IOException {
+    public List<Map<String, Object>> omniGetActiveDExSells() throws JsonRPCException, IOException {
         List<Map<String, Object>> result = send("getactivedexsells_MP", null);
         return result;
     }
@@ -166,7 +164,7 @@ public class OmniClient extends BitcoinClient {
      * @param currency The identifier of the token to look up
      * @return The available and reserved balance
      */
-    public MPBalanceEntry getbalance_MP(Address address, CurrencyID currency)
+    public MPBalanceEntry omniGetBalance(Address address, CurrencyID currency)
             throws JsonRPCException, IOException, ParseException {
         List<Object> params = createParamList(address.toString(), currency.getValue());
         Map<String, String> result = send("getbalance_MP", params);
@@ -182,7 +180,7 @@ public class OmniClient extends BitcoinClient {
      * @param currency The identifier of the token to look up
      * @return A list containing addresses, and the associated available and reserved balances
      */
-    public List<MPBalanceEntry> getallbalancesforid_MP(CurrencyID currency)
+    public List<MPBalanceEntry> omniGetAllBalancesForId(CurrencyID currency)
             throws JsonRPCException, IOException, ParseException, AddressFormatException {
         List<Object> params = createParamList(currency.getValue());
         List<Map<String, Object>> untypedBalances = send("getallbalancesforid_MP", params);
@@ -254,7 +252,7 @@ public class OmniClient extends BitcoinClient {
      * @param txid The hash of the transaction to look up
      * @return Information about the transaction
      */
-    public Map<String, Object> getTransactionMP(Sha256Hash txid) throws JsonRPCException, IOException {
+    public Map<String, Object> omniGetTransaction(Sha256Hash txid) throws JsonRPCException, IOException {
         List<Object> params = createParamList(txid.toString());
         Map<String, Object> transaction = send("gettransaction_MP", params);
         return transaction;
@@ -284,8 +282,8 @@ public class OmniClient extends BitcoinClient {
      * @param rawTxHex    The hex-encoded raw transaction
      * @return The hash of the transaction
      */
-    public Sha256Hash sendrawtx_MP(Address fromAddress, String rawTxHex) throws JsonRPCException, IOException {
-        return sendrawtx_MP(fromAddress, rawTxHex, null);
+    public Sha256Hash omniSendRawTx(Address fromAddress, String rawTxHex) throws JsonRPCException, IOException {
+        return omniSendRawTx(fromAddress, rawTxHex, null);
     }
 
     /**
@@ -296,7 +294,7 @@ public class OmniClient extends BitcoinClient {
      * @param referenceAddress The reference address
      * @return The hash of the transaction
      */
-    public Sha256Hash sendrawtx_MP(Address fromAddress, String rawTxHex, Address referenceAddress)
+    public Sha256Hash omniSendRawTx(Address fromAddress, String rawTxHex, Address referenceAddress)
             throws JsonRPCException, IOException {
         List<Object> params = createParamList(fromAddress.toString(), rawTxHex);
         if (referenceAddress != null) {
@@ -315,7 +313,7 @@ public class OmniClient extends BitcoinClient {
      * @param amount      The amount to transfer
      * @return The hash of the transaction
      */
-    public Sha256Hash send_MP(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount)
+    public Sha256Hash omniSend(Address fromAddress, Address toAddress, CurrencyID currency, BigDecimal amount)
             throws JsonRPCException, IOException {
         List<Object> params = createParamList(fromAddress.toString(), toAddress.toString(), currency.getValue(),
                                               amount.toPlainString());
@@ -332,7 +330,7 @@ public class OmniClient extends BitcoinClient {
      * @param amount      The amount to distribute
      * @return The hash of the transaction
      */
-    public Sha256Hash sendToOwnersMP(Address fromAddress, CurrencyID currency, BigDecimal amount)
+    public Sha256Hash omniSendSTO(Address fromAddress, CurrencyID currency, BigDecimal amount)
             throws JsonRPCException, IOException {
         List<Object> params = createParamList(fromAddress.toString(), currency.getValue(), amount.toPlainString());
         String txid = send("sendtoowners_MP", params);

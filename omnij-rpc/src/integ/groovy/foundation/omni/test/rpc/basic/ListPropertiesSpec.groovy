@@ -9,13 +9,13 @@ import static foundation.omni.CurrencyID.TMSC
 import foundation.omni.rpc.SmartPropertyListInfo
 
 /**
- * Specification for listproperties_MP
+ * Specification for {@code "omni_listproperties"}.
  */
 class ListPropertiesSpec extends BaseRegTestSpec {
 
     def "Returns a property list with correct MSC and TMSC entries"() {
         when: "we get a list of properties"
-        List<SmartPropertyListInfo> properties = listproperties_MP()
+        List<SmartPropertyListInfo> properties = omniListProperties()
 
         then: "we get a list of size >= 2"
         properties != null

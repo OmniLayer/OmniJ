@@ -23,13 +23,13 @@ class SendRawTransactionSpec extends BaseRegTestSpec {
 
     def "Create raw transaction with reference address"() {
         when: "we submit a raw transaction"
-        def txid = client.sendrawtx_MP(activeAddress, rawTxHex, passiveAddress)
+        def txid = client.omniSendRawTx(activeAddress, rawTxHex, passiveAddress)
 
         and: "a new block is mined"
         client.generateBlock()
 
         then: "the transaction confirms"
-        def transaction = client.getTransactionMP(txid)
+        def transaction = client.omniGetTransaction(txid)
         transaction.confirmations == 1
 
         and: "the transaction should be valid"
@@ -48,13 +48,13 @@ class SendRawTransactionSpec extends BaseRegTestSpec {
 
     def "Create raw transaction without reference address"() {
         when: "we submit a raw transaction"
-        def txid = client.sendrawtx_MP(activeAddress, rawTxHex)
+        def txid = client.omniSendRawTx(activeAddress, rawTxHex)
 
         and: "a new block is mined"
         client.generateBlock()
 
         then: "the transaction confirmed"
-        def transaction = client.getTransactionMP(txid)
+        def transaction = client.omniGetTransaction(txid)
         transaction.confirmations == 1
 
         and: "the transaction should be valid"

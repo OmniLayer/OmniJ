@@ -48,7 +48,7 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
         def omniVersion
         def infoMP
         try {
-            infoMP = client.getinfo_MP()
+            infoMP = client.omniGetInfo()
         } catch (JsonRPCStatusException e) {
             /* swallow */
         }

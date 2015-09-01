@@ -35,26 +35,26 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         def currencyMSC = CurrencyID.MSC
 
         when: "creating a new crowdsale with 0.00000001 MDiv per unit invested"
-        def crowdsaleTxid = sendrawtx_MP(issuerAddress, rawTx)
+        def crowdsaleTxid = omniSendRawTx(issuerAddress, rawTx)
         generateBlock()
 
         then: "the crowdsale is active"
-        def crowdsaleTx = getTransactionMP(crowdsaleTxid)
+        def crowdsaleTx = omniGetTransaction(crowdsaleTxid)
         crowdsaleTx.confirmations == 1
         crowdsaleTx.valid == true
         def propertyId = new CurrencyID(crowdsaleTx.propertyid as Long)
-        getcrowdsale_MP(propertyId).active == true
+        omniGetCrowdsale(propertyId).active == true
 
         when: "participant invests #amountToInvest MSC"
-        def sendTxid = send_MP(investorAddress, issuerAddress, currencyMSC, amountToInvest)
+        def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest)
         generateBlock()
 
         then: "the investor should get #expectedBalance MDiv"
-        getTransactionMP(sendTxid).valid == true
-        getbalance_MP(investorAddress, propertyId).balance == expectedBalance
+        omniGetTransaction(sendTxid).valid == true
+        omniGetBalance(investorAddress, propertyId).balance == expectedBalance
 
         and: "the issuer receives the invested amount"
-        getbalance_MP(issuerAddress, currencyMSC).balance == startMSC + amountToInvest
+        omniGetBalance(issuerAddress, currencyMSC).balance == startMSC + amountToInvest
 
         where:
         amountToInvest | expectedBalance
@@ -89,26 +89,26 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         def currencyMSC = CurrencyID.MSC
 
         when: "creating a new crowdsale with 0.00000001 MDiv per unit invested"
-        def crowdsaleTxid = sendrawtx_MP(issuerAddress, rawTx)
+        def crowdsaleTxid = omniSendRawTx(issuerAddress, rawTx)
         generateBlock()
 
         then: "the crowdsale is active"
-        def crowdsaleTx = getTransactionMP(crowdsaleTxid)
+        def crowdsaleTx = omniGetTransaction(crowdsaleTxid)
         crowdsaleTx.confirmations == 1
         crowdsaleTx.valid == true
         def propertyId = new CurrencyID(crowdsaleTx.propertyid as Long)
-        getcrowdsale_MP(propertyId).active == true
+        omniGetCrowdsale(propertyId).active == true
 
         when: "participant invests #amountToInvest MSC"
-        def sendTxid = send_MP(investorAddress, issuerAddress, currencyMSC, amountToInvest)
+        def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest)
         generateBlock()
 
         then: "the investor should get #expectedBalance MDiv"
-        getTransactionMP(sendTxid).valid == true
-        getbalance_MP(investorAddress, propertyId).balance == expectedBalance
+        omniGetTransaction(sendTxid).valid == true
+        omniGetBalance(investorAddress, propertyId).balance == expectedBalance
 
         and: "the issuer receives the invested amount"
-        getbalance_MP(issuerAddress, currencyMSC).balance == startMSC + amountToInvest
+        omniGetBalance(issuerAddress, currencyMSC).balance == startMSC + amountToInvest
 
         where:
         amountToInvest | expectedBalance
@@ -143,26 +143,26 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         def currencyMSC = CurrencyID.TMSC
 
         when: "creating a new crowdsale with 3400 TIndiv per unit invested"
-        def crowdsaleTxid = sendrawtx_MP(issuerAddress, rawTx)
+        def crowdsaleTxid = omniSendRawTx(issuerAddress, rawTx)
         generateBlock()
 
         then: "the crowdsale is active"
-        def crowdsaleTx = getTransactionMP(crowdsaleTxid)
+        def crowdsaleTx = omniGetTransaction(crowdsaleTxid)
         crowdsaleTx.confirmations == 1
         crowdsaleTx.valid == true
         def propertyId = new CurrencyID(crowdsaleTx.propertyid as Long)
-        getcrowdsale_MP(propertyId).active == true
+        omniGetCrowdsale(propertyId).active == true
 
         when: "participant invests #amountToInvest TMSC"
-        def sendTxid = send_MP(investorAddress, issuerAddress, currencyMSC, amountToInvest)
+        def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest)
         generateBlock()
 
         then: "the investor should get #expectedBalance TIndiv"
-        getTransactionMP(sendTxid).valid == true
-        getbalance_MP(investorAddress, propertyId).balance == expectedBalance as BigDecimal
+        omniGetTransaction(sendTxid).valid == true
+        omniGetBalance(investorAddress, propertyId).balance == expectedBalance as BigDecimal
 
         and: "the issuer receives the invested amount"
-        getbalance_MP(issuerAddress, currencyMSC).balance == startMSC + amountToInvest
+        omniGetBalance(issuerAddress, currencyMSC).balance == startMSC + amountToInvest
 
         where:
         amountToInvest | expectedBalance

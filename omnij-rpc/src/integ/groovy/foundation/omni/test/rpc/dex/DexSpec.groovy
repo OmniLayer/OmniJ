@@ -20,7 +20,7 @@ class DexSpec extends BaseRegTestSpec {
     def "A new sell offer can be created with Action = 1 (New)"() {
         given:
         def fundedAddress = createFundedAddress(startBTC, startMSC, false)
-        def activeOffersAtTheStart = getactivedexsells_MP()
+        def activeOffersAtTheStart = omniGetActiveDExSells()
 
         when: "creating an offer with action = 1"
         def offerTxid = createDexSellOffer(
@@ -28,12 +28,12 @@ class DexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "it is a valid transaction"
-        def offerTx = getTransactionMP(offerTxid)
+        def offerTx = omniGetTransaction(offerTxid)
         offerTx.confirmations == 1
         offerTx.valid == true
 
         and: "a new offer is created on the distributed exchange"
-        def activeOffersNow = getactivedexsells_MP()
+        def activeOffersNow = omniGetActiveDExSells()
         activeOffersNow.size() == activeOffersAtTheStart.size() + 1
 
         where:
@@ -55,7 +55,7 @@ class DexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "the transaction should be a valid offering of #currencyOffered"
-        def offerTx = getTransactionMP(offerTxid)
+        def offerTx = omniGetTransaction(offerTxid)
         offerTx.valid == true
         offerTx.propertyid == currencyOffered.getValue()
 
@@ -66,7 +66,7 @@ class DexSpec extends BaseRegTestSpec {
     def "Offering more tokens than available puts up an offer with the available amount"() {
         given:
         def fundedAddress = createFundedAddress(startBTC, startMSC)
-        def amountAvailableAtStart = getbalance_MP(fundedAddress, currencyOffered).balance
+        def amountAvailableAtStart = omniGetBalance(fundedAddress, currencyOffered).balance
         def amountOffered = amountAvailableAtStart + 100.0
 
         when: "the amount offered for sale exceeds the sending address's available balance"
@@ -75,9 +75,9 @@ class DexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "this indicates to sell all tokens that are available"
-        def offerTx = getTransactionMP(offerTxid)
+        def offerTx = omniGetTransaction(offerTxid)
         def offerAmount = new BigDecimal(offerTx.amount)
-        def amountAvailableNow = getbalance_MP(fundedAddress, currencyOffered).balance
+        def amountAvailableNow = omniGetBalance(fundedAddress, currencyOffered).balance
         offerTx.valid == true
         offerAmount == amountAvailableAtStart
         offerAmount == Math.min(amountAvailableAtStart, amountOffered)
@@ -90,7 +90,7 @@ class DexSpec extends BaseRegTestSpec {
     def "The amount offered for sale is reserved from the available balance"() {
         given:
         def fundedAddress = createFundedAddress(startBTC, startMSC)
-        def balanceAtStart = getbalance_MP(fundedAddress, currencyOffered)
+        def balanceAtStart = omniGetBalance(fundedAddress, currencyOffered)
 
         when: "an amount is offered for sale"
         def offerTxid = createDexSellOffer(
@@ -98,9 +98,9 @@ class DexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "the offered amount is reserved and subtracted from the available balance"
-        def offerTx = getTransactionMP(offerTxid)
+        def offerTx = omniGetTransaction(offerTxid)
         def offerAmount = new BigDecimal(offerTx.amount)
-        def balanceNow = getbalance_MP(fundedAddress, currencyOffered)
+        def balanceNow = omniGetBalance(fundedAddress, currencyOffered)
         offerTx.valid == true
         balanceNow.balance == balanceAtStart.balance - offerAmount
         balanceNow.reserved == balanceAtStart.reserved + offerAmount
@@ -119,21 +119,21 @@ class DexSpec extends BaseRegTestSpec {
         generateBlock()
 
         and: "additional tokens are received"
-        def offerBeforeReceivingMore = getTransactionMP(offerTxid)
-        def balanceBeforeReceivingMore = getbalance_MP(fundedAddress, currencyOffered)
+        def offerBeforeReceivingMore = omniGetTransaction(offerTxid)
+        def balanceBeforeReceivingMore = omniGetBalance(fundedAddress, currencyOffered)
         def otherAddress = createFundedAddress(startBTC, startOtherMSC)
-        def sendTxid = send_MP(otherAddress, fundedAddress, currencyOffered, additionalMSC)
+        def sendTxid = omniSend(otherAddress, fundedAddress, currencyOffered, additionalMSC)
         generateBlock()
 
         then: "any tokens received are added to the available balance"
-        def balanceNow = getbalance_MP(fundedAddress, currencyOffered)
-        def sendTx = getTransactionMP(sendTxid)
+        def balanceNow = omniGetBalance(fundedAddress, currencyOffered)
+        def sendTx = omniGetTransaction(sendTxid)
         def sendAmount = new BigDecimal(sendTx.amount)
         sendTx.valid == true
         balanceNow.balance == balanceBeforeReceivingMore.balance + sendAmount
 
         and: "are not included in the amount for sale by this sell offer"
-        def offerNow = getTransactionMP(offerTxid)
+        def offerNow = omniGetTransaction(offerTxid)
         offerNow.valid == true
         offerNow.amount == offerBeforeReceivingMore.amount
         balanceNow.reserved == balanceBeforeReceivingMore.reserved
@@ -158,8 +158,8 @@ class DexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "the other offer is rejected"
-        getTransactionMP(firstOfferTxid).valid == true
-        getTransactionMP(secondOfferTxid).valid == false
+        omniGetTransaction(firstOfferTxid).valid == true
+        omniGetTransaction(secondOfferTxid).valid == false
 
         where:
         [startBTC, startMSC, currencyOffered, firstOfferMSC, firstOfferBTC,
@@ -169,8 +169,8 @@ class DexSpec extends BaseRegTestSpec {
     def "An offer can be updated with action = 2, and cancelled with action = 3"() {
         given:
         def fundedAddress = createFundedAddress(startBTC, startMSC)
-        def balanceAtStart = getbalance_MP(fundedAddress, currencyOffered)
-        def offersAtStart = getactivedexsells_MP()
+        def balanceAtStart = omniGetBalance(fundedAddress, currencyOffered)
+        def offersAtStart = omniGetActiveDExSells()
 
         when: "creating an offer with action 1"
         def offerTxid = createDexSellOffer(
@@ -178,15 +178,15 @@ class DexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(offerTxid).valid
-        getTransactionMP(offerTxid).amount as BigDecimal == offeredMSC
+        omniGetTransaction(offerTxid).valid
+        omniGetTransaction(offerTxid).amount as BigDecimal == offeredMSC
 
         and:
-        getbalance_MP(fundedAddress, currencyOffered).balance == balanceAtStart.balance - offeredMSC
-        getbalance_MP(fundedAddress, currencyOffered).reserved == balanceAtStart.reserved + offeredMSC
+        omniGetBalance(fundedAddress, currencyOffered).balance == balanceAtStart.balance - offeredMSC
+        omniGetBalance(fundedAddress, currencyOffered).reserved == balanceAtStart.reserved + offeredMSC
 
         and: "a new offer is listed"
-        getactivedexsells_MP().size() == offersAtStart.size() + 1
+        omniGetActiveDExSells().size() == offersAtStart.size() + 1
 
         when: "updating an offer with action = 2"
         def updateTxid = createDexSellOffer(
@@ -194,12 +194,12 @@ class DexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "the offered amount is updated"
-        getTransactionMP(updateTxid).valid
-        getTransactionMP(updateTxid).amount as BigDecimal == updatedMSC
+        omniGetTransaction(updateTxid).valid
+        omniGetTransaction(updateTxid).amount as BigDecimal == updatedMSC
 
         and: "the total amount offered is reserved"
-        getbalance_MP(fundedAddress, currencyOffered).balance == balanceAtStart.balance - updatedMSC
-        getbalance_MP(fundedAddress, currencyOffered).reserved == balanceAtStart.reserved + updatedMSC
+        omniGetBalance(fundedAddress, currencyOffered).balance == balanceAtStart.balance - updatedMSC
+        omniGetBalance(fundedAddress, currencyOffered).reserved == balanceAtStart.reserved + updatedMSC
 
         when: "cancelling an offer with action = 3"
         def cancelTxid = createDexSellOffer(
@@ -207,15 +207,15 @@ class DexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(cancelTxid).valid
+        omniGetTransaction(cancelTxid).valid
 
         and: "the original balance is restored"
-        getbalance_MP(fundedAddress, currencyOffered).balance == balanceAtStart.balance
-        getbalance_MP(fundedAddress, currencyOffered).reserved == balanceAtStart.reserved
-        getbalance_MP(fundedAddress, currencyOffered) == balanceAtStart
+        omniGetBalance(fundedAddress, currencyOffered).balance == balanceAtStart.balance
+        omniGetBalance(fundedAddress, currencyOffered).reserved == balanceAtStart.reserved
+        omniGetBalance(fundedAddress, currencyOffered) == balanceAtStart
 
         and: "the offer is no longer listed"
-        getactivedexsells_MP().size() == offersAtStart.size()
+        omniGetActiveDExSells().size() == offersAtStart.size()
 
         where:
         [startBTC, startMSC, currencyOffered, offeredMSC, desiredBTC, updatedMSC, updatedBTC] <<
@@ -237,8 +237,8 @@ class DexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(offerTxid).valid
-        getTransactionMP(acceptTxid).valid
+        omniGetTransaction(offerTxid).valid
+        omniGetTransaction(acceptTxid).valid
 
         where:
         [startBTC, startMSC, currencyOffered, offeredMSC, desiredBTC] << [[0.1, 0.1, MSC, 0.05, 0.07]]

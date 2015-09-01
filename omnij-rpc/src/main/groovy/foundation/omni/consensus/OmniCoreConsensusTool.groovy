@@ -56,7 +56,7 @@ class OmniCoreConsensusTool extends ConsensusTool {
     }
 
     private SortedMap<Address, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
-        List<MPBalanceEntry> balances = client.getallbalancesforid_MP(currencyID)
+        List<MPBalanceEntry> balances = client.omniGetAllBalancesForId(currencyID)
 
         TreeMap<Address, ConsensusEntry> map = [:]
 
@@ -84,13 +84,13 @@ class OmniCoreConsensusTool extends ConsensusTool {
     @Override
     @TypeChecked
     List<SmartPropertyListInfo> listProperties() {
-        List<SmartPropertyListInfo> props = client.listproperties_MP()
+        List<SmartPropertyListInfo> props = client.omniListProperties()
         return props
     }
 
     @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
-        /* Since getallbalancesforid_MP doesn't return the blockHeight, we have to check
+        /* Since omni_getallbalancesforid doesn't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
          */
         Integer beforeBlockHeight = currentBlockHeight()

@@ -14,7 +14,7 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
         def blockCountBeforeSend = getBlockCount()
 
         when: "broadcasting and confirming a simple send"
-        def txid = send_MP(senderAddress, receiverAddress, CurrencyID.MSC, sendAmount)
+        def txid = omniSend(senderAddress, receiverAddress, CurrencyID.MSC, sendAmount)
         def blockHashOfSend = generateAndGetBlockHash()
 
         then: "the transaction is valid"
@@ -42,17 +42,17 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
         def receiverAddress = newAddress
         def senderAddress = createFundedAddress(startBTC, startMSC)
 
-        def balanceBeforeSendActor = getbalance_MP(senderAddress, CurrencyID.MSC)
-        def balanceBeforeSendReceiver = getbalance_MP(receiverAddress, CurrencyID.MSC)
+        def balanceBeforeSendActor = omniGetBalance(senderAddress, CurrencyID.MSC)
+        def balanceBeforeSendReceiver = omniGetBalance(receiverAddress, CurrencyID.MSC)
 
         when: "broadcasting and confirming a simple send"
-        def txid = send_MP(senderAddress, receiverAddress, CurrencyID.MSC, sendAmount)
+        def txid = omniSend(senderAddress, receiverAddress, CurrencyID.MSC, sendAmount)
         def blockHashOfSend = generateAndGetBlockHash()
 
         then: "the transaction is valid and the tokens were transferred"
         checkTransactionValidity(txid)
-        getbalance_MP(senderAddress, CurrencyID.MSC).balance == balanceBeforeSendActor.balance - sendAmount
-        getbalance_MP(receiverAddress, CurrencyID.MSC).balance == balanceBeforeSendReceiver.balance + sendAmount
+        omniGetBalance(senderAddress, CurrencyID.MSC).balance == balanceBeforeSendActor.balance - sendAmount
+        omniGetBalance(receiverAddress, CurrencyID.MSC).balance == balanceBeforeSendReceiver.balance + sendAmount
 
         when: "invalidating the block with the send transaction and after a new block is mined"
         invalidateBlock(blockHashOfSend)
@@ -61,8 +61,8 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
 
         then: "the send transaction is no longer valid and the balances before the send are restored"
         !checkTransactionValidity(txid)
-        getbalance_MP(senderAddress, CurrencyID.MSC) == balanceBeforeSendActor
-        getbalance_MP(receiverAddress, CurrencyID.MSC) == balanceBeforeSendReceiver
+        omniGetBalance(senderAddress, CurrencyID.MSC) == balanceBeforeSendActor
+        omniGetBalance(receiverAddress, CurrencyID.MSC) == balanceBeforeSendReceiver
 
         when: "rolling back all blocks until before the initial funding"
         invalidateBlock(blockHashBeforeFunding)
@@ -70,8 +70,8 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
         generateBlock()
 
         then: "the actors have zero balances"
-        getbalance_MP(senderAddress, CurrencyID.MSC).balance == 0.0
-        getbalance_MP(receiverAddress, CurrencyID.MSC).balance == 0.0
+        omniGetBalance(senderAddress, CurrencyID.MSC).balance == 0.0
+        omniGetBalance(receiverAddress, CurrencyID.MSC).balance == 0.0
     }
 
 }

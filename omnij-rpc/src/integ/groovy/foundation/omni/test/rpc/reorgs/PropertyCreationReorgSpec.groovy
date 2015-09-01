@@ -20,7 +20,7 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
     CurrencyID nextTestPropertyID
 
     def setupSpec() {
-        propertyListAtStart = listproperties_MP()
+        propertyListAtStart = omniListProperties()
         def mainProperties = propertyListAtStart.findAll { it.id.ecosystem == Ecosystem.MSC }
         def testProperties = propertyListAtStart.findAll { it.id.ecosystem == Ecosystem.TMSC }
         def lastMainPropertyID = mainProperties.last().id
@@ -52,10 +52,10 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         checkTransactionValidity(txid)
 
         and: "a new property was created"
-        listproperties_MP().size() == propertyListAtStart.size() + 1
+        omniListProperties().size() == propertyListAtStart.size() + 1
 
         and: "the created property is in the correct ecosystem"
-        def txCreation = getTransactionMP(txid)
+        def txCreation = omniGetTransaction(txid)
         def currencyID = new CurrencyID(txCreation.propertyid as long)
         currencyID.ecosystem == ecosystem
 
@@ -63,7 +63,7 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         currencyID == expectedCurrencyID
 
         and: "the creator was credited with the correct amount of created tokens"
-        getbalance_MP(actorAddress, currencyID).balance == expectedBalance
+        omniGetBalance(actorAddress, currencyID).balance == expectedBalance
 
         when: "invalidating the block and property creation transaction"
         invalidateBlock(blockHashOfCreation)
@@ -74,16 +74,16 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         !checkTransactionValidity(txid)
 
         and: "the created property is no longer listed"
-        listproperties_MP().size() == propertyListAtStart.size()
+        omniListProperties().size() == propertyListAtStart.size()
 
         when:
-        getproperty_MP(currencyID)
+        omniGetProperty(currencyID)
 
         then: "no information about the property is available"
         thrown(JsonRPCStatusException)
 
         when:
-        getbalance_MP(actorAddress, currencyID)
+        omniGetBalance(actorAddress, currencyID)
 
         then: "no balance information for the property"
         thrown(JsonRPCStatusException)

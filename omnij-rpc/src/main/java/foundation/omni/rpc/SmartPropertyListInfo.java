@@ -3,7 +3,7 @@ package foundation.omni.rpc;
 import foundation.omni.CurrencyID;
 
 /**
- * Result for a single property from listproperties_MP
+ * Result for a single property from {@code "omni_listproperties"}
  */
 public class SmartPropertyListInfo {
     private final CurrencyID  id;               // propertyid in JSON

@@ -33,7 +33,7 @@ class SmartPropertySpec extends BaseRegTestSpec {
         client.generateBlock()
 
         then: "the transaction confirms"
-        def transaction = client.getTransactionMP(txid)
+        def transaction = client.omniGetTransaction(txid)
         transaction.confirmations == 1
 
         and: "it should be valid"
@@ -48,7 +48,7 @@ class SmartPropertySpec extends BaseRegTestSpec {
         transaction.amount == "3.14159265"
 
         and: "this amount was credited to the issuer"
-        def available = getbalance_MP(fundedAddress, propertyId)
+        def available = omniGetBalance(fundedAddress, propertyId)
         available.balance == 3.14159265
     }
 
@@ -60,7 +60,7 @@ class SmartPropertySpec extends BaseRegTestSpec {
         client.generateBlock()
 
         then: "the transaction confirms"
-        def transaction = client.getTransactionMP(txid)
+        def transaction = client.omniGetTransaction(txid)
         transaction.confirmations == 1
 
         and: "it should be valid"
@@ -75,7 +75,7 @@ class SmartPropertySpec extends BaseRegTestSpec {
         transaction.amount == "4815162342"
 
         and: "this amount was credited to the issuer"
-        def available = getbalance_MP(fundedAddress, propertyId)
+        def available = omniGetBalance(fundedAddress, propertyId)
         available.balance == 4815162342L
     }
 
