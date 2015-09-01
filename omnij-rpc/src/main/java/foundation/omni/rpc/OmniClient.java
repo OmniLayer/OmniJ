@@ -23,11 +23,7 @@ import java.util.Map;
 // TODO: rename methods
 
 // TODO: add missing RPCs:
-// - getallbalancesforaddress_MP
 // - listtransactions_MP
-// - listblocktransactions_MP
-// - getactivecrowdsales_MP
-// - getgrants_MP
 // - getsto_MP
 // - omni_gettradehistoryforpair
 // - omni_gettradehistoryforaddress
@@ -144,6 +140,16 @@ public class OmniClient extends BitcoinClient {
     }
 
     /**
+     * Lists currently active crowdsales.
+     *
+     * @return A list with information about active crowdsales
+     */
+    public List<Map<String, Object>> omniGetActiveCrowdsales() throws JsonRPCException, IOException {
+        List<Map<String, Object>> result = send("getactivecrowdsales_MP", null);
+        return result;
+    }
+
+    /**
      * Lists currently active offers on the distributed BTC/MSC exchange.
      *
      * @return A list with information about the active offers
@@ -208,6 +214,41 @@ public class OmniClient extends BitcoinClient {
     }
 
     /**
+     * Returns a list of all token balances for a given address.
+     *
+     * @param address The address to look up
+     * @return A list containing the available and reserved balances
+     */
+    public List<MPBalanceEntry> omniGetAllBalancesForAddress(Address address)
+            throws JsonRPCException, IOException, ParseException {
+        List<Object> params = createParamList(address.toString());
+        List<Map<String, Object>> untypedBalances = send("getallbalancesforaddress_MP", params);
+        List<MPBalanceEntry> balances = new ArrayList<MPBalanceEntry>(untypedBalances.size());
+        for (Map map : untypedBalances) {
+            // TODO: might be extracted, given the similarities to the other balance calls
+            BigDecimal balance;
+            BigDecimal reserved;
+            Object balanceJson = map.get("balance");
+            Object reservedJson = map.get("reserved");
+            /* Assume that if balanceJson field is of type String, so is reserved */
+            /* The RPCs have been changing here, but currently they should be using Strings */
+            if (balanceJson instanceof String) {
+                balance = (BigDecimal) jsonDecimalFormat.parse((String) balanceJson);
+                reserved = (BigDecimal) jsonDecimalFormat.parse((String) reservedJson);
+            } else if (balanceJson instanceof Integer) {
+                balance = new BigDecimal((Integer) balanceJson);
+                reserved = new BigDecimal((Integer) reservedJson);
+
+            } else {
+                throw new RuntimeException("unexpected data type");
+            }
+            MPBalanceEntry balanceEntry = new MPBalanceEntry(address, balance, reserved);
+            balances.add(balanceEntry);
+        }
+        return balances;
+    }
+
+    /**
      * Returns information about an Omni Layer transaction.
      *
      * @param txid The hash of the transaction to look up
@@ -217,6 +258,23 @@ public class OmniClient extends BitcoinClient {
         List<Object> params = createParamList(txid.toString());
         Map<String, Object> transaction = send("gettransaction_MP", params);
         return transaction;
+    }
+
+    /**
+     * Lists all Omni transactions in a block.
+     *
+     * @param blockIndex The block height or block index
+     * @return A list of transaction hashes
+     */
+    public List<Sha256Hash> omniListBlockTransactions(Integer blockIndex) throws JsonRPCException, IOException {
+        List<Object> params = createParamList(blockIndex);
+        List<String> untypedTransactions = send("listblocktransactions_MP", params);
+        List<Sha256Hash> transactions = new ArrayList<Sha256Hash>(untypedTransactions.size());
+        for (String txid : untypedTransactions) {
+            Sha256Hash hash = Sha256Hash.wrap(txid);
+            transactions.add(hash);
+        }
+        return transactions;
     }
 
     /**
@@ -623,6 +681,18 @@ public class OmniClient extends BitcoinClient {
             throws JsonRPCException, IOException {
         List<Object> params = createParamList(propertyForSale.getValue(), propertyDesired.getValue());
         List<Map<String, Object>> orders = send("getorderbook_MP", params);
+        return orders;
+    }
+
+    /**
+     * Returns information about granted and revoked units of managed tokens.
+     *
+     * @param propertyid The identifier of the managed tokens to lookup
+     * @return A list of grants and revokes
+     */
+    public List<Map<String, Object>> omniGetGrants(CurrencyID propertyid) throws JsonRPCException, IOException {
+        List<Object> params = createParamList(propertyid.getValue());
+        List<Map<String, Object>> orders = send("getgrants_MP", params);
         return orders;
     }
 
