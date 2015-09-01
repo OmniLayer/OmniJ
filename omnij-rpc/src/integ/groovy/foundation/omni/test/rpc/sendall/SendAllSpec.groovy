@@ -110,7 +110,7 @@ class SendAllSpec extends BaseRegTestSpec {
         getbalance_MP(otherAddress, nonManagedID).balance == zeroAmount
 
         when:
-        def tradeTxid = trade_MP(actorAddress, nonManagedID, 4.0, tradeCurrency, 4.0, 1 as Byte)
+        def tradeTxid = omniSendTrade(actorAddress, nonManagedID, 4.0, tradeCurrency, 4.0)
         generateBlock()
         def tradeTx = getTransactionMP(tradeTxid)
 

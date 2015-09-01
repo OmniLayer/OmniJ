@@ -14,7 +14,6 @@ class MetaDexSpec extends BaseRegTestSpec {
 
     final static BigDecimal startBTC = 0.001
     final static BigDecimal zeroAmount = 0.0
-    final static Byte actionNew = 1
 
     /**
      * @see: https://github.com/OmniLayer/omnicore/issues/39
@@ -28,13 +27,13 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(actorB, 10, PropertyType.INDIVISIBLE, propertyMSC.ecosystem)
 
         when:
-        def txidTradeA = trade_MP(actorA, propertyMSC, 0.00000006 , propertySPX, 6, actionNew)
+        def txidTradeA = omniSendTrade(actorA, propertyMSC, 0.00000006 , propertySPX, 6)
         generateBlock()
-        def txidTradeB = trade_MP(actorB, propertySPX, 10, propertyMSC, 0.00000001, actionNew)
+        def txidTradeB = omniSendTrade(actorB, propertySPX, 10, propertyMSC, 0.00000001)
         generateBlock()
-        def txidTradeC = trade_MP(actorC, propertyMSC, 0.00000001, propertySPX, 10, actionNew)
+        def txidTradeC = omniSendTrade(actorC, propertyMSC, 0.00000001, propertySPX, 10)
         generateBlock()
-        def txidTradeD = trade_MP(actorD, propertyMSC, 0.00000001, propertySPX, 4, actionNew)
+        def txidTradeD = omniSendTrade(actorD, propertyMSC, 0.00000001, propertySPX, 4)
         generateBlock()
 
         then:
@@ -67,9 +66,9 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(actorA, 25, PropertyType.INDIVISIBLE, propertyMSC.ecosystem)
 
         when:
-        def txidTradeA = trade_MP(actorA, propertySPX, 25, propertyMSC, 2.50, actionNew)
+        def txidTradeA = omniSendTrade(actorA, propertySPX, 25, propertyMSC, 2.50)
         generateBlock()
-        def txidTradeB = trade_MP(actorB, propertyMSC, 0.55, propertySPX, 5, actionNew)
+        def txidTradeB = omniSendTrade(actorB, propertyMSC, 0.55, propertySPX, 5)
         generateBlock()
 
         then:
@@ -99,9 +98,9 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(actorB, 12, PropertyType.INDIVISIBLE, propertyMSC.ecosystem)
 
         when:
-        def txidTradeA = trade_MP(actorA, propertyMSC, 0.00000020 , propertySPX, 10, actionNew)
+        def txidTradeA = omniSendTrade(actorA, propertyMSC, 0.00000020 , propertySPX, 10)
         generateBlock()
-        def txidTradeB = trade_MP(actorB, propertySPX, 12, propertyMSC, 0.00000017, actionNew)
+        def txidTradeB = omniSendTrade(actorB, propertySPX, 12, propertyMSC, 0.00000017)
         generateBlock()
 
         then:
@@ -130,9 +129,9 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(actorA, 1.0, PropertyType.DIVISIBLE, propertyMSC.ecosystem)
 
         when:
-        def txidTradeA = trade_MP(actorA, propertySPX, 1.0, propertyMSC, 2.0, actionNew)
+        def txidTradeA = omniSendTrade(actorA, propertySPX, 1.0, propertyMSC, 2.0)
         generateBlock()
-        def txidTradeB = trade_MP(actorB, propertyMSC, 1.66666666, propertySPX, 0.83333333, actionNew)
+        def txidTradeB = omniSendTrade(actorB, propertyMSC, 1.66666666, propertySPX, 0.83333333)
         generateBlock()
 
         then:
@@ -161,9 +160,9 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(actorB, 50.0, PropertyType.DIVISIBLE, propertyMSC.ecosystem)
 
         when:
-        def txidTradeA = trade_MP(actorA, propertyMSC, 23.0 , propertySPX, 100.0, actionNew)
+        def txidTradeA = omniSendTrade(actorA, propertyMSC, 23.0 , propertySPX, 100.0)
         generateBlock()
-        def txidTradeB = trade_MP(actorB, propertySPX, 50.0, propertyMSC, 10.0, actionNew)
+        def txidTradeB = omniSendTrade(actorB, propertySPX, 50.0, propertyMSC, 10.0)
         generateBlock()
 
         then:
@@ -188,7 +187,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPB = fundNewProperty(actorAdress, 10.0, PropertyType.DIVISIBLE, Ecosystem.TMSC)
 
         when:
-        def txidTrade = trade_MP(actorAdress, propertySPA, 1.0, propertySPB, 1.0, actionNew)
+        def txidTrade = omniSendTrade(actorAdress, propertySPA, 1.0, propertySPB, 1.0)
         generateBlock()
 
         then:
@@ -215,7 +214,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         getbalance_MP(traderB, propertySPX).balance == amountSPX
 
         when: "trader A offers MSC and desired SPX"
-        def txidOfferA = trade_MP(traderA, propertyMSC, amountMSC, propertySPX, amountSPX, actionNew)
+        def txidOfferA = omniSendTrade(traderA, propertyMSC, amountMSC, propertySPX, amountSPX)
         generateBlock()
 
         then: "it is a valid open order"
@@ -232,7 +231,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         getbalance_MP(traderA, propertyMSC).reserved == amountMSC
 
         when: "trader B offers SPX and desires MSC"
-        def txidOfferB = trade_MP(traderB, propertySPX, amountSPX, propertyMSC, amountMSC, actionNew)
+        def txidOfferB = omniSendTrade(traderB, propertySPX, amountSPX, propertyMSC, amountMSC)
         generateBlock()
 
         then: "the order is filled"
@@ -289,7 +288,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         getbalance_MP(traderB, propertySPX).balance == zeroAmount
 
         when: "trader A offers SPX and desired MSC"
-        def txidOfferA = trade_MP(traderA, propertySPX, amountSPX, propertyMSC, amountMSC, actionNew)
+        def txidOfferA = omniSendTrade(traderA, propertySPX, amountSPX, propertyMSC, amountMSC)
         generateBlock()
 
         then: "it is a valid open order"
@@ -306,7 +305,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         getbalance_MP(traderA, propertySPX).reserved == amountSPX
 
         when: "trader B offers MSC and desires SPX"
-        def txidOfferB = trade_MP(traderB, propertyMSC, amountMSC, propertySPX, amountSPX, actionNew)
+        def txidOfferB = omniSendTrade(traderB, propertyMSC, amountMSC, propertySPX, amountSPX)
         generateBlock()
 
         then: "the order is filled"
@@ -350,11 +349,11 @@ class MetaDexSpec extends BaseRegTestSpec {
     }
 
     def setupSpec() {
-        if (!commandExists("gettrade_MP")) {
-            throw new AssumptionViolatedException('The client has no "gettrade_MP" command')
+        if (!commandExists("omni_gettrade")) {
+            throw new AssumptionViolatedException('The client has no "omni_gettrade" command')
         }
-        if (!commandExists("getorderbook_MP")) {
-            throw new AssumptionViolatedException('The client has no "getorderbook_MP" command')
+        if (!commandExists("omni_getorderbook")) {
+            throw new AssumptionViolatedException('The client has no "omni_getorderbook" command')
         }
     }
 

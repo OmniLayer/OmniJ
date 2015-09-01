@@ -404,26 +404,22 @@ public class OmniClient extends BitcoinClient {
     }
 
     /**
-     * Creates and broadcasts a "trade" transaction.
-     *
-     * TODO: replace with omniSendTrade
+     * Place a trade offer on the distributed token exchange.
      *
      * @param fromAddress     The address to trade with
-     * @param propertyForSale The property for sale
-     * @param amountForSale   The amount to trade
-     * @param propertyDesired The desired property
-     * @param amountDesired   The desired amount for the trade
-     * @param action          New offer (1), cancel offer (2), cancel offers with currency pair (3), cancel all (4)
+     * @param propertyForSale The identifier of the tokens to list for sale
+     * @param amountForSale   The amount of tokens to list for sale
+     * @param propertyDesired The identifier of the tokens desired in exchange
+     * @param amountDesired   The amount of tokens desired in exchange
      * @return The hash of the transaction
      * @since Omni Core 0.0.10
      */
-    public Sha256Hash trade_MP(Address fromAddress, CurrencyID propertyForSale, BigDecimal amountForSale,
-                               CurrencyID propertyDesired, BigDecimal amountDesired, Byte action)
+    public Sha256Hash omniSendTrade(Address fromAddress, CurrencyID propertyForSale, BigDecimal amountForSale,
+                                    CurrencyID propertyDesired, BigDecimal amountDesired)
             throws JsonRPCException, IOException {
         List<Object> params = createParamList(fromAddress.toString(), propertyForSale.getValue(),
-                                              amountForSale.toPlainString(), propertyDesired.getValue(),
-                                              amountDesired.toPlainString(), action);
-        String txid = send("trade_MP", params);
+                amountForSale.toPlainString(), propertyDesired.getValue(), amountDesired.toPlainString());
+        String txid = send("omni_sendtrade", params);
         Sha256Hash hash = Sha256Hash.wrap(txid);
         return hash;
     }
