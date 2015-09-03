@@ -23,6 +23,7 @@ allprojects {
 
     repositories {
         jcenter()
+        maven { url 'https://dl.bintray.com/msgilligan/maven' } // bitcoinj-addons (RPC client)
 //      maven { url 'https://oss.sonatype.org/content/repositories/snapshots/'}  // bitcoinj snapshots
     }
 }

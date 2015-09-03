@@ -1,2 +1,2 @@
-include 'bitcoin-rpc', 'omnij-core', 'omnij-rpc', 'omnij-cli'
+include 'omnij-core', 'omnij-rpc', 'omnij-cli'
 
