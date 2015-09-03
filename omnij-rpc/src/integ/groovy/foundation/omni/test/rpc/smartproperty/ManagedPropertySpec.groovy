@@ -34,7 +34,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
                                              "Test Subcategory", "ManagedTokens", "http://www.omnilayer.org",
                                              "This is a test for managed properties")
         generateBlock()
-        def creationTx = getTransactionMP(creationTxid)
+        def creationTx = omniGetTransaction(creationTxid)
         currencyID = new CurrencyID(creationTx.propertyid as Long)
 
         then: "the transaction is valid"
@@ -48,12 +48,12 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         creationTx.amount as Integer == 0
 
         and: "there is a new property"
-        listproperties_MP().size() == old(listproperties_MP().size()) + 1
+        omniListProperties().size() == old(omniListProperties().size()) + 1
     }
 
     def "A managed property has a category, subcategory, name, website and description"() {
         when:
-        def propertyInfo = getproperty_MP(currencyID)
+        def propertyInfo = omniGetProperty(currencyID)
 
         then:
         propertyInfo.propertyid == currencyID.getValue()
@@ -67,15 +67,15 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "A managed property has no fixed supply and starts with 0 tokens"() {
         when:
-        def propertyInfo = getproperty_MP(currencyID)
+        def propertyInfo = omniGetProperty(currencyID)
 
         then:
         propertyInfo.fixedissuance == false
         propertyInfo.totaltokens as Integer == 0
 
         when:
-        def balanceForId = getallbalancesforid_MP(currencyID)
-        def balanceForAddress = getbalance_MP(actorAddress, currencyID)
+        def balanceForId = omniGetAllBalancesForId(currencyID)
+        def balanceForAddress = omniGetBalance(actorAddress, currencyID)
 
         then:
         balanceForId.size() == 0
@@ -85,7 +85,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "A reference to the issuer and creation transaction is available"() {
         when:
-        def propertyInfo = getproperty_MP(currencyID)
+        def propertyInfo = omniGetProperty(currencyID)
 
         then:
         propertyInfo.issuer == actorAddress.toString()
@@ -98,17 +98,17 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(txid).txid == txid.toString()
-        getTransactionMP(txid).valid
-        getTransactionMP(txid).type_int == 55
-        getTransactionMP(txid).propertyid == currencyID.getValue()
-        getTransactionMP(txid).divisible == false
-        getTransactionMP(txid).amount as Integer == 100
+        omniGetTransaction(txid).txid == txid.toString()
+        omniGetTransaction(txid).valid
+        omniGetTransaction(txid).type_int == 55
+        omniGetTransaction(txid).propertyid == currencyID.getValue()
+        omniGetTransaction(txid).divisible == false
+        omniGetTransaction(txid).amount as Integer == 100
     }
 
     def "Granting tokens increases the total number of tokens"() {
         when:
-        def propertyInfo = getproperty_MP(currencyID)
+        def propertyInfo = omniGetProperty(currencyID)
 
         then:
         propertyInfo.totaltokens as Integer == 100
@@ -116,7 +116,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "Granting tokens increases the issuer's balance"() {
         when:
-        def balance = getbalance_MP(actorAddress, currencyID)
+        def balance = omniGetBalance(actorAddress, currencyID)
 
         then:
         balance.balance == 100 as BigDecimal
@@ -129,16 +129,16 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(txid).txid == txid.toString()
-        getTransactionMP(txid).valid
-        getTransactionMP(txid).type_int == 55
-        getTransactionMP(txid).propertyid == currencyID.getValue()
-        getTransactionMP(txid).divisible == false
-        getTransactionMP(txid).amount as Integer == 170
+        omniGetTransaction(txid).txid == txid.toString()
+        omniGetTransaction(txid).valid
+        omniGetTransaction(txid).type_int == 55
+        omniGetTransaction(txid).propertyid == currencyID.getValue()
+        omniGetTransaction(txid).divisible == false
+        omniGetTransaction(txid).amount as Integer == 170
 
         and:
-        getproperty_MP(currencyID).totaltokens as Integer == 270
-        getbalance_MP(actorAddress, currencyID).balance == 270 as BigDecimal
+        omniGetProperty(currencyID).totaltokens as Integer == 270
+        omniGetBalance(actorAddress, currencyID).balance == 270 as BigDecimal
     }
 
     def "It's impossible to grant tokens for an non-existing property"() {
@@ -147,7 +147,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(txid).valid == false
+        omniGetTransaction(txid).valid == false
     }
 
     def "Granting tokens for a property with fixed supply is invalid"() {
@@ -156,11 +156,11 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(txid).valid == false
+        omniGetTransaction(txid).valid == false
 
         and:
-        getproperty_MP(nonManagedID).totaltokens == old(getproperty_MP(nonManagedID)).totaltokens
-        getbalance_MP(actorAddress, nonManagedID) == old(getbalance_MP(actorAddress, nonManagedID))
+        omniGetProperty(nonManagedID).totaltokens == old(omniGetProperty(nonManagedID)).totaltokens
+        omniGetBalance(actorAddress, nonManagedID) == old(omniGetBalance(actorAddress, nonManagedID))
     }
 
     def "Tokens can only be granted by the issuer on record"() {
@@ -169,12 +169,12 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(txid).valid == false
+        omniGetTransaction(txid).valid == false
 
         and:
-        getproperty_MP(currencyID).totaltokens as Integer == 270
-        getbalance_MP(actorAddress, currencyID).balance == 270 as BigDecimal
-        getbalance_MP(otherAddress, currencyID).balance == zeroAmount
+        omniGetProperty(currencyID).totaltokens as Integer == 270
+        omniGetBalance(actorAddress, currencyID).balance == 270 as BigDecimal
+        omniGetBalance(otherAddress, currencyID).balance == zeroAmount
     }
 
     def "Up to a total of 9223372036854775807 tokens can be granted"() {
@@ -183,53 +183,55 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(txid).valid
-        getTransactionMP(txid).amount as Long == new Long("9223372036854775537")
+        omniGetTransaction(txid).valid
+        omniGetTransaction(txid).amount as Long == new Long("9223372036854775537")
 
         and:
-        getproperty_MP(currencyID).totaltokens as Long == new Long("9223372036854775807")
-        getbalance_MP(actorAddress, currencyID).balance == new BigDecimal("9223372036854775807")
+        omniGetProperty(currencyID).totaltokens as Long == new Long("9223372036854775807")
+        omniGetBalance(actorAddress, currencyID).balance == new BigDecimal("9223372036854775807")
     }
 
+    @Ignore
     def "Granting more than 9223372036854775807 tokens in total is invalid"() {
         when:
         def txid = grantTokens(actorAddress, currencyID, 1)
         generateBlock()
 
         then:
-        getTransactionMP(txid).valid == false
+        omniGetTransaction(txid).valid == false
 
         and:
-        getproperty_MP(currencyID).totaltokens == old(getproperty_MP(currencyID)).totaltokens
-        getbalance_MP(actorAddress, currencyID) == old(getbalance_MP(actorAddress, currencyID))
+        omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens
+        omniGetBalance(actorAddress, currencyID) == old(omniGetBalance(actorAddress, currencyID))
     }
 
     def "Granted tokens can be transfered as usual"() {
         when:
-        def txid = send_MP(actorAddress, otherAddress, currencyID, 1)
+        def txid = omniSend(actorAddress, otherAddress, currencyID, 1)
         generateBlock()
 
         then:
-        getTransactionMP(txid).valid
+        omniGetTransaction(txid).valid
 
         and:
-        getproperty_MP(currencyID).totaltokens as Long == new Long("9223372036854775807")
-        getbalance_MP(actorAddress, currencyID).balance == new BigDecimal("9223372036854775806")
-        getbalance_MP(otherAddress, currencyID).balance == new BigDecimal("1")
+        omniGetProperty(currencyID).totaltokens as Long == new Long("9223372036854775807")
+        omniGetBalance(actorAddress, currencyID).balance == new BigDecimal("9223372036854775806")
+        omniGetBalance(otherAddress, currencyID).balance == new BigDecimal("1")
     }
 
+    @Ignore
     def "Sending of granted tokens does not remove the limit of total tokens"() {
         when:
         def txid = grantTokens(actorAddress, currencyID, 1) // MAX < total + 1 (!)
         generateBlock()
 
         then:
-        getTransactionMP(txid).valid == false
+        omniGetTransaction(txid).valid == false
 
         and:
-        getproperty_MP(currencyID).totaltokens == old(getproperty_MP(currencyID)).totaltokens
-        getbalance_MP(actorAddress, currencyID) == old(getbalance_MP(actorAddress, currencyID))
-        getbalance_MP(otherAddress, currencyID) == old(getbalance_MP(otherAddress, currencyID))
+        omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens
+        omniGetBalance(actorAddress, currencyID) == old(omniGetBalance(actorAddress, currencyID))
+        omniGetBalance(otherAddress, currencyID) == old(omniGetBalance(otherAddress, currencyID))
     }
 
     def "Tokens of managed properties can be revoked with transaction type 56"() {
@@ -238,17 +240,17 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(txid).txid == txid.toString()
-        getTransactionMP(txid).valid
-        getTransactionMP(txid).type_int == 56
-        getTransactionMP(txid).propertyid == currencyID.getValue()
-        getTransactionMP(txid).divisible == false
-        getTransactionMP(txid).amount as Long == new Long("9223372036854775805")
+        omniGetTransaction(txid).txid == txid.toString()
+        omniGetTransaction(txid).valid
+        omniGetTransaction(txid).type_int == 56
+        omniGetTransaction(txid).propertyid == currencyID.getValue()
+        omniGetTransaction(txid).divisible == false
+        omniGetTransaction(txid).amount as Long == new Long("9223372036854775805")
     }
 
     def "Revoking tokens decreases the total number of tokens"() {
         when:
-        def propertyInfo = getproperty_MP(currencyID)
+        def propertyInfo = omniGetProperty(currencyID)
 
         then:
         propertyInfo.totaltokens as Integer == 2
@@ -256,7 +258,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "Revoking tokens decreases the issuer's balance"() {
         when:
-        def balance = getbalance_MP(actorAddress, currencyID)
+        def balance = omniGetBalance(actorAddress, currencyID)
 
         then:
         balance.balance == 1 as BigDecimal
@@ -268,7 +270,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(txid).valid == false
+        omniGetTransaction(txid).valid == false
     }
 
     @Ignore
@@ -278,12 +280,12 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(txid).valid == false
+        omniGetTransaction(txid).valid == false
 
         and:
-        getproperty_MP(currencyID).totaltokens == old(getproperty_MP(currencyID)).totaltokens
-        getbalance_MP(actorAddress, currencyID) == old(getbalance_MP(actorAddress, currencyID))
-        getbalance_MP(otherAddress, currencyID) == old(getbalance_MP(otherAddress, currencyID))
+        omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens
+        omniGetBalance(actorAddress, currencyID) == old(omniGetBalance(actorAddress, currencyID))
+        omniGetBalance(otherAddress, currencyID) == old(omniGetBalance(otherAddress, currencyID))
     }
 
     def "Revoking tokens for a property with fixed supply is invalid"() {
@@ -292,11 +294,11 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(txid).valid == false
+        omniGetTransaction(txid).valid == false
 
         and:
-        getproperty_MP(nonManagedID).totaltokens == old(getproperty_MP(nonManagedID)).totaltokens
-        getbalance_MP(actorAddress, nonManagedID) == old(getbalance_MP(actorAddress, nonManagedID))
+        omniGetProperty(nonManagedID).totaltokens == old(omniGetProperty(nonManagedID)).totaltokens
+        omniGetBalance(actorAddress, nonManagedID) == old(omniGetBalance(actorAddress, nonManagedID))
     }
 
     def "Revoking more tokens than available is not possible"() {
@@ -305,12 +307,12 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getTransactionMP(txid).valid == false
+        omniGetTransaction(txid).valid == false
 
         and:
-        getproperty_MP(currencyID).totaltokens == old(getproperty_MP(currencyID)).totaltokens
-        getbalance_MP(actorAddress, currencyID) == old(getbalance_MP(actorAddress, currencyID))
-        getbalance_MP(otherAddress, currencyID) == old(getbalance_MP(otherAddress, currencyID))
+        omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens
+        omniGetBalance(actorAddress, currencyID) == old(omniGetBalance(actorAddress, currencyID))
+        omniGetBalance(otherAddress, currencyID) == old(omniGetBalance(otherAddress, currencyID))
     }
 
 }

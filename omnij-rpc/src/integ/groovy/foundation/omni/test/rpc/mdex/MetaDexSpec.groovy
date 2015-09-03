@@ -14,7 +14,6 @@ class MetaDexSpec extends BaseRegTestSpec {
 
     final static BigDecimal startBTC = 0.001
     final static BigDecimal zeroAmount = 0.0
-    final static Byte actionNew = 1
 
     /**
      * @see: https://github.com/OmniLayer/omnicore/issues/39
@@ -28,33 +27,33 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(actorB, 10, PropertyType.INDIVISIBLE, propertyMSC.ecosystem)
 
         when:
-        def txidTradeA = trade_MP(actorA, propertyMSC, 0.00000006 , propertySPX, 6, actionNew)
+        def txidTradeA = omniSendTrade(actorA, propertyMSC, 0.00000006 , propertySPX, 6)
         generateBlock()
-        def txidTradeB = trade_MP(actorB, propertySPX, 10, propertyMSC, 0.00000001, actionNew)
+        def txidTradeB = omniSendTrade(actorB, propertySPX, 10, propertyMSC, 0.00000001)
         generateBlock()
-        def txidTradeC = trade_MP(actorC, propertyMSC, 0.00000001, propertySPX, 10, actionNew)
+        def txidTradeC = omniSendTrade(actorC, propertyMSC, 0.00000001, propertySPX, 10)
         generateBlock()
-        def txidTradeD = trade_MP(actorD, propertyMSC, 0.00000001, propertySPX, 4, actionNew)
+        def txidTradeD = omniSendTrade(actorD, propertyMSC, 0.00000001, propertySPX, 4)
         generateBlock()
 
         then:
-        gettrade_MP(txidTradeA).valid
-        gettrade_MP(txidTradeB).valid
-        gettrade_MP(txidTradeC).valid
-        gettrade_MP(txidTradeD).valid
+        omniGetTrade(txidTradeA).valid
+        omniGetTrade(txidTradeB).valid
+        omniGetTrade(txidTradeC).valid
+        omniGetTrade(txidTradeD).valid
 
         and:
-        gettrade_MP(txidTradeA).status == "filled"
-        gettrade_MP(txidTradeB).status == "filled"
-        gettrade_MP(txidTradeC).status == "open"
-        gettrade_MP(txidTradeD).status == "filled"
+        omniGetTrade(txidTradeA).status == "filled"
+        omniGetTrade(txidTradeB).status == "filled"
+        omniGetTrade(txidTradeC).status == "open"
+        omniGetTrade(txidTradeD).status == "filled"
 
         and:
-        getorderbook_MP(propertyMSC, propertySPX).size() == 1
-        getorderbook_MP(propertySPX, propertyMSC).size() == 0
+        omniGetOrderbook(propertyMSC, propertySPX).size() == 1
+        omniGetOrderbook(propertySPX, propertyMSC).size() == 0
 
         and:
-        getbalance_MP(actorC, propertyMSC).reserved == 0.00000001
+        omniGetBalance(actorC, propertyMSC).reserved == 0.00000001
     }
 
     /**
@@ -67,26 +66,26 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(actorA, 25, PropertyType.INDIVISIBLE, propertyMSC.ecosystem)
 
         when:
-        def txidTradeA = trade_MP(actorA, propertySPX, 25, propertyMSC, 2.50, actionNew)
+        def txidTradeA = omniSendTrade(actorA, propertySPX, 25, propertyMSC, 2.50)
         generateBlock()
-        def txidTradeB = trade_MP(actorB, propertyMSC, 0.55, propertySPX, 5, actionNew)
+        def txidTradeB = omniSendTrade(actorB, propertyMSC, 0.55, propertySPX, 5)
         generateBlock()
 
         then:
-        gettrade_MP(txidTradeA).valid
-        gettrade_MP(txidTradeB).valid
+        omniGetTrade(txidTradeA).valid
+        omniGetTrade(txidTradeB).valid
 
         and:
-        gettrade_MP(txidTradeA).status != "open"
-        gettrade_MP(txidTradeB).status != "open"
-        gettrade_MP(txidTradeA).status != "filled"
-        gettrade_MP(txidTradeB).status != "filled"
+        omniGetTrade(txidTradeA).status != "open"
+        omniGetTrade(txidTradeB).status != "open"
+        omniGetTrade(txidTradeA).status != "filled"
+        omniGetTrade(txidTradeB).status != "filled"
 
         and:
-        getbalance_MP(actorA, propertyMSC).balance == 0.5
-        getbalance_MP(actorA, propertySPX).reserved == 20 as BigDecimal
-        getbalance_MP(actorB, propertySPX).balance == 5 as BigDecimal
-        getbalance_MP(actorB, propertyMSC).reserved == 0.05
+        omniGetBalance(actorA, propertyMSC).balance == 0.5
+        omniGetBalance(actorA, propertySPX).reserved == 20 as BigDecimal
+        omniGetBalance(actorB, propertySPX).balance == 5 as BigDecimal
+        omniGetBalance(actorB, propertyMSC).reserved == 0.05
     }
 
     /**
@@ -99,25 +98,25 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(actorB, 12, PropertyType.INDIVISIBLE, propertyMSC.ecosystem)
 
         when:
-        def txidTradeA = trade_MP(actorA, propertyMSC, 0.00000020 , propertySPX, 10, actionNew)
+        def txidTradeA = omniSendTrade(actorA, propertyMSC, 0.00000020 , propertySPX, 10)
         generateBlock()
-        def txidTradeB = trade_MP(actorB, propertySPX, 12, propertyMSC, 0.00000017, actionNew)
+        def txidTradeB = omniSendTrade(actorB, propertySPX, 12, propertyMSC, 0.00000017)
         generateBlock()
 
         then:
-        gettrade_MP(txidTradeA).valid
-        gettrade_MP(txidTradeB).valid
+        omniGetTrade(txidTradeA).valid
+        omniGetTrade(txidTradeB).valid
 
         and:
-        gettrade_MP(txidTradeA).status == "filled"
-        gettrade_MP(txidTradeB).status != "open"
-        gettrade_MP(txidTradeB).status != "filled"
+        omniGetTrade(txidTradeA).status == "filled"
+        omniGetTrade(txidTradeB).status != "open"
+        omniGetTrade(txidTradeB).status != "filled"
 
         and:
-        getbalance_MP(actorA, propertySPX).balance == 10 as BigDecimal
-        getbalance_MP(actorA, propertyMSC).reserved == 0.0
-        getbalance_MP(actorB, propertyMSC).balance == 0.00000020
-        getbalance_MP(actorB, propertySPX).reserved == 2 as BigDecimal
+        omniGetBalance(actorA, propertySPX).balance == 10 as BigDecimal
+        omniGetBalance(actorA, propertyMSC).reserved == 0.0
+        omniGetBalance(actorB, propertyMSC).balance == 0.00000020
+        omniGetBalance(actorB, propertySPX).reserved == 2 as BigDecimal
     }
 
     /**
@@ -130,25 +129,25 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(actorA, 1.0, PropertyType.DIVISIBLE, propertyMSC.ecosystem)
 
         when:
-        def txidTradeA = trade_MP(actorA, propertySPX, 1.0, propertyMSC, 2.0, actionNew)
+        def txidTradeA = omniSendTrade(actorA, propertySPX, 1.0, propertyMSC, 2.0)
         generateBlock()
-        def txidTradeB = trade_MP(actorB, propertyMSC, 1.66666666, propertySPX, 0.83333333, actionNew)
+        def txidTradeB = omniSendTrade(actorB, propertyMSC, 1.66666666, propertySPX, 0.83333333)
         generateBlock()
 
         then:
-        gettrade_MP(txidTradeA).valid
-        gettrade_MP(txidTradeB).valid
+        omniGetTrade(txidTradeA).valid
+        omniGetTrade(txidTradeB).valid
 
         and:
-        gettrade_MP(txidTradeA).status != "open"
-        gettrade_MP(txidTradeA).status != "filled"
-        gettrade_MP(txidTradeB).status == "filled"
+        omniGetTrade(txidTradeA).status != "open"
+        omniGetTrade(txidTradeA).status != "filled"
+        omniGetTrade(txidTradeB).status == "filled"
 
         and:
-        getbalance_MP(actorA, propertyMSC).balance == 1.66666666
-        getbalance_MP(actorA, propertySPX).reserved == 0.16666667
-        getbalance_MP(actorB, propertySPX).balance == 0.83333333
-        getbalance_MP(actorB, propertyMSC).reserved == 0.0
+        omniGetBalance(actorA, propertyMSC).balance == 1.66666666
+        omniGetBalance(actorA, propertySPX).reserved == 0.16666667
+        omniGetBalance(actorB, propertySPX).balance == 0.83333333
+        omniGetBalance(actorB, propertyMSC).reserved == 0.0
     }
 
     /**
@@ -161,25 +160,25 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(actorB, 50.0, PropertyType.DIVISIBLE, propertyMSC.ecosystem)
 
         when:
-        def txidTradeA = trade_MP(actorA, propertyMSC, 23.0 , propertySPX, 100.0, actionNew)
+        def txidTradeA = omniSendTrade(actorA, propertyMSC, 23.0 , propertySPX, 100.0)
         generateBlock()
-        def txidTradeB = trade_MP(actorB, propertySPX, 50.0, propertyMSC, 10.0, actionNew)
+        def txidTradeB = omniSendTrade(actorB, propertySPX, 50.0, propertyMSC, 10.0)
         generateBlock()
 
         then:
-        gettrade_MP(txidTradeA).valid
-        gettrade_MP(txidTradeB).valid
+        omniGetTrade(txidTradeA).valid
+        omniGetTrade(txidTradeB).valid
 
         and:
-        gettrade_MP(txidTradeA).status != "open"
-        gettrade_MP(txidTradeA).status != "filled"
-        gettrade_MP(txidTradeB).status == "filled"
+        omniGetTrade(txidTradeA).status != "open"
+        omniGetTrade(txidTradeA).status != "filled"
+        omniGetTrade(txidTradeB).status == "filled"
 
         and:
-        getbalance_MP(actorA, propertySPX).balance == 50.0
-        getbalance_MP(actorA, propertyMSC).reserved == 11.5
-        getbalance_MP(actorB, propertyMSC).balance == 11.5
-        getbalance_MP(actorB, propertySPX).reserved == 0.0
+        omniGetBalance(actorA, propertySPX).balance == 50.0
+        omniGetBalance(actorA, propertyMSC).reserved == 11.5
+        omniGetBalance(actorB, propertyMSC).balance == 11.5
+        omniGetBalance(actorB, propertySPX).reserved == 0.0
     }
 
     def "One side of the trade must either be MSC or TMSC"() {
@@ -188,17 +187,17 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPB = fundNewProperty(actorAdress, 10.0, PropertyType.DIVISIBLE, Ecosystem.TMSC)
 
         when:
-        def txidTrade = trade_MP(actorAdress, propertySPA, 1.0, propertySPB, 1.0, actionNew)
+        def txidTrade = omniSendTrade(actorAdress, propertySPA, 1.0, propertySPB, 1.0)
         generateBlock()
 
         then:
-        gettrade_MP(txidTrade).valid == false
+        omniGetTrade(txidTrade).valid == false
 
         and:
-        getbalance_MP(actorAdress, propertySPA).balance == 20.0
-        getbalance_MP(actorAdress, propertySPB).balance == 10.0
-        getbalance_MP(actorAdress, propertySPA).reserved == zeroAmount
-        getbalance_MP(actorAdress, propertySPB).reserved == zeroAmount
+        omniGetBalance(actorAdress, propertySPA).balance == 20.0
+        omniGetBalance(actorAdress, propertySPB).balance == 10.0
+        omniGetBalance(actorAdress, propertySPA).reserved == zeroAmount
+        omniGetBalance(actorAdress, propertySPB).reserved == zeroAmount
     }
 
     @Unroll
@@ -209,52 +208,52 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(traderB, amountSPX, propertyTypeSPX, propertyMSC.ecosystem)
 
         then:
-        getbalance_MP(traderA, propertyMSC).balance == amountMSC
-        getbalance_MP(traderA, propertySPX).balance == zeroAmount
-        getbalance_MP(traderB, propertyMSC).balance == zeroAmount
-        getbalance_MP(traderB, propertySPX).balance == amountSPX
+        omniGetBalance(traderA, propertyMSC).balance == amountMSC
+        omniGetBalance(traderA, propertySPX).balance == zeroAmount
+        omniGetBalance(traderB, propertyMSC).balance == zeroAmount
+        omniGetBalance(traderB, propertySPX).balance == amountSPX
 
         when: "trader A offers MSC and desired SPX"
-        def txidOfferA = trade_MP(traderA, propertyMSC, amountMSC, propertySPX, amountSPX, actionNew)
+        def txidOfferA = omniSendTrade(traderA, propertyMSC, amountMSC, propertySPX, amountSPX)
         generateBlock()
 
         then: "it is a valid open order"
-        gettrade_MP(txidOfferA).valid
-        gettrade_MP(txidOfferA).status == "open"
-        gettrade_MP(txidOfferA).propertyidforsale == propertyMSC.getValue()
-        gettrade_MP(txidOfferA).propertyiddesired == propertySPX.getValue()
+        omniGetTrade(txidOfferA).valid
+        omniGetTrade(txidOfferA).status == "open"
+        omniGetTrade(txidOfferA).propertyidforsale == propertyMSC.getValue()
+        omniGetTrade(txidOfferA).propertyiddesired == propertySPX.getValue()
 
         and: "there is an offering for the new property in the orderbook"
-        getorderbook_MP(propertyMSC, propertySPX).size() == 1
+        omniGetOrderbook(propertyMSC, propertySPX).size() == 1
 
         and: "the offered amount is now reserved"
-        getbalance_MP(traderA, propertyMSC).balance == zeroAmount
-        getbalance_MP(traderA, propertyMSC).reserved == amountMSC
+        omniGetBalance(traderA, propertyMSC).balance == zeroAmount
+        omniGetBalance(traderA, propertyMSC).reserved == amountMSC
 
         when: "trader B offers SPX and desires MSC"
-        def txidOfferB = trade_MP(traderB, propertySPX, amountSPX, propertyMSC, amountMSC, actionNew)
+        def txidOfferB = omniSendTrade(traderB, propertySPX, amountSPX, propertyMSC, amountMSC)
         generateBlock()
 
         then: "the order is filled"
-        gettrade_MP(txidOfferB).valid
-        gettrade_MP(txidOfferB).status == "filled"
-        gettrade_MP(txidOfferB).propertyidforsale == propertySPX.getValue()
-        gettrade_MP(txidOfferB).propertyiddesired == propertyMSC.getValue()
+        omniGetTrade(txidOfferB).valid
+        omniGetTrade(txidOfferB).status == "filled"
+        omniGetTrade(txidOfferB).propertyidforsale == propertySPX.getValue()
+        omniGetTrade(txidOfferB).propertyiddesired == propertyMSC.getValue()
 
         and: "the offering is no longer listed in the orderbook"
-        getorderbook_MP(propertyMSC, propertySPX).size() == 0
+        omniGetOrderbook(propertyMSC, propertySPX).size() == 0
 
         and:
-        getbalance_MP(traderA, propertyMSC).balance == zeroAmount
-        getbalance_MP(traderA, propertySPX).balance == amountSPX
-        getbalance_MP(traderB, propertyMSC).balance == amountMSC
-        getbalance_MP(traderB, propertySPX).balance == zeroAmount
+        omniGetBalance(traderA, propertyMSC).balance == zeroAmount
+        omniGetBalance(traderA, propertySPX).balance == amountSPX
+        omniGetBalance(traderB, propertyMSC).balance == amountMSC
+        omniGetBalance(traderB, propertySPX).balance == zeroAmount
 
         and:
-        getbalance_MP(traderA, propertyMSC).reserved == zeroAmount
-        getbalance_MP(traderA, propertySPX).reserved == zeroAmount
-        getbalance_MP(traderB, propertyMSC).reserved == zeroAmount
-        getbalance_MP(traderB, propertySPX).reserved == zeroAmount
+        omniGetBalance(traderA, propertyMSC).reserved == zeroAmount
+        omniGetBalance(traderA, propertySPX).reserved == zeroAmount
+        omniGetBalance(traderB, propertyMSC).reserved == zeroAmount
+        omniGetBalance(traderB, propertySPX).reserved == zeroAmount
 
         where:
         propertyTypeSPX          | amountSPX                              | propertyMSC     | amountMSC
@@ -283,52 +282,52 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(traderA, amountSPX, propertyTypeSPX, propertyMSC.ecosystem)
 
         then:
-        getbalance_MP(traderA, propertyMSC).balance == zeroAmount
-        getbalance_MP(traderA, propertySPX).balance == amountSPX
-        getbalance_MP(traderB, propertyMSC).balance == amountMSC
-        getbalance_MP(traderB, propertySPX).balance == zeroAmount
+        omniGetBalance(traderA, propertyMSC).balance == zeroAmount
+        omniGetBalance(traderA, propertySPX).balance == amountSPX
+        omniGetBalance(traderB, propertyMSC).balance == amountMSC
+        omniGetBalance(traderB, propertySPX).balance == zeroAmount
 
         when: "trader A offers SPX and desired MSC"
-        def txidOfferA = trade_MP(traderA, propertySPX, amountSPX, propertyMSC, amountMSC, actionNew)
+        def txidOfferA = omniSendTrade(traderA, propertySPX, amountSPX, propertyMSC, amountMSC)
         generateBlock()
 
         then: "it is a valid open order"
-        gettrade_MP(txidOfferA).valid
-        gettrade_MP(txidOfferA).status == "open"
-        gettrade_MP(txidOfferA).propertyidforsale == propertySPX.getValue()
-        gettrade_MP(txidOfferA).propertyiddesired == propertyMSC.getValue()
+        omniGetTrade(txidOfferA).valid
+        omniGetTrade(txidOfferA).status == "open"
+        omniGetTrade(txidOfferA).propertyidforsale == propertySPX.getValue()
+        omniGetTrade(txidOfferA).propertyiddesired == propertyMSC.getValue()
 
         and: "there is an offering for the new property in the orderbook"
-        getorderbook_MP(propertySPX, propertyMSC).size() == 1
+        omniGetOrderbook(propertySPX, propertyMSC).size() == 1
 
         and: "the offered amount is now reserved"
-        getbalance_MP(traderA, propertySPX).balance == zeroAmount
-        getbalance_MP(traderA, propertySPX).reserved == amountSPX
+        omniGetBalance(traderA, propertySPX).balance == zeroAmount
+        omniGetBalance(traderA, propertySPX).reserved == amountSPX
 
         when: "trader B offers MSC and desires SPX"
-        def txidOfferB = trade_MP(traderB, propertyMSC, amountMSC, propertySPX, amountSPX, actionNew)
+        def txidOfferB = omniSendTrade(traderB, propertyMSC, amountMSC, propertySPX, amountSPX)
         generateBlock()
 
         then: "the order is filled"
-        gettrade_MP(txidOfferB).valid
-        gettrade_MP(txidOfferB).status == "filled"
-        gettrade_MP(txidOfferB).propertyidforsale == propertyMSC.getValue()
-        gettrade_MP(txidOfferB).propertyiddesired == propertySPX.getValue()
+        omniGetTrade(txidOfferB).valid
+        omniGetTrade(txidOfferB).status == "filled"
+        omniGetTrade(txidOfferB).propertyidforsale == propertyMSC.getValue()
+        omniGetTrade(txidOfferB).propertyiddesired == propertySPX.getValue()
 
         and: "the offering is no longer listed in the orderbook"
-        getorderbook_MP(propertySPX, propertyMSC).size() == 0
+        omniGetOrderbook(propertySPX, propertyMSC).size() == 0
 
         and:
-        getbalance_MP(traderA, propertyMSC).balance == amountMSC
-        getbalance_MP(traderA, propertySPX).balance == zeroAmount
-        getbalance_MP(traderB, propertyMSC).balance == zeroAmount
-        getbalance_MP(traderB, propertySPX).balance == amountSPX
+        omniGetBalance(traderA, propertyMSC).balance == amountMSC
+        omniGetBalance(traderA, propertySPX).balance == zeroAmount
+        omniGetBalance(traderB, propertyMSC).balance == zeroAmount
+        omniGetBalance(traderB, propertySPX).balance == amountSPX
 
         and:
-        getbalance_MP(traderA, propertyMSC).reserved == zeroAmount
-        getbalance_MP(traderA, propertySPX).reserved == zeroAmount
-        getbalance_MP(traderB, propertyMSC).reserved == zeroAmount
-        getbalance_MP(traderB, propertySPX).reserved == zeroAmount
+        omniGetBalance(traderA, propertyMSC).reserved == zeroAmount
+        omniGetBalance(traderA, propertySPX).reserved == zeroAmount
+        omniGetBalance(traderB, propertyMSC).reserved == zeroAmount
+        omniGetBalance(traderB, propertySPX).reserved == zeroAmount
 
         where:
         propertyTypeSPX          | amountSPX                              | propertyMSC     | amountMSC
@@ -350,11 +349,11 @@ class MetaDexSpec extends BaseRegTestSpec {
     }
 
     def setupSpec() {
-        if (!commandExists("gettrade_MP")) {
-            throw new AssumptionViolatedException('The client has no "gettrade_MP" command')
+        if (!commandExists("omni_gettrade")) {
+            throw new AssumptionViolatedException('The client has no "omni_gettrade" command')
         }
-        if (!commandExists("getorderbook_MP")) {
-            throw new AssumptionViolatedException('The client has no "getorderbook_MP" command')
+        if (!commandExists("omni_getorderbook")) {
+            throw new AssumptionViolatedException('The client has no "omni_getorderbook" command')
         }
     }
 

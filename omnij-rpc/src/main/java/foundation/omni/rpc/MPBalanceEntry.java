@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 /**
  * Balance data for a specific Omni CurrencyID in a single Bitcoin address
  *
- * A Java representation of the JSON entry returned by getallbalancesforid_MP
+ * A Java representation of the JSON entry returned by {@code "omni_getallbalancesforid"}.
  */
 public class MPBalanceEntry {
     private Address address;

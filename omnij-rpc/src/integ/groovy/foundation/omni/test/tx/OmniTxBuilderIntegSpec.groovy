@@ -19,7 +19,7 @@ class OmniTxBuilderIntegSpec extends BaseRegTestSpec {
     def "Can simple send amount MSC from one address to another using OmniTxBuilder and sendraw RPC"() {
         given: "a fundedAddress with BTC/MSC and a newly created toAddress"
         def fundedAddress = createFundedAddress(startBTC, startMSC)
-        def startBalance = getbalance_MP(fundedAddress, MSC).balance
+        def startBalance = omniGetBalance(fundedAddress, MSC).balance
         def fundedKey = dumpPrivKey(fundedAddress)
         def toAddress = getNewAddress()
         List<TransactionOutput> utxos = listUnspentJ(fundedAddress)
@@ -33,10 +33,10 @@ class OmniTxBuilderIntegSpec extends BaseRegTestSpec {
 
         and: "a block is generated"
         generateBlock()
-        def endBalance = getbalance_MP(fundedAddress, MSC).balance
+        def endBalance = omniGetBalance(fundedAddress, MSC).balance
 
         then: "the toAddress has the correct MSC balance and source address is reduced by correct amount"
-        amount == getbalance_MP(toAddress, MSC).balance
+        amount == omniGetBalance(toAddress, MSC).balance
         endBalance == startBalance - amount
     }
 }

@@ -33,17 +33,17 @@ class SendToOwnersSpec extends BaseRegTestSpec {
         def expectedBalance = 0.0
 
         when: "We Send to Owners"
-        def startBalances = getallbalancesforid_MP(currencyID)
-        def startBalanceSender = getbalance_MP(fundedAddress, currencyID).balance
+        def startBalances = omniGetAllBalancesForId(currencyID)
+        def startBalanceSender = omniGetBalance(fundedAddress, currencyID).balance
         def numberOfHolders = startBalances.size()
-        sendToOwnersMP(fundedAddress, currencyID, amountSent)
+        omniSendSTO(fundedAddress, currencyID, amountSent)
 
         and: "We generate a block"
         generateBlock()
 
         // The fee for each receiver is #stoFeePerAddress
         if (numberOfHolders > 1) {
-            def endBalances = getallbalancesforid_MP(currencyID)
+            def endBalances = omniGetAllBalancesForId(currencyID)
             def changedBalances = endBalances - startBalances
             def numberReceivers = changedBalances.size() - 1
             def totalFee = numberReceivers * stoFeePerAddress
@@ -54,7 +54,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
         }
 
         then: "Our balance has been reduced by amount sent + fees"
-        getbalance_MP(fundedAddress, currencyID).balance == expectedBalance
+        omniGetBalance(fundedAddress, currencyID).balance == expectedBalance
     }
 
     def "STO fails when amount sent is zero"() {
@@ -64,7 +64,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
         def startBalances = consensusTool.getConsensusSnapshot(currencyID)
 
         when: "We Send to Owners with amount equal zero"
-        sendToOwnersMP(fundedAddress, currencyID, 0.0)
+        omniSendSTO(fundedAddress, currencyID, 0.0)
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
