@@ -17,10 +17,6 @@ There are currently three subprojects of OmniJ. Each of which builds a JAR artif
 |===
 | module | Description | Languages/Version
 
-| bitcoin-rpc
-| Bitcoin RPC library, command-line API/tools, integration tests
-| JDK 7+ Java & Groovy
-
 | omnij-core
 | Core Omni functionality
 | JDK 7+ Java-only, Android-compatible
@@ -28,7 +24,13 @@ There are currently three subprojects of OmniJ. Each of which builds a JAR artif
 | omnij-rpc
 | Omni Core RPC library, command-line API/tools, integration tests
 | JDK 7+ Java & Groovy
+
+| omnij-cli
+| Builds the command-line Omni consensus-checking tool.
+| JDK 7+ Java & Groovy
 |===
+
+A Bitcoin JSON-RPC client and command-line tool support that was previously part of OmniJ has moved to the https://github.com/msgilligan/bitcoinj-addons[bitcoinj-addons] project which is used by OmniJ.
 
 === OmniLayer Documentation
 
@@ -57,11 +59,11 @@ The only prerequisite for building OmniJ is having Java JDK 7 or later installed
 
 . Build and test with the provided Gradle wrapper scripts. For Unix/Mac:
 
-    ./gradlew build
+    ./gradlew build :omnij-cli:shadowJar
 +
 or for Windows:
 
-    ./gradlew.bat build
+    ./gradlew.bat build :omnij-cli:shadowJar
 
 After a successful build, the jars will be in the following locations:
 
@@ -69,27 +71,22 @@ After a successful build, the jars will be in the following locations:
 |===
 | module | jar path
 
-| bitcoin-rpc 
-| bitcoin-rpc/build/libs/bitcoin-rpc-_version_.jar
-
 | omnij-core
 | omnij-core/build/libs/omnij-core-_version_.jar
 
 | omnij-rpc
 | omnij-rpc/build/libs/omnij-rpc-_version_.jar
+
+| omnij-cli 
+| omnij-cli/build/libs/omni-consensus-_version_.jar
 |===
 
-== Integration Testing with bitcoin-spock
-
-[NOTE]
-We've recently moved this repository from https://github.com/msgilligan/bitcoin-spock[msgilligan/bitcoin-spock] to https://github.com/OmniLayer/OmniJ[OmniLayer/OmniJ]. Since most of the issues in the Issue DB were focused on Omni RPC testing and OmniJ development, it made sense to move the whole repo. Some Bitcoin-specific portions of the repo may be extracted to another project or contributed to https://bitcoinj.github.io[bitcoinj].
+== Omni Integration Testing with Spock Framework
 
 Integration testing for https://bitcoin.org[Bitcoin] and http://omni.foundation[Omni Protocol] using the http://spockframework.org[Spock Framework].
 
-There are currently three test suites contained in this project.
+There are currently two integration test suites contained in this project.
 
-Bitcoin RegTest Tests::
-Test Bitcoin RPC calls against an instance of `bitcoind` running in RegTest mode.
 
 Omni RegTest Tests::
 Test Bitcoin and Omni Core RPC calls against an instance of `omnicored` running in RegTest mode.
@@ -97,8 +94,10 @@ Test Bitcoin and Omni Core RPC calls against an instance of `omnicored` running 
 Omni Consensus Tests::
 Use the `getallbalancesforid_MP` RPC to get balances for multiple Omni Protocol currencies and compare them against balance information from several well-known public Omni Protocol servers with consensus-checking Web APIs.
 
-[NOTE]
-Omni Core was formerly known as Master Core and the binary is still named `mastercored` (release version, it is still `bitcoind` on the current development branch), though that should change in a future release. The Omni Protocol was formerly Master Protocol.
+=== Moved to bitcoinj-addons
+
+Bitcoin RegTest Tests::
+Test Bitcoin RPC calls against an instance of `bitcoind` running in RegTest mode.
 
 == Installing pre-requisites
 
@@ -135,14 +134,17 @@ The above examples are for the Consensus Test, to run the other test suites repl
 
 To run the test from Jenkins we are using the following (UNIX) shell scripts:
 
-test-btc-integ-regtest.sh::
-Runs BTC RPC RegTest tests against a built executable of `bitcoind` in `copied-artifacts/src` directory.
-
 test-omni-integ-regtest.sh::
 Runs Omni Core RPC regtest test against a built executable of `omnicored` in `copied-artifacts/src` directory.
 
 test-omni-consensus-mainnet.sh::
 Runs consensus tests against a built executable of `omnicored` in `copied-artifacts/src` directory.
+
+=== Moved to bitcoinj-addons project
+
+bitcoinj-rpcclient/run-bitcoind-regtest.sh::
+Runs BTC RPC RegTest tests against a built executable of `bitcoind` in `copied-artifacts/src` directory.
+
 
 [CAUTION]
 Read the scripts carefully to make sure you understand how they work. Take special care to notice the `rm -rf` commands.
@@ -185,7 +187,7 @@ These sample Spock "feature tests" are from the file https://github.com/OmniLaye
 
 The OmniJ Command-line Consensus tool can be built with the following command:
 
-    ./gradlew omnij-cli:shadowJar
+    ./gradlew :omnij-cli:shadowJar
 
 This will produce a self-contained, executable jar in `omnij-cli/build/libs/omni-consensus-`_version_`.jar`.
 
