@@ -6,8 +6,10 @@ sourceCompatibility = 1.7
 group = 'foundation.omni'
 
 dependencies {
-    compile project(':bitcoin-rpc')
     compile project(':omnij-core')
+
+    compile 'com.msgilligan:bitcoinj-rpcclient:0.0.3'
+    compile 'com.msgilligan:bitcoinj-cli:0.0.3'
 
     compile "org.codehaus.groovy:groovy:${groovyVersion}"
     compile "org.codehaus.groovy:groovy-json:${groovyVersion}"
