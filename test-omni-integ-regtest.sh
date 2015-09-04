@@ -36,7 +36,7 @@ BTCPID=$!
 
 # Run integration tests
 echo "Running Omni RPC integration tests in RegTest mode..."
-./gradlew clean :omnij-rpc:regTest
+./gradlew clean :omnij-rpc:regTest :omnij-cli:regTest
 GRADLESTATUS=$?
 
 exit $GRADLESTATUS

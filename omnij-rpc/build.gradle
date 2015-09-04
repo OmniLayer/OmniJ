@@ -2,14 +2,10 @@ plugins {
     id 'maven'
 }
 
-sourceCompatibility = 1.7
-group = 'foundation.omni'
-
 dependencies {
     compile project(':omnij-core')
 
-    compile 'com.msgilligan:bitcoinj-rpcclient:0.0.3'
-    compile 'com.msgilligan:bitcoinj-cli:0.0.3'
+    compile 'com.msgilligan:bitcoinj-rpcclient:0.0.4'
 
     compile "org.codehaus.groovy:groovy:${groovyVersion}"
     compile "org.codehaus.groovy:groovy-json:${groovyVersion}"
@@ -62,7 +58,7 @@ task regTest(type: Test) {
     systemProperties ([ "omni.test.rpcTestUser": rpcTestUser,
                         "omni.test.rpcTestPassword": rpcTestPassword,
     ])
-    include 'foundation/omni/test/rpc/**', 'foundation/omni/test/tx/**', 'foundation/omni/cli/**'
+    include 'foundation/omni/test/rpc/**', 'foundation/omni/test/tx/**'
 }
 
 task consensusTest(type: Test) {
