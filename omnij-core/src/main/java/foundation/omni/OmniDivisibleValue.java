@@ -53,6 +53,11 @@ public final class OmniDivisibleValue extends OmniValue {
     }
 
     @Override
+    public PropertyType getPropertyType() {
+        return PropertyType.DIVISIBLE;
+    }
+
+    @Override
     public Class<?> getNumberType() {
         return Long.class;
     }

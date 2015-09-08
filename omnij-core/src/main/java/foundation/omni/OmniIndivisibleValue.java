@@ -4,7 +4,7 @@ import java.math.BigInteger;
 
 /**
  * Numeric Value of Indivisible Omni Token
- * An indivsible token is an integer number of tokens that can't be subdivided to
+ * An indivisible token is an integer number of tokens that can't be subdivided to
  * less than one token.
  */
 public final class OmniIndivisibleValue extends OmniValue {
@@ -33,4 +33,10 @@ public final class OmniIndivisibleValue extends OmniValue {
     private OmniIndivisibleValue(long value) {
         super(value);
     }
+
+    @Override
+    public PropertyType getPropertyType() {
+        return PropertyType.INDIVISIBLE;
+    }
+
 }

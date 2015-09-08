@@ -4,6 +4,7 @@ import javax.money.NumberValue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.util.PropertyPermission;
 
 /**
  * <p>Numeric value for a quantity of Omni tokens - base class for OmniDivisible and OmniIndivisible subclasses.
@@ -62,6 +63,8 @@ public abstract class OmniValue extends NumberValue {
     public long asWillets() {
         return value;
     }
+
+    abstract public PropertyType getPropertyType();
 
     /**
      * <p>Make sure a BigInteger value is a valid Omni "number of coins" value</p>
