@@ -8,6 +8,7 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
+import org.junit.AssumptionViolatedException
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -265,7 +266,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         def numberOfAllOwners = omniGetProperty(currencyMSC).size()
         if (BTC.btcToSatoshis(startMSC - amountSTO) < (numberOfAllOwners - 1)) {
-            throw new org.junit.internal.AssumptionViolatedException("actor may not have enough MSC to pay the fee")
+            throw new AssumptionViolatedException("actor may not have enough MSC to pay the fee")
         }
 
         // fund participants
@@ -402,10 +403,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
      */
     def maybeSkipReservedMetaDexTests(def amountReserved, def amountReservedOwners) {
         if (amountReserved > 0) {
-            throw new org.junit.internal.AssumptionViolatedException("skipped")
+            throw new AssumptionViolatedException("skipped")
         }
         if (amountReservedOwners.sum() > 0) {
-            throw new org.junit.internal.AssumptionViolatedException("skipped")
+            throw new AssumptionViolatedException("skipped")
         }
     }
 
