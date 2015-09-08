@@ -136,7 +136,7 @@ class OmniDivisibleValueSpec extends Specification {
 
     def "Converting to float not allowed"() {
         when:
-        OmniValue value = new OmniDivisibleValue(1)
+        OmniValue value = OmniDivisibleValue.of(1)
         def v = value.floatValue()
 
         then:
@@ -145,7 +145,7 @@ class OmniDivisibleValueSpec extends Specification {
 
     def "Converting to double not allowed"() {
         when:
-        OmniValue value = new OmniDivisibleValue(1)
+        OmniValue value = OmniDivisibleValue.of(1)
         def v = value.doubleValue()
 
         then:
