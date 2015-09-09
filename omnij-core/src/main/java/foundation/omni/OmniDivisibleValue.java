@@ -6,6 +6,7 @@ import javax.money.NumberValue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.math.RoundingMode;
 
 /**
  * Numeric Value of Divisible Omni Token
@@ -16,13 +17,15 @@ import java.math.MathContext;
 public final class OmniDivisibleValue extends OmniValue {
     public static final BigDecimal   MIN_VALUE = new BigDecimal(0); // Minimum value of 1 in transactions?
     public static final BigDecimal   MAX_VALUE = new BigDecimal("92233720368.54775807");
-    public static final long willetsPerCoin = Coin.COIN.value; // 10^8 (Omni equivalent of Satoshis
+    public static final MathContext DEFAULT_CONTEXT = new MathContext(0, RoundingMode.UNNECESSARY);
+    public static final int DEFAULT_SCALE = Coin.SMALLEST_UNIT_EXPONENT;
+    public static final long willetsPerCoin = Coin.COIN.value; // 10^8 (Omni equivalent of satoshi unit
     private static final BigDecimal bdWilletsPerCoin = new BigDecimal(willetsPerCoin);
 
     /**
      * Create OmniDivisibleValue of the specified amount
      * @param amount Number of Omni tokens
-     * @return
+     * @return OmniDivisibleValue representing amount
      */
     public static OmniDivisibleValue of(long amount) {
         return OmniDivisibleValue.of(BigDecimal.valueOf(amount));
@@ -31,7 +34,7 @@ public final class OmniDivisibleValue extends OmniValue {
     /**
      * Create OmniDivisibleValue of the specified amount
      * @param amount Number of Omni tokens
-     * @return
+     * @return OmniDivisibleValue representing amount
      */
     public static OmniDivisibleValue of(BigDecimal amount) {
         return new OmniDivisibleValue(amount.multiply(bdWilletsPerCoin).longValueExact());
@@ -64,12 +67,12 @@ public final class OmniDivisibleValue extends OmniValue {
 
     @Override
     public int getPrecision() {
-        throw new UnsupportedOperationException("Operation not supported");
+        return DEFAULT_CONTEXT.getPrecision();
     }
 
     @Override
     public int getScale() {
-        throw new UnsupportedOperationException("Operation not supported");
+        return DEFAULT_SCALE;
     }
 
     @Override
@@ -154,7 +157,6 @@ public final class OmniDivisibleValue extends OmniValue {
 
     public BigDecimal bigDecimalValue() {
         BigDecimal willets = new BigDecimal(value);
-        //TODO: Add rounding mode?
-        return willets.divide(bdWilletsPerCoin);
+        return willets.divide(bdWilletsPerCoin, DEFAULT_SCALE, RoundingMode.UNNECESSARY);
     }
 }
