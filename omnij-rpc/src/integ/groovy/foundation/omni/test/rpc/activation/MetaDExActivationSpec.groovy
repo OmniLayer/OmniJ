@@ -4,6 +4,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
 import org.bitcoinj.core.Address
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -16,6 +17,7 @@ import spock.lang.Stepwise
  *
  * Note: this test is only successful with a clean state, and requires that the feature is initially disabled!
  */
+@Ignore('the tests can only be executed with a pristine state, and the MetaDEx is already activated in regtest mode')
 @Stepwise
 class MetaDExActivationSpec extends BaseActivationSpec {
 
