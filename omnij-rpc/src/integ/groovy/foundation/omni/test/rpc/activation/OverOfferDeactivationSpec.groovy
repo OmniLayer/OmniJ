@@ -1,7 +1,6 @@
 package foundation.omni.test.rpc.activation
 
 import foundation.omni.CurrencyID
-import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -12,15 +11,7 @@ import spock.lang.Stepwise
  * distributed exchange for an amount that is more than the available balance.
  *
  * During the grace period, the old rules are still in place.
- *
- * Note: this test is only successful with a clean state!
- *
- * After running the tests, the following tests fail:
- *
- *   "Offering more tokens than available puts up an offer with the available amount" (in test.rpc.dex.DexSpec)
- *   "Receiving tokens doesn't increase the offered amount of a published offer" (in test.rpc.dex.DexSpec)
  */
-@Ignore('the tests can only be executed with a pristine state, and they affect other exchange related tests')
 @Stepwise
 class OverOfferDeactivationSpec extends BaseActivationSpec {
 

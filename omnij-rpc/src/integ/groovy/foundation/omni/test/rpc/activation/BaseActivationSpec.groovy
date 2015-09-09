@@ -1,13 +1,21 @@
 package foundation.omni.test.rpc.activation
 
 import foundation.omni.BaseRegTestSpec
+import org.bitcoinj.core.Sha256Hash
 import org.junit.internal.AssumptionViolatedException
+import spock.lang.Shared
 
 /**
  * Base specification for feature activations in regtest mode
  *
  * The use of activation commands is restricted to whitelisted senders. To whitelist a source to allow feature
  * activations, the option {@code -omniactivationallowsender="sender"} can be used.
+ *
+ * To avoid that the activations affect other tests, a workaround is used to revert consensus affecting changes:
+ *
+ * Before the tests, the hash of a "marker block" is stored, and after the tests 50 blocks are mined, and
+ * finally the "marker block" is invalidated. This results in a reorganization, and because only the state of
+ * the last 50 blocks is persisted, it completely resets the state, including all activations inbetween.
  */
 abstract class BaseActivationSpec extends BaseRegTestSpec {
 
@@ -26,6 +34,8 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
     static protected BigDecimal startMSC = 0.1
     static protected BigDecimal zeroAmount = 0.0
 
+    @Shared Sha256Hash initialBlock
+
     def setupSpec() {
         if (!commandExists('omni_sendactivation')) {
             throw new AssumptionViolatedException('The client has no "omni_sendactivation" command')
@@ -33,5 +43,18 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
         if (!commandExists('omni_getactivations')) {
             throw new AssumptionViolatedException('The client has no "omni_getactivations" command')
         }
+
+        generateBlock()
+        def currentBlockCount = getBlockCount()
+        initialBlock = getBlockHash(currentBlockCount)
+    }
+
+    def cleanupSpec() {
+        for (int i = 0; i < 50; ++i) {
+            generateBlock()
+        }
+        invalidateBlock(initialBlock)
+        clearMemPool()
+        generateBlock()
     }
 }

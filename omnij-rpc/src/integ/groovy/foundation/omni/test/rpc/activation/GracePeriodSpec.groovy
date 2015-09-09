@@ -1,6 +1,5 @@
 package foundation.omni.test.rpc.activation
 
-import spock.lang.Ignore
 import spock.lang.Unroll
 
 /**
@@ -10,10 +9,7 @@ import spock.lang.Unroll
  * users have enough time to update their clients.
  *
  * The feature identifier 3 is currently unused, and a good candidate for tests.
- *
- * Note: this test is only successful with a clean state!
  */
-@Ignore('the tests can only be executed with a pristine state')
 class GracePeriodSpec extends BaseActivationSpec {
 
     @Unroll
