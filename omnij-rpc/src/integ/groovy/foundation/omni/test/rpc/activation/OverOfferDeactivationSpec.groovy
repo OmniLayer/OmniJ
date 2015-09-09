@@ -1,8 +1,6 @@
 package foundation.omni.test.rpc.activation
 
-import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
-import org.junit.internal.AssumptionViolatedException
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -22,25 +20,13 @@ import spock.lang.Stepwise
  *   "Receiving tokens doesn't increase the offered amount of a published offer" (in test.rpc.dex.DexSpec)
  */
 @Stepwise
-class OverOfferDeactivationSpec extends BaseRegTestSpec {
+class OverOfferDeactivationSpec extends BaseActivationSpec {
 
-    final static Integer minClientVersion = 0
-    final static Integer activationMinBlocks = 5
-    final static Short featureId = 5 // TODO: identifier may change
-    final static BigDecimal startBTC = 0.1
-    final static BigDecimal startMSC = 0.1
-    final static BigDecimal zeroAmount = 0.0
-    final static BigDecimal stdCommitFee = 0.0
-    final static Byte stdBlockSpan = 10
-    final static Byte actionNew = 1
+    static final BigDecimal stdCommitFee = 0.0
+    static final Byte stdBlockSpan = 10
+    static final Byte actionNew = 1
 
     @Shared Integer activationBlock = 999999
-
-    def setupSpec() {
-        if (!commandExists('omni_sendactivation')) {
-            throw new AssumptionViolatedException('The client has no "omni_sendactivation" command')
-        }
-    }
 
     def "Offering more than available on the distributed exchange is valid before the deactivation"() {
         setup:
@@ -69,7 +55,7 @@ class OverOfferDeactivationSpec extends BaseRegTestSpec {
         activationBlock = getBlockCount() + activationMinBlocks + 1 // one extra, for transaction confirmation
 
         when:
-        def txid = omniSendActivation(actorAddress, featureId, activationBlock, minClientVersion)
+        def txid = omniSendActivation(actorAddress, overOffersFeatureId, activationBlock, minClientVersion)
         generateBlock()
 
         then:

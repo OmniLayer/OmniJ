@@ -1,7 +1,5 @@
 package foundation.omni.test.rpc.activation
 
-import foundation.omni.BaseRegTestSpec
-import org.junit.internal.AssumptionViolatedException
 import spock.lang.Unroll
 
 /**
@@ -10,21 +8,11 @@ import spock.lang.Unroll
  * Features are activated at specific block heights, which must be within the range of a grace period to ensure
  * users have enough time to update their clients.
  *
- * The use of activation commands is restricted to whitelisted senders. To whitelist a source to allow feature
- * activations, the option {@code -omniactivationallowsender="sender"} can be used.
- *
  * The feature identifier 3 is currently unused, and a good candidate for tests.
  *
  * Note: this test is only successful with a clean state!
  */
-class GracePeriodSpec extends BaseRegTestSpec {
-
-    final static Integer minClientVersion = 0
-    final static Integer activationMinBlocks = 5
-    final static Integer activationMaxBlocks = 10
-    final static Short featureId = 3
-    final static BigDecimal startBTC = 0.001
-    final static BigDecimal zeroAmount = 0.0
+class GracePeriodSpec extends BaseActivationSpec {
 
     @Unroll
     def "A relative activation height of #blockOffset blocks is smaller than the grace period and not allowed"() {
@@ -33,7 +21,7 @@ class GracePeriodSpec extends BaseRegTestSpec {
         def activationBlock = getBlockCount() + blockOffset + 1 // one extra, for transaction confirmation
 
         when:
-        def txid = omniSendActivation(actorAddress, featureId, activationBlock, minClientVersion)
+        def txid = omniSendActivation(actorAddress, unallocatedFeatureId, activationBlock, minClientVersion)
         generateBlock()
 
         then:
@@ -50,7 +38,7 @@ class GracePeriodSpec extends BaseRegTestSpec {
         def activationBlock = getBlockCount() + blockOffset + 1 // one extra, for transaction confirmation
 
         when:
-        def txid = omniSendActivation(actorAddress, featureId, activationBlock, minClientVersion)
+        def txid = omniSendActivation(actorAddress, unallocatedFeatureId, activationBlock, minClientVersion)
         generateBlock()
 
         then:
@@ -67,7 +55,7 @@ class GracePeriodSpec extends BaseRegTestSpec {
         def activationBlock = getBlockCount() + blockOffset + 1 // one extra, for transaction confirmation
 
         when:
-        def txid = omniSendActivation(actorAddress, featureId, activationBlock, minClientVersion)
+        def txid = omniSendActivation(actorAddress, unallocatedFeatureId, activationBlock, minClientVersion)
         generateBlock()
 
         then:
@@ -75,11 +63,5 @@ class GracePeriodSpec extends BaseRegTestSpec {
 
         where:
         blockOffset << [activationMinBlocks, activationMinBlocks + 1, activationMaxBlocks - 1, activationMaxBlocks]
-    }
-
-    def setupSpec() {
-        if (!commandExists('omni_sendactivation')) {
-            throw new AssumptionViolatedException('The client has no "omni_sendactivation" command')
-        }
     }
 }

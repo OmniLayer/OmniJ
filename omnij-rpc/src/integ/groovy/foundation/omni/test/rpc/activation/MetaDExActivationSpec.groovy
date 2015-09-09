@@ -1,11 +1,9 @@
 package foundation.omni.test.rpc.activation
 
-import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
 import org.bitcoinj.core.Address
-import org.junit.internal.AssumptionViolatedException
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -19,13 +17,7 @@ import spock.lang.Stepwise
  * Note: this test is only successful with a clean state, and requires that the feature is initially disabled!
  */
 @Stepwise
-class MetaDExActivationSpec extends BaseRegTestSpec {
-
-    final static Integer minClientVersion = 0
-    final static Integer activationMinBlocks = 5
-    final static Short featureId = 2
-    final static BigDecimal startBTC = 0.1
-    final static BigDecimal startMSC = 0.1
+class MetaDExActivationSpec extends BaseActivationSpec {
 
     @Shared Integer activationBlock = 999999
     @Shared Address actorAddress
@@ -33,10 +25,6 @@ class MetaDExActivationSpec extends BaseRegTestSpec {
     @Shared CurrencyID testID
 
     def setupSpec() {
-        if (!commandExists('omni_sendactivation')) {
-            throw new AssumptionViolatedException('The client has no "omni_sendactivation" command')
-        }
-
         actorAddress = createFundedAddress(startBTC, startMSC)
         mainID = fundNewProperty(actorAddress, 10.0, PropertyType.DIVISIBLE, Ecosystem.MSC)
         testID = fundNewProperty(actorAddress, 15.0, PropertyType.DIVISIBLE, Ecosystem.TMSC)
@@ -108,7 +96,7 @@ class MetaDExActivationSpec extends BaseRegTestSpec {
         activationBlock = getBlockCount() + activationMinBlocks + 1 // one extra, for transaction confirmation
 
         when:
-        def txid = omniSendActivation(actorAddress, featureId, activationBlock, minClientVersion)
+        def txid = omniSendActivation(actorAddress, metaDExFeatureId, activationBlock, minClientVersion)
         generateBlock()
 
         then:
@@ -120,14 +108,14 @@ class MetaDExActivationSpec extends BaseRegTestSpec {
         def completedActivations = activations.completedactivations
 
         then:
-        pendingActivations.any { it.featureid == featureId }
-        !completedActivations.any { it.featureid == featureId }
+        pendingActivations.any { it.featureid == metaDExFeatureId }
+        !completedActivations.any { it.featureid == metaDExFeatureId }
 
         when:
-        def pendingFeature = pendingActivations.find { it.featureid == featureId } as Map<String, Object>
+        def pendingFeature = pendingActivations.find { it.featureid == metaDExFeatureId } as Map<String, Object>
 
         then:
-        pendingFeature.featureid == featureId
+        pendingFeature.featureid == metaDExFeatureId
         pendingFeature.activationblock == activationBlock
         pendingFeature.minimumversion == minClientVersion
     }
@@ -157,14 +145,14 @@ class MetaDExActivationSpec extends BaseRegTestSpec {
         def completedActivations = activations.completedactivations
 
         then:
-        !pendingActivations.any { it.featureid == featureId }
-        completedActivations.any { it.featureid == featureId }
+        !pendingActivations.any { it.featureid == metaDExFeatureId }
+        completedActivations.any { it.featureid == metaDExFeatureId }
 
         when:
-        def activatedFeature = completedActivations.find { it.featureid == featureId } as Map<String, Object>
+        def activatedFeature = completedActivations.find { it.featureid == metaDExFeatureId } as Map<String, Object>
 
         then:
-        activatedFeature.featureid == featureId
+        activatedFeature.featureid == metaDExFeatureId
         activatedFeature.activationblock == activationBlock
         activatedFeature.minimumversion == minClientVersion
 
