@@ -708,4 +708,15 @@ public class OmniClient extends BitcoinClient {
         return orders;
     }
 
+    /**
+     * Returns pending and completed feature activations.
+     *
+     * @return Pending and complete feature activations
+     * @since Omni Core 0.0.10
+     */
+    public Map<String, List<Map<String, Object>>> omniGetActivations() throws JsonRPCException, IOException {
+        Map<String, List<Map<String, Object>>> activations = send("omni_getactivations", null);
+        return activations;
+    }
+
 }
