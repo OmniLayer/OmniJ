@@ -214,6 +214,15 @@ public abstract class OmniValue extends NumberValue {
     }
 
     @Override
+    public int compareTo(NumberValue o) {
+        if (o instanceof OmniValue) {
+            return Long.compare(this.value, ((OmniValue) o).value);
+        } else {
+            return Long.compare(this.value, o.longValueExact());
+        }
+    }
+
+    @Override
     public String toString() {
         return Long.toString(value);
     }
