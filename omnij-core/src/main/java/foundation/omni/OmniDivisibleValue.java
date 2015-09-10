@@ -159,4 +159,13 @@ public final class OmniDivisibleValue extends OmniValue {
         BigDecimal willets = new BigDecimal(value);
         return willets.divide(bdWilletsPerCoin, DEFAULT_SCALE, RoundingMode.UNNECESSARY);
     }
+
+    public OmniDivisibleValue plus(OmniDivisibleValue right) {
+        return OmniDivisibleValue.ofWillets(this.value + right.value);
+    }
+
+    public OmniDivisibleValue minus(OmniDivisibleValue right) {
+        return OmniDivisibleValue.ofWillets(this.value - right.value);
+    }
+
 }

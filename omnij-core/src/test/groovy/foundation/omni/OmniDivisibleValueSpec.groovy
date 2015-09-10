@@ -170,4 +170,10 @@ class OmniDivisibleValueSpec extends Specification {
         ArithmeticException e = thrown()
     }
 
+    def "Equality works"() {
+        expect:
+        OmniDivisibleValue.of(1) == OmniDivisibleValue.of(1)
+//        OmniDivisibleValue.of(0.1) == OmniDivisibleValue.of(0.1)    // Broken!!! is this a groovy bug?
+    }
+
 }

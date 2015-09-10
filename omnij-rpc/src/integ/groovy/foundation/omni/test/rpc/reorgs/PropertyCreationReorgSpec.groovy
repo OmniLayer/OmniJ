@@ -3,6 +3,7 @@ package foundation.omni.test.rpc.reorgs
 import com.msgilligan.bitcoinj.rpc.JsonRPCStatusException
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
+import foundation.omni.OmniValue
 import foundation.omni.PropertyType
 import foundation.omni.rpc.SmartPropertyListInfo
 import spock.lang.Shared
@@ -45,7 +46,8 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         def actorAddress = createFundedAddress(startBTC, startMSC)
 
         when: "broadcasting and confirming a property creation transaction"
-        def txid = createProperty(actorAddress, ecosystem, propertyType, numberOfTokens.longValue())
+        def value = OmniValue.of(numberOfTokens, propertyType)
+        def txid = createProperty(actorAddress, ecosystem, value)
         def blockHashOfCreation = generateAndGetBlockHash()
 
         then: "the transaction is valid"

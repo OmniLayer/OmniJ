@@ -1,0 +1,3 @@
+moduleName=omnij groovy extensions
+moduleVersion=0.0.1-dev
+extensionClasses=foundation.omni.dsl.categories.NumberCategory

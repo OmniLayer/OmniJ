@@ -2,10 +2,12 @@ package foundation.omni.test
 
 import com.msgilligan.bitcoinj.test.BTCTestSupport
 import foundation.omni.Ecosystem
+import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniValue
 import foundation.omni.PropertyType
 import foundation.omni.rpc.RawTxDelegate
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
 import foundation.omni.CurrencyID
 import foundation.omni.net.OmniNetworkParameters
@@ -18,13 +20,29 @@ import foundation.omni.rpc.OmniClientDelegate
 trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelegate {
 
 
+
+    @Deprecated
     Sha256Hash requestMSC(Address toAddress, BigDecimal requestedMSC) {
-        return requestMSC(toAddress, requestedMSC, true)
+        return requestMSC(toAddress, OmniDivisibleValue.of(requestedMSC), true)
     }
 
-    Sha256Hash requestMSC(Address toAddress, BigDecimal requestedMSC, Boolean allowIntermediate) {
-        final OmniNetworkParameters params = OmniRegTestParams.get()  // Hardcoded for RegTest for now
 
+    Sha256Hash requestMSC(Address toAddress, OmniValue requestedOmni) {
+        return requestMSC(toAddress, requestedOmni, true)
+    }
+
+    /**
+     * Request MSC/Omni for testing
+     *
+     * TODO: Convert parameters and math to use OmniValue/Long
+     * @param toAddress Address requesting MSC/Omni
+     * @param requestedMSC Amount requested
+     * @param allowIntermediate allow intermediate receiver
+     * @return txid
+     */
+    Sha256Hash requestMSC(Address toAddress, OmniValue requestedOmni, Boolean allowIntermediate) {
+        final OmniNetworkParameters params = OmniRegTestParams.get()  // Hardcoded for RegTest for now
+        BigDecimal requestedMSC = requestedOmni.bigDecimalValue()
         // For 1.0 BTC an amount of 100.0 MSC is generated, resulting in a minimal purchase amount of
         // 0.00000100 MSC for 0.00000001 BTC
         def btcForMSC = (requestedMSC / 100.0).setScale(8, BigDecimal.ROUND_UP)
@@ -34,7 +52,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
             assert actualMSC == requestedMSC
         }
 
-        requestBitcoin(toAddress, btcForMSC + stdTxFee)
+        requestBitcoin(toAddress, btcForMSC.btc + stdTxFee.btc)
         def txid = sendBitcoin(toAddress, params.moneyManAddress, btcForMSC)
 
         if (actualMSC != requestedMSC) {
@@ -63,18 +81,29 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
         return txid
     }
 
+    @Deprecated
     Address createFundedAddress(BigDecimal requestedBTC, BigDecimal requestedMSC) {
+        return createFundedAddress(btcToCoin(requestedBTC), OmniDivisibleValue.of(requestedMSC), true)
+    }
+
+    @Deprecated
+    Address createFundedAddress(BigDecimal requestedBTC, BigDecimal requestedMSC, Boolean confirmTransactions) {
+        return createFundedAddress(btcToCoin(requestedBTC), OmniDivisibleValue.of(requestedMSC), confirmTransactions)
+    }
+
+    Address createFundedAddress(Coin requestedBTC, OmniValue requestedMSC) {
         return createFundedAddress(requestedBTC, requestedMSC, true)
     }
 
-    Address createFundedAddress(BigDecimal requestedBTC, BigDecimal requestedMSC, Boolean confirmTransactions) {
+    Address createFundedAddress(Coin requestedBTC, OmniValue requestedMSC, Boolean confirmTransactions) {
+        log.debug "createFundedAddress: requestedBTC: {}, requestedMSC: {}, confirm: {}", requestedBTC.toFriendlyString(), requestedMSC, confirmTransactions
         def fundedAddress = newAddress
 
-        if (requestedMSC > 0.0) {
+        if (requestedMSC.getWillets() > 0) {
             def txidMSC = requestMSC(fundedAddress, requestedMSC)
         }
 
-        if (requestedBTC > 0.0) {
+        if (requestedBTC > 0.btc) {
             def txidBTC = requestBitcoin(fundedAddress, requestedBTC)
         }
 
@@ -87,9 +116,13 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
         return fundedAddress
     }
 
+    @Deprecated
     CurrencyID fundNewProperty(Address address, BigDecimal amountBD, PropertyType type, Ecosystem ecosystem) {
-        OmniValue amount = OmniValue.of(amountBD, type);
-        def txidCreation = createProperty(address, ecosystem, type, amount.asWillets())
+        return fundNewProperty(address, OmniValue.of(amountBD, type), ecosystem)
+    }
+
+    CurrencyID fundNewProperty(Address address, OmniValue amount, Ecosystem ecosystem) {
+        def txidCreation = createProperty(address, ecosystem, amount)
         generateBlock()
         def txCreation = omniGetTransaction(txidCreation)
         assert txCreation.valid == true

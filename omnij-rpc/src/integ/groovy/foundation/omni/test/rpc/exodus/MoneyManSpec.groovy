@@ -1,9 +1,11 @@
 package foundation.omni.test.rpc.exodus
 
+import foundation.omni.OmniDivisibleValue
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.net.OmniRegTestParams
 import foundation.omni.rpc.OmniClient
+import org.bitcoinj.core.Coin
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -15,8 +17,8 @@ class MoneyManSpec extends BaseRegTestSpec {
 
     final static BigDecimal sendAmount = 10.0
     final static BigDecimal extraAmount = 0.10
-    final static BigDecimal faucetBTC = 10.0
-    final static BigDecimal faucetMSC = 1000.0
+    final static Coin faucetBTC = 10.btc
+    final static OmniDivisibleValue faucetMSC = 1000.divisible
     final static BigDecimal initialMSCPerBTC = 100.0
     final static BigDecimal simpleSendAmount = 1.0
 
@@ -56,7 +58,7 @@ class MoneyManSpec extends BaseRegTestSpec {
     def "check Spec setup"() {
         // This test is really an integration test of createFundedAddress()
         expect:
-        getBitcoinBalance(faucetAddress) == faucetBTC
+        getBitcoinBalance(faucetAddress) == faucetBTC.decimalBtc
         omniGetBalance(faucetAddress, MSC).balance == initialMSCPerBTC * sendAmount
         omniGetBalance(faucetAddress, TMSC).balance == initialMSCPerBTC * sendAmount
     }
