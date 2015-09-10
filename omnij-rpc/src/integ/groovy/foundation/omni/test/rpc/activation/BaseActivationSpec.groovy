@@ -50,6 +50,9 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
     }
 
     def cleanupSpec() {
+        if (initialBlock == null) {
+            return
+        }
         for (int i = 0; i < 50; ++i) {
             generateBlock()
         }
