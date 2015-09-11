@@ -10,6 +10,7 @@ buildscript {
 }
 
 ext.groovyVersion = '2.4.4'
+ext.bitcoinjAddonsVersion = '0.0.7-SNAPSHOT'
 
 apply from: 'gradle/groovydoc.gradle'
 apply from: 'gradle/asciidoctor.gradle'
