@@ -1,7 +1,9 @@
 package foundation.omni.test.rpc.misc
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
+import foundation.omni.OmniDivisibleValue
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.Coin
 import spock.lang.Ignore
 import spock.lang.Unroll
 
@@ -11,12 +13,12 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         given:
         def pristineAddress = newAddress
 
-        def balanceBTC = getBitcoinBalance(pristineAddress, 0, 9999999)
+        Coin balanceBTC = getBitcoinBalance(pristineAddress, 0, 9999999)
         def balanceMSC = omniGetBalance(pristineAddress, CurrencyID.MSC)
         def balanceTMSC = omniGetBalance(pristineAddress, CurrencyID.TMSC)
 
         expect: "zero balances"
-        balanceBTC == 0.0
+        balanceBTC == Coin.ZERO
         balanceMSC.balance == 0.0
         balanceMSC.reserved == 0.0
         balanceTMSC.balance == 0.0
@@ -24,10 +26,10 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
     }
 
     @Unroll
-    def "Requesting #requestedBTC BTC adds exactly that amount to the receivers BTC balance"() {
+    def "Requesting #requestedBTC BTC adds exactly that amount to the receivers BTC balance"(Coin requestedBTC) {
         given:
         def fundedAddress = newAddress
-        def balanceAtStart = getBitcoinBalance(fundedAddress, 0)
+        Coin balanceAtStart = getBitcoinBalance(fundedAddress, 0)
 
         when: "requesting bitcoin"
         def txid = requestBitcoin(fundedAddress, requestedBTC)
@@ -47,12 +49,12 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         finalBalance == balanceAfterRequest
 
         where:
-        requestedBTC << [1.0, stdTxFee, stdRelayTxFee, 0.00000001]
+        requestedBTC << [1.btc, stdTxFee, stdRelayTxFee, 0.00000001.btc]
     }
 
     @Unroll
     def "The client accepts a transaction fee of #feeBTC BTC"() {
-        def sendBTC = 0.1
+        def sendBTC = 0.1.btc
         def startBTC = sendBTC + feeBTC
 
         def senderAddress = newAddress
@@ -69,7 +71,7 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         then: "sender ends up with zero and receiver with the transferred amount, implying the rest was spent for fees"
         def sendTx = getTransaction(txid)
         sendTx.confirmations == 1
-        getBitcoinBalance(senderAddress) == 0.0
+        getBitcoinBalance(senderAddress) == 0.btc
         getBitcoinBalance(receiverAddress) == sendBTC
 
         where:
@@ -95,16 +97,16 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
     }
 
     @Unroll
-    def "The client accepts dust outputs with #dustAmount BTC"() {
-        def startBTC = dustAmount + stdTxFee
+    def "The client accepts dust outputs with #dustAmount BTC"(Coin relayTxFee, BigInteger dustAmount) {
+        def startBTC = dustAmount.satoshi + stdTxFee
 
         def senderAddress = newAddress
         def receiverAddress = newAddress
         requestBitcoin(senderAddress, startBTC)
         generateBlock()
 
-        def outputs = new HashMap<Address, BigDecimal>()
-        outputs[receiverAddress] = dustAmount
+        def outputs = new HashMap<Address, Coin>()
+        outputs[receiverAddress] = dustAmount.satoshi
 
         when: "sending a transaction with a dust output"
         def txid = sendBitcoin(senderAddress, outputs)
@@ -113,19 +115,19 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         then: "it is valid and not rejected"
         def sendTx = getTransaction(txid)
         sendTx.confirmations == 1
-        getBitcoinBalance(senderAddress) == 0.0
-        getBitcoinBalance(receiverAddress) == dustAmount
+        getBitcoinBalance(senderAddress) == 0.btc
+        getBitcoinBalance(receiverAddress) == dustAmount.satoshi
 
         where:
         relayTxFee = stdRelayTxFee
-        dustAmount = ((((148 + 34) * 3) / 1000) * relayTxFee).setScale(8, BigDecimal.ROUND_UP)
+        dustAmount = ((((148 + 34) * 3) / 1000) * relayTxFee.value).setScale(8, BigDecimal.ROUND_UP)
     }
 
     @Ignore
     @Unroll
     def "The client generates a \"simple send\" transaction with 2x #payToPubKeyDust + 1x #payloadDust BTC outputs"() {
         def startMSC = 1.0
-        def startBTC = 2 * payToPubKeyDust + payloadDust + stdTxFee
+        def startBTC = (2 * payToPubKeyDust + payloadDust + stdTxFee.value).satoshi
 
         def senderAddress = newAddress
         def receiverAddress = newAddress
@@ -136,7 +138,7 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getBitcoinBalance(receiverAddress) == 0.0
+        getBitcoinBalance(receiverAddress) == 0.btc
         getBitcoinBalance(senderAddress) == startBTC
         omniGetBalance(receiverAddress, CurrencyID.MSC).balance == 0.0
         omniGetBalance(senderAddress, CurrencyID.MSC).balance == startMSC
@@ -146,8 +148,8 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        getBitcoinBalance(receiverAddress) == payToPubKeyDust
-        getBitcoinBalance(senderAddress) == 0.0
+        getBitcoinBalance(receiverAddress) == payToPubKeyDust.satoshi
+        getBitcoinBalance(senderAddress) == 0.btc
 
         and:
         def sendTx = omniGetTransaction(txid)
@@ -158,18 +160,19 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
 
         where:
         relayTxFee = stdRelayTxFee
-        payToPubKeyDust = ((((148 + 34) * 3) / 1000) * stdRelayTxFee).setScale(8, BigDecimal.ROUND_UP)
-        payloadDust = ((((148 + 80) * 3) / 1000) * stdRelayTxFee).setScale(8, BigDecimal.ROUND_UP)
+        payToPubKeyDust = ((((148 + 34) * 3) / 1000) * stdRelayTxFee.value).setScale(8, BigDecimal.ROUND_UP)
+        payloadDust = ((((148 + 80) * 3) / 1000) * stdRelayTxFee.value).setScale(8, BigDecimal.ROUND_UP)
     }
 
     @Unroll
-    def "Requesting #requestedMSC MSC adds exactly that amount to the receivers MSC balance"() {
+    def "Requesting #requestedAmount MSC adds exactly that amount to the receivers MSC balance"() {
         given:
         def fundedAddress = newAddress
         def balanceAtStart = omniGetBalance(fundedAddress, CurrencyID.MSC)
 
         when:
-        def txid = requestMSC(fundedAddress, requestedMSC)
+        def requestedOmni = OmniDivisibleValue.of(requestedAmount)
+        def txid = requestMSC(fundedAddress, requestedOmni)
         generateBlock()
 
         then:
@@ -177,11 +180,11 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         def balanceConfirmed = omniGetBalance(fundedAddress, CurrencyID.MSC)
 
         fundingTx.confirmations > 0
-        balanceConfirmed.balance == balanceAtStart.balance + requestedMSC
+        balanceConfirmed.balance == balanceAtStart.balance + requestedOmni.bigDecimalValue()
         balanceConfirmed.reserved == balanceAtStart.reserved
 
         where:
-        requestedMSC << [1.0, 0.1, 0.000001, 0.00000001, 0.00000001]
+        requestedAmount << [1.0, 0.1, 0.000001, 0.00000001, 0.00000001]
     }
 
 }

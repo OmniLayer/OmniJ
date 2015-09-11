@@ -35,6 +35,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     }
 
     def getTestPlanPath() {
+        // TODO: Remove dependency on current working dir, so tests can be run from IDEA
         return "src/integ/groovy/foundation/omni/test/rpc/sto/sto-testplan.tsv"
     }
 
@@ -156,14 +157,13 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
     def "STO Property ID is 0 - bitcoin"() {
         def ecosystem = Ecosystem.TMSC
-        def propertyType = PropertyType.DIVISIBLE
-        def btcAvailable = 0.001
-        def btcAvailableOwners = 1.0
-        def amountSTO = 0.0001
-        def startMSC = 2.0
+        Coin btcAvailable = 0.001.btc
+        Coin btcAvailableOwners = 1.0.btc
+        OmniDivisibleValue amountSTO = 0.0001.divisible
+        OmniDivisibleValue startMSC = 2.0.divisible
         def expectException = true
         def expectedValidity = false
-        def currencyMSC = new CurrencyID(ecosystem.getValue())
+        def currencyMSC = new CurrencyID(ecosystem.value)
 
         when: "there is a well funded actor and two owners with bitcoin"
         def actorAddress = createFundedAddress(btcAvailable, startMSC)
@@ -171,13 +171,13 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def ownerB = createFundedAddress(btcAvailableOwners, startMSC)
 
         then: "they have a certain amount of tokens and coins"
-        omniGetBalance(actorAddress, currencyMSC).balance == startMSC
+        omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
         getBitcoinBalance(actorAddress) == btcAvailable
         getBitcoinBalance(ownerA) == btcAvailableOwners
         getBitcoinBalance(ownerB) == btcAvailableOwners
 
         when: "#amountSTO is sent to the bitcoin owners"
-        def txid = executeSendToOwners(actorAddress, CurrencyID.BTC, OmniValue.of(amountSTO, propertyType), expectException)
+        def txid = executeSendToOwners(actorAddress, CurrencyID.BTC, amountSTO, expectException)
         generateBlock()
 
         then: "the transaction validity is #expectedValidity"
@@ -187,11 +187,11 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
             assert transaction.confirmations == 1
         }
 
-        and: "the sender paid at worst 2 * #stdTxFee bitcoin for the transaction itself"
-        getBitcoinBalance(actorAddress) >= (btcAvailable - 2 * stdTxFee)
+        and: "the sender paid at worst #stdTxFee * 2 bitcoin for the transaction itself"
+        getBitcoinBalance(actorAddress) >= (btcAvailable - (stdTxFee * 2))
 
         and: "all other balances are still the same"
-        omniGetBalance(actorAddress, currencyMSC).balance == startMSC
+        omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
         getBitcoinBalance(ownerA) == btcAvailableOwners
         getBitcoinBalance(ownerB) == btcAvailableOwners
     }

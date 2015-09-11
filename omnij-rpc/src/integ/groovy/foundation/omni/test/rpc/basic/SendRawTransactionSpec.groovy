@@ -13,7 +13,7 @@ import spock.lang.Shared
 class SendRawTransactionSpec extends BaseRegTestSpec {
 
     final static Coin startBTC = 1.btc
-    final static OmniDivisibleValue startMSC = OmniDivisibleValue.of(50)
+    final static OmniDivisibleValue startMSC = 50.divisible
 
     @Shared
     Address activeAddress

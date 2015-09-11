@@ -1,6 +1,7 @@
 package foundation.omni.rpc
 
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
 import org.bitcoinj.core.Transaction
 import groovy.transform.CompileStatic
@@ -126,7 +127,7 @@ class OmniCLIClient extends OmniExtendedClient {
      * @param minconf (optional) the minimum number of confirmations a transaction must have before it is counted towards the total. 1 is the default; use 0 to also count unconfirmed transactions.
      * @return the total amount received
      */
-    BigDecimal getreceivedbyaddress(Address address, Integer minconf=null) {
+    Coin getreceivedbyaddress(Address address, Integer minconf=null) {
         return getReceivedByAddress(address, minconf)
     }
 
@@ -137,7 +138,7 @@ class OmniCLIClient extends OmniExtendedClient {
      * @param minconf (optional) the minimum number of confirmations an incoming transaction must have before it is counted towards the balance.
      * @return
      */
-    BigDecimal getbalance(String account, Integer minconf=null) {
+    Coin getbalance(String account, Integer minconf=null) {
         return getBalance(account,minconf)
     }
 
@@ -149,7 +150,7 @@ class OmniCLIClient extends OmniExtendedClient {
      * @param commentTo
      * @return
      */
-    Sha256Hash sendtoaddress(Address address, BigDecimal amount, String comment = null, String commentTo = null) {
+    Sha256Hash sendtoaddress(Address address, Coin amount, String comment = null, String commentTo = null) {
         return sendToAddress(address,amount,comment,commentTo)
     }
 
@@ -161,7 +162,7 @@ class OmniCLIClient extends OmniExtendedClient {
      * @param amount
      * @return
      */
-    Sha256Hash sendfrom(String account, Address address, BigDecimal amount) {
+    Sha256Hash sendfrom(String account, Address address, Coin amount) {
         return sendFrom(account, address, amount)
     }
 
@@ -172,7 +173,7 @@ class OmniCLIClient extends OmniExtendedClient {
      * @param amounts
      * @return
      */
-    Sha256Hash sendmany(String account, Map<Address, BigDecimal> amounts) {
+    Sha256Hash sendmany(String account, Map<Address, Coin> amounts) {
         return sendMany(account, amounts)
     }
 
