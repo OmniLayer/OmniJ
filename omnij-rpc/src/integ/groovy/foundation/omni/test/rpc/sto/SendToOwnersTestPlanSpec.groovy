@@ -49,7 +49,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         maybeSkipReservedMetaDexTests(sptReserved, sptReservedOwners)
                                        OmniValue
         given:
-        //log.info "Creating startMSC from: {} + {}", mscAvailable, mscReserved
+        //log.debug "Creating startMSC from: {} + {}", mscAvailable, mscReserved
         def startMSC = OmniDivisibleValue.of(mscAvailable + mscReserved)
         def actorAddress = createFundedAddress(startBTC, startMSC, false)
         def currencyMSC = new CurrencyID(ecosystem.getValue())
@@ -94,8 +94,8 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         and: "every owner ends up with the expected #currencySPT balance"
         for (id in ownerIds) {
-            log.info "about to check owner {}: currency: {}, expectedavail: {}, expectedreserved: {}", id, currencySPT, expectedSPTAvailableOwners[id], expectedSPTReservedOwners[id]
-            log.info "class is {}", expectedSPTAvailableOwners[id].class
+            log.debug "about to check owner {}: currency: {}, expectedavail: {}, expectedreserved: {}", id, currencySPT, expectedSPTAvailableOwners[id], expectedSPTReservedOwners[id]
+            log.debug "class is {}", expectedSPTAvailableOwners[id].class
             Long expectedLong =  expectedSPTAvailableOwners[id]
             BigDecimal expectedBD = (BigDecimal) expectedLong;
             assertBalance(owners[id], currencySPT, (BigDecimal) expectedSPTAvailableOwners[id], (BigDecimal) expectedSPTReservedOwners[id])

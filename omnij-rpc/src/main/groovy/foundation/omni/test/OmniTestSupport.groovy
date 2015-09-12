@@ -118,7 +118,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
         if (check && confirmTransactions) {
             assert getBitcoinBalance(fundedAddress).value >= requestedBTC.value
             assert omniGetBalance(fundedAddress, CurrencyID.MSC).balance >= requestedMSC.bigDecimalValue()
-            log.info "balances verified, fundedAddress has {} BTC and {} Omni", requestedBTC.toFriendlyString(), requestedMSC
+            log.debug "balances verified, fundedAddress has {} and {} Omni", requestedBTC.toFriendlyString(), requestedMSC
         }
 
         return fundedAddress
