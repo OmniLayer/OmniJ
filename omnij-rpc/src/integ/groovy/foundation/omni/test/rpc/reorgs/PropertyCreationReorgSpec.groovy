@@ -46,7 +46,6 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         def actorAddress = createFundedAddress(startBTC, startMSC)
 
         when: "broadcasting and confirming a property creation transaction"
-        def value = OmniValue.of(numberOfTokens, propertyType)
         def txid = createProperty(actorAddress, ecosystem, value)
         def blockHashOfCreation = generateAndGetBlockHash()
 
@@ -65,7 +64,7 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         currencyID == expectedCurrencyID
 
         and: "the creator was credited with the correct amount of created tokens"
-        omniGetBalance(actorAddress, currencyID).balance == expectedBalance
+        omniGetBalance(actorAddress, currencyID).balance == value.bigDecimalValue()
 
         when: "invalidating the block and property creation transaction"
         invalidateBlock(blockHashOfCreation)
@@ -91,11 +90,11 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         thrown(JsonRPCStatusException)
 
         where:
-        ecosystem      | propertyType             | numberOfTokens        | expectedBalance               | expectedCurrencyID
-        Ecosystem.MSC  | PropertyType.INDIVISIBLE | new Long("150")       | new BigDecimal("150")         | nextMainPropertyID
-        Ecosystem.MSC  | PropertyType.DIVISIBLE   | new Long("100000000") | new BigDecimal("1.00000000")  | nextMainPropertyID
-        Ecosystem.TMSC | PropertyType.INDIVISIBLE | new Long("350")       | new BigDecimal("350")         | nextTestPropertyID
-        Ecosystem.TMSC | PropertyType.DIVISIBLE   | new Long("250000000") | new BigDecimal("2.50000000")  | nextTestPropertyID
+        ecosystem      | value              | expectedCurrencyID
+        Ecosystem.MSC  | 150.indivisible    | nextMainPropertyID
+        Ecosystem.MSC  | 1.0.divisible      | nextMainPropertyID
+        Ecosystem.TMSC | 350.indivisible    | nextTestPropertyID
+        Ecosystem.TMSC | 2.5.divisible      | nextTestPropertyID
     }
 
 }
