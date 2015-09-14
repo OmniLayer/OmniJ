@@ -20,9 +20,9 @@ import java.util.PropertyPermission;
  * static methods which can take either <code>BigDecimal</code> or <code>long</code> values as parameters.</p>
  *
  * <p>The various *<code>value()</code> methods of <code>Number</code> and <code>NumberValue</code> will
- * return values as used in the Omni Protocol Specification, which means that <bold>for divisible tokens the
+ * return values as used in the Omni Protocol Specification, which means that <b>for divisible tokens the
  * values will be treated a decimal values and methods returning integer types will be throw exceptions if their
- * is a fractional component that would be truncated.</bold></p>
+ * is a fractional component that would be truncated.</b></p>
  *
  * <p>TODO: provide examples of *value() methods and what they return</p>
  *

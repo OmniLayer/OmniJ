@@ -47,7 +47,7 @@ import java.util.Map;
 
 /**
  * Pure Java Bitcoin and Omni Core JSON-RPC client with camelCase method names.
- * <p/>
+ * <p>
  * For example, if the RPC is {@code "omni_getbalance"}, then the corresponding method name is {@link #omniGetBalance(Address, CurrencyID)}.
  *
  * @see <a href="https://github.com/OmniLayer/omnicore/blob/omnicore-0.0.10/src/omnicore/doc/rpc-api.md">Omni Core RPC API documentation on GitHub</a>
