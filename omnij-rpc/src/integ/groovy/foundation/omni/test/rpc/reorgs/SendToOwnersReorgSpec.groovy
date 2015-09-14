@@ -2,6 +2,7 @@ package foundation.omni.test.rpc.reorgs
 
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
+import foundation.omni.OmniValue
 import foundation.omni.PropertyType
 
 class SendToOwnersReorgSpec extends BaseReorgSpec {
@@ -39,9 +40,9 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
 
         def ecosystem = Ecosystem.MSC
         def propertyType = PropertyType.INDIVISIBLE
-        def amountToCreate = new BigDecimal("153")
+        def amountToCreate = OmniValue.of(153, propertyType)
 
-        def txidCreation = createProperty(senderAddress, ecosystem, propertyType, amountToCreate.longValue())
+        def txidCreation = createProperty(senderAddress, ecosystem, amountToCreate)
         generateBlock()
         def txCreation = omniGetTransaction(txidCreation)
         def currencyID = new CurrencyID(txCreation.propertyid as long)
@@ -102,7 +103,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         omniGetBalance(dummyOwnerC, currencyID).balance == new BigDecimal("0")
 
         and: "the sender has the initial amount that was created"
-        omniGetBalance(senderAddress, currencyID).balance == amountToCreate
+        omniGetBalance(senderAddress, currencyID).balance == amountToCreate.bigDecimalValue()
     }
 
 }

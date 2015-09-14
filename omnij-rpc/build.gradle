@@ -4,8 +4,10 @@ plugins {
 
 dependencies {
     compile project(':omnij-core')
+    compile project(':omnij-dsl')
 
-    compile 'com.msgilligan:bitcoinj-rpcclient:0.0.4'
+    compile "com.msgilligan:bitcoinj-rpcclient:${bitcoinjAddonsVersion}"
+    compile "com.msgilligan:bitcoinj-groovy:${bitcoinjAddonsVersion}"
 
     compile "org.codehaus.groovy:groovy:${groovyVersion}"
     compile "org.codehaus.groovy:groovy-json:${groovyVersion}"

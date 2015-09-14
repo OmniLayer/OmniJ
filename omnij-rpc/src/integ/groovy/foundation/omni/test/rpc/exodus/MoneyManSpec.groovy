@@ -1,9 +1,12 @@
 package foundation.omni.test.rpc.exodus
 
+import foundation.omni.OmniDivisibleValue
+import foundation.omni.test.MoneyMan
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.net.OmniRegTestParams
 import foundation.omni.rpc.OmniClient
+import org.bitcoinj.core.Coin
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -13,12 +16,11 @@ import static foundation.omni.CurrencyID.TMSC
 @Stepwise
 class MoneyManSpec extends BaseRegTestSpec {
 
-    final static BigDecimal sendAmount = 10.0
-    final static BigDecimal extraAmount = 0.10
-    final static BigDecimal faucetBTC = 10.0
-    final static BigDecimal faucetMSC = 1000.0
-    final static BigDecimal initialMSCPerBTC = 100.0
-    final static BigDecimal simpleSendAmount = 1.0
+    final static Coin sendAmount = 10.btc
+    final static Coin extraAmount = 0.10.btc
+    final static Coin faucetBTC = 10.btc
+    final static OmniDivisibleValue faucetMSC = 1000.divisible
+    final static OmniDivisibleValue simpleSendAmount = 1.divisible
 
     @Shared
     Address faucetAddress
@@ -49,16 +51,16 @@ class MoneyManSpec extends BaseRegTestSpec {
 
         and: "The balances for the account we just sent MSC to is correct"
         getBitcoinBalance(testAddress) == extraAmount
-        omniGetBalance(testAddress, MSC).balance == initialMSCPerBTC * sendAmount
-        omniGetBalance(testAddress, TMSC).balance == initialMSCPerBTC * sendAmount
+        omniGetBalance(testAddress, MSC).balance ==  MoneyMan.toOmni(sendAmount).bigDecimalValue()
+        omniGetBalance(testAddress, TMSC).balance == MoneyMan.toOmni(sendAmount).bigDecimalValue()
     }
 
     def "check Spec setup"() {
         // This test is really an integration test of createFundedAddress()
         expect:
         getBitcoinBalance(faucetAddress) == faucetBTC
-        omniGetBalance(faucetAddress, MSC).balance == initialMSCPerBTC * sendAmount
-        omniGetBalance(faucetAddress, TMSC).balance == initialMSCPerBTC * sendAmount
+        omniGetBalance(faucetAddress, MSC).balance == MoneyMan.toOmni(sendAmount).bigDecimalValue()
+        omniGetBalance(faucetAddress, TMSC).balance == MoneyMan.toOmni(sendAmount).bigDecimalValue()
     }
 
     def "Simple send MSC from one address to another" () {
@@ -67,7 +69,7 @@ class MoneyManSpec extends BaseRegTestSpec {
         when: "we send MSC"
         def senderBalance = omniGetBalance(faucetAddress, MSC)
         def toAddress = getNewAddress()
-        def txid = client.omniSend(faucetAddress, toAddress, MSC, simpleSendAmount)
+        def txid = client.omniSend(faucetAddress, toAddress, MSC, simpleSendAmount.bigDecimalValue())
         def tx = client.getTransaction(txid)
 
         then: "we got a non-zero transaction id"
@@ -80,8 +82,8 @@ class MoneyManSpec extends BaseRegTestSpec {
         def receiverBalance = client.omniGetBalance(toAddress, MSC)
 
         then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
-        receiverBalance.balance == simpleSendAmount
-        newSenderBalance.balance == senderBalance.balance - simpleSendAmount
+        receiverBalance.balance == simpleSendAmount.bigDecimalValue()
+        newSenderBalance.balance == senderBalance.balance - simpleSendAmount.bigDecimalValue()
     }
 
     def "Send MSC back to same adddress" () {

@@ -1,9 +1,12 @@
 package foundation.omni;
 
+import org.bitcoinj.core.Coin;
+
 import javax.money.NumberValue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.PropertyPermission;
 
 /**
@@ -60,7 +63,7 @@ public abstract class OmniValue extends NumberValue {
                 OmniDivisibleValue.of(amount) : OmniIndivisibleValue.of(amount);
     }
 
-    public long asWillets() {
+    public long getWillets() {
         return value;
     }
 
@@ -227,4 +230,5 @@ public abstract class OmniValue extends NumberValue {
         return Long.toString(value);
     }
 
+    public  abstract BigDecimal bigDecimalValue();
 }

@@ -1,7 +1,10 @@
 package foundation.omni.test.rpc.basic
 
+import foundation.omni.OmniDivisibleValue
+import foundation.omni.dsl.categories.NumberCategory
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
+import org.bitcoinj.core.Coin
 import spock.lang.Shared
 
 /**
@@ -9,8 +12,8 @@ import spock.lang.Shared
  */
 class SendRawTransactionSpec extends BaseRegTestSpec {
 
-    final static BigDecimal startBTC = 1.0
-    final static BigDecimal startMSC = 50.0
+    final static Coin startBTC = 1.btc
+    final static OmniDivisibleValue startMSC = 50.divisible
 
     @Shared
     Address activeAddress

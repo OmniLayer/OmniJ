@@ -1,6 +1,8 @@
 package foundation.omni.test.rpc.sto
 
+import com.msgilligan.bitcoinj.rpc.conversion.BitcoinMath
 import foundation.omni.CurrencyID
+import foundation.omni.OmniValue
 import org.bitcoinj.core.Address
 import com.msgilligan.bitcoinj.BTC
 import foundation.omni.PropertyType
@@ -15,16 +17,9 @@ class SendToOwnersTestPlanRawSpec extends SendToOwnersTestPlanSpec {
      * Executes the "send to owner" command by creating a raw transaction to bypass the RPC interface.
      */
     @Override
-    def executeSendToOwners(Address address, CurrencyID currency, def propertyType, BigDecimal amount, def exceptional=false) {
-        BigDecimal numberOfTokens = amount
-
-        if (propertyType == PropertyType.DIVISIBLE) {
-            numberOfTokens = BTC.btcToSatoshis(numberOfTokens)
-        }
-
-        def rawTxHex = createSendToOwnersHex(currency, numberOfTokens.longValue());
+    def executeSendToOwners(Address address, CurrencyID currency, OmniValue amount, Boolean exceptional=false) {
+        def rawTxHex = createSendToOwnersHex(currency, amount.willets);
         def txid = omniSendRawTx(address, rawTxHex)
         return txid
     }
-
 }

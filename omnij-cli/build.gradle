@@ -11,7 +11,7 @@ configurations {
 dependencies {
     compile project(':omnij-rpc')
 
-    compile 'com.msgilligan:bitcoinj-cli:0.0.4'
+    compile "com.msgilligan:bitcoinj-cli:${bitcoinjAddonsVersion}"
 
     robovm  "org.codehaus.groovy:groovy:${groovyVersion}:grooid"
 }

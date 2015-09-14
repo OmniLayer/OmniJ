@@ -1,5 +1,6 @@
 package foundation.omni;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
@@ -34,9 +35,21 @@ public final class OmniIndivisibleValue extends OmniValue {
         super(value);
     }
 
+    public BigDecimal bigDecimalValue() {
+        return new BigDecimal(value);
+    }
+
     @Override
     public PropertyType getPropertyType() {
         return PropertyType.INDIVISIBLE;
+    }
+
+    public OmniIndivisibleValue plus(OmniIndivisibleValue right) {
+        return OmniIndivisibleValue.of(this.value + right.value);
+    }
+
+    public OmniIndivisibleValue minus(OmniIndivisibleValue right) {
+        return OmniIndivisibleValue.of(this.value - right.value);
     }
 
 }

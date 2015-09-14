@@ -1,11 +1,12 @@
 package foundation.omni.rpc;
 
-import com.msgilligan.bitcoinj.BTC;
 import com.msgilligan.bitcoinj.rpc.JsonRPCException;
 import com.msgilligan.bitcoinj.rpc.RPCConfig;
+import com.msgilligan.bitcoinj.rpc.conversion.BitcoinMath;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
 import foundation.omni.OmniDivisibleValue;
+import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
 import foundation.omni.tx.RawTxBuilder;
 import org.bitcoinj.core.Address;
@@ -63,10 +64,10 @@ public class OmniExtendedClient extends OmniClient {
                                   BigDecimal amountDesired, Byte paymentWindow, BigDecimal commitmentFee,
                                   Byte action) throws JsonRPCException, IOException {
         OmniDivisibleValue quantityForSale = OmniDivisibleValue.of(amountForSale);
-        Coin satoshisDesired = BTC.btcToCoin(amountDesired);
-        Coin satoshisFee = BTC.btcToCoin(commitmentFee);
+        Coin satoshisDesired = BitcoinMath.btcToCoin(amountDesired);
+        Coin satoshisFee = BitcoinMath.btcToCoin(commitmentFee);
         String rawTxHex = builder.createDexSellOfferHex(
-                currencyId, quantityForSale.asWillets(), satoshisDesired.value, paymentWindow, satoshisFee.value, action);
+                currencyId, quantityForSale.getWillets(), satoshisDesired.value, paymentWindow, satoshisFee.value, action);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -83,7 +84,7 @@ public class OmniExtendedClient extends OmniClient {
     public Sha256Hash acceptDexOffer(Address fromAddress, CurrencyID currencyId, BigDecimal amount, Address toAddress)
             throws JsonRPCException, IOException {
         OmniDivisibleValue quantity = OmniDivisibleValue.of(amount);
-        String rawTxHex = builder.createAcceptDexOfferHex(currencyId, quantity.asWillets());
+        String rawTxHex = builder.createAcceptDexOfferHex(currencyId, quantity.getWillets());
         Sha256Hash txid = omniSendRawTx(fromAddress, rawTxHex, toAddress);
         return txid;
     }
@@ -108,7 +109,7 @@ public class OmniExtendedClient extends OmniClient {
         OmniDivisibleValue qtyForSale = OmniDivisibleValue.of(amountForSale);  // Assume divisible property
         OmniDivisibleValue qtyDesired = OmniDivisibleValue.of(amountDesired);  // Assume divisible property
         String rawTxHex = builder.createMetaDexSellOfferHex(
-                currencyForSale, qtyForSale.asWillets(), currencyDesired, qtyDesired.asWillets(), action);
+                currencyForSale, qtyForSale.getWillets(), currencyDesired, qtyDesired.getWillets(), action);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -131,7 +132,7 @@ public class OmniExtendedClient extends OmniClient {
                                       Byte earlyBirdBonus, Byte issuerBonus)
             throws JsonRPCException, IOException {
         String rawTxHex = builder.createCrowdsaleHex(ecosystem, propertyType, 0L, "", "", "CS", "", "", propertyDesired,
-                                                     tokensPerUnit, deadline, earlyBirdBonus, issuerBonus);
+                tokensPerUnit, deadline, earlyBirdBonus, issuerBonus);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -145,9 +146,15 @@ public class OmniExtendedClient extends OmniClient {
      * @param amount     The number of units to create
      * @return The transaction hash
      */
+    @Deprecated
     public Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount)
             throws JsonRPCException, IOException {
-        return createProperty(address, ecosystem, type, amount, "SP");
+        return createProperty(address, ecosystem, OmniValue.of(amount, type), "SP");
+    }
+
+    public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value)
+            throws JsonRPCException, IOException {
+        return createProperty(address, ecosystem, value, "SP");
     }
 
     /**
@@ -160,9 +167,15 @@ public class OmniExtendedClient extends OmniClient {
      * @param label      The label or title of the property
      * @return The transaction hash
      */
+    @Deprecated
     public Sha256Hash createProperty(Address address, Ecosystem ecosystem, PropertyType type, Long amount, String label)
             throws JsonRPCException, IOException {
-        String rawTxHex = builder.createPropertyHex(ecosystem, type, 0L, "", "", label, "", "", amount);
+        return createProperty(address, ecosystem, OmniValue.of(amount, type), label);
+    }
+
+    public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value, String label)
+            throws JsonRPCException, IOException {
+        String rawTxHex = builder.createPropertyHex(ecosystem, value.getPropertyType(), 0L, "", "", label, "", "", value.getWillets());
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }

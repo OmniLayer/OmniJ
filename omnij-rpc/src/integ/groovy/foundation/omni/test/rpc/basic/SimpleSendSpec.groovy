@@ -19,7 +19,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
     @Unroll
     def "Can simple send #amount MSC from one address to another"() {
         setup:
-        def faucetAddress = createFundedAddress(faucetBTC, fundingMSC)
+        def faucetAddress = createFundedAddress(faucetBTC.btc, fundingMSC.divisible)
 
         when: "we send MSC"
         def startBalance = omniGetBalance(faucetAddress, MSC).balance

@@ -2,16 +2,18 @@ package foundation.omni.test.rpc.dex
 
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
+import org.bitcoinj.core.Coin
 import spock.lang.Unroll
 
 import static CurrencyID.MSC
+import static CurrencyID.TMSC
 
 /**
  * Specification for the traditional distributed exchange
  */
 class DexSpec extends BaseRegTestSpec {
 
-    final static BigDecimal stdCommitFee = 0.0001
+    final static Coin stdCommitFee = 0.0001.btc
     final static Byte stdBlockSpan = 10
     final static Byte actionNew = 1
     final static Byte actionUpdate = 2
@@ -24,7 +26,7 @@ class DexSpec extends BaseRegTestSpec {
 
         when: "creating an offer with action = 1"
         def offerTxid = createDexSellOffer(
-                fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
+                fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee.decimalBtc, actionNew)
         generateBlock()
 
         then: "it is a valid transaction"
@@ -51,7 +53,7 @@ class DexSpec extends BaseRegTestSpec {
 
         when: "an offer of #currencyId is created"
         def offerTxid = createDexSellOffer(
-                fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
+                fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee.decimalBtc, actionNew)
         generateBlock()
 
         then: "the transaction should be a valid offering of #currencyOffered"
@@ -60,18 +62,18 @@ class DexSpec extends BaseRegTestSpec {
         offerTx.propertyid == currencyOffered.getValue()
 
         where: "the currency identifier is either MSC or TMSC"
-        currencyOffered << [CurrencyID.MSC, CurrencyID.TMSC]
+        currencyOffered << [MSC, TMSC]
     }
 
     def "Offering more tokens than available puts up an offer with the available amount"() {
         given:
         def fundedAddress = createFundedAddress(startBTC, startMSC)
-        def amountAvailableAtStart = omniGetBalance(fundedAddress, currencyOffered).balance
-        def amountOffered = amountAvailableAtStart + 100.0
+        BigDecimal amountAvailableAtStart = omniGetBalance(fundedAddress, currencyOffered).balance
+        BigDecimal amountOffered = amountAvailableAtStart + 100.0
 
         when: "the amount offered for sale exceeds the sending address's available balance"
         def offerTxid = createDexSellOffer(
-                fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
+                fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee.decimalBtc, actionNew)
         generateBlock()
 
         then: "this indicates to sell all tokens that are available"
@@ -80,7 +82,7 @@ class DexSpec extends BaseRegTestSpec {
         def amountAvailableNow = omniGetBalance(fundedAddress, currencyOffered).balance
         offerTx.valid == true
         offerAmount == amountAvailableAtStart
-        offerAmount == Math.min(amountAvailableAtStart, amountOffered)
+        offerAmount == amountOffered.min(amountAvailableAtStart)
         amountAvailableNow == 0.0
 
         where:
@@ -94,7 +96,7 @@ class DexSpec extends BaseRegTestSpec {
 
         when: "an amount is offered for sale"
         def offerTxid = createDexSellOffer(
-                fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
+                fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee.decimalBtc, actionNew)
         generateBlock()
 
         then: "the offered amount is reserved and subtracted from the available balance"
@@ -115,7 +117,7 @@ class DexSpec extends BaseRegTestSpec {
 
         when: "the sell offer is published"
         def offerTxid = createDexSellOffer(
-                fundedAddress, currencyOffered, offerMSC, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
+                fundedAddress, currencyOffered, offerMSC, desiredBTC, stdBlockSpan, stdCommitFee.decimalBtc, actionNew)
         generateBlock()
 
         and: "additional tokens are received"
@@ -149,12 +151,12 @@ class DexSpec extends BaseRegTestSpec {
 
         when: "there is already an active offer accepting BTC"
         def firstOfferTxid = createDexSellOffer(
-                fundedAddress, currencyOffered, firstOfferMSC, firstOfferBTC, stdBlockSpan, stdCommitFee, actionNew)
+                fundedAddress, currencyOffered, firstOfferMSC, firstOfferBTC, stdBlockSpan, stdCommitFee.decimalBtc, actionNew)
         generateBlock()
 
         and: "and another offer accepting BTC is made"
         def secondOfferTxid = createDexSellOffer(
-                fundedAddress, currencyOffered, secondOfferMSC, secondOfferBTC, stdBlockSpan, stdCommitFee, actionNew)
+                fundedAddress, currencyOffered, secondOfferMSC, secondOfferBTC, stdBlockSpan, stdCommitFee.decimalBtc, actionNew)
         generateBlock()
 
         then: "the other offer is rejected"
@@ -174,7 +176,7 @@ class DexSpec extends BaseRegTestSpec {
 
         when: "creating an offer with action 1"
         def offerTxid = createDexSellOffer(
-                fundedAddress, currencyOffered, offeredMSC, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
+                fundedAddress, currencyOffered, offeredMSC, desiredBTC, stdBlockSpan, stdCommitFee.decimalBtc, actionNew)
         generateBlock()
 
         then:
@@ -190,7 +192,7 @@ class DexSpec extends BaseRegTestSpec {
 
         when: "updating an offer with action = 2"
         def updateTxid = createDexSellOffer(
-                fundedAddress, currencyOffered, updatedMSC, updatedBTC, stdBlockSpan, stdCommitFee, actionUpdate)
+                fundedAddress, currencyOffered, updatedMSC, updatedBTC, stdBlockSpan, stdCommitFee.decimalBtc, actionUpdate)
         generateBlock()
 
         then: "the offered amount is updated"
@@ -229,7 +231,7 @@ class DexSpec extends BaseRegTestSpec {
 
         when: "A offers MSC"
         def offerTxid = createDexSellOffer(
-                actorA, currencyOffered, offeredMSC, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
+                actorA, currencyOffered, offeredMSC, desiredBTC, stdBlockSpan, stdCommitFee.decimalBtc, actionNew)
         generateBlock()
 
         and: "B accepts the offer"

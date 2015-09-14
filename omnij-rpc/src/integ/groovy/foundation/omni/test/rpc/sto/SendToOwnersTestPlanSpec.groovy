@@ -1,6 +1,10 @@
 package foundation.omni.test.rpc.sto
 
+import foundation.omni.OmniDivisibleValue
+import foundation.omni.OmniValue
+import foundation.omni.dsl.categories.NumberCategory
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
 import com.msgilligan.bitcoinj.BTC
 import com.xlson.groovycsv.CsvParser
@@ -11,12 +15,14 @@ import foundation.omni.PropertyType
 import org.junit.AssumptionViolatedException
 import spock.lang.Shared
 import spock.lang.Unroll
+import spock.util.mop.Use
 
 /**
  * Data driven tests for the "send to owners" transaction type
  */
+@Use(NumberCategory)
 class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
-    final static BigDecimal startBTC = 0.1
+    final static Coin startBTC = 0.1.btc
 
     @Shared
     def testdata
@@ -29,6 +35,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     }
 
     def getTestPlanPath() {
+        // TODO: Remove dependency on current working dir, so tests can be run from IDEA
         return "src/integ/groovy/foundation/omni/test/rpc/sto/sto-testplan.tsv"
     }
 
@@ -40,9 +47,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         assert numberOfOwners == expectedSPTReservedOwners.size()
 
         maybeSkipReservedMetaDexTests(sptReserved, sptReservedOwners)
-
+                                       OmniValue
         given:
-        def startMSC = mscAvailable + mscReserved
+        //log.debug "Creating startMSC from: {} + {}", mscAvailable, mscReserved
+        def startMSC = OmniDivisibleValue.of(mscAvailable + mscReserved)
         def actorAddress = createFundedAddress(startBTC, startMSC, false)
         def currencyMSC = new CurrencyID(ecosystem.getValue())
         def currencySPT = getStoProperty(actorAddress, data)
@@ -70,7 +78,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         }
 
         when: "#amountSTO is sent to owners of #currencySPT"
-        def txid = executeSendToOwners(actorAddress, currencySPT, propertyType, amountSTO, expectException)
+        def txid = executeSendToOwners(actorAddress, currencySPT, OmniValue.of(amountSTO, propertyType), expectException)
         generateBlock()
 
         then: "the transaction validity is #expectedValidity"
@@ -86,7 +94,11 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         and: "every owner ends up with the expected #currencySPT balance"
         for (id in ownerIds) {
-            assertBalance(owners[id], currencySPT, expectedSPTAvailableOwners[id], expectedSPTReservedOwners[id])
+            log.debug "about to check owner {}: currency: {}, expectedavail: {}, expectedreserved: {}", id, currencySPT, expectedSPTAvailableOwners[id], expectedSPTReservedOwners[id]
+            log.debug "class is {}", expectedSPTAvailableOwners[id].class
+            Long expectedLong =  expectedSPTAvailableOwners[id]
+            BigDecimal expectedBD = (BigDecimal) expectedLong;
+            assertBalance(owners[id], currencySPT, (BigDecimal) expectedSPTAvailableOwners[id], (BigDecimal) expectedSPTReservedOwners[id])
         }
 
         where:
@@ -117,7 +129,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def ecosystem = Ecosystem.TMSC
         def propertyType = PropertyType.DIVISIBLE
         def amountSTO = 1.0
-        def startMSC = 2.0
+        def startMSC = 2.0.divisible    // test/demo of Omni NumberCategory meta-programming
         def expectException = true
         def expectedValidity = false
 
@@ -126,10 +138,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def currencySPT = new CurrencyID(4294967295L) // does not exist
 
         given: "the actor starts with #startMSC #currencyMSC"
-        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC
+        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
 
         when: "#amountSTO is sent to owners of #currencySPT"
-        def txid = executeSendToOwners(actorAddress, currencySPT, propertyType, amountSTO, expectException)
+        def txid = executeSendToOwners(actorAddress, currencySPT, OmniValue.of(amountSTO, propertyType), expectException)
         generateBlock()
 
         then: "the transaction validity is #expectedValidity"
@@ -140,19 +152,18 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         }
 
         and: "the sender's balance is still the same"
-        omniGetBalance(actorAddress, currencyMSC).balance == startMSC
+        omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
     }
 
     def "STO Property ID is 0 - bitcoin"() {
         def ecosystem = Ecosystem.TMSC
-        def propertyType = PropertyType.DIVISIBLE
-        def btcAvailable = 0.001
-        def btcAvailableOwners = 1.0
-        def amountSTO = 0.0001
-        def startMSC = 2.0
+        Coin btcAvailable = 0.001.btc
+        Coin btcAvailableOwners = 1.0.btc
+        OmniDivisibleValue amountSTO = 0.0001.divisible
+        OmniDivisibleValue startMSC = 2.0.divisible
         def expectException = true
         def expectedValidity = false
-        def currencyMSC = new CurrencyID(ecosystem.getValue())
+        def currencyMSC = new CurrencyID(ecosystem.value)
 
         when: "there is a well funded actor and two owners with bitcoin"
         def actorAddress = createFundedAddress(btcAvailable, startMSC)
@@ -160,13 +171,13 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def ownerB = createFundedAddress(btcAvailableOwners, startMSC)
 
         then: "they have a certain amount of tokens and coins"
-        omniGetBalance(actorAddress, currencyMSC).balance == startMSC
+        omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
         getBitcoinBalance(actorAddress) == btcAvailable
         getBitcoinBalance(ownerA) == btcAvailableOwners
         getBitcoinBalance(ownerB) == btcAvailableOwners
 
         when: "#amountSTO is sent to the bitcoin owners"
-        def txid = executeSendToOwners(actorAddress, CurrencyID.BTC, propertyType, amountSTO, expectException)
+        def txid = executeSendToOwners(actorAddress, CurrencyID.BTC, amountSTO, expectException)
         generateBlock()
 
         then: "the transaction validity is #expectedValidity"
@@ -176,11 +187,11 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
             assert transaction.confirmations == 1
         }
 
-        and: "the sender paid at worst 2 * #stdTxFee bitcoin for the transaction itself"
-        getBitcoinBalance(actorAddress) >= (btcAvailable - 2 * stdTxFee)
+        and: "the sender paid at worst #stdTxFee * 2 bitcoin for the transaction itself"
+        getBitcoinBalance(actorAddress) >= (btcAvailable - (stdTxFee * 2))
 
         and: "all other balances are still the same"
-        omniGetBalance(actorAddress, currencyMSC).balance == startMSC
+        omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
         getBitcoinBalance(ownerA) == btcAvailableOwners
         getBitcoinBalance(ownerB) == btcAvailableOwners
     }
@@ -188,8 +199,8 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     def "Sender owns all the coins of the STO Property, other addresses had non-zero balances but now zero balances"() {
         def ecosystem = Ecosystem.TMSC
         def propertyType = PropertyType.DIVISIBLE
-        def amountSTO = 1.0
-        def startMSC = 1.0
+        def amountSTO = OmniDivisibleValue.of(1.0)
+        def startMSC = OmniDivisibleValue.of(1.0)
         def expectException = false
         def expectedValidity = false
         def currencyMSC = new CurrencyID(ecosystem.getValue())
@@ -198,16 +209,16 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def ownerA = createFundedAddress(startBTC, startMSC)
         def ownerB = createFundedAddress(startBTC, startMSC)
 
-        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC
-        assert omniGetBalance(ownerA, currencyMSC).balance == startMSC
-        assert omniGetBalance(ownerB, currencyMSC).balance == startMSC
+        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
+        assert omniGetBalance(ownerA, currencyMSC).balance == startMSC.bigDecimalValue()
+        assert omniGetBalance(ownerB, currencyMSC).balance == startMSC.bigDecimalValue()
 
         // Create property
-        def numberOfTokens = amountSTO
-        if (propertyType == PropertyType.DIVISIBLE) {
-            numberOfTokens = BTC.btcToSatoshis(numberOfTokens)
-        }
-        def txidCreation = createProperty(ownerA, ecosystem, propertyType, numberOfTokens.longValue())
+//        def numberOfTokens = amountSTO
+//        if (propertyType == PropertyType.DIVISIBLE) {
+//            numberOfTokens = BTC.btcToSatoshis(numberOfTokens)
+//        }
+        def txidCreation = createProperty(ownerA, ecosystem, amountSTO)
         generateBlock()
         def txCreation = omniGetTransaction(txidCreation)
         assert txCreation.valid == true
@@ -216,26 +227,26 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         // Owner A has the tokens
         assert omniGetBalance(actorAddress, currencySPT).balance == 0.0
-        assert omniGetBalance(ownerA, currencySPT).balance == amountSTO
+        assert omniGetBalance(ownerA, currencySPT).balance == amountSTO.bigDecimalValue()
         assert omniGetBalance(ownerB, currencySPT).balance == 0.0
 
         // Owner A sends half of the tokens to owner B
-        omniSend(ownerA, ownerB, currencySPT, (amountSTO / 2))
+        omniSend(ownerA, ownerB, currencySPT, (amountSTO.bigDecimalValue() / 2))
         generateBlock()
         assert omniGetBalance(actorAddress, currencySPT).balance == 0.0
         assert omniGetBalance(ownerA, currencySPT).balance == (amountSTO / 2)
         assert omniGetBalance(ownerB, currencySPT).balance == (amountSTO / 2)
 
         // Owner A and B send the tokens to the main actor
-        omniSend(ownerA, actorAddress, currencySPT, (amountSTO / 2))
-        omniSend(ownerB, actorAddress, currencySPT, (amountSTO / 2))
+        omniSend(ownerA, actorAddress, currencySPT, (amountSTO.bigDecimalValue() / 2))
+        omniSend(ownerB, actorAddress, currencySPT, (amountSTO.bigDecimalValue() / 2))
         generateBlock()
-        assert omniGetBalance(actorAddress, currencySPT).balance == amountSTO
+        assert omniGetBalance(actorAddress, currencySPT).balance == amountSTO.bigDecimalValue()
         assert omniGetBalance(ownerA, currencySPT).balance == 0.0
         assert omniGetBalance(ownerB, currencySPT).balance == 0.0
 
         when: "#amountSTO is sent to owners of #currencySPT"
-        def txid = executeSendToOwners(actorAddress, currencySPT, propertyType, amountSTO, expectException)
+        def txid = executeSendToOwners(actorAddress, currencySPT, amountSTO, expectException)
         generateBlock()
 
         then: "the transaction validity is #expectedValidity"
@@ -246,26 +257,26 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         }
 
         and: "all balances still the same"
-        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC
-        assert omniGetBalance(actorAddress, currencySPT).balance == amountSTO
+        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
+        assert omniGetBalance(actorAddress, currencySPT).balance == amountSTO.bigDecimalValue()
         assert omniGetBalance(ownerA, currencySPT).balance == 0.0
         assert omniGetBalance(ownerB, currencySPT).balance == 0.0
     }
 
-    def "Owners with similar effictive balances, but different available/reserved ratios, receive the same amount"() {
+    def "Owners with similar effective balances, but different available/reserved ratios, receive the same amount"() {
         def ecosystem = Ecosystem.TMSC
         def propertyType = PropertyType.DIVISIBLE
-        def startMSC = 100.0
-        def amountSTO = 99.0
-        def reservedOwnerA = 100.0
-        def reservedOwnerB = 10.0
-        def reservedOwnerC = 0.0
+        def startMSC = OmniDivisibleValue.of(100.0)
+        def amountSTO = OmniDivisibleValue.of(99.0)
+        def reservedOwnerA = OmniDivisibleValue.of(100.0)
+        def reservedOwnerB = OmniDivisibleValue.of(10.0)
+        def reservedOwnerC = OmniDivisibleValue.of(0.0)
         def expectException = false
         def expectedValidity = true
         def currencyMSC = new CurrencyID(ecosystem.getValue())
 
         def numberOfAllOwners = omniGetProperty(currencyMSC).size()
-        if (BTC.btcToSatoshis(startMSC - amountSTO) < (numberOfAllOwners - 1)) {
+        if ((startMSC.willets - amountSTO.willets) < (numberOfAllOwners - 1)) {
             throw new AssumptionViolatedException("actor may not have enough MSC to pay the fee")
         }
 
@@ -276,17 +287,17 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def ownerC = createFundedAddress(startBTC, startMSC)
 
         // reserve an amount for owner A and B
-        reserveAmountMSC(ownerA, currencyMSC, reservedOwnerA)
-        reserveAmountMSC(ownerB, currencyMSC, reservedOwnerB)
+        reserveAmountMSC(ownerA, currencyMSC, reservedOwnerA.bigDecimalValue())
+        reserveAmountMSC(ownerB, currencyMSC, reservedOwnerB.bigDecimalValue())
 
         // confirm starting balances
-        assertBalance(actorAddress, currencyMSC, startMSC, 0.0)
-        assertBalance(ownerA, currencyMSC, (startMSC - reservedOwnerA), reservedOwnerA)
-        assertBalance(ownerB, currencyMSC, (startMSC - reservedOwnerB), reservedOwnerB)
-        assertBalance(ownerC, currencyMSC, (startMSC - reservedOwnerC), reservedOwnerC)
+        assertBalance(actorAddress, currencyMSC, startMSC.bigDecimalValue(), 0.0)
+        assertBalance(ownerA, currencyMSC, (startMSC - reservedOwnerA).bigDecimalValue(), reservedOwnerA.bigDecimalValue())
+        assertBalance(ownerB, currencyMSC, (startMSC - reservedOwnerB).bigDecimalValue(), reservedOwnerB.bigDecimalValue())
+        assertBalance(ownerC, currencyMSC, (startMSC - reservedOwnerC).bigDecimalValue(), reservedOwnerC.bigDecimalValue())
 
         when: "#amountSTO is sent to three owners with similar effective balance of #currencyMSC"
-        def txid = executeSendToOwners(actorAddress, currencyMSC, propertyType, amountSTO, expectException)
+        def txid = executeSendToOwners(actorAddress, currencyMSC, amountSTO, expectException)
         generateBlock()
 
         then: "the transaction is valid"
@@ -301,10 +312,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def ownerBalanceA = omniGetBalance(ownerA, currencyMSC)
         def ownerBalanceB = omniGetBalance(ownerB, currencyMSC)
         def ownerBalanceC = omniGetBalance(ownerC, currencyMSC)
-        def amountSpentActor = startMSC - actorBalance.balance
-        def amountReceivedOwnerA = ownerBalanceA.balance - (startMSC - reservedOwnerA)
-        def amountReceivedOwnerB = ownerBalanceB.balance - (startMSC - reservedOwnerB)
-        def amountReceivedOwnerC = ownerBalanceC.balance - (startMSC - reservedOwnerC)
+        def amountSpentActor = startMSC.bigDecimalValue() - actorBalance.balance
+        def amountReceivedOwnerA = ownerBalanceA.balance - (startMSC - reservedOwnerA).bigDecimalValue()
+        def amountReceivedOwnerB = ownerBalanceB.balance - (startMSC - reservedOwnerB).bigDecimalValue()
+        def amountReceivedOwnerC = ownerBalanceC.balance - (startMSC - reservedOwnerC).bigDecimalValue()
 
         then: "the actor really spent MSC and the owners received MSC"
         amountSpentActor > 0.0
@@ -314,9 +325,9 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         and: "the reserved balances are unchanged"
         actorBalance.reserved  == 0.0
-        ownerBalanceA.reserved == reservedOwnerA
-        ownerBalanceB.reserved == reservedOwnerB
-        ownerBalanceC.reserved == reservedOwnerC
+        ownerBalanceA.reserved == reservedOwnerA.bigDecimalValue()
+        ownerBalanceB.reserved == reservedOwnerB.bigDecimalValue()
+        ownerBalanceC.reserved == reservedOwnerC.bigDecimalValue()
 
         and: "the three owners received exactly the same amount"
         amountReceivedOwnerA == amountReceivedOwnerB
@@ -326,16 +337,16 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     /**
      * Parses the property identifier and creates a new property, if it's neither MSC or TMSC.
      */
-    def getStoProperty(Address actorAddress, def data) {
-        def amountAvailableOwners = Eval.me(data.AmountAvailableOwners) as List<BigDecimal>
-        def amountAvailable = new BigDecimal(data.AmountAvailable)
-        def ecosystem = new Ecosystem(Short.valueOf(data.Ecosystem))
+    CurrencyID getStoProperty(Address actorAddress, def data) {
         def propertyType = new PropertyType(Integer.valueOf(data.PropertyType))
+        def amountAvailableOwners = Eval.me(data.AmountAvailableOwners) as List<BigDecimal>
+        def amountAvailable = OmniValue.of(new BigDecimal(data.AmountAvailable), propertyType)
+        def ecosystem = new Ecosystem(Short.valueOf(data.Ecosystem))
         def propertyName = new String(data.PropertyName)
-        def numberOfTokens = 0.0
+        def numberOfTokens = OmniValue.of(0, propertyType)
 
         if (amountAvailableOwners.size()) {
-            numberOfTokens += amountAvailableOwners.sum()
+            numberOfTokens += OmniValue.of((BigDecimal) amountAvailableOwners.sum(), propertyType)
         }
 
         if (propertyName == "MSC" || propertyName == "TMSC") {
@@ -348,11 +359,11 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         numberOfTokens += amountAvailable
 
-        if (propertyType == PropertyType.DIVISIBLE) {
-            numberOfTokens = BTC.btcToSatoshis(numberOfTokens)
-        }
+//        if (propertyType == PropertyType.DIVISIBLE) {
+//            numberOfTokens = BTC.btcToSatoshis(numberOfTokens)
+//        }
 
-        def txid = createProperty(actorAddress, ecosystem, propertyType, numberOfTokens.longValue())
+        def txid = createProperty(actorAddress, ecosystem, numberOfTokens)
         generateBlock()
 
         def transaction = omniGetTransaction(txid)
@@ -383,12 +394,12 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     /**
      * Executes the "send to owner" command. It catches exceptions and can expect them.
      */
-    def executeSendToOwners(Address address, CurrencyID currency, def propertyType, BigDecimal amount, def exceptional=false) {
+    def executeSendToOwners(Address address, CurrencyID currency, OmniValue amount, Boolean exceptional=false) {
         Boolean thrown = false
         Sha256Hash txid = null
 
         try {
-            txid = omniSendSTO(address, currency, amount)
+            txid = omniSendSTO(address, currency, amount.bigDecimalValue())
         } catch(Exception) {
             thrown = true
         }
@@ -410,10 +421,14 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         }
     }
 
+    void assertBalance(Address address, CurrencyID currency, OmniValue expectedAvailable, OmniValue expectedReserved) {
+        assertBalance(address,currency,expectedAvailable.bigDecimalValue(),expectedReserved.bigDecimalValue())
+    }
+
     /**
      * Short cut to confirm a balance.
      */
-    void assertBalance(Address address, CurrencyID currency, def expectedAvailable, def expectedReserved) {
+    void assertBalance(Address address, CurrencyID currency, BigDecimal expectedAvailable, BigDecimal expectedReserved) {
         def balance = omniGetBalance(address, currency)
         assert balance.balance == expectedAvailable
         assert balance.reserved == expectedReserved

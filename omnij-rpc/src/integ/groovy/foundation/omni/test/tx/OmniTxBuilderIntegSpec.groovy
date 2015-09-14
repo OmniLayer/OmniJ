@@ -1,6 +1,7 @@
 package foundation.omni.test.tx
 
 import com.msgilligan.bitcoinj.BTC
+import com.msgilligan.bitcoinj.rpc.conversion.BitcoinMath
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.tx.OmniTxBuilder
 import org.bitcoinj.core.TransactionOutput
@@ -26,7 +27,7 @@ class OmniTxBuilderIntegSpec extends BaseRegTestSpec {
         BigDecimal amount = 0.1
 
         when: "we build a signed Omni Simple Send Transaction in a bitcoinj Transaction object"
-        def tx = omniTxBuilder.createSignedSimpleSend(fundedKey, utxos, toAddress, MSC, BTC.btcToCoin(amount).longValue())
+        def tx = omniTxBuilder.createSignedSimpleSend(fundedKey, utxos, toAddress, MSC, BitcoinMath.btcToCoin(amount).longValue())
 
         and: "we send it"
         def txid = sendRawTransaction(tx)
