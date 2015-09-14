@@ -1,0 +1,53 @@
+// Handles publication of distributions to Bintray
+subprojects {
+    apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+
+    task sourceJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourceJar
+        archives javadocJar
+    }
+
+    publishing {
+        publications {
+            jar(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+
+    bintray {
+        user = project.hasProperty("binTrayAPIUser") ? binTrayAPIUser : 'please set binTrayAPIUser'
+        key = project.hasProperty("binTrayAPIKey") ? binTrayAPIKey : 'please set binTrayAPIKey'
+        dryRun = false // whether to run this as dry-run, without deploying
+        publications = ['jar'] // When uploading Maven-based publication files
+        pkg {
+            repo = 'maven'
+            userOrg = 'omni'
+            name = 'omnij'
+            desc = 'OmniJ - Omni Layer for Java and the JVM'
+            websiteUrl = 'https://github.com/msgilligan/bitcoinj-addons'
+            issueTrackerUrl = 'https://github.com/msgilligan/bitcoinj-addons/issues'
+            vcsUrl = 'https://github.com/msgilligan/bitcoinj-addons.git'
+            licenses = ['Apache-2.0']
+            labels = ['bitcoin', 'omni', 'json-rpc']
+            version {
+                name = project.version
+                desc = 'Dangerously preliminary release.'
+                released  = new Date()
+                vcsTag = 'none'
+            }
+        }
+    }
+}
