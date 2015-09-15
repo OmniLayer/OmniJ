@@ -43,7 +43,11 @@ A Bitcoin JSON-RPC client and command-line tool support that was previously part
 
 === OmniJ Maven Artifacts
 
-Coming https://github.com/OmniLayer/OmniJ/issues/66[soon].
+Available on https://bintray.com/omni/maven/omnij/view[Bintray].
+
+image::https://api.bintray.com/packages/omni/maven/omnij/images/download.svg[link="https://bintray.com/omni/maven/omnij/_latestVersion"]
+
+WARNING: These binaries have not been audited. Use only on TestNet or RegTest.
 
 === Building OmniJ
 
