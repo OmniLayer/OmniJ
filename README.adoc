@@ -21,6 +21,10 @@ There are currently three subprojects of OmniJ. Each of which builds a JAR artif
 | Core Omni functionality
 | JDK 7+ Java-only, Android-compatible
 
+| omnij-dsl
+| Domain Specific Language (DSL) support for Omni
+| JDK 7+, Groovy language
+
 | omnij-rpc
 | Omni Core RPC library, command-line API/tools, integration tests
 | JDK 7+ Java & Groovy
@@ -77,6 +81,9 @@ After a successful build, the jars will be in the following locations:
 
 | omnij-core
 | omnij-core/build/libs/omnij-core-_version_.jar
+
+| omnij-dsl
+| omnij-dsl/build/libs/omnij-dsl-_version_.jar
 
 | omnij-rpc
 | omnij-rpc/build/libs/omnij-rpc-_version_.jar
