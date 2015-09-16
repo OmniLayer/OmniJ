@@ -162,33 +162,47 @@ Read the scripts carefully to make sure you understand how they work. Take speci
 
 == Sample Spock Integration Tests
 
-These sample Spock "feature tests" are from the file https://github.com/OmniLayer/OmniJ/blob/master/bitcoin-rpc/src/integ/groovy/com/msgilligan/bitcoin/rpc/BitcoinSpec.groovy#L30[BitcoinSpec.groovy].
+These sample Spock "feature tests" are from the file https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/smartproperty/ManagedPropertySpec.groovy[ManagedPropertySpec.groovy].
 
 [source,groovy]
 ----
-    def "Use RegTest mode to generate a block upon request"() {
-        given: "a certain starting height"
-        def startHeight = blockCount
-
-        when: "we generate 1 new block"
+    def "A managed property can be created with transaction type 54"() {
+        when:
+        creationTxid = createManagedProperty(actorAddress, Ecosystem.MSC,
+                          PropertyType.INDIVISIBLE, "Test Category",
+                          "Test Subcategory", "ManagedTokens",
+                          "http://www.omnilayer.org",
+                          "This is a test for managed properties")
         generateBlock()
+        def creationTx = omniGetTransaction(creationTxid)
+        currencyID = new CurrencyID(creationTx.propertyid as Long)
 
-        then: "the block height is 1 higher"
-        blockCount == startHeight + 1
+        then: "the transaction is valid"
+        creationTx.valid
+
+        and: "it has the specified values"
+        creationTx.txid == creationTxid.toString()
+        creationTx.type_int == 54
+        creationTx.divisible == false
+        creationTx.propertyname == "ManagedTokens"
+        creationTx.amount as Integer == 0
+
+        and: "there is a new property"
+        omniListProperties().size() == old(omniListProperties().size()) + 1
     }
 
-    def "When we send an amount to a newly created address, it arrives"() {
-        given: "A new, empty Bitcoin address"
-        def destinationAddress = getNewAddress()
+    def "A managed property has a category, subcategory, name, website and description"() {
+        when:
+        def propertyInfo = omniGetProperty(currencyID)
 
-        when: "we send it testAmount (from coins mined in RegTest mode)"
-        sendToAddress(destinationAddress, testAmount, "comment", "comment-to")
-
-        and: "we generate 1 new block"
-        generateBlock()
- 
-        then: "the new address has a balance of testAmount"
-        testAmount == getReceivedByAddress(destinationAddress)
+        then:
+        propertyInfo.propertyid == currencyID.getValue()
+        propertyInfo.divisible == false
+        propertyInfo.name == "ManagedTokens"
+        propertyInfo.category == "Test Category"
+        propertyInfo.subcategory == "Test Subcategory"
+        propertyInfo.url == "http://www.omnilayer.org"
+        propertyInfo.data == "This is a test for managed properties"
     }
 ----
 
