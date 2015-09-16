@@ -2,7 +2,6 @@ buildscript {
     repositories {
         jcenter()
     }
-
     dependencies {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
         classpath 'com.github.jruby-gradle:jruby-gradle-plugin:0.4.0'
@@ -13,18 +12,14 @@ buildscript {
 ext.groovyVersion = '2.4.4'
 ext.bitcoinjAddonsVersion = '0.0.7'
 
-apply from: 'gradle/groovydoc.gradle'
-apply from: 'gradle/asciidoctor.gradle'
-apply from: 'gradle/idea.gradle'
-
 allprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
 
     sourceCompatibility = 1.7
 
-    group = 'foundation.omni'
     version = '0.3.1-SNAPSHOT'
+    group = 'foundation.omni'
 
     repositories {
         jcenter()
@@ -35,7 +30,6 @@ allprojects {
 }
 
 subprojects {
-
     dependencies {
         compile 'org.bitcoinj:bitcoinj-core:0.13.2'
         compile 'org.slf4j:slf4j-api:1.7.7'
@@ -56,6 +50,9 @@ subprojects {
     }
 }
 
+apply from: 'gradle/idea.gradle'
+apply from: 'gradle/groovydoc.gradle'
+apply from: 'gradle/asciidoctor.gradle'
 apply from: 'gradle/bintray.gradle'
 
 task testReport(type: TestReport) {
