@@ -19,7 +19,7 @@ class DexSpec extends BaseRegTestSpec {
     final static Byte actionUpdate = 2
     final static Byte actionCancel = 3
 
-    def "A new sell offer can be created with Action = 1 (New)"() {
+    def "A new sell offer can be created with action = 1 (new)"() {
         given:
         def fundedAddress = createFundedAddress(startBTC, startMSC, false)
         def activeOffersAtTheStart = omniGetActiveDExSells()
@@ -29,10 +29,24 @@ class DexSpec extends BaseRegTestSpec {
                 fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee.decimalBtc, actionNew)
         generateBlock()
 
-        then: "it is a valid transaction"
+        and: "retrieving information about the offer"
         def offerTx = omniGetTransaction(offerTxid)
+
+        then: "it is a valid transaction"
+        offerTx.txid == offerTxid.toString()
+        offerTx.sendingaddress == fundedAddress.toString()
+        offerTx.version == 1
+        offerTx.type_int == 20
+        offerTx.type == "DEx Sell Offer"
+        offerTx.propertyid == currencyOffered.getValue()
+        offerTx.divisible
+        offerTx.amount as BigDecimal == amountOffered
+        offerTx.bitcoindesired as BigDecimal == desiredBTC
+        offerTx.timelimit == stdBlockSpan
+        offerTx.feerequired as BigDecimal == stdCommitFee.decimalBtc
+        offerTx.action == "new"
+        offerTx.valid
         offerTx.confirmations == 1
-        offerTx.valid == true
 
         and: "a new offer is created on the distributed exchange"
         def activeOffersNow = omniGetActiveDExSells()
@@ -168,7 +182,7 @@ class DexSpec extends BaseRegTestSpec {
          secondOfferMSC, secondOfferBTC] << [[0.1, 2.5, MSC, 1.0, 0.2, 1.5, 0.3]]
     }
 
-    def "An offer can be updated with action = 2, and cancelled with action = 3"() {
+    def "An offer can be updated with action = 2 (update), and cancelled with action = 3 (cancel)"() {
         given:
         def fundedAddress = createFundedAddress(startBTC, startMSC)
         def balanceAtStart = omniGetBalance(fundedAddress, currencyOffered)
@@ -195,9 +209,13 @@ class DexSpec extends BaseRegTestSpec {
                 fundedAddress, currencyOffered, updatedMSC, updatedBTC, stdBlockSpan, stdCommitFee.decimalBtc, actionUpdate)
         generateBlock()
 
+        and: "retrieving information about the update"
+        def updateTx = omniGetTransaction(updateTxid)
+
         then: "the offered amount is updated"
-        omniGetTransaction(updateTxid).valid
-        omniGetTransaction(updateTxid).amount as BigDecimal == updatedMSC
+        updateTx.amount as BigDecimal == updatedMSC
+        updateTx.action == "update"
+        updateTx.valid
 
         and: "the total amount offered is reserved"
         omniGetBalance(fundedAddress, currencyOffered).balance == balanceAtStart.balance - updatedMSC
@@ -208,8 +226,12 @@ class DexSpec extends BaseRegTestSpec {
                 fundedAddress, currencyOffered, 0.0, 0.0, 0 as Byte, 0.0, actionCancel)
         generateBlock()
 
-        then:
-        omniGetTransaction(cancelTxid).valid
+        and: "retrieving information about the cancel"
+        def cancelTx = omniGetTransaction(cancelTxid)
+
+        then: "the transaction is valid"
+        cancelTx.valid
+        cancelTx.action == "cancel"
 
         and: "the original balance is restored"
         omniGetBalance(fundedAddress, currencyOffered).balance == balanceAtStart.balance
@@ -238,9 +260,24 @@ class DexSpec extends BaseRegTestSpec {
         def acceptTxid = acceptDexOffer(actorB, currencyOffered, offeredMSC, actorA)
         generateBlock()
 
-        then:
+        then: "both transactions are valid"
         omniGetTransaction(offerTxid).valid
         omniGetTransaction(acceptTxid).valid
+
+        when: "retrieving information about the accept order"
+        def acceptTx = omniGetTransaction(acceptTxid)
+
+        then: "the information matches the specified data"
+        acceptTx.txid == acceptTxid.toString()
+        acceptTx.sendingaddress == actorB.toString()
+        acceptTx.referenceaddress == actorA.toString()
+        acceptTx.version == 0
+        acceptTx.type_int == 22
+        acceptTx.type == "DEx Accept Offer"
+        acceptTx.propertyid == currencyOffered.getValue()
+        acceptTx.divisible
+        acceptTx.amount as BigDecimal == offeredMSC
+        acceptTx.confirmations == 1
 
         where:
         [startBTC, startMSC, currencyOffered, offeredMSC, desiredBTC] << [[0.1, 0.1, MSC, 0.05, 0.07]]
