@@ -8,6 +8,7 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 public class OmniTxBuilder {
     private final long stdTxFee = 10000;
+    private static final int dustAmountInSatoshis = 546;
     private final NetworkParameters netParams;
     private final OmniNetworkParameters omniParams;
     private final RawTxBuilder builder = new RawTxBuilder();
@@ -49,9 +51,9 @@ public class OmniTxBuilder {
         Transaction tx = transactionEncoder.encodeObfuscated(redeemingKey, payload, redeemingAddress.toString());
 
         // Add outputs to the transaction
-        tx.addOutput(Coin.MILLICOIN, omniParams.getExodusAddress());    // Add correct Exodus Output
+        tx.addOutput(Coin.valueOf(dustAmountInSatoshis), omniParams.getExodusAddress());
         if (refAddress != null) {
-            tx.addOutput(Coin.CENT, refAddress);                            // Reference (destination) address output
+            tx.addOutput(Coin.valueOf(dustAmountInSatoshis), refAddress);
         }
         return tx;
     }
@@ -81,6 +83,20 @@ public class OmniTxBuilder {
         return tx;
     }
 
+    public Transaction createUnsignedOmniTransaction(ECKey fromKey, List<TransactionInput> inputs, Address refAddress, byte[] payload) throws InsufficientMoneyException {
+        Address fromAddress = fromKey.toAddress(netParams);
+
+        Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
+
+        makeChangeOutputFromInputs(tx, fromAddress, inputs);
+
+        for (TransactionInput input : inputs)
+            tx.addInput(input);
+
+        return tx;
+    }
+
+
     /**
      * Create a signed simple send Transaction
      *
@@ -97,6 +113,13 @@ public class OmniTxBuilder {
         return createSignedOmniTransaction(fromKey, unspentOutputs, toAddress, payload);
     }
 
+    public Transaction createUnsignedSimpleSend(ECKey fromKey, List<TransactionInput> inputs, Address toAddress, CurrencyID currencyID, long amount) throws InsufficientMoneyException {
+        String txHex = builder.createSimpleSendHex(currencyID, amount);
+        byte[] payload = RawTxBuilder.hexToBinary(txHex);
+        return createUnsignedOmniTransaction(fromKey, inputs, toAddress, payload);
+    }
+
+
     /**
      * <p>Calculate change and create a change output</p>
      *
@@ -112,6 +135,7 @@ public class OmniTxBuilder {
         long amountIn     = sum(unspentOutputs);    // Sum of available UTXOs
         long amountOut    = sum(tx.getOutputs());   // Sum of outputs, this transaction
         long amountChange = amountIn - amountOut - stdTxFee;
+
         // If change is negative, transaction is invalid
         if (amountChange < 0) {
             Coin missing = Coin.valueOf(-amountChange);
@@ -125,6 +149,26 @@ public class OmniTxBuilder {
         return tx;
     }
 
+    Transaction makeChangeOutputFromInputs(Transaction tx, Address changeAddress, List<TransactionInput> inputs) throws InsufficientMoneyException {
+        // Calculate change
+        long amountIn     = sumInputs(inputs);    // Sum of inputs
+        long amountOut    = sum(tx.getOutputs());   // Sum of outputs, this transaction
+        long amountChange = amountIn - amountOut - stdTxFee;
+
+        // If change is negative, transaction is invalid
+        if (amountChange < 0) {
+            Coin missing = Coin.valueOf(-amountChange);
+            throw new InsufficientMoneyException(missing, "Insufficient Bitcoin to build Omni Transaction");
+        }
+        // If change is positive, return it all to the sending address
+        if (amountChange > 0) {
+            // Add a change output
+            tx.addOutput(Coin.valueOf(amountChange), changeAddress);
+        }
+        return tx;
+    }
+
+
     /**
      * Calculate the total value of a list of transaction outputs.
      *
@@ -136,6 +180,13 @@ public class OmniTxBuilder {
         for (TransactionOutput output : outputs) {
             sum += output.getValue().longValue();
         }
+        return sum;
+    }
+
+    long sumInputs(List<TransactionInput> inputs) {
+        long sum = 0;
+        for (TransactionInput input : inputs)
+            sum += input.getValue().longValue();
         return sum;
     }
 }
