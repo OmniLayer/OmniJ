@@ -22,7 +22,6 @@ import java.util.Map;
 
 // TODO: add missing RPCs:
 // - listtransactions_MP
-// - getsto_MP
 // - omni_gettradehistoryforpair
 // - omni_gettradehistoryforaddress
 
@@ -653,6 +652,19 @@ public class OmniClient extends BitcoinClient {
         String txid = send("omni_sendactivation", params);
         Sha256Hash hash = Sha256Hash.wrap(txid);
         return hash;
+    }
+
+    /**
+     * Get information and recipients of a send-to-owners transaction.
+     *
+     * @param txid  The hash of the transaction to lookup
+     * @return Information about the transaction
+     */
+    public Map<String, Object> omniGetSTO(Sha256Hash txid) throws JsonRPCException, IOException {
+        String filter = "*"; // no filter at all
+        List<Object> params = createParamList(txid.toString(), filter);
+        Map<String, Object> stoInfo = send("getsto_MP", params);
+        return stoInfo;
     }
 
     /**

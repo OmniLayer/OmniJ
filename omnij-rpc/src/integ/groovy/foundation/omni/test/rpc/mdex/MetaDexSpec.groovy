@@ -54,6 +54,25 @@ class MetaDexSpec extends BaseRegTestSpec {
 
         and:
         omniGetBalance(actorC, propertyMSC).reserved == 0.00000001
+
+        when: "retrieving additional information about trade C"
+        def txTradeC = omniGetTrade(txidTradeC)
+
+        then: "the order is still unmatched"
+        txTradeC.txid == txidTradeC.toString()
+        txTradeC.sendingaddress == actorC.toString()
+        txTradeC.version == 0
+        txTradeC.type_int == 25
+        txTradeC.type == "MetaDEx trade"
+        txTradeC.propertyidforsale == propertyMSC.getValue()
+        txTradeC.propertyidforsaleisdivisible
+        txTradeC.amountforsale as BigDecimal == 0.00000001.divisible.bigDecimalValue()
+        txTradeC.propertyiddesired == propertySPX.getValue()
+        txTradeC.amountdesired as BigDecimal == 10.indivisible.bigDecimalValue()
+        txTradeC.unitprice == "0.00000000100000000000000000000000000000000000000000"
+        txTradeC.amountremaining as BigDecimal == 0.00000001.divisible.bigDecimalValue()
+        txTradeC.amounttofill as BigDecimal == 10.indivisible.bigDecimalValue()
+        txTradeC.matches.size == 0
     }
 
     /**
@@ -72,20 +91,62 @@ class MetaDexSpec extends BaseRegTestSpec {
         generateBlock()
 
         then:
-        omniGetTrade(txidTradeA).valid
-        omniGetTrade(txidTradeB).valid
-
-        and:
-        omniGetTrade(txidTradeA).status != "open"
-        omniGetTrade(txidTradeB).status != "open"
-        omniGetTrade(txidTradeA).status != "filled"
-        omniGetTrade(txidTradeB).status != "filled"
+        omniGetTransaction(txidTradeA).valid
+        omniGetTransaction(txidTradeB).valid
 
         and:
         omniGetBalance(actorA, propertyMSC).balance == 0.5
         omniGetBalance(actorA, propertySPX).reserved == 20 as BigDecimal
         omniGetBalance(actorB, propertySPX).balance == 5 as BigDecimal
         omniGetBalance(actorB, propertyMSC).reserved == 0.05
+
+        when: "retrieving information about trade A"
+        def txTradeA = omniGetTrade(txidTradeA)
+
+        then:
+        txTradeA.status == "open part filled"
+
+        and:
+        txTradeA.propertyidforsale == propertySPX.getValue()
+        txTradeA.amountforsale as BigDecimal == 25.indivisible.bigDecimalValue()
+        txTradeA.propertyiddesired == propertyMSC.getValue()
+        txTradeA.amountdesired as BigDecimal == 2.5.divisible.bigDecimalValue()
+        txTradeA.unitprice == "0.10000000000000000000000000000000000000000000000000"
+        txTradeA.amountremaining as BigDecimal == 20.indivisible.bigDecimalValue()
+        txTradeA.amounttofill as BigDecimal == 2.0.divisible.bigDecimalValue()
+        txTradeA.matches.size == 1
+
+        when:
+        def tradeMatchA = txTradeA.matches.find { it.txid == txidTradeB.toString() } as Map<String, Object>
+
+        then:
+        tradeMatchA.address == actorB.toString()
+        tradeMatchA.amountsold as BigDecimal == 5.divisible.bigDecimalValue()
+        tradeMatchA.amountreceived as BigDecimal == 0.5.divisible.bigDecimalValue()
+
+        when: "retrieving information about trade B"
+        def txTradeB = omniGetTrade(txidTradeB)
+
+        then:
+        txTradeB.status == "open part filled"
+
+        and:
+        txTradeB.propertyidforsale == propertyMSC.getValue()
+        txTradeB.amountforsale as BigDecimal == 0.55.divisible.bigDecimalValue()
+        txTradeB.propertyiddesired == propertySPX.getValue()
+        txTradeB.amountdesired as BigDecimal == 5.indivisible.bigDecimalValue()
+        txTradeB.unitprice == "0.11000000000000000000000000000000000000000000000000"
+        txTradeB.amountremaining as BigDecimal == 0.05.divisible.bigDecimalValue()
+        txTradeB.amounttofill as BigDecimal == 1.indivisible.bigDecimalValue()
+        txTradeB.matches.size == 1
+
+        when:
+        def tradeMatchB = txTradeB.matches.find { it.txid == txidTradeA.toString() } as Map<String, Object>
+
+        then:
+        tradeMatchB.address == actorA.toString()
+        tradeMatchB.amountsold as BigDecimal == 0.5.divisible.bigDecimalValue()
+        tradeMatchB.amountreceived as BigDecimal == 5.indivisible.bigDecimalValue()
     }
 
     /**
