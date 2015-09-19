@@ -17,7 +17,6 @@ import java.util.List;
  *
  */
 public class OmniTxBuilder {
-    private final long stdTxFee = 10000;
     private final NetworkParameters netParams;
     private final OmniNetworkParameters omniParams;
     private final RawTxBuilder builder = new RawTxBuilder();
@@ -49,9 +48,9 @@ public class OmniTxBuilder {
         Transaction tx = transactionEncoder.encodeObfuscated(redeemingKey, payload, redeemingAddress.toString());
 
         // Add outputs to the transaction
-        tx.addOutput(Coin.MILLICOIN, omniParams.getExodusAddress());    // Add correct Exodus Output
+        tx.addOutput(Transaction.MIN_NONDUST_OUTPUT, omniParams.getExodusAddress());    // Add correct Exodus Output
         if (refAddress != null) {
-            tx.addOutput(Coin.CENT, refAddress);                            // Reference (destination) address output
+            tx.addOutput(Transaction.MIN_NONDUST_OUTPUT, refAddress);                   // Reference (destination) address output
         }
         return tx;
     }
@@ -111,7 +110,7 @@ public class OmniTxBuilder {
         // Calculate change
         long amountIn     = sum(unspentOutputs);    // Sum of available UTXOs
         long amountOut    = sum(tx.getOutputs());   // Sum of outputs, this transaction
-        long amountChange = amountIn - amountOut - stdTxFee;
+        long amountChange = amountIn - amountOut - Transaction.REFERENCE_DEFAULT_MIN_TX_FEE.value;
         // If change is negative, transaction is invalid
         if (amountChange < 0) {
             Coin missing = Coin.valueOf(-amountChange);
@@ -134,7 +133,7 @@ public class OmniTxBuilder {
     long sum(List <TransactionOutput> outputs) {
         long sum = 0;
         for (TransactionOutput output : outputs) {
-            sum += output.getValue().longValue();
+            sum += output.getValue().value;
         }
         return sum;
     }
