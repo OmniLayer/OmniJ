@@ -106,4 +106,94 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         omniGetBalance(senderAddress, currencyID).balance == amountToCreate.bigDecimalValue()
     }
 
+    def "Historical STO transactions are not affected by reorganizations"() {
+        when:
+        def actorAddress = createFundedAddress(startBTC, startMSC)
+        def tokenID = fundNewProperty(actorAddress, 100.divisible, Ecosystem.MSC)
+        def ownerA = newAddress
+        def ownerB = newAddress
+        omniSend(actorAddress, ownerA, tokenID, 10.0)
+        omniSend(actorAddress, ownerB, tokenID, 10.0)
+        generateBlock()
+
+        then:
+        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC
+        omniGetBalance(actorAddress, tokenID).balance == 100.0 - 20.0
+        omniGetBalance(ownerA, tokenID).balance == 10.0
+        omniGetBalance(ownerB, tokenID).balance == 10.0
+
+        when: "sending the first STO transaction"
+        def firstTxid = omniSendSTO(actorAddress, tokenID, 30.0)
+        generateBlock()
+        def firstTx = omniGetSTO(firstTxid)
+
+        then: "the transaction is valid"
+        firstTx.txid == firstTxid.toString()
+        firstTx.sendingaddress == actorAddress.toString()
+        firstTx.valid
+        firstTx.version == 0
+        firstTx.type_int == 3
+        firstTx.propertyid == tokenID.getValue()
+        firstTx.divisible
+        firstTx.amount as BigDecimal == 30.0
+        firstTx.totalstofee as BigDecimal == 0.00000002
+        firstTx.recipients.size == 2
+        firstTx.recipients.any { it.address == ownerA.toString() }
+        firstTx.recipients.any { it.address == ownerB.toString() }
+        firstTx.recipients.every { it.amount as BigDecimal == 15.0 } // 30.0 for two owners
+
+        and: "two owners received tokens"
+        omniGetBalance(ownerA, tokenID).balance == 10.0 + 15.0
+        omniGetBalance(ownerB, tokenID).balance == 10.0 + 15.0
+
+        and: "the actor was charged"
+        omniGetBalance(actorAddress, tokenID).balance == 100.0 - 20.0 - 30.0
+        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC - (2 * 0.00000001)
+
+        when: "sending a second STO transaction"
+        def secondTxid = omniSendSTO(actorAddress, tokenID, 30.0)
+        def blockHashOfSecond = generateAndGetBlockHash()
+
+        and: "invalidating the block with the second STO transaction"
+        invalidateBlock(blockHashOfSecond)
+        clearMemPool()
+        generateBlock()
+        def secondOrphanedTx = omniGetTransaction(secondTxid)
+
+        then: "the transaction is not valid"
+        !secondOrphanedTx.valid
+        // secondOrphanedTx.confirmations == -1 TODO: activate after Omni Core adjustment
+
+        when: "creating a third STO transaction"
+        def thirdTxid = omniSendSTO(actorAddress, tokenID, 50.0)
+        generateBlock()
+        def thirdTx = omniGetSTO(thirdTxid)
+
+        then: "the third STO transaction is valid"
+        thirdTx.valid
+        thirdTx.amount as BigDecimal == 50.0
+        thirdTx.totalstofee as BigDecimal == 0.00000002
+        thirdTx.recipients.size == 2
+        thirdTx.recipients.any { it.address == ownerA.toString() }
+        thirdTx.recipients.any { it.address == ownerB.toString() }
+        thirdTx.recipients.every { it.amount as BigDecimal == 25.0 } // 50.0 for two owners
+
+        when: "checking the first STO transaction once more"
+        def firstTxNow = omniGetSTO(firstTxid)
+
+        then: "the information for the first transaction is still the same"
+        firstTxNow.valid
+        firstTx.amount as BigDecimal == 30.0
+        firstTx.totalstofee as BigDecimal == 0.00000002
+        firstTx.recipients.size == 2
+        firstTx.recipients.any { it.address == ownerA.toString() }
+        firstTx.recipients.any { it.address == ownerB.toString() }
+        firstTx.recipients.every { it.amount as BigDecimal == 15.0 } // 30.0 for two owners
+
+        and: "the final balances as expected"
+        omniGetBalance(actorAddress, tokenID).balance == 100.0 - 20.0 - 30.0 - 50.0
+        omniGetBalance(ownerA, tokenID).balance == 10.0 + 15.0 + 25.0 // initial + first STO + third STO
+        omniGetBalance(ownerB, tokenID).balance == 10.0 + 15.0 + 25.0
+        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC - (4 * 0.00000001) // fee for each owner
+    }
 }

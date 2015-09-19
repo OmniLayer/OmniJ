@@ -3,12 +3,21 @@ package foundation.omni.test.rpc.reorgs
 import com.msgilligan.bitcoinj.rpc.JsonRPCStatusException
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.OmniValue
-import foundation.omni.PropertyType
 import foundation.omni.rpc.SmartPropertyListInfo
+import org.bitcoinj.core.Coin
 import spock.lang.Shared
 import spock.lang.Unroll
 
+/**
+ * To confirm that the database for smart properties/tokens remains
+ * consistent during reorganizations, new tokens are created and the total
+ * number of created tokens, and their identifiers, are checked against
+ * expected values.
+ *
+ * The tests cover the case where snapshots of the state are restored from
+ * persisted data, but also consider the situation where no snapshot is
+ * available, and the whole state is wiped and reconstructed.
+ */
 class PropertyCreationReorgSpec extends BaseReorgSpec {
 
     @Shared
@@ -21,6 +30,14 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
     CurrencyID nextTestPropertyID
 
     def setupSpec() {
+        // two extra tokens are created to ensure there are
+        // tokens, other than the hardcoded base tokens
+        def dummyA = createFundedAddress(Coin.CENT, 0.divisible, false)
+        def dummyB = createFundedAddress(Coin.CENT, 0.divisible, false)
+        fundNewProperty(dummyA, 3405691582.indivisible, Ecosystem.MSC)
+        fundNewProperty(dummyB, 4276994270.indivisible, Ecosystem.TMSC)
+        generateBlock()
+
         propertyListAtStart = omniListProperties()
         def mainProperties = propertyListAtStart.findAll { it.id.ecosystem == Ecosystem.MSC }
         def testProperties = propertyListAtStart.findAll { it.id.ecosystem == Ecosystem.TMSC }
@@ -41,7 +58,7 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
     }
 
     @Unroll
-    def "In #ecosystem, after invalidating the creation of #propertyType, the transaction and the property are invalid"()
+    def "In #ecosystem, after invalidating the creation of #value tokens, the transaction and the tokens are invalid"()
     {
         def actorAddress = createFundedAddress(startBTC, startMSC)
 
@@ -66,7 +83,12 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         and: "the creator was credited with the correct amount of created tokens"
         omniGetBalance(actorAddress, currencyID).balance == value.bigDecimalValue()
 
-        when: "invalidating the block and property creation transaction"
+        when: "invalidating the block and property creation transaction after zero or more blocks"
+        for (int i = 0; i < extraBlocks; ++i) {
+            // after a certain number of blocks the whole state is cleared,
+            // initiating the reprocessing of all Omni transactions
+            generateBlock()
+        }
         invalidateBlock(blockHashOfCreation)
         clearMemPool()
         generateBlock()
@@ -90,11 +112,11 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         thrown(JsonRPCStatusException)
 
         where:
-        ecosystem      | value              | expectedCurrencyID
-        Ecosystem.MSC  | 150.indivisible    | nextMainPropertyID
-        Ecosystem.MSC  | 1.0.divisible      | nextMainPropertyID
-        Ecosystem.TMSC | 350.indivisible    | nextTestPropertyID
-        Ecosystem.TMSC | 2.5.divisible      | nextTestPropertyID
+        ecosystem      | value              | extraBlocks | expectedCurrencyID
+        Ecosystem.MSC  | 150.indivisible    | 51          | nextMainPropertyID
+        Ecosystem.MSC  | 1.0.divisible      | 3           | nextMainPropertyID
+        Ecosystem.TMSC | 350.indivisible    | 53          | nextTestPropertyID
+        Ecosystem.TMSC | 2.5.divisible      | 0           | nextTestPropertyID
     }
 
 }
