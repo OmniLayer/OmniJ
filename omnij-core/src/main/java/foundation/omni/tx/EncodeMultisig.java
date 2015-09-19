@@ -21,7 +21,6 @@ public class EncodeMultisig {
 
     private static final int maxKeys = 3;  /* Redeemable key + 2 data keys */
     private static final int maxDataKeys = maxKeys - 1;
-    private static final int dustAmountInSatoshis = 100000;
 
     private final NetworkParameters netParams;
 
@@ -59,8 +58,9 @@ public class EncodeMultisig {
             redeemableGroup.add(redeemingKey);
             redeemableGroup.addAll(group);
             Script script = ScriptBuilder.createMultiSigOutputScript(1, redeemableGroup); // 1 of group.size() multisig
-            Coin amount = Coin.valueOf(dustAmountInSatoshis); // TODO: Make this dynamic
-            txClassB.addOutput(amount, script);
+            TransactionOutput output = new TransactionOutput(netParams, null, Coin.ZERO, script.getProgram());
+            output.setValue(output.getMinNonDustValue());
+            txClassB.addOutput(output);
         }
 
         return txClassB;
