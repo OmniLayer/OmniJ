@@ -93,6 +93,12 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         crowdsale.tokensissued as BigDecimal == expectedBalance.bigDecimalValue()
         crowdsale.addedissuertokens as BigDecimal == 0.divisible.bigDecimalValue() // no bonus applied
 
+        when:
+        def txidClose = closeCrowdsale(issuerAddress, propertyId) // bypass RPC layer
+        generateBlock()
+
+        then:
+        omniGetTransaction(txidClose).valid
 
         where:
         amountToInvest       | expectedBalance
@@ -189,6 +195,13 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         crowdsale.tokensissued as BigDecimal == expectedBalance.bigDecimalValue()
         crowdsale.addedissuertokens as BigDecimal == 0.divisible.bigDecimalValue() // no bonus applied
 
+        when:
+        def txidClose = closeCrowdsale(issuerAddress, propertyId) // bypass RPC layer
+        generateBlock()
+
+        then:
+        omniGetTransaction(txidClose).valid == !crowdsaleMaxed
+
         where:
         amountToInvest | expectedBalance                | crowdsaleMaxed
         0.01.divisible | 922337203.68547758.divisible   | false
@@ -216,7 +229,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
                 "percenttoissuer" : 0
             }
         */
-        def rawTx = "0000003301000100000000000054496e646976000000000000020000000000000d4800000001ccd403f00000"
+        def rawTx = "0000003302000100000000000054496e646976000000000000020000000000000d4800000001ccd403f00000"
         def issuerAddress = createFundedAddress(startBTC, startMSC, false)
         def investorAddress = createFundedAddress(startBTC, amountToInvest.bigDecimalValue(), false)
         def currencyMSC = CurrencyID.TMSC
@@ -279,6 +292,13 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         crowdsale.deadline == 7731414000
         crowdsale.tokensissued as BigDecimal == expectedBalance.bigDecimalValue()
         crowdsale.addedissuertokens as BigDecimal == 0.divisible.bigDecimalValue() // no bonus applied
+
+        when:
+        def txidClose = closeCrowdsale(issuerAddress, propertyId) // bypass RPC layer
+        generateBlock()
+
+        then:
+        omniGetTransaction(txidClose).valid
 
         where:
         amountToInvest   | expectedBalance
