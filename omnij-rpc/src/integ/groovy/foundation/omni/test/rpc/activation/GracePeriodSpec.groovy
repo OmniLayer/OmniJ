@@ -12,6 +12,10 @@ import spock.lang.Unroll
  */
 class GracePeriodSpec extends BaseActivationSpec {
 
+    def beforeSpec() {
+        skipIfActivated(unallocatedFeatureId)
+    }
+
     @Unroll
     def "A relative activation height of #blockOffset blocks is smaller than the grace period and not allowed"() {
         setup:

@@ -60,4 +60,14 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
         clearMemPool()
         generateBlock()
     }
+
+    def skipIfActivated(def featureId) {
+        def activations = omniGetActivations()
+        if (activations.pendingactivations.any( { it.featureid == featureId } )) {
+            throw new AssumptionViolatedException("Feature $featureId is already activated")
+        }
+        if (activations.completedactivations.any( { it.featureid == featureId } )) {
+            throw new AssumptionViolatedException("Feature $featureId is already live")
+        }
+    }
 }
