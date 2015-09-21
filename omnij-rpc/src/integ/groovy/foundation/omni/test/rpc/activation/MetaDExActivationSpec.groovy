@@ -26,6 +26,10 @@ class MetaDExActivationSpec extends BaseActivationSpec {
     @Shared CurrencyID mainID
     @Shared CurrencyID testID
 
+    def beforeSpec() {
+        skipIfActivated(metaDExFeatureId)
+    }
+
     def setupSpec() {
         actorAddress = createFundedAddress(startBTC, startMSC)
         mainID = fundNewProperty(actorAddress, 10.0, PropertyType.DIVISIBLE, Ecosystem.MSC)

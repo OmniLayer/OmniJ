@@ -21,6 +21,10 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
 
     @Shared Integer activationBlock = 999999
 
+    def beforeSpec() {
+        skipIfActivated(overOffersFeatureId)
+    }
+
     def "Offering more than available on the distributed exchange is valid before the deactivation"() {
         setup:
         def actorAddress = createFundedAddress(startBTC, startMSC)

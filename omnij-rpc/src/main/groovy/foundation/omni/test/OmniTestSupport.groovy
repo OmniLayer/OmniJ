@@ -68,7 +68,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
             // transaction fee, have to be paid twice
             BigDecimal additionalRequiredDecimal = (dustForExodus + dustForReference + dustForPayload + stdTxFee.value) * 2
             Coin additionalRequired = additionalRequiredDecimal.satoshi
-            println "requestMSC: requesting ${additionalRequired} additional bitcoin"
+            log.debug "requestMSC: requesting ${additionalRequired} additional bitcoin"
             requestBitcoin(toAddress, additionalRequired)
 
             // The excessive amount of MSC is sent to a new address to get rid of it
