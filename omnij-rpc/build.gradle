@@ -35,39 +35,59 @@ sourceSets {
     }
 }
 
-task integrationTest(type: Test) {
-    testClassesDir = sourceSets.integrationTest.output.classesDir
-    classpath = sourceSets.integrationTest.runtimeClasspath
-    outputs.upToDateWhen { false }
-    testLogging.showStandardStreams = true
-}
-
-task regTest(type: Test) {
-    testClassesDir = sourceSets.integrationTest.output.classesDir
-    classpath = sourceSets.integrationTest.runtimeClasspath
-    outputs.upToDateWhen { false }
-    testLogging.showStandardStreams = true
-    beforeSuite { descriptor ->
-        if (descriptor.getClassName() != null) {
-            logger.lifecycle('\033[1m' + descriptor.getName() + "\033[0m") // bold
+/** Base class for integration tests
+ */
+class IntegrationTest extends Test {
+    public IntegrationTest() {
+        testClassesDir = project.sourceSets.integrationTest.output.classesDir
+        classpath = project.sourceSets.integrationTest.runtimeClasspath
+        outputs.upToDateWhen { false }
+        testLogging {
+            showStandardStreams = true
+            exceptionFormat = 'full'
+            displayGranularity = -1
+        }
+        beforeSuite { descriptor ->
+            if (descriptor.className != null) {
+                logger.lifecycle("\033[1m$descriptor.name\033[0m") // bold
+            }
+        }
+        beforeTest { descriptor ->
+            logger.lifecycle("    $descriptor.name")
         }
     }
-    beforeTest { descriptor ->
-        logger.lifecycle('    ' + descriptor.getName())
-    }
-
-    systemProperty 'regtest', true
-    systemProperties ([ "omni.test.rpcTestUser": rpcTestUser,
-                        "omni.test.rpcTestPassword": rpcTestPassword,
-    ])
-    include 'foundation/omni/test/rpc/**', 'foundation/omni/test/tx/**'
 }
 
-task consensusTest(type: Test) {
-    testClassesDir = sourceSets.integrationTest.output.classesDir
-    classpath = sourceSets.integrationTest.runtimeClasspath
-    outputs.upToDateWhen { false }
-    testLogging.showStandardStreams = true
+/** Base class for integration tests in regtest mode
+ */
+class RegTest extends IntegrationTest {
+    public RegTest() {
+        systemProperty 'regtest', true
+        systemProperties ([ 'omni.test.rpcTestUser': project.rpcTestUser,
+                            'omni.test.rpcTestPassword': project.rpcTestPassword,
+        ])
+    }
+}
+
+task integrationTest(type: IntegrationTest) {
+    description = 'Runs Bitcoin and Omni Core integration tests.'
+}
+
+task activationRegTest(type: RegTest) {
+    description = 'Tests Omni Protocol feature activations in regtest mode.'
+
+    include 'foundation/omni/test/rpc/activation/*'
+}
+
+task regTest(type: RegTest, dependsOn: 'activationRegTest') {
+    description = 'Tests Omni Core RPC calls against an instance of omnicored running in regtest mode.'
+
+    include 'foundation/omni/test/rpc/**', 'foundation/omni/test/tx/**'
+    exclude 'foundation/omni/test/rpc/activation/*'
+}
+
+task consensusTest(type: IntegrationTest) {
+    description = 'Compares balances for multiple Omni Protocol currencies against public data providers.'
 
     systemProperty 'regtest', false
     systemProperties ([ "omni.test.rpcTestUser": rpcTestUser,
@@ -78,5 +98,3 @@ task consensusTest(type: Test) {
     ])
     include 'foundation/omni/test/consensus/**'
 }
-
-
