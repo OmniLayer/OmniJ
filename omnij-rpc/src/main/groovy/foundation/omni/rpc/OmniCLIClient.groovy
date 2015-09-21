@@ -86,7 +86,7 @@ class OmniCLIClient extends OmniExtendedClient {
      * @param comment (optional) a comment to associate with this transaction.
      * @return
      */
-    Boolean move(Address fromaccount, Address toaccount, BigDecimal amount, Integer minconf=null, String comment=null) {
+    Boolean move(Address fromaccount, Address toaccount, Coin amount, Integer minconf=null, String comment=null) {
         return moveFunds(fromaccount, toaccount, amount, minconf, comment)
     }
 
