@@ -1,6 +1,7 @@
 package foundation.omni.rpc;
 
 import com.msgilligan.bitcoinj.rpc.BitcoinClient;
+import com.msgilligan.bitcoinj.rpc.BitcoinExtendedClient;
 import com.msgilligan.bitcoinj.rpc.JsonRPCException;
 import com.msgilligan.bitcoinj.rpc.RPCConfig;
 import foundation.omni.CurrencyID;
@@ -51,7 +52,7 @@ import java.util.Map;
  *
  * @see <a href="https://github.com/OmniLayer/omnicore/blob/omnicore-0.0.10/src/omnicore/doc/rpc-api.md">Omni Core RPC API documentation on GitHub</a>
  */
-public class OmniClient extends BitcoinClient {
+public class OmniClient extends BitcoinExtendedClient {
 
     public static Sha256Hash zeroHash = Sha256Hash.wrap("0000000000000000000000000000000000000000000000000000000000000000");
     private DecimalFormat jsonDecimalFormat;

@@ -2,6 +2,7 @@ package foundation.omni
 
 import com.msgilligan.bitcoinj.rpc.Loggable
 import com.msgilligan.bitcoinj.rpc.RPCURI
+import com.msgilligan.bitcoinj.test.RegTestFundingSource
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
 import foundation.omni.rpc.test.TestServers
@@ -20,6 +21,7 @@ abstract class BaseRegTestSpec extends Specification implements OmniClientDelega
 
     {
         client = new OmniCLIClient(RPCURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
+        fundingSource = new RegTestFundingSource(client)
     }
 
     void setupSpec() {
