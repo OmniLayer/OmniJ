@@ -1,10 +1,10 @@
 #!/usr/bin/env groovy
 @GrabResolver(name='bitcoinjaddons', root='https://dl.bintray.com/msgilligan/maven')
-@Grab('com.msgilligan:bitcoinj-rpcclient:0.0.7')
-@Grab('com.msgilligan:bitcoinj-groovy:0.0.7')
+@Grab('com.msgilligan:bitcoinj-rpcclient:0.0.8')
+@Grab('com.msgilligan:bitcoinj-groovy:0.0.8')
 @GrabResolver(name='OmniJ', root='https://dl.bintray.com/omni/maven')
-@Grab('foundation.omni:omnij-dsl:0.3.0')
-@Grab('foundation.omni:omnij-rpc:0.3.0')
+@Grab('foundation.omni:omnij-dsl:0.3.1')
+@Grab('foundation.omni:omnij-rpc:0.3.1')
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
@@ -12,6 +12,7 @@ import foundation.omni.rpc.OmniExtendedClient
 import foundation.omni.rpc.OmniCLIClient
 import com.msgilligan.bitcoinj.rpc.RPCURI
 import foundation.omni.test.OmniTestSupport
+import com.msgilligan.bitcoinj.test.RegTestFundingSource
 
 // Mine some blocks and setup a source of funds for testing
 def miner = new RegTestMiner()
@@ -52,5 +53,7 @@ assert otherSPT == 1
 
 // Leverage OmniTestSupport to create a "miner" that can fund an address with BTC and MSC
 class RegTestMiner implements OmniTestSupport {
-    { client = new OmniCLIClient(RPCURI.defaultRegTestURI,  "bitcoinrpc", "pass")  }
+    // Static Initializer
+    {   client = new OmniCLIClient(RPCURI.defaultRegTestURI,  "bitcoinrpc", "pass")
+        fundingSource = new RegTestFundingSource(client) }
 }
