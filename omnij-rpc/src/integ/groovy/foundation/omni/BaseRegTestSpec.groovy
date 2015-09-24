@@ -34,8 +34,8 @@ abstract class BaseRegTestSpec extends Specification implements OmniClientDelega
         // Set and confirm default fees, so a known reference value can be used in tests
         assert client.setTxFee(stdTxFee)
         def basicinfo = client.getinfo()
-        assert basicinfo.paytxfee == stdTxFee.decimalBtc
-        assert basicinfo.relayfee == stdRelayTxFee.decimalBtc
+        assert basicinfo.paytxfee == stdTxFee
+        assert basicinfo.relayfee == stdRelayTxFee
     }
 
     void cleanupSpec() {

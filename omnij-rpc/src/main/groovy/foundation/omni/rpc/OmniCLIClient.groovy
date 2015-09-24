@@ -1,5 +1,6 @@
 package foundation.omni.rpc
 
+import com.msgilligan.bitcoinj.json.pojo.ServerInfo
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
@@ -183,7 +184,7 @@ class OmniCLIClient extends OmniExtendedClient {
      *
      * @return A Map (JSON object) containing the information.
      */
-    Map<String, Object> getinfo() {
+    ServerInfo getinfo() {
         return getInfo()
     }
 }
