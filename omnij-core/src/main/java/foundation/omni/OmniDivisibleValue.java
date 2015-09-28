@@ -2,9 +2,7 @@ package foundation.omni;
 
 import org.bitcoinj.core.Coin;
 
-import javax.money.NumberValue;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
@@ -61,8 +59,14 @@ public final class OmniDivisibleValue extends OmniValue {
     }
 
     @Override
-    public Class<?> getNumberType() {
-        return Long.class;
+    public Class<BigDecimal> getNumberType() {
+        return BigDecimal.class;
+    }
+
+    @Override
+    public BigDecimal numberValue() {
+        BigDecimal willets = new BigDecimal(value);
+        return willets.divide(bdWilletsPerCoin, DEFAULT_SCALE, RoundingMode.UNNECESSARY);
     }
 
     @Override
@@ -77,14 +81,12 @@ public final class OmniDivisibleValue extends OmniValue {
 
     @Override
     public int intValueExact() {
-        BigDecimal bd = bigDecimalValue();
-        return bd.intValueExact();
+        return numberValue().intValueExact();
     }
 
     @Override
     public long longValueExact() {
-        BigDecimal bd = bigDecimalValue();
-        return bd.longValueExact();
+        return numberValue().longValueExact();
     }
 
     @Override
@@ -93,18 +95,8 @@ public final class OmniDivisibleValue extends OmniValue {
     }
 
     @Override
-    public <T extends Number> T numberValue(Class<T> numberType) {
-        throw new UnsupportedOperationException("Operation not supported");
-    }
-
-    @Override
-    public NumberValue round(MathContext mathContext) {
-        throw new UnsupportedOperationException("Operation not supported");
-    }
-
-    @Override
-    public <T extends Number> T numberValueExact(Class<T> numberType) {
-        throw new UnsupportedOperationException("Operation not supported");
+    public OmniDivisibleValue round(MathContext mathContext) {
+        return OmniDivisibleValue.of(numberValue().round(mathContext));
     }
 
     @Override
@@ -119,14 +111,12 @@ public final class OmniDivisibleValue extends OmniValue {
 
     @Override
     public byte byteValue() {
-        BigDecimal bd = bigDecimalValue();
-        return bd.byteValueExact();
+        return numberValue().byteValueExact();
     }
 
     @Override
     public short shortValue() {
-        BigDecimal bd = bigDecimalValue();
-        return bd.shortValueExact();
+        return numberValue().shortValueExact();
     }
 
     @Override
@@ -149,15 +139,9 @@ public final class OmniDivisibleValue extends OmniValue {
         return doubleValueExact();
     }
 
-    @Override
-    public String toString() {
-        BigDecimal bd = bigDecimalValue();
-        return bd.toString();
-    }
-
+    @Deprecated
     public BigDecimal bigDecimalValue() {
-        BigDecimal willets = new BigDecimal(value);
-        return willets.divide(bdWilletsPerCoin, DEFAULT_SCALE, RoundingMode.UNNECESSARY);
+        return numberValue();
     }
 
     public OmniDivisibleValue plus(OmniDivisibleValue right) {

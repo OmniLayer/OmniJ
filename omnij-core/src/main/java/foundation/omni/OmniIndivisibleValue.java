@@ -1,7 +1,9 @@
 package foundation.omni;
 
+import javax.money.NumberValue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 
 /**
  * Numeric Value of Indivisible Omni Token
@@ -35,7 +37,27 @@ public final class OmniIndivisibleValue extends OmniValue {
         super(value);
     }
 
+    @Override
+    public Class<Long> getNumberType() {
+        return Long.class;
+    }
+
+    @Override
+    public OmniIndivisibleValue round(MathContext mathContext) {
+        return OmniIndivisibleValue.of(asBigDecimal().round(mathContext).longValue());
+    }
+
+    @Override
+    public Long numberValue() {
+        return value;
+    }
+
+    @Deprecated
     public BigDecimal bigDecimalValue() {
+        return asBigDecimal();
+    }
+
+    private BigDecimal asBigDecimal() {
         return new BigDecimal(value);
     }
 

@@ -30,6 +30,13 @@ import java.util.PropertyPermission;
  * <p>TODO: Should we allow negative values?</p>
  */
 public abstract class OmniValue extends NumberValue {
+    // TODO: Make public and rename to 'willets'?
+    // (unless, of course, we want to OmniIndivisibleValue to also represent Bitcoins
+    // in which case we might want to give it a name other than 'willets'. I don't like
+    // using 'value' because of the tension between the divisible/indivisible distinction
+    // and the fact that we're extending NumberValue and need to interoperate with standard
+    // Number types where OmniDivisible needs to behave more like BigDecimal.)
+    // Is there a word that could mean either willets or satoshi? e.g. 'bits', 'internal', 'nanocoins', etc?
     protected final long value; // internal value format, in willets
 
     // Willet max/min values, same as max/min for indivisible, but different than for divisible
@@ -100,9 +107,13 @@ public abstract class OmniValue extends NumberValue {
     }
 
     @Override
-    public Class<?> getNumberType() {
-        return Long.class;
-    }
+    abstract public Class<? extends Number> getNumberType();
+
+    /**
+     * Return value in preferred number type
+     * @return value as represented in best/preferred number type
+     */
+    abstract public Number numberValue();
 
     @Override
     public int getPrecision() {
@@ -134,24 +145,12 @@ public abstract class OmniValue extends NumberValue {
 
     @Override
     public <T extends Number> T numberValue(Class<T> numberType) {
-        throw new UnsupportedOperationException("Operation not supported");
-//        switch (numberType) {
-//            case (Class<T>) Long.class:
-//                return (T) new Long(0);
-//                break;
-//            default:
-//                throw new UnsupportedOperationException("unsupported type");
-//        }
-    }
-
-    @Override
-    public NumberValue round(MathContext mathContext) {
-        throw new UnsupportedOperationException("Operation not supported");
+        return ConvertNumberValue.of(numberType, numberValue());
     }
 
     @Override
     public <T extends Number> T numberValueExact(Class<T> numberType) {
-        throw new UnsupportedOperationException("Operation not supported");
+        return ConvertNumberValue.ofExact(numberType, numberValue());
     }
 
     @Override
@@ -227,8 +226,9 @@ public abstract class OmniValue extends NumberValue {
 
     @Override
     public String toString() {
-        return Long.toString(value);
+        return numberValue().toString();
     }
 
+    @Deprecated
     public  abstract BigDecimal bigDecimalValue();
 }
