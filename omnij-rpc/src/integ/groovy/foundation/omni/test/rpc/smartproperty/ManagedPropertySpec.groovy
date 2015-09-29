@@ -94,7 +94,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "New tokens can be granted with transaction type 55"() {
         when:
-        def txid = grantTokens(actorAddress, currencyID, 100)
+        def txid = grantTokens(actorAddress, currencyID, 100.indivisible)
         generateBlock()
 
         then:
@@ -125,7 +125,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "Tokens can be granted several times"() {
         when:
-        def txid = grantTokens(actorAddress, currencyID, 170)
+        def txid = grantTokens(actorAddress, currencyID, 170.indivisible)
         generateBlock()
 
         then:
@@ -143,7 +143,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "It's impossible to grant tokens for an non-existing property"() {
         when:
-        def txid = grantTokens(otherAddress, new CurrencyID(CurrencyID.MAX_REAL_ECOSYSTEM_VALUE), 1)
+        def txid = grantTokens(otherAddress, new CurrencyID(CurrencyID.MAX_REAL_ECOSYSTEM_VALUE), 1.indivisible)
         generateBlock()
 
         then:
@@ -152,7 +152,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "Granting tokens for a property with fixed supply is invalid"() {
         when:
-        def txid = grantTokens(actorAddress, nonManagedID, 1)
+        def txid = grantTokens(actorAddress, nonManagedID, 1.indivisible)
         generateBlock()
 
         then:
@@ -165,7 +165,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "Tokens can only be granted by the issuer on record"() {
         when:
-        def txid = grantTokens(otherAddress, currencyID, 500)
+        def txid = grantTokens(otherAddress, currencyID, 500.indivisible)
         generateBlock()
 
         then:
@@ -179,22 +179,22 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "Up to a total of 9223372036854775807 tokens can be granted"() {
         when:
-        def txid = grantTokens(actorAddress, currencyID, new Long("9223372036854775537")) // MAX - already granted tokens
+        def txid = grantTokens(actorAddress, currencyID, 9223372036854775537.indivisible) // MAX - already granted tokens
         generateBlock()
 
         then:
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).amount as Long == new Long("9223372036854775537")
+        omniGetTransaction(txid).amount as Long == 9223372036854775537L
 
         and:
-        omniGetProperty(currencyID).totaltokens as Long == new Long("9223372036854775807")
-        omniGetBalance(actorAddress, currencyID).balance == new BigDecimal("9223372036854775807")
+        omniGetProperty(currencyID).totaltokens as Long == 9223372036854775807L
+        omniGetBalance(actorAddress, currencyID).balance == 9223372036854775807.0
     }
 
     @Ignore
     def "Granting more than 9223372036854775807 tokens in total is invalid"() {
         when:
-        def txid = grantTokens(actorAddress, currencyID, 1)
+        def txid = grantTokens(actorAddress, currencyID, 1.indivisible)
         generateBlock()
 
         then:
@@ -222,7 +222,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     @Ignore
     def "Sending of granted tokens does not remove the limit of total tokens"() {
         when:
-        def txid = grantTokens(actorAddress, currencyID, 1) // MAX < total + 1 (!)
+        def txid = grantTokens(actorAddress, currencyID, 1.indivisible) // MAX < total + 1 (!)
         generateBlock()
 
         then:
@@ -236,7 +236,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "Tokens of managed properties can be revoked with transaction type 56"() {
         when:
-        def txid = revokeTokens(actorAddress, currencyID, new Long("9223372036854775805"))
+        def txid = revokeTokens(actorAddress, currencyID, 9223372036854775805.divisible)
         generateBlock()
 
         then:
@@ -245,7 +245,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).type_int == 56
         omniGetTransaction(txid).propertyid == currencyID.getValue()
         omniGetTransaction(txid).divisible == false
-        omniGetTransaction(txid).amount as Long == new Long("9223372036854775805")
+        omniGetTransaction(txid).amount as Long == 9223372036854775805L
     }
 
     def "Revoking tokens decreases the total number of tokens"() {
@@ -266,7 +266,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "It's impossible to revoke tokens for an non-existing property"() {
         when:
-        def txid = revokeTokens(otherAddress, new CurrencyID(CurrencyID.MAX_REAL_ECOSYSTEM_VALUE), 1)
+        def txid = revokeTokens(otherAddress, new CurrencyID(CurrencyID.MAX_REAL_ECOSYSTEM_VALUE), 1.divisible)
         generateBlock()
 
         then:
@@ -276,7 +276,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     @Ignore
     def "Tokens can only be revoked by the issuer on record"() {
         when:
-        def txid = revokeTokens(otherAddress, currencyID, 1)
+        def txid = revokeTokens(otherAddress, currencyID, 1.divisible)
         generateBlock()
 
         then:
@@ -290,7 +290,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "Revoking tokens for a property with fixed supply is invalid"() {
         when:
-        def txid = revokeTokens(actorAddress, nonManagedID, 1)
+        def txid = revokeTokens(actorAddress, nonManagedID, 1.divisible)
         generateBlock()
 
         then:
@@ -303,7 +303,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "Revoking more tokens than available is not possible"() {
         when:
-        def txid = revokeTokens(actorAddress, currencyID, 100) // issuer has less than 100 tokens
+        def txid = revokeTokens(actorAddress, currencyID, 100.divisible) // issuer has less than 100 tokens
         generateBlock()
 
         then:

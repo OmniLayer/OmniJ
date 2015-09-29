@@ -259,7 +259,7 @@ class DexSpec extends BaseRegTestSpec {
         generateBlock()
 
         and: "B accepts the offer"
-        def acceptTxid = acceptDexOffer(actorB, currencyOffered, offeredMSC.bigDecimalValue(), actorA)
+        def acceptTxid = acceptDexOffer(actorB, currencyOffered, offeredMSC, actorA)
         generateBlock()
 
         then: "both transactions are valid"

@@ -22,7 +22,7 @@ def currencyID = new CurrencyID(creationTx.propertyid as Long)
 println "created currencyID ${currencyID}"
 
 // Can Issue Tokens
-def grantTxId = client.grantTokens(managerAddress, currencyID, 100)
+def grantTxId = client.grantTokens(managerAddress, currencyID, 100.indivisible)
 env.waitForBlocks(1)
 
 // Can Send a newly issued token
