@@ -1,11 +1,9 @@
 package foundation.omni.test.rpc.sto
 
-import com.msgilligan.bitcoinj.rpc.conversion.BitcoinMath
+//import com.msgilligan.bitcoinj.rpc.conversion.BitcoinMath
 import foundation.omni.CurrencyID
 import foundation.omni.OmniValue
 import org.bitcoinj.core.Address
-import com.msgilligan.bitcoinj.BTC
-import foundation.omni.PropertyType
 
 /**
  * Data driven tests for the "send to owners" transaction type, whereby a raw transaction
@@ -18,7 +16,7 @@ class SendToOwnersTestPlanRawSpec extends SendToOwnersTestPlanSpec {
      */
     @Override
     def executeSendToOwners(Address address, CurrencyID currency, OmniValue amount, Boolean exceptional=false) {
-        def rawTxHex = createSendToOwnersHex(currency, amount.willets);
+        def rawTxHex = createSendToOwnersHex(currency, amount);
         def txid = omniSendRawTx(address, rawTxHex)
         return txid
     }

@@ -2,7 +2,10 @@ package foundation.omni.tx;
 
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
+import foundation.omni.OmniDivisibleValue;
+import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
+import org.bitcoinj.core.Coin;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.UnsupportedEncodingException;
@@ -18,16 +21,16 @@ public class RawTxBuilder {
     /**
      * Creates a hex-encoded raw transaction of type 0: "simple send".
      */
-    public String createSimpleSendHex(CurrencyID currencyId, Long amount) {
-        String rawTxHex = String.format("00000000%08x%016x", currencyId.getValue(), amount);
+    public String createSimpleSendHex(CurrencyID currencyId, OmniValue amount) {
+        String rawTxHex = String.format("00000000%08x%016x", currencyId.getValue(), amount.getWillets());
         return rawTxHex;
     }
 
     /**
      * Creates a hex-encoded raw transaction of type 3: "send to owners".
      */
-    public String createSendToOwnersHex(CurrencyID currencyId, Long amount) {
-        String rawTxHex = String.format("00000003%08x%016x", currencyId.getValue(), amount);
+    public String createSendToOwnersHex(CurrencyID currencyId, OmniValue amount) {
+        String rawTxHex = String.format("00000003%08x%016x", currencyId.getValue(), amount.getWillets());
         return rawTxHex;
     }
 
@@ -37,21 +40,21 @@ public class RawTxBuilder {
      * Currency amounts are Long values in satoshis/willets
      *
      * @param currencyId Currency ID to sell MSC or TMSC only
-     * @param amountForSale Amount of MSC/TMSC for sale (in willets)
-     * @param amountDesired Amount of BTC desired (in satoshis)
+     * @param amountForSale Amount of MSC/TMSC for sale
+     * @param amountDesired Amount of BTC desired
      * @param paymentWindow Time period in blocks
-     * @param commitmentFee Minimum Bitcoin transaction fee (in satoshis)
+     * @param commitmentFee Minimum Bitcoin transaction fee
      * @param action Sell offer sub-action
      * @return The hex-encoded raw transaction
      */
-    public String createDexSellOfferHex(CurrencyID currencyId, Long amountForSale, Long amountDesired,
-                                        Byte paymentWindow, Long commitmentFee, Byte action) {
+    public String createDexSellOfferHex(CurrencyID currencyId, OmniDivisibleValue amountForSale, Coin amountDesired,
+                                        Byte paymentWindow, Coin commitmentFee, Byte action) {
         String rawTxHex = String.format("00010014%08x%016x%016x%02x%016x%02x",
                 currencyId.getValue(),
-                amountForSale,
-                amountDesired,
+                amountForSale.getWillets(),
+                amountDesired.value,
                 paymentWindow.byteValue(),
-                commitmentFee,
+                commitmentFee.value,
                 action.byteValue());
         return rawTxHex;
     }
@@ -59,13 +62,13 @@ public class RawTxBuilder {
     /**
      * Creates a hex-encoded raw transaction of type 21: "trade tokens for tokens".
      */
-    public String createMetaDexSellOfferHex(CurrencyID currencyForSale, Long amountForSale, CurrencyID currencyDesired,
-                                            Long amountDesired, Byte action) {
+    public String createMetaDexSellOfferHex(CurrencyID currencyForSale, OmniValue amountForSale, CurrencyID currencyDesired,
+                                            OmniValue amountDesired, Byte action) {
         String rawTxHex = String.format("00000015%08x%016x%08x%016x%02x",
                 currencyForSale.getValue(),
-                amountForSale,
+                amountForSale.getWillets(),
                 currencyDesired.getValue(),
-                amountDesired,
+                amountDesired.getWillets(),
                 action.byteValue());
         return rawTxHex;
     }
@@ -73,10 +76,10 @@ public class RawTxBuilder {
     /**
      * Creates a hex-encoded raw transaction of type 22: "purchase tokens with bitcoins".
      */
-    public String createAcceptDexOfferHex(CurrencyID currencyId, Long amount) {
+    public String createAcceptDexOfferHex(CurrencyID currencyId, OmniValue amount) {
         String rawTxHex = String.format("00000016%08x%016x",
                 currencyId.getValue(),
-                amount);
+                amount.getWillets());
         return rawTxHex;
     }
 
@@ -85,7 +88,7 @@ public class RawTxBuilder {
      */
     public String createPropertyHex(Ecosystem ecosystem, PropertyType propertyType, Long previousPropertyId,
                                     String category, String subCategory, String label, String website, String info,
-                                    Long amount) {
+                                    OmniValue amount) {
         String rawTxHex = String.format("00000032%02x%04x%08x%s00%s00%s00%s00%s00%016x",
                 ecosystem.getValue(),
                 propertyType.getValue(),
@@ -95,7 +98,7 @@ public class RawTxBuilder {
                 toHexString(label),
                 toHexString(website),
                 toHexString(info),
-                amount);
+                amount.getWillets());
         return rawTxHex;
     }
 
@@ -152,16 +155,16 @@ public class RawTxBuilder {
     /**
      * Creates a hex-encoded raw transaction of type 55: "grant tokens for a managed property".
      */
-    public String createGrantTokensHex(CurrencyID currencyId, Long amount, String memo) {
-        String rawTxHex = String.format("00000037%08x%016x%s00", currencyId.getValue(), amount, toHexString(memo));
+    public String createGrantTokensHex(CurrencyID currencyId, OmniValue amount, String memo) {
+        String rawTxHex = String.format("00000037%08x%016x%s00", currencyId.getValue(), amount.getWillets(), toHexString(memo));
         return rawTxHex;
     }
 
     /**
      * Creates a hex-encoded raw transaction of type 56: "revoke tokens of a managed property".
      */
-    public String createRevokeTokensHex(CurrencyID currencyId, Long amount, String memo) {
-        String rawTxHex = String.format("00000038%08x%016x%s00", currencyId.getValue(), amount, toHexString(memo));
+    public String createRevokeTokensHex(CurrencyID currencyId, OmniValue amount, String memo) {
+        String rawTxHex = String.format("00000038%08x%016x%s00", currencyId.getValue(), amount.getWillets(), toHexString(memo));
         return rawTxHex;
     }
 

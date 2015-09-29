@@ -2,7 +2,7 @@ package foundation.omni.rpc;
 
 import com.msgilligan.bitcoinj.rpc.JsonRPCException;
 import com.msgilligan.bitcoinj.rpc.RPCConfig;
-import com.msgilligan.bitcoinj.rpc.conversion.BitcoinMath;
+import com.msgilligan.bitcoinj.json.conversion.BitcoinMath;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
 import foundation.omni.OmniDivisibleValue;
@@ -39,11 +39,13 @@ public class OmniExtendedClient extends OmniClient {
      * Creates and broadcasts a "send to owners" transaction.
      *
      * @param currencyId  The identifier of the currency
-     * @param amount      The number of tokens to distribute
+     * @param amount      The number of tokens to distribute (assumed in willets)
      * @return The transaction hash
      */
     public Sha256Hash sendToOwners(Address address, CurrencyID currencyId, Long amount) throws JsonRPCException, IOException {
-        String rawTxHex = builder.createSendToOwnersHex(currencyId, amount);
+        OmniValue omniValue = OmniDivisibleValue.ofWillets(amount); // We really don't know if divisible or not here
+        //  ... but it doesn't matter since  createSendToOwnersHex just converts back to willets.
+        String rawTxHex = builder.createSendToOwnersHex(currencyId, omniValue);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -53,21 +55,18 @@ public class OmniExtendedClient extends OmniClient {
      *
      * @param address        The address
      * @param currencyId     The identifier of the currency for sale
-     * @param amountForSale  The amount of currency (BigDecimal coins)
-     * @param amountDesired  The amount of desired Bitcoin (in BTC)
+     * @param amountForSale  The amount of currency
+     * @param amountDesired  The amount of desired Bitcoin
      * @param paymentWindow  The payment window measured in blocks
      * @param commitmentFee  The minimum transaction fee required to be paid as commitment when accepting this offer
      * @param action         The action applied to the offer (1 = new, 2 = update, 3 = cancel)
      * @return The transaction hash
      */
-    public Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, BigDecimal amountForSale,
-                                  BigDecimal amountDesired, Byte paymentWindow, BigDecimal commitmentFee,
+    public Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, OmniDivisibleValue amountForSale,
+                                  Coin amountDesired, Byte paymentWindow, Coin commitmentFee,
                                   Byte action) throws JsonRPCException, IOException {
-        OmniDivisibleValue quantityForSale = OmniDivisibleValue.of(amountForSale);
-        Coin satoshisDesired = BitcoinMath.btcToCoin(amountDesired);
-        Coin satoshisFee = BitcoinMath.btcToCoin(commitmentFee);
         String rawTxHex = builder.createDexSellOfferHex(
-                currencyId, quantityForSale.getWillets(), satoshisDesired.value, paymentWindow, satoshisFee.value, action);
+                currencyId, amountForSale, amountDesired, paymentWindow, commitmentFee, action);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -84,7 +83,7 @@ public class OmniExtendedClient extends OmniClient {
     public Sha256Hash acceptDexOffer(Address fromAddress, CurrencyID currencyId, BigDecimal amount, Address toAddress)
             throws JsonRPCException, IOException {
         OmniDivisibleValue quantity = OmniDivisibleValue.of(amount);
-        String rawTxHex = builder.createAcceptDexOfferHex(currencyId, quantity.getWillets());
+        String rawTxHex = builder.createAcceptDexOfferHex(currencyId, quantity);
         Sha256Hash txid = omniSendRawTx(fromAddress, rawTxHex, toAddress);
         return txid;
     }
@@ -109,7 +108,7 @@ public class OmniExtendedClient extends OmniClient {
         OmniDivisibleValue qtyForSale = OmniDivisibleValue.of(amountForSale);  // Assume divisible property
         OmniDivisibleValue qtyDesired = OmniDivisibleValue.of(amountDesired);  // Assume divisible property
         String rawTxHex = builder.createMetaDexSellOfferHex(
-                currencyForSale, qtyForSale.getWillets(), currencyDesired, qtyDesired.getWillets(), action);
+                currencyForSale, qtyForSale, currencyDesired, qtyDesired, action);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -175,7 +174,7 @@ public class OmniExtendedClient extends OmniClient {
 
     public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value, String label)
             throws JsonRPCException, IOException {
-        String rawTxHex = builder.createPropertyHex(ecosystem, value.getPropertyType(), 0L, "", "", label, "", "", value.getWillets());
+        String rawTxHex = builder.createPropertyHex(ecosystem, value.getPropertyType(), 0L, "", "", label, "", "", value);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -225,7 +224,9 @@ public class OmniExtendedClient extends OmniClient {
      */
     public Sha256Hash grantTokens(Address address, CurrencyID currencyID, Long amount)
             throws JsonRPCException, IOException {
-        String rawTxHex = builder.createGrantTokensHex(currencyID, amount, "");
+        OmniDivisibleValue omniValue = OmniDivisibleValue.ofWillets(amount); // Don't really know if divisible or not
+        // but doesn't matter in  createGrantTokensHex
+        String rawTxHex = builder.createGrantTokensHex(currencyID, omniValue, "");
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -240,7 +241,9 @@ public class OmniExtendedClient extends OmniClient {
      */
     public Sha256Hash revokeTokens(Address address, CurrencyID currencyID, Long amount)
             throws JsonRPCException, IOException {
-        String rawTxHex = builder.createRevokeTokensHex(currencyID, amount, "");
+        OmniDivisibleValue omniValue = OmniDivisibleValue.ofWillets(amount); // Don't really know if divisible or not
+        // but doesn't matter in  createGrantTokensHex
+        String rawTxHex = builder.createRevokeTokensHex(currencyID, omniValue, "");
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }

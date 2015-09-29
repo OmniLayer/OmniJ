@@ -1,6 +1,8 @@
 package foundation.omni.test.rpc.activation
 
 import foundation.omni.CurrencyID
+import foundation.omni.OmniDivisibleValue
+import org.bitcoinj.core.Coin
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -15,7 +17,7 @@ import spock.lang.Stepwise
 @Stepwise
 class OverOfferDeactivationSpec extends BaseActivationSpec {
 
-    static final BigDecimal stdCommitFee = 0.0
+    static final Coin stdCommitFee = 0.btc
     static final Byte stdBlockSpan = 10
     static final Byte actionNew = 1
 
@@ -29,16 +31,16 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         setup:
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.MSC).balance
-        def orderAmount = balanceAtStart * 5 // more than available!
-
+        def orderAmountMSC = OmniDivisibleValue.of(balanceAtStart * 5) // more than available!
+        def orderAmountBTC = Coin.valueOf(orderAmountMSC.willets)
         when:
         def txid = createDexSellOffer(
-                actorAddress, CurrencyID.MSC, orderAmount, orderAmount, stdBlockSpan, stdCommitFee, actionNew)
+                actorAddress, CurrencyID.MSC, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
         generateBlock()
 
         then:
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).amount as BigDecimal != orderAmount
+        omniGetTransaction(txid).amount as BigDecimal != orderAmountMSC.bigDecimalValue()
         omniGetTransaction(txid).amount as BigDecimal == balanceAtStart // less than offered!
 
         and:

@@ -57,7 +57,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         // Create a DEx offer to reserve an amount
         if (mscReserved > 0) {
-            reserveAmountMSC(actorAddress, currencyMSC, mscReserved)
+            reserveAmountMSC(actorAddress, currencyMSC, mscReserved.divisible)
         }
 
         when: "the owners are funded"
@@ -265,12 +265,12 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
     def "Owners with similar effective balances, but different available/reserved ratios, receive the same amount"() {
         def ecosystem = Ecosystem.TMSC
-        def propertyType = PropertyType.DIVISIBLE
-        def startMSC = OmniDivisibleValue.of(100.0)
-        def amountSTO = OmniDivisibleValue.of(99.0)
-        def reservedOwnerA = OmniDivisibleValue.of(100.0)
-        def reservedOwnerB = OmniDivisibleValue.of(10.0)
-        def reservedOwnerC = OmniDivisibleValue.of(0.0)
+//        def propertyType = PropertyType.DIVISIBLE
+        def startMSC = 100.divisible
+        def amountSTO = 99.divisible
+        def reservedOwnerA = 100.divisible
+        def reservedOwnerB = 10.divisible
+        def reservedOwnerC = 0.divisible
         def expectException = false
         def expectedValidity = true
         def currencyMSC = new CurrencyID(ecosystem.getValue())
@@ -287,8 +287,8 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def ownerC = createFundedAddress(startBTC, startMSC)
 
         // reserve an amount for owner A and B
-        reserveAmountMSC(ownerA, currencyMSC, reservedOwnerA.bigDecimalValue())
-        reserveAmountMSC(ownerB, currencyMSC, reservedOwnerB.bigDecimalValue())
+        reserveAmountMSC(ownerA, currencyMSC, reservedOwnerA)
+        reserveAmountMSC(ownerB, currencyMSC, reservedOwnerB)
 
         // confirm starting balances
         assertBalance(actorAddress, currencyMSC, startMSC.bigDecimalValue(), 0.0)
@@ -351,7 +351,8 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         if (propertyName == "MSC" || propertyName == "TMSC") {
             if (numberOfTokens > 0) {
-                requestMSC(actorAddress, numberOfTokens)
+                assert numberOfTokens.propertyType == PropertyType.DIVISIBLE
+                requestMSC(actorAddress, (OmniDivisibleValue) numberOfTokens)
                 generateBlock()
             }
             return CurrencyID.valueOf(propertyName)
@@ -377,10 +378,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     /**
      * Creates an offer on the distributed exchange to reserve an amount.
      */
-    def reserveAmountMSC(Address actorAddress, CurrencyID currency, BigDecimal amount) {
-        BigDecimal desiredBTC = 1.0
+    def reserveAmountMSC(Address actorAddress, CurrencyID currency, OmniDivisibleValue amount) {
+        Coin desiredBTC = 1.0.btc
         Byte blockSpan = 100
-        BigDecimal commitFee = 0.0001
+        Coin commitFee = 0.0001.btc
         Byte action = 1 // new offer
 
         def txid = createDexSellOffer(actorAddress, currency, amount, desiredBTC, blockSpan, commitFee, action)

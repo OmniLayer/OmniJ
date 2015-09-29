@@ -1,6 +1,7 @@
 package foundation.omni.tx;
 
 import foundation.omni.CurrencyID;
+import foundation.omni.OmniValue;
 import foundation.omni.net.OmniNetworkParameters;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
@@ -105,13 +106,13 @@ public class OmniTxBuilder {
      * @param amount The currency amount in willets
      * @return Signed and ready-to-send Transaction
      */
-    public Transaction createSignedSimpleSend(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address toAddress, CurrencyID currencyID, long amount) throws InsufficientMoneyException {
+    public Transaction createSignedSimpleSend(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address toAddress, CurrencyID currencyID, OmniValue amount) throws InsufficientMoneyException {
         String txHex = builder.createSimpleSendHex(currencyID, amount);
         byte[] payload = RawTxBuilder.hexToBinary(txHex);
         return createSignedOmniTransaction(fromKey, unspentOutputs, toAddress, payload);
     }
 
-    public Transaction createUnsignedSimpleSend(ECKey fromKey, List<TransactionInput> inputs, Address toAddress, CurrencyID currencyID, long amount) throws InsufficientMoneyException {
+    public Transaction createUnsignedSimpleSend(ECKey fromKey, List<TransactionInput> inputs, Address toAddress, CurrencyID currencyID, OmniValue amount) throws InsufficientMoneyException {
         String txHex = builder.createSimpleSendHex(currencyID, amount);
         byte[] payload = RawTxBuilder.hexToBinary(txHex);
         return createUnsignedOmniTransaction(fromKey, inputs, toAddress, payload);

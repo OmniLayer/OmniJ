@@ -2,6 +2,8 @@ package foundation.omni.tx
 
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
+import foundation.omni.OmniDivisibleValue
+import foundation.omni.OmniIndivisibleValue
 import foundation.omni.PropertyType
 import org.bitcoinj.core.Coin
 import spock.lang.Shared
@@ -11,6 +13,8 @@ import spock.lang.Specification
  * RawTxBuilder unit tests
  */
 class RawTxBuilderSpec extends Specification {
+    final static OmniDivisibleValue ONE_OMNI = OmniDivisibleValue.of(1)
+
     @Shared
     RawTxBuilder builder
 
@@ -22,7 +26,7 @@ class RawTxBuilderSpec extends Specification {
         when:
         def txHex = builder.createSimpleSendHex(
                 CurrencyID.MSC,   // property
-                Coin.COIN_VALUE)  // amount to transfer: 1.0 MSC (in willets)
+                ONE_OMNI)         // amount to transfer: 1.0 MSC (in willets)
 
         then:
         txHex == "00000000000000010000000005f5e100"
@@ -32,7 +36,7 @@ class RawTxBuilderSpec extends Specification {
         when:
         def txHex = builder.createSendToOwnersHex(
                 CurrencyID.MSC,   // property
-                Coin.COIN_VALUE)  // amount to distribute: 1.0 MSC (in willets)
+                ONE_OMNI)         // amount to distribute: 1.0 MSC (in willets)
 
         then:
         txHex == "00000003000000010000000005f5e100"
@@ -42,10 +46,10 @@ class RawTxBuilderSpec extends Specification {
         when:
         def txHex = builder.createDexSellOfferHex(
                 CurrencyID.MSC,   // property
-                Coin.COIN_VALUE,  // amount for sale: 1.0 MSC (in willets)
-                20000000,         // amount desired: 0.2 BTC (in satoshis)
+                ONE_OMNI,         // amount for sale: 1.0 MSC (in willets)
+                0.2.btc,         // amount desired: 0.2 BTC (in satoshis)
                 (Byte) 10,        // payment window in blocks
-                10000,            // commitment fee in satoshis
+                0.0001.btc,       // commitment fee in satoshis
                 (Byte) 1)         // sub-action: new offer
 
         then:
@@ -56,9 +60,9 @@ class RawTxBuilderSpec extends Specification {
         when:
         def txHex = builder.createMetaDexSellOfferHex(
                 CurrencyID.MSC,       // property
-                250000000,            // amount for sale: 2.5 MSC
+                OmniDivisibleValue.of(2.5),            // amount for sale: 2.5 MSC
                 CurrencyID.TetherUS,  // property desired
-                5000000000L,          // amount desired: 50.0 TetherUS
+                OmniDivisibleValue.of(50),          // amount desired: 50.0 TetherUS
                 (Byte) 1)             // sub-action: new offer
 
         then:
@@ -69,7 +73,7 @@ class RawTxBuilderSpec extends Specification {
         when:
         def txHex = builder.createAcceptDexOfferHex(
                 CurrencyID.MSC,  // property
-                130000000)       // amount to purchase: 1.3 MSC
+                OmniDivisibleValue.of(1.3))       // amount to purchase: 1.3 MSC
 
         then:
         txHex == "00000016000000010000000007bfa480"
@@ -86,7 +90,7 @@ class RawTxBuilderSpec extends Specification {
                 "Quantum Miner",           // label
                 "builder.bitwatch.co",     // website
                 "",                        // additional information
-                1000000)                   // number of units to create
+                OmniIndivisibleValue.of(1000000))                   // number of units to create
 
         then:
         txHex == "0000003201000100000000436f6d70616e69657300426974636f696e204d696e696e67005175616e74" +
@@ -145,7 +149,7 @@ class RawTxBuilderSpec extends Specification {
         when:
         def txHex = builder.createGrantTokensHex(
                 new CurrencyID(8),           // property
-                1000,                        // number of units to issue
+                OmniDivisibleValue.ofWillets(1000),                        // number of units to issue
                 "First Milestone Reached!")  // additional information
 
         then:
@@ -156,7 +160,7 @@ class RawTxBuilderSpec extends Specification {
         when:
         def txHex = builder.createRevokeTokensHex(
                 new CurrencyID(8),                            // property
-                1000,                                         // number of units to revoke
+                OmniDivisibleValue.ofWillets(1000),                                         // number of units to revoke
                 "Redemption of tokens for Bob, Thanks Bob!")  // additional information
 
         then:

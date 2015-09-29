@@ -1,5 +1,6 @@
 package foundation.omni.tx
 
+import foundation.omni.OmniDivisibleValue
 import org.bitcoinj.core.ECKey
 import org.bitcoinj.core.InsufficientMoneyException
 import org.bitcoinj.core.TransactionOutput
@@ -23,7 +24,7 @@ class OmniTxBuilderSpec extends BaseTxSpec {
 //        TransactionOutput utxo = new TransactionOutput(netParams, null, Coin.COIN, senderKey)
 //        List<TransactionOutput> utxos = [utxo]
         List<TransactionOutput> utxos = []
-        def tx = omniTxBuilder.createSignedSimpleSend(senderKey, utxos, toAddress, MSC, 10000000)
+        def tx = omniTxBuilder.createSignedSimpleSend(senderKey, utxos, toAddress, MSC, OmniDivisibleValue.ofWillets(10000000))
         byte[] rawTx = tx.bitcoinSerialize()
 
         then:

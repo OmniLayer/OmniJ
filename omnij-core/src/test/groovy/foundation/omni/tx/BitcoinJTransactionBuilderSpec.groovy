@@ -1,5 +1,6 @@
 package foundation.omni.tx
 
+import foundation.omni.OmniDivisibleValue
 import foundation.omni.net.OmniNetworkParameters
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.ECKey
@@ -37,7 +38,7 @@ class BitcoinJTransactionBuilderSpec extends BaseTxSpec {
 
         when:
         def toAddress = senderAddr
-        def txHex = builder.createSimpleSendHex(MSC, Coin.COIN.longValue())
+        def txHex = builder.createSimpleSendHex(MSC, OmniDivisibleValue.of(1))
         def payload = hex(txHex)
         Transaction tx = encoder.encodeObfuscated(senderKey, payload, senderAddr.toString())
         tx.addOutput(Coin.MILLICOIN, omniParams.exodusAddress)
