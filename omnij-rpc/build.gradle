@@ -82,7 +82,7 @@ task activationRegTest(type: RegTest) {
 task regTest(type: RegTest, dependsOn: 'activationRegTest') {
     description = 'Tests Omni Core RPC calls against an instance of omnicored running in regtest mode.'
 
-    include 'foundation/omni/test/rpc/**', 'foundation/omni/test/tx/**'
+    include 'foundation/omni/test/rpc/**', 'foundation/omni/test/scripts/**', 'foundation/omni/test/tx/**'
     exclude 'foundation/omni/test/rpc/activation/*'
 }
 

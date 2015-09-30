@@ -27,7 +27,7 @@ env.waitForBlocks(1)
 
 // Can Send a newly issued token
 def otherAddress = client.getNewAddress()
-def sendTxId = client.omniSend(managerAddress, otherAddress, currencyID, 1)
+def sendTxId = client.omniSend(managerAddress, otherAddress, currencyID, 1.indivisible)
 env.waitForBlocks(1)
 
 // Some checks
