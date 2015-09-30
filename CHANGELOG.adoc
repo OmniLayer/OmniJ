@@ -3,7 +3,7 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
-== v0.3.2
+== v0.3.2 (Forthcoming...)
 
 Use OmniValue over BigDecimal in RPC method parameters. JSON-RPC results still use BigDecimal
 and Map structures. They will migrate to POJOs and OmniValue soon.

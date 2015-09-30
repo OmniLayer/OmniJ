@@ -2,12 +2,14 @@ package foundation.omni.test.consensus
 
 import foundation.omni.consensus.OmniCoreConsensusTool
 import foundation.omni.rpc.test.TestServers
+import spock.lang.Ignore
 import spock.lang.Specification
 
 
 /**
  * Test Spec for OmniCoreConsensusTool
  */
+@Ignore("Until we get a new test host")
 class OmniCoreConsensusToolSpec extends Specification {
     static final private TestServers testServers = TestServers.instance
 
