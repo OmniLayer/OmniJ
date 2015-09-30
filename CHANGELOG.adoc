@@ -1,0 +1,37 @@
+= OmniJ Changes
+:homepage: https://github.com/OmniLayer/OmniJ
+
+A high-level view of the changes in each OmniJ binary release.
+
+== v0.3.2
+
+Use OmniValue over BigDecimal in RPC method parameters. JSON-RPC results still use BigDecimal
+and Map structures. They will migrate to POJOs and OmniValue soon.
+
+=== Potentially Breaking
+
+* Use OmniValue over BigDecimal in RPC method parameters. 
+
+=== Features/Changes
+
+* Update to bitcoinj-addons v0.0.9.
+* All "number of coins" parameters in OmniClient are now OmniValue
+* All "number of coins" parameters in OmniExtendedClient are now OmniValue
+* Conversion to using OmniValue and Coin in test is near complete.
+
+== v0.3.1
+
+Last release before API starts changing to use OmniValue rather than BigDecimal
+
+=== Features/Changes
+
+* Update to bitcoinj-addons v0.0.8
+* Support for creating unsigned Omni transactions.
+* Improvements to non-dust and minimum transaction fee calculations.
+* More RegTest integration tests of Omni Core.
+
+== REL-0.3.0
+
+First release. See commit history for details.
+
+
