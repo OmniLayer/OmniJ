@@ -65,7 +65,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def ownerIds = 0..<numberOfOwners
         ownerIds.each { owners << newAddress }
         owners = owners.sort { it.toString() }
-        ownerIds.each { omniSend(actorAddress, owners[it], currencySPT, sptAvailableOwners[it]) }
+        ownerIds.each { omniSend(actorAddress, owners[it], currencySPT, OmniValue.of(sptAvailableOwners[it], propertyType)) }
         generateBlock()
 
         then: "the actor starts with the correct #currencySPT and #currencyMSC balance"
@@ -209,9 +209,9 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def ownerA = createFundedAddress(startBTC, startMSC)
         def ownerB = createFundedAddress(startBTC, startMSC)
 
-        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
-        assert omniGetBalance(ownerA, currencyMSC).balance == startMSC.bigDecimalValue()
-        assert omniGetBalance(ownerB, currencyMSC).balance == startMSC.bigDecimalValue()
+        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC.numberValue()
+        assert omniGetBalance(ownerA, currencyMSC).balance == startMSC.numberValue()
+        assert omniGetBalance(ownerB, currencyMSC).balance == startMSC.numberValue()
 
         // Create property
 //        def numberOfTokens = amountSTO
@@ -227,19 +227,19 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         // Owner A has the tokens
         assert omniGetBalance(actorAddress, currencySPT).balance == 0.0
-        assert omniGetBalance(ownerA, currencySPT).balance == amountSTO.bigDecimalValue()
+        assert omniGetBalance(ownerA, currencySPT).balance == amountSTO.numberValue()
         assert omniGetBalance(ownerB, currencySPT).balance == 0.0
 
         // Owner A sends half of the tokens to owner B
-        omniSend(ownerA, ownerB, currencySPT, (amountSTO.bigDecimalValue() / 2))
+        omniSend(ownerA, ownerB, currencySPT, (amountSTO / 2L))
         generateBlock()
         assert omniGetBalance(actorAddress, currencySPT).balance == 0.0
-        assert omniGetBalance(ownerA, currencySPT).balance == (amountSTO / 2)
-        assert omniGetBalance(ownerB, currencySPT).balance == (amountSTO / 2)
+        assert omniGetBalance(ownerA, currencySPT).balance == (amountSTO.numberValue() / 2)
+        assert omniGetBalance(ownerB, currencySPT).balance == (amountSTO.numberValue() / 2)
 
         // Owner A and B send the tokens to the main actor
-        omniSend(ownerA, actorAddress, currencySPT, (amountSTO.bigDecimalValue() / 2))
-        omniSend(ownerB, actorAddress, currencySPT, (amountSTO.bigDecimalValue() / 2))
+        omniSend(ownerA, actorAddress, currencySPT, (amountSTO / 2))
+        omniSend(ownerB, actorAddress, currencySPT, (amountSTO / 2))
         generateBlock()
         assert omniGetBalance(actorAddress, currencySPT).balance == amountSTO.bigDecimalValue()
         assert omniGetBalance(ownerA, currencySPT).balance == 0.0
@@ -257,8 +257,8 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         }
 
         and: "all balances still the same"
-        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
-        assert omniGetBalance(actorAddress, currencySPT).balance == amountSTO.bigDecimalValue()
+        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC.numberValue()
+        assert omniGetBalance(actorAddress, currencySPT).balance == amountSTO.numberValue()
         assert omniGetBalance(ownerA, currencySPT).balance == 0.0
         assert omniGetBalance(ownerB, currencySPT).balance == 0.0
     }
@@ -400,7 +400,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         Sha256Hash txid = null
 
         try {
-            txid = omniSendSTO(address, currency, amount.bigDecimalValue())
+            txid = omniSendSTO(address, currency, amount)
         } catch(Exception) {
             thrown = true
         }

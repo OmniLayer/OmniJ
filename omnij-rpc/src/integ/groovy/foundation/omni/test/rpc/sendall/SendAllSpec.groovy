@@ -9,9 +9,9 @@ import spock.lang.Unroll
 
 class SendAllSpec extends BaseRegTestSpec {
 
-    final static BigDecimal startBTC = 0.1
-    final static BigDecimal startMSC = 0.1
-    final static BigDecimal zeroAmount = 0.0
+    final static startBTC = 0.1.btc
+    final static startMSC = 0.1.divisible
+    final static zeroAmount = 0.0
 
     @Unroll
     def "In #ecosystem all available tokens can be transferred with transaction type 4"() {
@@ -20,8 +20,8 @@ class SendAllSpec extends BaseRegTestSpec {
         def otherAddress = newAddress
 
         then:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC
-        omniGetBalance(actorAddress, CurrencyID.TMSC).balance == startMSC
+        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC.numberValue()
+        omniGetBalance(actorAddress, CurrencyID.TMSC).balance == startMSC.numberValue()
         omniGetBalance(otherAddress, CurrencyID.MSC).balance == zeroAmount
         omniGetBalance(otherAddress, CurrencyID.TMSC).balance == zeroAmount
 
@@ -46,19 +46,19 @@ class SendAllSpec extends BaseRegTestSpec {
         subSends.size() == 1
         subSends[0].propertyid == ecosystem.getValue()
         subSends[0].divisible
-        subSends[0].amount as BigDecimal == startMSC
+        subSends[0].amount as BigDecimal == startMSC.numberValue()
 
         and:
         if (ecosystem == Ecosystem.MSC) {
             assert omniGetBalance(actorAddress, CurrencyID.MSC).balance == zeroAmount
-            assert omniGetBalance(actorAddress, CurrencyID.TMSC).balance == startMSC
-            assert omniGetBalance(otherAddress, CurrencyID.MSC).balance == startMSC
+            assert omniGetBalance(actorAddress, CurrencyID.TMSC).balance == startMSC.numberValue()
+            assert omniGetBalance(otherAddress, CurrencyID.MSC).balance == startMSC.numberValue()
             assert omniGetBalance(otherAddress, CurrencyID.TMSC).balance == zeroAmount
         } else {
-            assert omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC
+            assert omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC.numberValue()
             assert omniGetBalance(actorAddress, CurrencyID.TMSC).balance == zeroAmount
             assert omniGetBalance(otherAddress, CurrencyID.MSC).balance == zeroAmount
-            assert omniGetBalance(otherAddress, CurrencyID.TMSC).balance == startMSC
+            assert omniGetBalance(otherAddress, CurrencyID.TMSC).balance == startMSC.numberValue()
         }
 
         where:
@@ -77,8 +77,8 @@ class SendAllSpec extends BaseRegTestSpec {
         then:
         omniGetBalance(actorAddress, CurrencyID.MSC).balance == zeroAmount
         omniGetBalance(actorAddress, CurrencyID.TMSC).balance == zeroAmount
-        omniGetBalance(otherAddress, CurrencyID.MSC).balance == startMSC
-        omniGetBalance(otherAddress, CurrencyID.TMSC).balance == startMSC
+        omniGetBalance(otherAddress, CurrencyID.MSC).balance == startMSC.numberValue()
+        omniGetBalance(otherAddress, CurrencyID.TMSC).balance == startMSC.numberValue()
 
         when:
         def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
@@ -90,8 +90,8 @@ class SendAllSpec extends BaseRegTestSpec {
         and:
         omniGetBalance(actorAddress, CurrencyID.MSC).balance == zeroAmount
         omniGetBalance(actorAddress, CurrencyID.TMSC).balance == zeroAmount
-        omniGetBalance(otherAddress, CurrencyID.MSC).balance == startMSC
-        omniGetBalance(otherAddress, CurrencyID.TMSC).balance == startMSC
+        omniGetBalance(otherAddress, CurrencyID.MSC).balance == startMSC.numberValue()
+        omniGetBalance(otherAddress, CurrencyID.TMSC).balance == startMSC.numberValue()
 
         where:
         ecosystem << [Ecosystem.MSC, Ecosystem.TMSC]
@@ -100,9 +100,9 @@ class SendAllSpec extends BaseRegTestSpec {
     @Unroll
     def "In #ecosystem only available, unreserved balances are transferred, when sending all tokens"() {
         when:
-        def actorAddress = createFundedAddress(startBTC, zeroAmount)
-        def otherAddress = createFundedAddress(startBTC, zeroAmount)
-        def nonManagedID = fundNewProperty(actorAddress, 10.0, PropertyType.DIVISIBLE, ecosystem)
+        def actorAddress = createFundedAddress(startBTC, 0.divisible)
+        def otherAddress = createFundedAddress(startBTC, 0.divisible)
+        def nonManagedID = fundNewProperty(actorAddress, 10.divisible, ecosystem)
         def tradeCurrency = new CurrencyID(ecosystem.getValue())
 
         then:
@@ -110,7 +110,7 @@ class SendAllSpec extends BaseRegTestSpec {
         omniGetBalance(otherAddress, nonManagedID).balance == zeroAmount
 
         when:
-        def tradeTxid = omniSendTrade(actorAddress, nonManagedID, 4.0, tradeCurrency, 4.0)
+        def tradeTxid = omniSendTrade(actorAddress, nonManagedID, 4.divisible, tradeCurrency, 4.divisible)
         generateBlock()
         def tradeTx = omniGetTransaction(tradeTxid)
 

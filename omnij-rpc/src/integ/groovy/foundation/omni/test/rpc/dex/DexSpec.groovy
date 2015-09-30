@@ -140,7 +140,7 @@ class DexSpec extends BaseRegTestSpec {
         def offerBeforeReceivingMore = omniGetTransaction(offerTxid)
         def balanceBeforeReceivingMore = omniGetBalance(fundedAddress, currencyOffered)
         def otherAddress = createFundedAddress(startBTC, startOtherMSC)
-        def sendTxid = omniSend(otherAddress, fundedAddress, currencyOffered, additionalMSC.bigDecimalValue())
+        def sendTxid = omniSend(otherAddress, fundedAddress, currencyOffered, additionalMSC)
         generateBlock()
 
         then: "any tokens received are added to the available balance"
@@ -197,11 +197,11 @@ class DexSpec extends BaseRegTestSpec {
 
         then:
         omniGetTransaction(offerTxid).valid
-        omniGetTransaction(offerTxid).amount as BigDecimal == offeredMSC.bigDecimalValue()
+        omniGetTransaction(offerTxid).amount as BigDecimal == offeredMSC.numberValue()
 
         and:
-        omniGetBalance(fundedAddress, currencyOffered).balance == balanceAtStart.balance - offeredMSC.bigDecimalValue()
-        omniGetBalance(fundedAddress, currencyOffered).reserved == balanceAtStart.reserved + offeredMSC.bigDecimalValue()
+        omniGetBalance(fundedAddress, currencyOffered).balance == balanceAtStart.balance - offeredMSC.numberValue()
+        omniGetBalance(fundedAddress, currencyOffered).reserved == balanceAtStart.reserved + offeredMSC.numberValue()
 
         and: "a new offer is listed"
         omniGetActiveDExSells().size() == offersAtStart.size() + 1

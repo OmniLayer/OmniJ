@@ -26,9 +26,9 @@ class SendToOwnersSpec extends BaseRegTestSpec {
 
     def "STO calculates correct fees for the simple case"() {
         setup:
-        def startingBTC = 10.0
-        def startingMSC = 1000.0
-        def amountSent = 100.0
+        def startingBTC = 10.btc
+        def startingMSC = 1000.divisible
+        def amountSent = 100.divisible
         def fundedAddress = createFundedAddress(startingBTC, startingMSC)
         def currencyID = TMSC
         def expectedBalance = 0.0
@@ -48,7 +48,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
             def changedBalances = endBalances - startBalances
             def numberReceivers = changedBalances.size() - 1
             def totalFee = numberReceivers * stoFeePerAddress
-            expectedBalance = startBalanceSender - amountSent - totalFee
+            expectedBalance = startBalanceSender - amountSent.numberValue() - totalFee
         } else {
             // There are no other holders, thus no receiver or fee
             expectedBalance = startBalanceSender
@@ -65,7 +65,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
         def startBalances = consensusTool.getConsensusSnapshot(currencyID)
 
         when: "We Send to Owners with amount equal zero"
-        omniSendSTO(fundedAddress, currencyID, 0.0)
+        omniSendSTO(fundedAddress, currencyID, 0.divisible)
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()

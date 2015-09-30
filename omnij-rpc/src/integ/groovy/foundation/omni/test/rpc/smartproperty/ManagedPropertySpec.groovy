@@ -25,7 +25,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def setupSpec() {
         actorAddress = createFundedAddress(startBTC, zeroAmount)
         otherAddress = createFundedAddress(startBTC, zeroAmount)
-        nonManagedID = fundNewProperty(actorAddress, 10.0, PropertyType.DIVISIBLE, Ecosystem.MSC)
+        nonManagedID = fundNewProperty(actorAddress, 10.divisible, Ecosystem.MSC)
     }
 
     def "A managed property can be created with transaction type 54"() {
@@ -207,16 +207,16 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "Granted tokens can be transfered as usual"() {
         when:
-        def txid = omniSend(actorAddress, otherAddress, currencyID, 1)
+        def txid = omniSend(actorAddress, otherAddress, currencyID, 1.indivisible)
         generateBlock()
 
         then:
         omniGetTransaction(txid).valid
 
         and:
-        omniGetProperty(currencyID).totaltokens as Long == new Long("9223372036854775807")
-        omniGetBalance(actorAddress, currencyID).balance == new BigDecimal("9223372036854775806")
-        omniGetBalance(otherAddress, currencyID).balance == new BigDecimal("1")
+        omniGetProperty(currencyID).totaltokens as Long == 9223372036854775807L
+        omniGetBalance(actorAddress, currencyID).balance == 9223372036854775806.0
+        omniGetBalance(otherAddress, currencyID).balance == 1.0
     }
 
     @Ignore
@@ -236,7 +236,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "Tokens of managed properties can be revoked with transaction type 56"() {
         when:
-        def txid = revokeTokens(actorAddress, currencyID, 9223372036854775805.divisible)
+        def txid = revokeTokens(actorAddress, currencyID, 9223372036854775805.indivisible)
         generateBlock()
 
         then:

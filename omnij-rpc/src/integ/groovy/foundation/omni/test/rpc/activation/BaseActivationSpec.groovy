@@ -1,6 +1,8 @@
 package foundation.omni.test.rpc.activation
 
 import foundation.omni.BaseRegTestSpec
+import foundation.omni.OmniValue
+import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
 import org.junit.internal.AssumptionViolatedException
 import spock.lang.Shared
@@ -30,9 +32,9 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
 
     // Default values
     static protected Integer minClientVersion = 0
-    static protected BigDecimal startBTC = 0.1
-    static protected BigDecimal startMSC = 0.1
-    static protected BigDecimal zeroAmount = 0.0
+    static protected Coin startBTC = 0.1.btc
+    static protected OmniValue startMSC = 0.1.divisible
+    static protected OmniValue zeroAmount = 0.divisible
 
     @Shared Sha256Hash initialBlock
 

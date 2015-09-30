@@ -51,16 +51,16 @@ class MoneyManSpec extends BaseRegTestSpec {
 
         and: "The balances for the account we just sent MSC to is correct"
         getBitcoinBalance(testAddress) == extraAmount
-        omniGetBalance(testAddress, MSC).balance ==  MoneyMan.toOmni(sendAmount).bigDecimalValue()
-        omniGetBalance(testAddress, TMSC).balance == MoneyMan.toOmni(sendAmount).bigDecimalValue()
+        omniGetBalance(testAddress, MSC).balance ==  MoneyMan.toOmni(sendAmount).numberValue()
+        omniGetBalance(testAddress, TMSC).balance == MoneyMan.toOmni(sendAmount).numberValue()
     }
 
     def "check Spec setup"() {
         // This test is really an integration test of createFundedAddress()
         expect:
         getBitcoinBalance(faucetAddress) == faucetBTC
-        omniGetBalance(faucetAddress, MSC).balance == MoneyMan.toOmni(sendAmount).bigDecimalValue()
-        omniGetBalance(faucetAddress, TMSC).balance == MoneyMan.toOmni(sendAmount).bigDecimalValue()
+        omniGetBalance(faucetAddress, MSC).balance == MoneyMan.toOmni(sendAmount).numberValue()
+        omniGetBalance(faucetAddress, TMSC).balance == MoneyMan.toOmni(sendAmount).numberValue()
     }
 
     def "Simple send MSC from one address to another" () {
@@ -69,7 +69,7 @@ class MoneyManSpec extends BaseRegTestSpec {
         when: "we send MSC"
         def senderBalance = omniGetBalance(faucetAddress, MSC)
         def toAddress = getNewAddress()
-        def txid = client.omniSend(faucetAddress, toAddress, MSC, simpleSendAmount.bigDecimalValue())
+        def txid = client.omniSend(faucetAddress, toAddress, MSC, simpleSendAmount)
         def tx = client.getTransaction(txid)
 
         then: "we got a non-zero transaction id"
@@ -82,8 +82,8 @@ class MoneyManSpec extends BaseRegTestSpec {
         def receiverBalance = client.omniGetBalance(toAddress, MSC)
 
         then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
-        receiverBalance.balance == simpleSendAmount.bigDecimalValue()
-        newSenderBalance.balance == senderBalance.balance - simpleSendAmount.bigDecimalValue()
+        receiverBalance.balance == simpleSendAmount.numberValue()
+        newSenderBalance.balance == senderBalance.balance - simpleSendAmount.numberValue()
     }
 
     def "Send MSC back to same adddress" () {
@@ -91,7 +91,7 @@ class MoneyManSpec extends BaseRegTestSpec {
 
         when: "we send MSC"
         def wealthyBalance = omniGetBalance(faucetAddress, MSC).balance
-        def txid = omniSend(faucetAddress, faucetAddress, MSC, 10.12345678)
+        def txid = omniSend(faucetAddress, faucetAddress, MSC, 10.12345678.divisible)
 
         then: "we got a non-zero transaction id"
         txid != OmniClient.zeroHash

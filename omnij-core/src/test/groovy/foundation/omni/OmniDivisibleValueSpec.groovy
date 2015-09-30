@@ -1,5 +1,6 @@
 package foundation.omni
 
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -67,7 +68,7 @@ class OmniDivisibleValueSpec extends Specification {
         OmniValue value = OmniDivisibleValue.of(val)
 
         then: "it is created correctly"
-        value.bigDecimalValue().toBigInteger() == decimalValue
+        value.numberValue().toBigInteger() == decimalValue
 
         and: "class was as expected"
         val.class == valClass
@@ -168,6 +169,53 @@ class OmniDivisibleValueSpec extends Specification {
 
         then:
         ArithmeticException e = thrown()
+    }
+
+    @Unroll
+    def "Addition works: #a + #b == #c"(Number a, Number b, Number c) {
+        when:
+        def A = OmniDivisibleValue.of(a)
+        def B = OmniDivisibleValue.of(b)
+        def C = OmniDivisibleValue.of(c)
+
+        then:
+        C.numberValue() == (A + B).numberValue()
+
+        where:
+        a | b | c
+        1 | 1 | 2
+        1.1 | 1.1 | 2.2
+    }
+
+    @Unroll
+    def "Multiplication works: #a * #b == #c"(Number a, Number b, Number c) {
+        when:
+        def A = OmniDivisibleValue.of(a)
+        def C = OmniDivisibleValue.of(c)
+
+        then:
+        C.numberValue() == (A * b).numberValue()
+
+        where:
+        a | b | c
+        2 | 3 | 6
+        2.1 | 3 | 6.3
+    }
+
+
+    @Unroll
+    def "Division works: #a / #b == #c"(Number a, Number b, Number c) {
+        when:
+        def A = OmniDivisibleValue.of(a)
+        def C = OmniDivisibleValue.of(c)
+
+        then:
+        C.numberValue() == (A / b).numberValue()
+
+        where:
+        a | b | c
+        6 | 3 | 2
+        6.3 | 3 | 2.1
     }
 
     def "Equality works"() {

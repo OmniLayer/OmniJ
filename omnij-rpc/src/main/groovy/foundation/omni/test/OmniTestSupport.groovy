@@ -75,8 +75,8 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
             def junkAddress = newAddress
 
             // TODO: can we always get away with not generating a block inbetween?
-            def extraTxidMSC = omniSend(toAddress, junkAddress, CurrencyID.MSC, excessiveMSC.bigDecimalValue())
-            def extraTxidTMSC = omniSend(toAddress, junkAddress, CurrencyID.TMSC, excessiveMSC.bigDecimalValue())
+            def extraTxidMSC = omniSend(toAddress, junkAddress, CurrencyID.MSC, excessiveMSC)
+            def extraTxidTMSC = omniSend(toAddress, junkAddress, CurrencyID.TMSC, excessiveMSC)
         }
 
         // TODO: when using an intermediate receiver, this txid doesn't reflect the whole picture

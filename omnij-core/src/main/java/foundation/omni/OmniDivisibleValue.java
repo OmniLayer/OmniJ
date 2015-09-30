@@ -152,4 +152,21 @@ public final class OmniDivisibleValue extends OmniValue {
         return OmniDivisibleValue.ofWillets(this.value - right.value);
     }
 
+    OmniDivisibleValue multiply(Integer right) {
+        return OmniDivisibleValue.ofWillets(this.value * right);
+    }
+
+    OmniDivisibleValue multiply(Long right) {
+        return OmniDivisibleValue.ofWillets(this.value * right);
+    }
+
+    OmniDivisibleValue div(Integer right) {
+        return OmniDivisibleValue.ofWillets(this.value / right);
+    }
+
+    OmniDivisibleValue div(Long right) {
+        return OmniDivisibleValue.ofWillets(this.value / right);
+    }
+
+
 }

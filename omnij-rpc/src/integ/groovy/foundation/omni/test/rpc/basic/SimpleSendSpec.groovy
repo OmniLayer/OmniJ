@@ -3,6 +3,7 @@ package foundation.omni.test.rpc.basic
 import com.msgilligan.bitcoinj.rpc.JsonRPCStatusException
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
+import spock.lang.Ignore
 import spock.lang.Unroll
 
 import static foundation.omni.CurrencyID.*
@@ -31,14 +32,14 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def endBalance = omniGetBalance(faucetAddress, MSC).balance
 
         then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
-        amount == omniGetBalance(toAddress, MSC).balance
-        endBalance == startBalance - amount
+        amount.numberValue() == omniGetBalance(toAddress, MSC).balance
+        endBalance == startBalance - amount.numberValue()
 
         where:
         fundingMSC | amount
-        1000.0     | 1.0
-        1.0        | 0.12345678
-        0.000001   | 0.00000001
+        1000.0     | 1.divisible
+        1.0        | 0.12345678.divisible
+        0.000001   | 0.00000001.divisible
     }
 
     def "When the amount to transfer is zero Simple Sends are rejected by the RPC"() {
@@ -49,7 +50,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def toAddress = getNewAddress()
 
         when: "the amount to transfer is zero"
-        omniSend(fundedAddress, toAddress, MSC, 0)
+        omniSend(fundedAddress, toAddress, MSC, 0.divisible)
         // TODO: Test sending a negative amount of coins?
         // TODO: Check that the *right type* of exceptions are thrown
         // Currently it seems they're all 500s
@@ -61,6 +62,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         // TODO: Verify that blockchain state didn't change
     }
 
+    @Ignore("Can't have negative OmniValues -- need to rewrite this test using a lower-level send")
     def "When the amount to transfer is negative, Simple Sends are rejected by the RPC"() {
         // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
         // treated as invalid by the Omni Core parser
@@ -70,7 +72,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def toAddress = getNewAddress()
 
         when: "the amount to transfer is zero"
-        omniSend(fundedAddress, toAddress, MSC, -1.0)
+        omniSend(fundedAddress, toAddress, MSC, (-1.0).divisible)
         // TODO: Test sending a negative amount of coins?
         // TODO: Check that the *right type* of exceptions are thrown
         // Currently it seems they're all 500s
@@ -91,7 +93,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def toAddress = getNewAddress()
 
         when: "the sending address has zero coins in its available balance for the specified currency identifier"
-        def txid = client.omniSend(emptyAddress, toAddress, MSC, 1.0)
+        def txid = client.omniSend(emptyAddress, toAddress, MSC, 1.divisible)
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
@@ -106,7 +108,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def toAddress = getNewAddress()
 
         when: "the amount to transfer exceeds the number owned and available by the sending address"
-        omniSend(fundedAddress, toAddress, MSC, 1.00000001)
+        omniSend(fundedAddress, toAddress, MSC, 1.00000001.divisible)
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
@@ -121,7 +123,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def toAddress = getNewAddress()
 
         when: "the specified currency identifier is non-existent"
-        omniSend(richAddress, toAddress, nonExistentCurrencyID, 1.0)
+        omniSend(richAddress, toAddress, nonExistentCurrencyID, 1.divisible)
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()

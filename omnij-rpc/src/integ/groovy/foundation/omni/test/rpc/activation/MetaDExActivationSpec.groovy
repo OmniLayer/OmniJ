@@ -32,14 +32,14 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
     def setupSpec() {
         actorAddress = createFundedAddress(startBTC, startMSC)
-        mainID = fundNewProperty(actorAddress, 10.0, PropertyType.DIVISIBLE, Ecosystem.MSC)
-        testID = fundNewProperty(actorAddress, 15.0, PropertyType.DIVISIBLE, Ecosystem.TMSC)
+        mainID = fundNewProperty(actorAddress, 10.divisible, Ecosystem.MSC)
+        testID = fundNewProperty(actorAddress, 15.divisible, Ecosystem.TMSC)
     }
 
     def "Creating trades involving test ecosystem tokens before the activation is valid"() {
         setup:
-        def amountForSale = 3.0
-        def amountDesired = 5.0
+        def amountForSale = 3.divisible
+        def amountDesired = 5.divisible
         def balanceAtStart = omniGetBalance(actorAddress, testID)
 
         when:
@@ -51,10 +51,10 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
         and:
         omniGetTrade(tradeTxid).status == "open"
-        omniGetTrade(tradeTxid).amountremaining as BigDecimal == amountForSale
-        omniGetTrade(tradeTxid).amounttofill as BigDecimal == amountDesired
-        omniGetTrade(tradeTxid).amountforsale as BigDecimal == amountForSale
-        omniGetTrade(tradeTxid).amountdesired as BigDecimal == amountDesired
+        omniGetTrade(tradeTxid).amountremaining as BigDecimal == amountForSale.numberValue()
+        omniGetTrade(tradeTxid).amounttofill as BigDecimal == amountDesired.numberValue()
+        omniGetTrade(tradeTxid).amountforsale as BigDecimal == amountForSale.numberValue()
+        omniGetTrade(tradeTxid).amountdesired as BigDecimal == amountDesired.numberValue()
         omniGetTrade(tradeTxid).propertyidforsale == testID.getValue()
         omniGetTrade(tradeTxid).propertyiddesired == CurrencyID.TMSC.getValue()
         omniGetTrade(tradeTxid).propertyidforsaleisdivisible
@@ -62,8 +62,8 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         omniGetTrade(tradeTxid).unitprice == "1.66666666666666666666666666666666666666666666666667"
 
         and:
-        omniGetBalance(actorAddress, testID).balance == balanceAtStart.balance - amountForSale
-        omniGetBalance(actorAddress, testID).reserved == balanceAtStart.reserved + amountForSale
+        omniGetBalance(actorAddress, testID).balance == balanceAtStart.balance - amountForSale.numberValue()
+        omniGetBalance(actorAddress, testID).reserved == balanceAtStart.reserved + amountForSale.numberValue()
 
         when:
         def cancelTxid = omniSendCancelAllTrades(actorAddress, Ecosystem.TMSC)
@@ -75,8 +75,8 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
         and:
         omniGetTrade(tradeTxid).status == "cancelled"
-        omniGetTrade(tradeTxid).amountforsale as BigDecimal == amountForSale
-        omniGetTrade(tradeTxid).amountdesired as BigDecimal == amountDesired
+        omniGetTrade(tradeTxid).amountforsale as BigDecimal == amountForSale.numberValue()
+        omniGetTrade(tradeTxid).amountdesired as BigDecimal == amountDesired.numberValue()
         omniGetTrade(tradeTxid).propertyidforsale == testID.getValue()
         omniGetTrade(tradeTxid).propertyiddesired == CurrencyID.TMSC.getValue()
 
@@ -86,7 +86,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
     def "Creating trades involving main ecosystem tokens before the activation is invalid"() {
         when:
-        def txid = omniSendTrade(actorAddress, mainID, 5.0, CurrencyID.MSC, 2.0)
+        def txid = omniSendTrade(actorAddress, mainID, 5.divisible, CurrencyID.MSC, 2.divisible)
         generateBlock()
 
         then:
@@ -128,7 +128,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
     def "Creating trades involving main ecosystem tokens during the grace period is still invalid"() {
         when:
-        def txid = omniSendTrade(actorAddress, CurrencyID.MSC, startMSC, mainID, 25.0)
+        def txid = omniSendTrade(actorAddress, CurrencyID.MSC, startMSC, mainID, 25.divisible)
         generateBlock()
 
         then:
@@ -167,7 +167,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
     def "After the successful activation of the feature, it valid to trade main ecosystem tokens"() {
         setup:
         def amountForSale = startMSC
-        def amountDesired = 25.0
+        def amountDesired = 25.divisible
         def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.MSC)
 
         when:
@@ -179,10 +179,10 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
         and:
         omniGetTrade(tradeTxid).status == "open"
-        omniGetTrade(tradeTxid).amountremaining as BigDecimal == amountForSale
-        omniGetTrade(tradeTxid).amounttofill as BigDecimal == amountDesired
-        omniGetTrade(tradeTxid).amountforsale as BigDecimal == amountForSale
-        omniGetTrade(tradeTxid).amountdesired as BigDecimal == amountDesired
+        omniGetTrade(tradeTxid).amountremaining as BigDecimal == amountForSale.numberValue()
+        omniGetTrade(tradeTxid).amounttofill as BigDecimal == amountDesired.numberValue()
+        omniGetTrade(tradeTxid).amountforsale as BigDecimal == amountForSale.numberValue()
+        omniGetTrade(tradeTxid).amountdesired as BigDecimal == amountDesired.numberValue()
         omniGetTrade(tradeTxid).propertyidforsale == CurrencyID.MSC.getValue()
         omniGetTrade(tradeTxid).propertyiddesired == mainID.getValue()
         omniGetTrade(tradeTxid).propertyidforsaleisdivisible
@@ -206,10 +206,10 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         and:
         omniGetTrade(cancelTxid).propertyidforsale == CurrencyID.MSC.getValue()
         omniGetTrade(cancelTxid).propertyidforsaleisdivisible
-        omniGetTrade(cancelTxid).amountforsale as BigDecimal == amountForSale
+        omniGetTrade(cancelTxid).amountforsale as BigDecimal == amountForSale.numberValue()
         omniGetTrade(cancelTxid).propertyiddesired == mainID.getValue()
         omniGetTrade(cancelTxid).propertyiddesiredisdivisible
-        omniGetTrade(cancelTxid).amountdesired as BigDecimal == amountDesired
+        omniGetTrade(cancelTxid).amountdesired as BigDecimal == amountDesired.numberValue()
         omniGetTrade(cancelTxid).unitprice == "0.00400000000000000000000000000000000000000000000000"
 
         and:

@@ -2,12 +2,14 @@ package foundation.omni.test.rpc.crowdsale
 
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
+import foundation.omni.OmniDivisibleValue
+import org.bitcoinj.core.Coin
 import spock.lang.Unroll
 
 class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
-    final static BigDecimal startBTC = 0.01
-    final static BigDecimal startMSC = 0.00
+    final static startBTC = 0.01.btc
+    final static startMSC = 0.divisible
 
     @Unroll
     def "Investing #amountToInvest MSC in a crowdsale with 0.00000001 MDiv per unit yields #expectedBalance MDiv"() {
@@ -31,7 +33,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         */
         def rawTx = "000000330100020000000000004d44697600000000000001000000000000000100000001ccd403f00000"
         def issuerAddress = createFundedAddress(startBTC, startMSC, false)
-        def investorAddress = createFundedAddress(startBTC, amountToInvest.bigDecimalValue(), false)
+        def investorAddress = createFundedAddress(startBTC, amountToInvest, false)
         def currencyMSC = CurrencyID.MSC
 
         when: "creating a new crowdsale with 0.00000001 MDiv per unit invested"
@@ -48,7 +50,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         omniGetCrowdsale(propertyId).active
 
         when: "participant invests #amountToInvest MSC"
-        def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest.bigDecimalValue())
+        def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest)
         generateBlock()
 
         then: "the investor should get #expectedBalance MDiv"
@@ -129,7 +131,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         */
         def rawTx = "000000330100020000000000004d446976000000000000017fffffffffffffff00000001ccd403f00000"
         def issuerAddress = createFundedAddress(startBTC, startMSC, false)
-        def investorAddress = createFundedAddress(startBTC, amountToInvest.bigDecimalValue(), false)
+        def investorAddress = createFundedAddress(startBTC, amountToInvest, false)
         def currencyMSC = CurrencyID.MSC
 
         when: "creating a new crowdsale with 0.00000001 MDiv per unit invested"
@@ -146,7 +148,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         omniGetCrowdsale(propertyId).active
 
         when: "participant invests #amountToInvest MSC"
-        def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest.bigDecimalValue())
+        def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest)
         generateBlock()
 
         then: "the investor should get #expectedBalance MDiv"
@@ -231,7 +233,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         */
         def rawTx = "0000003302000100000000000054496e646976000000000000020000000000000d4800000001ccd403f00000"
         def issuerAddress = createFundedAddress(startBTC, startMSC, false)
-        def investorAddress = createFundedAddress(startBTC, amountToInvest.bigDecimalValue(), false)
+        def investorAddress = createFundedAddress(startBTC, amountToInvest, false)
         def currencyMSC = CurrencyID.TMSC
 
         when: "creating a new crowdsale with 3400 TIndiv per unit invested"
@@ -248,14 +250,14 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         omniGetCrowdsale(propertyId).active
 
         when: "participant invests #amountToInvest TMSC"
-        def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest.bigDecimalValue())
+        def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest)
         generateBlock()
 
         then: "the investor should get #expectedBalance TIndiv"
-        omniGetBalance(investorAddress, propertyId).balance == expectedBalance.bigDecimalValue()
+        omniGetBalance(investorAddress, propertyId).balance.longValue() == expectedBalance.longValue()
 
         and: "the issuer receives the invested amount"
-        omniGetBalance(issuerAddress, currencyMSC).balance == startMSC + amountToInvest.bigDecimalValue()
+        omniGetBalance(issuerAddress, currencyMSC).balance == startMSC + amountToInvest.numberValue()
 
         when: "retrieving the transaction"
         def sendTx = omniGetTransaction(sendTxid)

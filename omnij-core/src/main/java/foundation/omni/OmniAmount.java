@@ -222,7 +222,7 @@ public class OmniAmount implements MonetaryAmount {
     }
 
     @Override
-    public NumberValue getNumber() {
+    public OmniValue getNumber() {
         return value;
     }
 }

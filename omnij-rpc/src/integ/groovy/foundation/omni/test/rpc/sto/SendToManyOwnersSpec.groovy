@@ -1,4 +1,6 @@
 package foundation.omni.test.rpc.sto
+
+import foundation.omni.OmniValue
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.Ecosystem
@@ -30,9 +32,9 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         println "-----------------------------------------------------------------------"
         print "\n"
 
-        // Preperation
+        // Preparation
         def fundingSPT = ((maxN * (maxN + 1)) / 2) * (amountStartPerOwner + amountDistributePerOwner)
-        def actorSPT = ((maxN * (maxN + 1)) / 2) * amountDistributePerOwner
+        def actorSPT = OmniValue.of(((maxN * (maxN + 1)) / 2) * amountDistributePerOwner, propertyType)
         def actorMSC = maxN * stoFeePerAddress
 
         // Create actor
@@ -40,7 +42,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
 
         // Create property
         println String.format("Creating a new %s with %s units ...", propertyType.toString(), fundingSPT.toPlainString())
-        def currencySPT = fundNewProperty(actorAddress, fundingSPT, propertyType, Ecosystem.MSC)
+        def currencySPT = fundNewProperty(actorAddress, OmniValue.of(fundingSPT, propertyType), Ecosystem.MSC)
 
         // Check funding balances of actor
         def startingBalanceMSC = omniGetBalance(actorAddress, MSC)
@@ -56,7 +58,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
 
         // Fund owners
         for (n in 1..maxN) {
-            BigDecimal starting = n * amountStartPerOwner
+            def starting = OmniValue.of(n * amountStartPerOwner, propertyType)
             owners[n] = newAddress
             omniSend(actorAddress, owners[n], currencySPT, starting)
             println String.format("Sending %s SPT to owner #%d ...", starting.toPlainString(), n)
@@ -129,9 +131,9 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
             dryRun(maxN, amountStartPerOwner, amountDistributePerOwner, propertyType)
         }
 
-        // Preperation
+        // Preparation
         def fundingSPT = ((maxN * (maxN + 1)) / 2) * (amountStartPerOwner + amountDistributePerOwner)
-        def actorSPT = ((maxN * (maxN + 1)) / 2) * amountDistributePerOwner
+        def actorSPT = OmniValue.of(((maxN * (maxN + 1)) / 2) * amountDistributePerOwner, propertyType)
         def actorMSC = maxN * stoFeePerAddress
 
         // Create actor
@@ -151,7 +153,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
 
         // Fund owners
         for (n in 1..maxN) {
-            BigDecimal starting = n * amountStartPerOwner
+            def starting = OmniValue.of(n * amountStartPerOwner, propertyType)
             owners[n] = newAddress
             omniSend(actorAddress, owners[n], currencySPT, starting)
             if (n % 500 == 0) {
@@ -165,7 +167,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         def reallyBalanceMSC = omniGetBalance(actorAddress, MSC)
         def reallyBalanceSPT = omniGetBalance(actorAddress, currencySPT)
         assert reallyBalanceMSC.balance == actorMSC
-        assert reallyBalanceSPT.balance == actorSPT
+        assert reallyBalanceSPT.balance == actorSPT.numberValue()
 
         // Check owner balances
         for (n in 1..maxN) {

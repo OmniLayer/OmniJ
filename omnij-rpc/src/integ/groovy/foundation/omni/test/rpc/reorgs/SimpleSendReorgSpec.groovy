@@ -4,7 +4,7 @@ import foundation.omni.CurrencyID
 
 class SimpleSendReorgSpec extends BaseReorgSpec {
 
-    final static BigDecimal sendAmount = 0.1
+    final static sendAmount = 0.1.divisible
 
     def "After invalidating a simple send, the send transaction is invalid"()
     {
@@ -51,8 +51,8 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
 
         then: "the transaction is valid and the tokens were transferred"
         checkTransactionValidity(txid)
-        omniGetBalance(senderAddress, CurrencyID.MSC).balance == balanceBeforeSendActor.balance - sendAmount
-        omniGetBalance(receiverAddress, CurrencyID.MSC).balance == balanceBeforeSendReceiver.balance + sendAmount
+        omniGetBalance(senderAddress, CurrencyID.MSC).balance == balanceBeforeSendActor.balance - sendAmount.numberValue()
+        omniGetBalance(receiverAddress, CurrencyID.MSC).balance == balanceBeforeSendReceiver.balance + sendAmount.numberValue()
 
         when: "invalidating the block with the send transaction and after a new block is mined"
         invalidateBlock(blockHashOfSend)

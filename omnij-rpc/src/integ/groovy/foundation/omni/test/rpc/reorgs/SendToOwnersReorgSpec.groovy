@@ -10,7 +10,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
     def "After invalidating a send to owners transaction, the transaction is invalid"()
     {
         given:
-        def sendAmount = new BigDecimal("0.1")
+        def sendAmount = 0.1.divisible
         def senderAddress = createFundedAddress(startBTC, startMSC)
         def dummyOwnerAddress = createFundedAddress(startBTC, startMSC)
 
@@ -39,8 +39,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         def dummyOwnerC = newAddress
 
         def ecosystem = Ecosystem.MSC
-        def propertyType = PropertyType.INDIVISIBLE
-        def amountToCreate = OmniValue.of(153, propertyType)
+        def amountToCreate = OmniValue.of(153, PropertyType.INDIVISIBLE)
 
         def txidCreation = createProperty(senderAddress, ecosystem, amountToCreate)
         generateBlock()
@@ -48,33 +47,33 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         def currencyID = new CurrencyID(txCreation.propertyid as long)
 
         when: "funding the owners with a new property"
-        omniSend(senderAddress, dummyOwnerA, currencyID, new BigDecimal("1"))
-        omniSend(senderAddress, dummyOwnerB, currencyID, new BigDecimal("1"))
-        omniSend(senderAddress, dummyOwnerC, currencyID, new BigDecimal("1"))
+        omniSend(senderAddress, dummyOwnerA, currencyID, 1.indivisible)
+        omniSend(senderAddress, dummyOwnerB, currencyID, 1.indivisible)
+        omniSend(senderAddress, dummyOwnerC, currencyID, 1.indivisible)
         def blockHashOfOwnerFunding = generateAndGetBlockHash()
 
         then: "the owners have some balance"
-        omniGetBalance(dummyOwnerA, currencyID).balance == new BigDecimal("1")
-        omniGetBalance(dummyOwnerB, currencyID).balance == new BigDecimal("1")
-        omniGetBalance(dummyOwnerC, currencyID).balance == new BigDecimal("1")
+        omniGetBalance(dummyOwnerA, currencyID).balance == 1.0
+        omniGetBalance(dummyOwnerB, currencyID).balance == 1.0
+        omniGetBalance(dummyOwnerC, currencyID).balance == 1.0
 
         and: "the sender has less"
-        omniGetBalance(senderAddress, currencyID).balance == new BigDecimal("150")
+        omniGetBalance(senderAddress, currencyID).balance == 150.0
 
         when: "sending to the owners"
-        def txidSTO = omniSendSTO(senderAddress, currencyID, new BigDecimal("150"))
+        def txidSTO = omniSendSTO(senderAddress, currencyID, 150.indivisible)
         def blockHashOfSend = generateAndGetBlockHash()
 
         then: "the send to owners transaction is valid"
         checkTransactionValidity(txidSTO)
 
         and: "the owners received the tokens"
-        omniGetBalance(dummyOwnerA, currencyID).balance == new BigDecimal("51")
-        omniGetBalance(dummyOwnerB, currencyID).balance == new BigDecimal("51")
-        omniGetBalance(dummyOwnerC, currencyID).balance == new BigDecimal("51")
+        omniGetBalance(dummyOwnerA, currencyID).balance == 51.0
+        omniGetBalance(dummyOwnerB, currencyID).balance == 51.0
+        omniGetBalance(dummyOwnerC, currencyID).balance == 51.0
 
         and: "the sender has no more tokens"
-        omniGetBalance(senderAddress, currencyID).balance == new BigDecimal("0")
+        omniGetBalance(senderAddress, currencyID).balance == 0.0
 
         when: "invalidating the block and send to owners transaction"
         invalidateBlock(blockHashOfSend)
@@ -85,12 +84,12 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         !checkTransactionValidity(txidSTO)
 
         and: "the owners no longer have the tokens they received"
-        omniGetBalance(dummyOwnerA, currencyID).balance == new BigDecimal("1")
-        omniGetBalance(dummyOwnerB, currencyID).balance == new BigDecimal("1")
-        omniGetBalance(dummyOwnerC, currencyID).balance == new BigDecimal("1")
+        omniGetBalance(dummyOwnerA, currencyID).balance == 1.0
+        omniGetBalance(dummyOwnerB, currencyID).balance == 1.0
+        omniGetBalance(dummyOwnerC, currencyID).balance == 1.0
 
         and: "the sender has the balance from before the send to owners transaction"
-        omniGetBalance(senderAddress, currencyID).balance == new BigDecimal("150")
+        omniGetBalance(senderAddress, currencyID).balance == 150.0
 
         when: "rolling back until before the funding of the owners"
         invalidateBlock(blockHashOfOwnerFunding)
@@ -98,9 +97,9 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         generateBlock()
 
         then: "the owners have no tokens"
-        omniGetBalance(dummyOwnerA, currencyID).balance == new BigDecimal("0")
-        omniGetBalance(dummyOwnerB, currencyID).balance == new BigDecimal("0")
-        omniGetBalance(dummyOwnerC, currencyID).balance == new BigDecimal("0")
+        omniGetBalance(dummyOwnerA, currencyID).balance == 0.0
+        omniGetBalance(dummyOwnerB, currencyID).balance == 0.0
+        omniGetBalance(dummyOwnerC, currencyID).balance == 0.0
 
         and: "the sender has the initial amount that was created"
         omniGetBalance(senderAddress, currencyID).balance == amountToCreate.bigDecimalValue()
@@ -112,8 +111,8 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         def tokenID = fundNewProperty(actorAddress, 100.divisible, Ecosystem.MSC)
         def ownerA = newAddress
         def ownerB = newAddress
-        omniSend(actorAddress, ownerA, tokenID, 10.0)
-        omniSend(actorAddress, ownerB, tokenID, 10.0)
+        omniSend(actorAddress, ownerA, tokenID, 10.divisible)
+        omniSend(actorAddress, ownerB, tokenID, 10.divisible)
         generateBlock()
 
         then:
@@ -123,7 +122,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         omniGetBalance(ownerB, tokenID).balance == 10.0
 
         when: "sending the first STO transaction"
-        def firstTxid = omniSendSTO(actorAddress, tokenID, 30.0)
+        def firstTxid = omniSendSTO(actorAddress, tokenID, 30.divisible)
         generateBlock()
         def firstTx = omniGetSTO(firstTxid)
 
@@ -151,7 +150,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC - (2 * 0.00000001)
 
         when: "sending a second STO transaction"
-        def secondTxid = omniSendSTO(actorAddress, tokenID, 30.0)
+        def secondTxid = omniSendSTO(actorAddress, tokenID, 30.divisible)
         def blockHashOfSecond = generateAndGetBlockHash()
 
         and: "invalidating the block with the second STO transaction"
@@ -165,7 +164,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         // secondOrphanedTx.confirmations == -1 TODO: activate after Omni Core adjustment
 
         when: "creating a third STO transaction"
-        def thirdTxid = omniSendSTO(actorAddress, tokenID, 50.0)
+        def thirdTxid = omniSendSTO(actorAddress, tokenID, 50.divisible)
         generateBlock()
         def thirdTx = omniGetSTO(thirdTxid)
 

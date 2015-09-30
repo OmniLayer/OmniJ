@@ -27,7 +27,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
         def creationTx = omniGetTransaction(txid)
         assert (creationTx.valid)
         currencyID = new CurrencyID(creationTx.propertyid as Long)
-        nonCrowdsaleID = fundNewProperty(actorAddress, 500.0, PropertyType.DIVISIBLE, Ecosystem.TMSC)
+        nonCrowdsaleID = fundNewProperty(actorAddress, 500.divisible, Ecosystem.TMSC)
     }
 
     def "Closing a non-existing crowdsale is invalid"() {
@@ -62,7 +62,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
 
     def "Before closing a crowdsale, tokens can be purchased"() {
         when:
-        def txid = omniSend(otherAddress, actorAddress, CurrencyID.TMSC, 0.5)
+        def txid = omniSend(otherAddress, actorAddress, CurrencyID.TMSC, 0.5.divisible)
         generateBlock()
 
         then:
@@ -100,7 +100,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
 
     def "Sending tokens, after a crowdsale was closed, does not grant tokens"() {
         when:
-        def txid = omniSend(otherAddress, actorAddress, CurrencyID.TMSC, 0.5)
+        def txid = omniSend(otherAddress, actorAddress, CurrencyID.TMSC, 0.5.divisible)
         generateBlock()
 
         then:
