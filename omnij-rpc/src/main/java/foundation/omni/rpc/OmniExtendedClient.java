@@ -11,6 +11,7 @@ import foundation.omni.PropertyType;
 import foundation.omni.tx.RawTxBuilder;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 
 import java.io.IOException;
@@ -30,8 +31,8 @@ public class OmniExtendedClient extends OmniClient {
         super(config);
     }
 
-    public OmniExtendedClient(URI server, String rpcuser, String rpcpassword) throws IOException {
-        super(server, rpcuser, rpcpassword);
+    public OmniExtendedClient(NetworkParameters netParms, URI server, String rpcuser, String rpcpassword) throws IOException {
+        super(netParms, server, rpcuser, rpcpassword);
     }
 
     /**

@@ -11,6 +11,7 @@ import foundation.omni.json.conversion.OmniClientModule;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.params.RegTestParams;
 
@@ -61,11 +62,11 @@ public class OmniClient extends BitcoinExtendedClient {
     private DecimalFormat jsonDecimalFormat;
 
     public OmniClient(RPCConfig config) throws IOException {
-        this(config.getURI(), config.getUsername(), config.getPassword());
+        this(config.getNetParams(), config.getURI(), config.getUsername(), config.getPassword());
     }
 
-    public OmniClient(URI server, String rpcuser, String rpcpassword) throws IOException {
-        super(server, rpcuser, rpcpassword);
+    public OmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) throws IOException {
+        super(netParams, server, rpcuser, rpcpassword);
         mapper.registerModule(new OmniClientModule(RegTestParams.get()));
         // Create a DecimalFormat that fits our requirements
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
@@ -124,8 +125,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @return An object with detailed information
      */
     public Map<String, Object> omniGetProperty(CurrencyID currency) throws JsonRPCException, IOException {
-        List<Object> params = createParamList(currency.getValue());
-        Map<String, Object> result = send("getproperty_MP", params);
+        Map<String, Object> result = send("getproperty_MP", currency.getValue());
         return result;
     }
 
@@ -136,8 +136,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @return An object with detailed information
      */
     public Map<String, Object> omniGetCrowdsale(CurrencyID currency) throws JsonRPCException, IOException {
-        List<Object> params = createParamList(currency.getValue());
-        Map<String, Object> result = send("getcrowdsale_MP", params);
+        Map<String, Object> result = send("getcrowdsale_MP", currency.getValue());
         return result;
     }
 
@@ -170,8 +169,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public MPBalanceEntry omniGetBalance(Address address, CurrencyID currency)
             throws JsonRPCException, IOException, ParseException {
-        List<Object> params = createParamList(address, currency.getValue());
-        Map<String, String> result = send("getbalance_MP", params);
+        Map<String, String> result = send("getbalance_MP", address, currency.getValue());
         BigDecimal balanceBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("balance"));
         BigDecimal reservedBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("reserved"));
         MPBalanceEntry entry = new MPBalanceEntry(address, balanceBTC, reservedBTC);
@@ -186,8 +184,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public List<MPBalanceEntry> omniGetAllBalancesForId(CurrencyID currency)
             throws JsonRPCException, IOException, ParseException, AddressFormatException {
-        List<Object> params = createParamList(currency.getValue());
-        List<Map<String, Object>> untypedBalances = send("getallbalancesforid_MP", params);
+        List<Map<String, Object>> untypedBalances = send("getallbalancesforid_MP", currency.getValue());
         List<MPBalanceEntry> balances = new ArrayList<MPBalanceEntry>(untypedBalances.size());
         for (Map map : untypedBalances) {
             // TODO: Should this mapping be done by Jackson?
@@ -223,8 +220,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public List<MPBalanceEntry> omniGetAllBalancesForAddress(Address address)
             throws JsonRPCException, IOException, ParseException {
-        List<Object> params = createParamList(address);
-        List<Map<String, Object>> untypedBalances = send("getallbalancesforaddress_MP", params);
+        List<Map<String, Object>> untypedBalances = send("getallbalancesforaddress_MP", address);
         List<MPBalanceEntry> balances = new ArrayList<MPBalanceEntry>(untypedBalances.size());
         for (Map map : untypedBalances) {
             // TODO: might be extracted, given the similarities to the other balance calls
@@ -257,8 +253,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @return Information about the transaction
      */
     public Map<String, Object> omniGetTransaction(Sha256Hash txid) throws JsonRPCException, IOException {
-        List<Object> params = createParamList(txid.toString());
-        Map<String, Object> transaction = send("gettransaction_MP", params);
+        Map<String, Object> transaction = send("gettransaction_MP", txid);
         return transaction;
     }
 
@@ -269,8 +264,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @return A list of transaction hashes
      */
     public List<Sha256Hash> omniListBlockTransactions(Integer blockIndex) throws JsonRPCException, IOException {
-        List<Object> params = createParamList(blockIndex);
-        List<String> untypedTransactions = send("listblocktransactions_MP", params);
+        List<String> untypedTransactions = send("listblocktransactions_MP", blockIndex);
         List<Sha256Hash> transactions = new ArrayList<Sha256Hash>(untypedTransactions.size());
         for (String txid : untypedTransactions) {
             Sha256Hash hash = Sha256Hash.wrap(txid);
@@ -300,12 +294,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public Sha256Hash omniSendRawTx(Address fromAddress, String rawTxHex, Address referenceAddress)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, rawTxHex);
-        if (referenceAddress != null) {
-            params.add(referenceAddress);
-        }
-        String txid = send("sendrawtx_MP", params);
-        return Sha256Hash.wrap(txid);
+        return send("sendrawtx_MP", Sha256Hash.class, fromAddress, rawTxHex, referenceAddress);
     }
 
     /**
@@ -319,10 +308,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public Sha256Hash omniSend(Address fromAddress, Address toAddress, CurrencyID currency, OmniValue amount)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, toAddress, currency.getValue(), amount);
-        String txid = send("send_MP", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("send_MP", Sha256Hash.class, fromAddress, toAddress, currency.getValue(), amount);
     }
 
     /**
@@ -335,10 +321,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public Sha256Hash omniSendSTO(Address fromAddress, CurrencyID currency, OmniValue amount)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, currency.getValue(), amount);
-        String txid = send("sendtoowners_MP", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("sendtoowners_MP", Sha256Hash.class, fromAddress, currency.getValue(), amount);
     }
 
     /**
@@ -352,10 +335,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public Sha256Hash omniSendAll(Address fromAddress, Address toAddress, Ecosystem ecosystem)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, toAddress, ecosystem.getValue());
-        String txid = send("omni_sendall", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("omni_sendall", Sha256Hash.class, fromAddress, toAddress, ecosystem.getValue());
     }
 
     /**
@@ -375,12 +355,8 @@ public class OmniClient extends BitcoinExtendedClient {
                                       Coin amountDesired, Byte paymentWindow, Coin commitmentFee,
                                       Byte action)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, currencyId.getValue(),
-                amountForSale, amountDesired,
-                paymentWindow, commitmentFee, action);
-        String txid = send("omni_senddexsell", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("omni_senddexsell", Sha256Hash.class, fromAddress, currencyId.getValue(),
+                amountForSale, amountDesired, paymentWindow, commitmentFee, action);
     }
 
     /**
@@ -397,11 +373,8 @@ public class OmniClient extends BitcoinExtendedClient {
     public Sha256Hash omniSendDExAccept(Address fromAddress, Address toAddress, CurrencyID currencyId,
                                         OmniValue amount, Boolean override)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, toAddress, currencyId.getValue(),
+        return send("omni_senddexaccept", Sha256Hash.class, fromAddress, toAddress, currencyId.getValue(),
                 amount, override);
-        String txid = send("omni_senddexaccept", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
     }
 
     /**
@@ -418,11 +391,8 @@ public class OmniClient extends BitcoinExtendedClient {
     public Sha256Hash omniSendTrade(Address fromAddress, CurrencyID propertyForSale, OmniValue amountForSale,
                                     CurrencyID propertyDesired, OmniValue amountDesired)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, propertyForSale.getValue(),
+        return send("omni_sendtrade", Sha256Hash.class, fromAddress, propertyForSale.getValue(),
                 amountForSale, propertyDesired.getValue(), amountDesired);
-        String txid = send("omni_sendtrade", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
     }
 
     /**
@@ -440,11 +410,8 @@ public class OmniClient extends BitcoinExtendedClient {
                                                   OmniValue amountForSale, CurrencyID propertyDesired,
                                                   OmniValue amountDesired)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, propertyForSale.getValue(),
+        return send("omni_sendcanceltradesbyprice", Sha256Hash.class, fromAddress, propertyForSale.getValue(),
                 amountForSale, propertyDesired.getValue(), amountDesired);
-        String txid = send("omni_sendcanceltradesbyprice", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
     }
 
     /**
@@ -459,11 +426,8 @@ public class OmniClient extends BitcoinExtendedClient {
     public Sha256Hash omniSendCancelTradesByPair(Address fromAddress, CurrencyID propertyForSale,
                                                  CurrencyID propertyDesired)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, propertyForSale.getValue(),
+        return send("omni_sendcanceltradesbypair", Sha256Hash.class, fromAddress, propertyForSale.getValue(),
                 propertyDesired.getValue());
-        String txid = send("omni_sendcanceltradesbypair", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
     }
 
     /**
@@ -476,10 +440,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public Sha256Hash omniSendCancelAllTrades(Address fromAddress, Ecosystem ecosystem)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, ecosystem.getValue());
-        String txid = send("omni_sendcancelalltrades", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("omni_sendcancelalltrades", Sha256Hash.class, fromAddress, ecosystem.getValue());
     }
 
     /**
@@ -502,11 +463,8 @@ public class OmniClient extends BitcoinExtendedClient {
                                             CurrencyID previousId, String category, String subCategory, String name,
                                             String url, String data, OmniValue amount)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, ecosystem.getValue(), propertyType.getValue(),
-                previousId.getValue(), category, subCategory, name, url, data, amount);
-        String txid = send("omni_sendissuancefixed", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("omni_sendissuancefixed", Sha256Hash.class, fromAddress, ecosystem.getValue(),
+                propertyType.getValue(), previousId.getValue(), category, subCategory, name, url, data, amount);
     }
 
     /**
@@ -535,12 +493,9 @@ public class OmniClient extends BitcoinExtendedClient {
                                                 BigDecimal tokensPerUnit, Long deadline, Byte earlyBirdBonus,
                                                 Byte issuerBonus)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, ecosystem.getValue(), propertyType.getValue(),
-                previousId.getValue(), category, subCategory, name, url, data, propertyDesired.getValue(),
-                tokensPerUnit.toPlainString(), deadline, earlyBirdBonus, issuerBonus);
-        String txid = send("omni_sendissuancecrowdsale", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("omni_sendissuancecrowdsale", Sha256Hash.class, fromAddress, ecosystem.getValue(),
+                propertyType.getValue(), previousId.getValue(), category, subCategory, name, url, data,
+                propertyDesired.getValue(), tokensPerUnit.toPlainString(), deadline, earlyBirdBonus, issuerBonus);
     }
 
     /**
@@ -553,10 +508,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public Sha256Hash omniSendCloseCrowdsale(Address fromAddress, CurrencyID propertyId)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, propertyId.getValue());
-        String txid = send("omni_sendclosecrowdsale", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("omni_sendclosecrowdsale", Sha256Hash.class, fromAddress, propertyId.getValue());
     }
 
     /**
@@ -578,11 +530,8 @@ public class OmniClient extends BitcoinExtendedClient {
                                               CurrencyID previousId, String category, String subCategory, String name,
                                               String url, String data)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, ecosystem.getValue(), propertyType.getValue(),
-                previousId.getValue(), category, subCategory, name, url, data);
-        String txid = send("omni_sendissuancemanaged", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("omni_sendissuancemanaged", Sha256Hash.class, fromAddress, ecosystem.getValue(),
+                propertyType.getValue(), previousId.getValue(), category, subCategory, name, url, data);
     }
 
     /**
@@ -597,11 +546,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public Sha256Hash omniSendGrant(Address fromAddress, Address toAddress, CurrencyID propertyId, OmniValue amount)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, toAddress, propertyId.getValue(),
-                amount);
-        String txid = send("omni_sendgrant", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("omni_sendgrant", Sha256Hash.class, fromAddress, toAddress, propertyId.getValue(), amount);
     }
 
     /**
@@ -615,10 +560,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public Sha256Hash omniSendRevoke(Address fromAddress, CurrencyID propertyId, OmniValue amount)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, propertyId.getValue(), amount);
-        String txid = send("omni_sendrevoke", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("omni_sendrevoke", Sha256Hash.class, fromAddress, propertyId.getValue(), amount);
     }
 
     /**
@@ -632,10 +574,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public Sha256Hash omniSendChangeIssuer(Address fromAddress, Address toAddress, CurrencyID propertyId)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, toAddress, propertyId.getValue());
-        String txid = send("omni_sendchangeissuer", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("omni_sendchangeissuer", Sha256Hash.class, fromAddress, toAddress, propertyId.getValue());
     }
 
     /**
@@ -650,10 +589,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public Sha256Hash omniSendActivation(Address fromAddress, Short featureId, Integer block, Integer minVersion)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(fromAddress, featureId, block, minVersion);
-        String txid = send("omni_sendactivation", params);
-        Sha256Hash hash = Sha256Hash.wrap(txid);
-        return hash;
+        return send("omni_sendactivation", Sha256Hash.class, fromAddress, featureId, block, minVersion);
     }
 
     /**
@@ -664,8 +600,7 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public Map<String, Object> omniGetSTO(Sha256Hash txid) throws JsonRPCException, IOException {
         String filter = "*"; // no filter at all
-        List<Object> params = createParamList(txid.toString(), filter);
-        Map<String, Object> stoInfo = send("getsto_MP", params);
+        Map<String, Object> stoInfo = send("getsto_MP", txid, filter);
         return stoInfo;
     }
 
@@ -677,8 +612,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @since Omni Core 0.0.10
      */
     public Map<String, Object> omniGetTrade(Sha256Hash txid) throws JsonRPCException, IOException {
-        List<Object> params = createParamList(txid.toString());
-        Map<String, Object> trade = send("omni_gettrade", params);
+        Map<String, Object> trade = send("omni_gettrade", txid);
         return trade;
     }
 
@@ -690,8 +624,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @since Omni Core 0.0.10
      */
     public List<Map<String, Object>> omniGetOrderbook(CurrencyID propertyForSale) throws JsonRPCException, IOException {
-        List<Object> params = createParamList(propertyForSale.getValue());
-        List<Map<String, Object>> orders = send("omni_getorderbook", params);
+        List<Map<String, Object>> orders = send("omni_getorderbook", propertyForSale.getValue());
         return orders;
     }
 
@@ -705,8 +638,8 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public List<Map<String, Object>> omniGetOrderbook(CurrencyID propertyForSale, CurrencyID propertyDesired)
             throws JsonRPCException, IOException {
-        List<Object> params = createParamList(propertyForSale.getValue(), propertyDesired.getValue());
-        List<Map<String, Object>> orders = send("omni_getorderbook", params);
+        List<Map<String, Object>> orders = send("omni_getorderbook",
+                                    propertyForSale.getValue(), propertyDesired.getValue());
         return orders;
     }
 
@@ -717,8 +650,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @return A list of grants and revokes
      */
     public List<Map<String, Object>> omniGetGrants(CurrencyID propertyid) throws JsonRPCException, IOException {
-        List<Object> params = createParamList(propertyid.getValue());
-        List<Map<String, Object>> orders = send("getgrants_MP", params);
+        List<Map<String, Object>> orders = send("getgrants_MP", propertyid.getValue());
         return orders;
     }
 

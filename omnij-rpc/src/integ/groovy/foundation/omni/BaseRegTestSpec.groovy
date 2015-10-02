@@ -7,6 +7,8 @@ import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
 import foundation.omni.rpc.test.TestServers
 import foundation.omni.test.OmniTestSupport
+import org.bitcoinj.core.NetworkParameters
+import org.bitcoinj.params.RegTestParams
 import spock.lang.Specification
 
 
@@ -20,7 +22,7 @@ abstract class BaseRegTestSpec extends Specification implements OmniClientDelega
     static final protected String rpcTestPassword = testServers.rpcTestPassword;
 
     {
-        client = new OmniCLIClient(RPCURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
+        client = new OmniCLIClient(RegTestParams.get(), RPCURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
         fundingSource = new RegTestFundingSource(client)
     }
 

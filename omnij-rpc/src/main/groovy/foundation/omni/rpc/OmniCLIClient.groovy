@@ -3,6 +3,7 @@ package foundation.omni.rpc
 import com.msgilligan.bitcoinj.json.pojo.ServerInfo
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
+import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Sha256Hash
 import org.bitcoinj.core.Transaction
 import groovy.transform.CompileStatic
@@ -26,8 +27,8 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class OmniCLIClient extends OmniExtendedClient {
 
-    OmniCLIClient(URI server, String rpcuser, String rpcpassword) {
-        super(server, rpcuser, rpcpassword)
+    OmniCLIClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
+        super(netParams, server, rpcuser, rpcpassword)
     }
 
     /**
