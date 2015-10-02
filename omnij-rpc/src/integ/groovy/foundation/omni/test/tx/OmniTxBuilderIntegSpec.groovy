@@ -5,7 +5,7 @@ import foundation.omni.OmniDivisibleValue
 import foundation.omni.tx.OmniTxBuilder
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.TransactionOutput
-import org.bitcoinj.params.RegTestParams
+import spock.lang.Shared
 
 import static foundation.omni.CurrencyID.MSC
 
@@ -15,7 +15,13 @@ import static foundation.omni.CurrencyID.MSC
 class OmniTxBuilderIntegSpec extends BaseRegTestSpec {
     static final Coin startBTC = 10.btc
     static final OmniDivisibleValue startMSC = 1000.divisible
-    static final omniTxBuilder = new OmniTxBuilder(RegTestParams.get())
+
+    @Shared
+    def omniTxBuilder
+
+    def setup() {
+        omniTxBuilder = new OmniTxBuilder(netParams)
+    }
 
     def "Can simple send amount MSC from one address to another using OmniTxBuilder and sendraw RPC"() {
         given: "a fundedAddress with BTC/MSC and a newly created toAddress"

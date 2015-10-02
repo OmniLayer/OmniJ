@@ -8,12 +8,12 @@ import foundation.omni.Ecosystem;
 import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
 import foundation.omni.json.conversion.OmniClientModule;
+import foundation.omni.net.OmniNetworkParameters;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.params.RegTestParams;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -67,7 +67,7 @@ public class OmniClient extends BitcoinExtendedClient {
 
     public OmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) throws IOException {
         super(netParams, server, rpcuser, rpcpassword);
-        mapper.registerModule(new OmniClientModule(RegTestParams.get()));
+        mapper.registerModule(new OmniClientModule(getNetParams()));
         // Create a DecimalFormat that fits our requirements
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setGroupingSeparator(',');
@@ -75,6 +75,10 @@ public class OmniClient extends BitcoinExtendedClient {
         String pattern = "#,##0.0#";
         jsonDecimalFormat = new DecimalFormat(pattern, symbols);
         jsonDecimalFormat.setParseBigDecimal(true);
+    }
+
+    public OmniNetworkParameters getOmniNetParams() {
+        return OmniNetworkParameters.fromBitcoinParms(getNetParams());
     }
 
     /**

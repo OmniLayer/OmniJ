@@ -4,7 +4,6 @@ import foundation.omni.OmniDivisibleValue
 import foundation.omni.test.MoneyMan
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
-import foundation.omni.net.OmniRegTestParams
 import foundation.omni.rpc.OmniClient
 import org.bitcoinj.core.Coin
 import spock.lang.Shared
@@ -42,7 +41,7 @@ class MoneyManSpec extends BaseRegTestSpec {
         getBitcoinBalance(testAddress) == sendAmount + extraAmount + stdTxFee
 
         when: "We send the BTC to the moneyManAddress and generate a block"
-        txid = sendBitcoin(testAddress, OmniRegTestParams.get().moneyManAddress, sendAmount)
+        txid = sendBitcoin(testAddress, omniNetParams.moneyManAddress, sendAmount)
         generateBlock()
         def tx = client.getTransaction(txid)
 
