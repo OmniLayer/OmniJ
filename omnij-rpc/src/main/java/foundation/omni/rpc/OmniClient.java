@@ -82,7 +82,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @return An object with state information
      */
     public Map<String, Object> omniGetInfo() throws JsonRPCException, IOException {
-        Map<String, Object> result = send("getinfo_MP", null);
+        Map<String, Object> result = send("getinfo_MP");
         return result;
     }
 
@@ -92,7 +92,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @return A list with short information
      */
     public List<SmartPropertyListInfo> omniListProperties() throws JsonRPCException, IOException {
-        List<Map<String, Object>> result = send("listproperties_MP", null);
+        List<Map<String, Object>> result = send("listproperties_MP");
 
         List<SmartPropertyListInfo> propList = new ArrayList<SmartPropertyListInfo>();
         for (Map jsonProp : result) {
@@ -147,7 +147,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @return A list with information about active crowdsales
      */
     public List<Map<String, Object>> omniGetActiveCrowdsales() throws JsonRPCException, IOException {
-        List<Map<String, Object>> result = send("getactivecrowdsales_MP", null);
+        List<Map<String, Object>> result = send("getactivecrowdsales_MP");
         return result;
     }
 
@@ -157,7 +157,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @return A list with information about the active offers
      */
     public List<Map<String, Object>> omniGetActiveDExSells() throws JsonRPCException, IOException {
-        List<Map<String, Object>> result = send("getactivedexsells_MP", null);
+        List<Map<String, Object>> result = send("getactivedexsells_MP");
         return result;
     }
 
@@ -729,7 +729,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @since Omni Core 0.0.10
      */
     public Map<String, List<Map<String, Object>>> omniGetActivations() throws JsonRPCException, IOException {
-        Map<String, List<Map<String, Object>>> activations = send("omni_getactivations", null);
+        Map<String, List<Map<String, Object>>> activations = send("omni_getactivations");
         return activations;
     }
 

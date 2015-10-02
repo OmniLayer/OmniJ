@@ -6,7 +6,6 @@ import foundation.omni.dsl.categories.NumberCategory
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
-import com.msgilligan.bitcoinj.BTC
 import com.xlson.groovycsv.CsvParser
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
