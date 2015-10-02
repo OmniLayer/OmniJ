@@ -40,11 +40,11 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
 
         then:
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).amount as BigDecimal != orderAmountMSC.bigDecimalValue()
+        omniGetTransaction(txid).amount as BigDecimal != orderAmountMSC.numberValue()
         omniGetTransaction(txid).amount as BigDecimal == balanceAtStart // less than offered!
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == zeroAmount
+        omniGetBalance(actorAddress, CurrencyID.MSC).balance == 0.0
         omniGetBalance(actorAddress, CurrencyID.MSC).reserved == balanceAtStart
     }
 
@@ -65,7 +65,8 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         setup:
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.MSC).balance
-        def orderAmount = balanceAtStart * 5 // more than available!
+        def orderAmountMSC = OmniDivisibleValue.of(balanceAtStart * 5) // more than available!
+        def orderAmountBTC = Coin.valueOf(orderAmountMSC.willets)
         def blockBeforeActivation = activationBlock - 1
 
         while (getBlockCount() < blockBeforeActivation - 1) { // two extra, for transaction confirmation
@@ -74,16 +75,16 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
 
         when:
         def txid = createDexSellOffer(
-                actorAddress, CurrencyID.MSC, orderAmount, orderAmount, stdBlockSpan, stdCommitFee, actionNew)
+                actorAddress, CurrencyID.MSC, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
         generateBlock()
 
         then:
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).amount as BigDecimal != orderAmount
+        omniGetTransaction(txid).amount as BigDecimal != orderAmountMSC.numberValue()
         omniGetTransaction(txid).amount as BigDecimal == balanceAtStart // less than offered!
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == zeroAmount
+        omniGetBalance(actorAddress, CurrencyID.MSC).balance == 0.0
         omniGetBalance(actorAddress, CurrencyID.MSC).reserved == balanceAtStart
     }
 
@@ -91,11 +92,12 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         setup:
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.MSC).balance
-        def orderAmount = balanceAtStart * 5 // more than available!
+        def orderAmountMSC = OmniDivisibleValue.of(balanceAtStart * 5) // more than available!
+        def orderAmountBTC = Coin.valueOf(orderAmountMSC.willets)
 
         when:
         def txid = createDexSellOffer(
-                actorAddress, CurrencyID.MSC, orderAmount, orderAmount, stdBlockSpan, stdCommitFee, actionNew)
+                actorAddress, CurrencyID.MSC, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
         generateBlock()
 
         then:
@@ -103,25 +105,27 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
 
         and:
         omniGetBalance(actorAddress, CurrencyID.MSC).balance == balanceAtStart
-        omniGetBalance(actorAddress, CurrencyID.MSC).reserved == zeroAmount
+        omniGetBalance(actorAddress, CurrencyID.MSC).reserved == 0.0
     }
 
     def "The activation has no effect on orders, which offer exactly the balance that is available"() {
         setup:
         def actorAddress = createFundedAddress(startBTC, startMSC)
-        def orderAmount = omniGetBalance(actorAddress, CurrencyID.MSC).balance
+        def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.MSC).balance
+        def orderAmountMSC = OmniDivisibleValue.of(balanceAtStart)
+        def orderAmountBTC = Coin.valueOf(orderAmountMSC.willets)
 
         when:
         def txid = createDexSellOffer(
-                actorAddress, CurrencyID.MSC, orderAmount, orderAmount, stdBlockSpan, stdCommitFee, actionNew)
+                actorAddress, CurrencyID.MSC, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
         generateBlock()
 
         then:
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).amount as BigDecimal == orderAmount
+        omniGetTransaction(txid).amount as BigDecimal == orderAmountMSC.numberValue()
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == zeroAmount
-        omniGetBalance(actorAddress, CurrencyID.MSC).reserved == orderAmount
+        omniGetBalance(actorAddress, CurrencyID.MSC).balance == 0.0
+        omniGetBalance(actorAddress, CurrencyID.MSC).reserved == orderAmountMSC.numberValue()
     }
 }
