@@ -1,0 +1,22 @@
+sudo: false
+os: linux
+language: java
+
+env:
+  global:
+  - OMNICORE_HOST=https://s3.amazonaws.com/ci.omnicore.private/builds
+  - OMNICORE_FILE=omnicored-43a7014c57-untrusted.tar.gz
+  - OMNICORE_HASH=76f801b3c697bd860747c2b1421b7c85aed59d165eaebc34d2a71899b30a2971
+
+cache:
+  directories:
+  - $HOME/.gradle/caches
+
+install:
+  - wget "$OMNICORE_HOST/$OMNICORE_FILE"
+  - echo "$OMNICORE_HASH  $OMNICORE_FILE" | shasum --algorithm 256 --check
+  - mkdir -p copied-artifacts/src/
+  - tar zxvf $OMNICORE_FILE -C copied-artifacts/src/
+
+script:
+  - ./test-omni-integ-regtest.sh
