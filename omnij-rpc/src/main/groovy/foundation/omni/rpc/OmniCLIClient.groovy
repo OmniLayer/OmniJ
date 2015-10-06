@@ -1,6 +1,7 @@
 package foundation.omni.rpc
 
 import com.msgilligan.bitcoinj.json.pojo.ServerInfo
+import com.msgilligan.bitcoinj.json.pojo.WalletTransactionInfo
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.NetworkParameters
@@ -48,11 +49,11 @@ class OmniCLIClient extends OmniExtendedClient {
      * <p>
      * @param generate to enable generation, true; to disable, false.
      * @param genproclimit (optional) the number of logical processors to use. Defaults to 1; use -1 to use all available processors.
-     * @return Object         Bitcoin 0.10.0+: An array containing the block header hashes of the generated blocks or null
+     * @return Bitcoin 0.10.0+: A list containing the block header hashes of the generated blocks or null
      *                        if no blocks were generated
-     *                        Bitcoin 0.9.x: null
+     *                        Bitcoin 0.9.x: empty list
      */
-    Object setgenerate(Boolean generate, Long genproclimit = null) {
+    List<Sha256Hash> setgenerate(Boolean generate, Long genproclimit = null) {
         return setGenerate(generate, genproclimit);
     }
 
@@ -98,7 +99,7 @@ class OmniCLIClient extends OmniExtendedClient {
      * @param txid a transaction identifier (hash) for the transaction to get information about.
      * @return a Map (JSON object) describing the transaction
      */
-    Map<String, Object> gettransaction(Sha256Hash txid) {
+    WalletTransactionInfo gettransaction(Sha256Hash txid) {
         return getTransaction(txid)
     }
 
