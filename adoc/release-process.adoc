@@ -1,0 +1,33 @@
+= bitcoinj-addons Release Process
+
+== OmniJ Release Process
+
+. Update `CHANGELOG.adoc`
+. Set versions
+.. `build.gradle`
+.. omnij-dsl `ExtensionModule`
+.. `README.adoc`
+. Commit version bump and changelog.
+. Tag: `git tag -a v0.x.y -m "Release 0.x.y"`
+. Push: `git push --tags origin master`
+. Full build, test
+.. `./gradlew clean jenkinsBuild regTest`
+. Publish to Bintray: 
+.. `./gradlew bintrayUpload`
+.. Confirm publish of artifacts in Bintray Web UI.
+. TBD: Update github-pages site (not set up yet)
+
+== Announcements
+
+. Not yet.
+
+== After release
+
+. Set versions back to -SNAPSHOT
+.. `build.gradle`
+.. omnij-dsl `ExtensionModule`
+.. *Not* `README.adoc` -- it should match release version
+. Commit and push to master
+
+
+
