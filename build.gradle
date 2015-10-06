@@ -10,7 +10,7 @@ buildscript {
 }
 
 ext.groovyVersion = '2.4.5'
-ext.bitcoinjAddonsVersion = '0.0.10-SNAPSHOT'
+ext.bitcoinjAddonsVersion = '0.0.10'
 
 allprojects {
     apply plugin: 'java'
@@ -23,9 +23,8 @@ allprojects {
 
     repositories {
         jcenter()
-        mavenLocal()   // Uncomment to work with local snapshots
+//        mavenLocal()   // Uncomment to work with local snapshots
         maven { url 'https://dl.bintray.com/msgilligan/maven' } // bitcoinj-addons (RPC client)
-//      maven { url 'https://oss.sonatype.org/content/repositories/snapshots/'}  // bitcoinj snapshots
     }
 }
 
