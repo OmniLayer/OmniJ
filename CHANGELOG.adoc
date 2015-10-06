@@ -3,6 +3,23 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.3.3
+
+Released: 2015.10.06
+
+=== Potentially Breaking
+
+* `OmniClient` constructor now requires a *bitcoinj* `NetworkParameters` instance.
+
+=== Features/Changes
+
+* Update to *bitcoinj-addons* 0.0.10
+* Simplify `OmniClient`, `OmniExtendedClient` with better use of Jackson
+* `omniNetParams` read-only property on `OmniClient`
+* Add `omniCreateToken.groovy` demonstration script and integration test
+* Improvements to integration tests of *Omni Core*
+* RegTest tests now run on *TravisCI* - and on Pull Requests, too.
+
 == v0.3.2 
 
 Released: 2015.09.30
