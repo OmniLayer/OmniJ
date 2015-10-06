@@ -11,7 +11,6 @@ import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
 import foundation.omni.CurrencyID
 import foundation.omni.net.OmniNetworkParameters
-import foundation.omni.net.OmniRegTestParams
 import foundation.omni.rpc.OmniClientDelegate
 
 /**
@@ -41,7 +40,6 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
      * @return txid
      */
     Sha256Hash requestMSC(Address toAddress, OmniDivisibleValue requestedMSC, Boolean allowIntermediate) {
-        final OmniNetworkParameters params = OmniRegTestParams.get()  // Hardcoded for RegTest for now
         // For 1.0 BTC an amount of 100.0 MSC is generated, resulting in a minimal purchase amount of
         // 0.00000100 MSC for 0.00000001 BTC
         Coin btcForMSC = (requestedMSC.willets / 100).setScale(0, BigDecimal.ROUND_UP).satoshi
@@ -52,7 +50,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
         }
 
         requestBitcoin(toAddress, btcForMSC + stdTxFee)
-        def txid = sendBitcoin(toAddress, params.moneyManAddress, btcForMSC)
+        def txid = sendBitcoin(toAddress, omniNetParams.moneyManAddress, btcForMSC)
 
         if (actualMSC.willets != requestedMSC.willets) {
             def excessiveMSC = actualMSC - requestedMSC

@@ -31,7 +31,7 @@ abstract class BaseReorgSpec extends BaseRegTestSpec {
     Boolean checkTransactionValidity(Sha256Hash txid, Integer confirmationsLimit = 1)
     {
         try {
-            def transaction = getRawTransaction(txid, true) as Map<String, Object>
+            def transaction = getRawTransactionInfo(txid)
             if (transaction.confirmations < confirmationsLimit) {
                 return false
             }
