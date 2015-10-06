@@ -7,6 +7,7 @@ import com.msgilligan.bitcoinj.rpc.RPCURI
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
 import foundation.omni.rpc.test.TestServers
+import org.bitcoinj.params.MainNetParams
 import spock.lang.Specification
 
 /**
@@ -24,7 +25,7 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
     static final protected String rpcTestUser = testServers.rpcTestUser
     static final protected String rpcTestPassword = testServers.rpcTestPassword;
     {
-        client = new OmniCLIClient(RPCURI.defaultMainNetURI, rpcTestUser, rpcTestPassword)
+        client = new OmniCLIClient(MainNetParams.get(), RPCURI.defaultMainNetURI, rpcTestUser, rpcTestPassword)
     }
     static final Integer rpcWaitTimeoutSeconds = 3*60*60  // Wait up to 3 hours for RPC response
 
