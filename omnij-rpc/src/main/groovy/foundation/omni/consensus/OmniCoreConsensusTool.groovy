@@ -8,6 +8,8 @@ import foundation.omni.rpc.SmartPropertyListInfo
 import foundation.omni.rpc.test.TestServers
 import groovy.transform.TypeChecked
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.NetworkParameters
+import org.bitcoinj.params.MainNetParams
 
 /**
  * Command-line tool and class for fetching Omni Core consensus data
@@ -18,9 +20,10 @@ class OmniCoreConsensusTool extends ConsensusTool {
     /**
      * URI Constructor
      *
+     * @netParams *bitcoinj* NetworkParameters for server to connect to
      * @param coreURI URI to connect to - user/pass if required, must be encoded in URL
      */
-    OmniCoreConsensusTool(URI coreURI)
+    OmniCoreConsensusTool(NetworkParameters netParams, URI coreURI)
     {
         String user = ""
         String pass = ""
@@ -30,7 +33,7 @@ class OmniCoreConsensusTool extends ConsensusTool {
             user = userpass[0]
             pass = userpass[1]
         }
-        OmniClient client = new OmniClient(coreURI, user, pass)
+        OmniClient client = new OmniClient(netParams, coreURI, user, pass)
         this.client = client
     }
 
@@ -50,7 +53,7 @@ class OmniCoreConsensusTool extends ConsensusTool {
     }
 
     public static void main(String[] args) {
-        OmniClient client = new OmniClient(RPCURI.defaultMainNetURI, TestServers.rpcTestUser, TestServers.rpcTestPassword)
+        OmniClient client = new OmniClient(MainNetParams.get(), RPCURI.defaultMainNetURI, TestServers.instance.rpcTestUser, TestServers.instance.rpcTestPassword)
         OmniCoreConsensusTool tool = new OmniCoreConsensusTool(client)
         tool.run(args.toList())
     }
