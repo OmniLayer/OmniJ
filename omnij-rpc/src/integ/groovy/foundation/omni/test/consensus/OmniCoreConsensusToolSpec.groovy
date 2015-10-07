@@ -10,6 +10,7 @@ import spock.lang.Specification
 /**
  * Test Spec for OmniCoreConsensusTool
  */
+@Ignore("Remote core server is down")
 class OmniCoreConsensusToolSpec extends Specification {
     static final private TestServers testServers = TestServers.instance
 

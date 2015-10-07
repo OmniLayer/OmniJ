@@ -9,6 +9,7 @@ import static foundation.omni.CurrencyID.MaidSafeCoin
 /**
  * Local Omni Core vs Remote Omni Core consensus comparison for <code>MaidSafeCoin</code>
  */
+@Ignore("Remote core server is down")
 @Title("Compare Omni Core vs. Remote Omni Core (e.g. stable/last revision)")
 class CompareCoreCoreSpec extends CompareCoreCoreBaseSpec {
 
