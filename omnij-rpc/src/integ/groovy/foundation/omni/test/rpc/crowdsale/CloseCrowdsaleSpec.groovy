@@ -9,8 +9,8 @@ import spock.lang.Shared
 
 class CloseCrowdsaleSpec extends BaseRegTestSpec {
 
-    final static BigDecimal startBTC = 0.01
-    final static BigDecimal startMSC = 1.00
+    final static startBTC = 0.01.btc
+    final static startMSC = 1.divisible
 
     @Shared Address actorAddress
     @Shared Address otherAddress

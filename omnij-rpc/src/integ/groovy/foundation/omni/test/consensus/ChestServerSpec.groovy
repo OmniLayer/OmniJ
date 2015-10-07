@@ -51,7 +51,7 @@ class ChestServerSpec extends Specification {
 
         when: "we convert the list to a map"
         // This may be unnecessary if we can assume the property list is ordered by propertyid
-        Map<CurrencyID, SmartPropertyListInfo> props = properties.collect { [it.id, it] }.collectEntries()
+        Map<CurrencyID, SmartPropertyListInfo> props = properties.collect { [it.propertyid, it] }.collectEntries()
 
         then: "MSC and TMSC are not returned in Chest property list"
         props[MSC] == null

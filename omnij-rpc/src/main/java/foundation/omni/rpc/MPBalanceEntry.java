@@ -1,5 +1,6 @@
 package foundation.omni.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bitcoinj.core.Address;
 
 import java.math.BigDecimal;
@@ -11,10 +12,12 @@ import java.math.BigDecimal;
  */
 public class MPBalanceEntry {
     private Address address;
-    private BigDecimal balance;
+    private BigDecimal balance;     // TODO: balance and reserved should be type OmniValue but we don't now PropertyType
     private BigDecimal reserved;
 
-    public MPBalanceEntry(Address address, BigDecimal balance, BigDecimal reserved) {
+    public MPBalanceEntry(@JsonProperty("address")  Address address,
+                          @JsonProperty("balance")  BigDecimal balance,
+                          @JsonProperty("reserved") BigDecimal reserved) {
         this.address = address;
         this.balance = balance;
         this.reserved = reserved;

@@ -39,10 +39,10 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         generateBlock()
 
         propertyListAtStart = omniListProperties()
-        def mainProperties = propertyListAtStart.findAll { it.id.ecosystem == Ecosystem.MSC }
-        def testProperties = propertyListAtStart.findAll { it.id.ecosystem == Ecosystem.TMSC }
-        def lastMainPropertyID = mainProperties.last().id
-        def lastTestPropertyID = testProperties.last().id
+        def mainProperties = propertyListAtStart.findAll { it.propertyid.ecosystem == Ecosystem.MSC }
+        def testProperties = propertyListAtStart.findAll { it.propertyid.ecosystem == Ecosystem.TMSC }
+        def lastMainPropertyID = mainProperties.last().propertyid
+        def lastTestPropertyID = testProperties.last().propertyid
 
         if (lastMainPropertyID == CurrencyID.MSC) {
             nextMainPropertyID = new CurrencyID(CurrencyID.TMSC_VALUE + 1)

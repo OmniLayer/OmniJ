@@ -21,8 +21,8 @@ class MultiPropertyComparison {
     }
 
     void compareAllProperties() {
-        Set<CurrencyID> props1 = f1.listProperties().collect{it.id}.toSet()
-        Set<CurrencyID> props2 = f2.listProperties().collect{it.id}.toSet()
+        Set<CurrencyID> props1 = f1.listProperties().collect{it.propertyid}.toSet()
+        Set<CurrencyID> props2 = f2.listProperties().collect{it.propertyid}.toSet()
         compareProperties(props1 + props2)
     }
 

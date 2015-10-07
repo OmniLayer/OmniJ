@@ -52,23 +52,23 @@ class OmniwalletServerSpec extends Specification {
 
         when: "we convert the list to a map"
         // This may be unnecessary if we can assume the property list is ordered by propertyid
-        Map<CurrencyID, SmartPropertyListInfo> props = properties.collect{[it.id, it]}.collectEntries()
+        Map<CurrencyID, SmartPropertyListInfo> props = properties.collect{[it.propertyid, it]}.collectEntries()
 
         then: "we can check MSC and TMSC are as expected"
-        props[MSC].id == MSC
-        props[MSC].id.ecosystem == Ecosystem.MSC
+        props[MSC].propertyid == MSC
+        props[MSC].propertyid.ecosystem == Ecosystem.MSC
         props[MSC].name == "Mastercoin" // Note: Omni Core returns "MasterCoin" with a capital-C
         props[MSC].category == ""
-        props[MSC].subCategory == ""
+        props[MSC].subcategory == ""
         props[MSC].data == ""
         props[MSC].url == ""
         props[MSC].divisible == null
 
-        props[TMSC].id == TMSC
-        props[TMSC].id.ecosystem == Ecosystem.TMSC
+        props[TMSC].propertyid == TMSC
+        props[TMSC].propertyid.ecosystem == Ecosystem.TMSC
         props[TMSC].name == "Test Mastercoin" // Note: Omni Core returns "Mastercoin" with a capital-C
         props[TMSC].category == ""
-        props[TMSC].subCategory == ""
+        props[TMSC].subcategory == ""
         props[TMSC].data == ""
         props[TMSC].url == ""
         props[TMSC].divisible == null

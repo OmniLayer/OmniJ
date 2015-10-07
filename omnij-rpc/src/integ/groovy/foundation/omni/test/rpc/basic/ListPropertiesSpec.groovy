@@ -25,25 +25,25 @@ class ListPropertiesSpec extends BaseRegTestSpec {
 
         when: "we convert the list to a map"
         // This may be unnecessary if we can assume the property list is ordered by propertyid
-        Map<CurrencyID, SmartPropertyListInfo> props = properties.collect{[it.id, it]}.collectEntries()
+        Map<CurrencyID, SmartPropertyListInfo> props = properties.collect{[it.propertyid, it]}.collectEntries()
 
         then: "we can check MSC and TMSC are as expected"
-        props[MSC].id == MSC
-        props[MSC].id.ecosystem == Ecosystem.MSC
+        props[MSC].propertyid == MSC
+        props[MSC].propertyid.ecosystem == Ecosystem.MSC
         props[MSC].name == "MasterCoin"
         props[MSC].category == "N/A"
-        props[MSC].subCategory == "N/A"
+        props[MSC].subcategory == "N/A"
         props[MSC].data == "***data***"
         props[MSC].url == "www.mastercoin.org"
-        props[MSC].divisible == true
+        props[MSC].divisible
 
-        props[TMSC].id == TMSC
-        props[TMSC].id.ecosystem == Ecosystem.TMSC
+        props[TMSC].propertyid == TMSC
+        props[TMSC].propertyid.ecosystem == Ecosystem.TMSC
         props[TMSC].name == "Test MasterCoin"
         props[TMSC].category == "N/A"
-        props[TMSC].subCategory == "N/A"
+        props[TMSC].subcategory == "N/A"
         props[TMSC].data == "***data***"
         props[TMSC].url == "www.mastercoin.org"
-        props[TMSC].divisible == true
+        props[TMSC].divisible
     }
 }
