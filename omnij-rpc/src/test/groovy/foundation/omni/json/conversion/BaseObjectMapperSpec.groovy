@@ -26,5 +26,5 @@ abstract class BaseObjectMapperSpec extends Specification {
      * Override this class to configure your module
      * @param testModule
      */
-    abstract configureModule(testModule)
+    abstract configureModule(SimpleModule testModule)
 }

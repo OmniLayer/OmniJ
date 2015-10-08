@@ -3,7 +3,7 @@ package foundation.omni;
 /**
  * Number type to represent a Omni Protocol Currency ID
  */
-public final class CurrencyID implements Cloneable {
+public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     private final long value;
 
     public static final long   MIN_VALUE = 0;
@@ -87,4 +87,8 @@ public final class CurrencyID implements Cloneable {
         return "CurrencyID:" + Long.toString(value);
     }
 
+    @Override
+    public int compareTo(CurrencyID o) {
+        return Long.compare(this.value, o.value);
+    }
 }

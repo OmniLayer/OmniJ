@@ -1,6 +1,7 @@
 package foundation.omni.consensus
 
 import foundation.omni.net.OmniMainNetParams
+import foundation.omni.rpc.BalanceEntry
 import org.bitcoinj.core.Address
 import spock.lang.Specification
 
@@ -14,10 +15,10 @@ class ConsensusEntryPairSpec extends Specification {
 
     def "is immutable"() {
         setup:
-        def pair = new ConsensusEntryPair(testAddress, new ConsensusEntry(0,0), new ConsensusEntry(0,0))
+        def pair = new ConsensusEntryPair(testAddress, new BalanceEntry(0,0), new BalanceEntry(0,0))
 
         when: "we try to change it"
-        pair.entry1 = new ConsensusEntry(1,1)
+        pair.entry1 = new BalanceEntry(1,1)
 
         then: "an exception is thrown and value isn't changed"
         ReadOnlyPropertyException e = thrown()
@@ -25,7 +26,7 @@ class ConsensusEntryPairSpec extends Specification {
 
     def "is iterable"() {
         setup:
-        def pair = new ConsensusEntryPair(testAddress, new ConsensusEntry(0,0), new ConsensusEntry(1,1))
+        def pair = new ConsensusEntryPair(testAddress, new BalanceEntry(0,0), new BalanceEntry(1,1))
 
         when: "we iterate it"
         def objs = []
@@ -36,8 +37,8 @@ class ConsensusEntryPairSpec extends Specification {
         then: "it worked"
         objs.size() == 3
         objs[0] == testAddress
-        objs[1] == new ConsensusEntry(0,0)
-        objs[2] == new ConsensusEntry(1,1)
+        objs[1] == new BalanceEntry(0,0)
+        objs[2] == new BalanceEntry(1,1)
     }
 
 }

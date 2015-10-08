@@ -22,9 +22,9 @@ import java.net.URI;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 
 // TODO: add missing RPCs:
 // - listtransactions_MP
@@ -151,67 +151,31 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param currency The identifier of the token to look up
      * @return The available and reserved balance
      */
-    public MPBalanceEntry omniGetBalance(Address address, CurrencyID currency)
+    public BalanceEntry omniGetBalance(Address address, CurrencyID currency)
             throws JsonRPCException, IOException, ParseException {
-        Map<String, String> result = send("getbalance_MP", address, currency.getValue());
-        BigDecimal balanceBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("balance"));
-        BigDecimal reservedBTC = (BigDecimal) jsonDecimalFormat.parse(result.get("reserved"));
-        // For consistency with omniGetAllBalancesForId we return  MPBalanceEntry even
-        // though the actual RPC doesn't return the address.
-        // TODO: Should we change the return type to not include the address?
-        MPBalanceEntry entry = new MPBalanceEntry(address, balanceBTC, reservedBTC);
-        return entry;
+        return send("getbalance_MP", BalanceEntry.class, address, currency.getValue());
     }
 
     /**
      * Returns a list of balances for a given identifier.
      *
      * @param currency The identifier of the token to look up
-     * @return A list containing addresses, and the associated available and reserved balances
+     * @return A Sorted Map indexed by addresses to available and reserved balances
      */
-    public List<MPBalanceEntry> omniGetAllBalancesForId(CurrencyID currency)
+    public SortedMap<Address, BalanceEntry> omniGetAllBalancesForId(CurrencyID currency)
             throws JsonRPCException, IOException, ParseException, AddressFormatException {
-        JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, MPBalanceEntry.class);
-        return send("getallbalancesforid_MP", resultType, currency);
+        return send("getallbalancesforid_MP", AddressBalanceEntries.class, currency);
     }
 
     /**
      * Returns a list of all token balances for a given address.
      *
-     * TODO: This returns a list of MPBalanceEntry records which (redundantly)
-     * contain the address in each record and which *don't* contain the propertyid
-     * which *does* vary with each record. This method is currently unused so that's
-     * probably why nobody noticed.
-     *
      * @param address The address to look up
-     * @return A list containing the available and reserved balances
+     * @return A Sorted Map indexed by currency/propertyid to available and reserved balances
      */
-    public List<MPBalanceEntry> omniGetAllBalancesForAddress(Address address)
+    public SortedMap<CurrencyID, BalanceEntry> omniGetAllBalancesForAddress(Address address)
             throws JsonRPCException, IOException, ParseException {
-        List<Map<String, Object>> untypedBalances = send("getallbalancesforaddress_MP", address);
-        List<MPBalanceEntry> balances = new ArrayList<MPBalanceEntry>(untypedBalances.size());
-        for (Map map : untypedBalances) {
-            // TODO: might be extracted, given the similarities to the other balance calls
-            BigDecimal balance;
-            BigDecimal reserved;
-            Object balanceJson = map.get("balance");
-            Object reservedJson = map.get("reserved");
-            /* Assume that if balanceJson field is of type String, so is reserved */
-            /* The RPCs have been changing here, but currently they should be using Strings */
-            if (balanceJson instanceof String) {
-                balance = (BigDecimal) jsonDecimalFormat.parse((String) balanceJson);
-                reserved = (BigDecimal) jsonDecimalFormat.parse((String) reservedJson);
-            } else if (balanceJson instanceof Integer) {
-                balance = new BigDecimal((Integer) balanceJson);
-                reserved = new BigDecimal((Integer) reservedJson);
-
-            } else {
-                throw new RuntimeException("unexpected data type");
-            }
-            MPBalanceEntry balanceEntry = new MPBalanceEntry(address, balance, reserved);
-            balances.add(balanceEntry);
-        }
-        return balances;
+        return send("getallbalancesforaddress_MP", PropertyBalanceEntries.class, address);
     }
 
     /**
@@ -624,5 +588,4 @@ public class OmniClient extends BitcoinExtendedClient {
         Map<String, List<Map<String, Object>>> activations = send("omni_getactivations");
         return activations;
     }
-
 }

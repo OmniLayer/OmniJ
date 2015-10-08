@@ -5,12 +5,12 @@ import com.msgilligan.bitcoinj.cli.CliOptions
 import com.msgilligan.bitcoinj.rpc.JsonRPCException
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.ChestConsensusTool
-import foundation.omni.consensus.ConsensusEntry
 import foundation.omni.consensus.ConsensusSnapshot
 import foundation.omni.consensus.ConsensusTool
 import foundation.omni.consensus.MultiPropertyComparison
 import foundation.omni.consensus.OmniCoreConsensusTool
 import foundation.omni.consensus.OmniwalletConsensusTool
+import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.OmniClient
 import org.apache.commons.cli.OptionBuilder
 import org.apache.commons.cli.OptionGroup
@@ -115,7 +115,7 @@ class ConsensusCLI extends CliCommand {
     }
 
     void output(ConsensusSnapshot snap, PrintWriter writer, boolean tsv) {
-        snap.entries.each { Address address, ConsensusEntry entry ->
+        snap.entries.each { Address address, BalanceEntry entry ->
             String balance = entry.balance.toPlainString()
             String reserved = entry.reserved.toPlainString()
             if (tsv) {

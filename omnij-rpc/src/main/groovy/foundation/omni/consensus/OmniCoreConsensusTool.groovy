@@ -2,7 +2,7 @@ package foundation.omni.consensus
 
 import com.msgilligan.bitcoinj.rpc.RPCURI
 import foundation.omni.CurrencyID
-import foundation.omni.rpc.MPBalanceEntry
+import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.OmniClient
 import foundation.omni.rpc.SmartPropertyListInfo
 import foundation.omni.rpc.test.TestServers
@@ -58,25 +58,10 @@ class OmniCoreConsensusTool extends ConsensusTool {
         tool.run(args.toList())
     }
 
-    private SortedMap<Address, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
-        List<MPBalanceEntry> balances = client.omniGetAllBalancesForId(currencyID)
-
-        TreeMap<Address, ConsensusEntry> map = [:]
-
-        balances.each { MPBalanceEntry item ->
-
-            Address address = item.address
-            ConsensusEntry entry = itemToEntry(item)
-
-            if (address != "" && entry.balance > 0) {
-                map.put(address, entry)
-            }
-        }
-        return map;
-    }
-
-    private ConsensusEntry itemToEntry(MPBalanceEntry item) {
-        return new ConsensusEntry(balance: item.balance, reserved:item.reserved)
+    private SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
+        SortedMap<Address, BalanceEntry> balances = client.omniGetAllBalancesForId(currencyID)
+        // TODO: Filter out empty address strings or 0 balances?
+        return balances;
     }
 
     @Override
@@ -98,7 +83,7 @@ class OmniCoreConsensusTool extends ConsensusTool {
          */
         Integer beforeBlockHeight = currentBlockHeight()
         Integer curBlockHeight
-        SortedMap<Address, ConsensusEntry> entries
+        SortedMap<Address, BalanceEntry> entries
         while (true) {
             entries = this.getConsensusForCurrency(currencyID)
             curBlockHeight = currentBlockHeight()

@@ -1,0 +1,46 @@
+package foundation.omni.json.conversion;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import foundation.omni.rpc.AddressBalanceEntries;
+import foundation.omni.rpc.AddressBalanceEntry;
+import foundation.omni.rpc.BalanceEntry;
+
+import java.io.IOException;
+
+/**
+ *
+ */
+public class PropertyBalanceEntriesDeserializer extends StdDeserializer<AddressBalanceEntries> {
+
+    public PropertyBalanceEntriesDeserializer() { super(AddressBalanceEntries.class); }
+
+    @Override
+    public AddressBalanceEntries deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+        AddressBalanceEntries result = new AddressBalanceEntries();
+        JsonDeserializer<Object> entryDeserializer = ctxt.findRootValueDeserializer(ctxt.constructType(AddressBalanceEntry.class));
+        JsonToken t;
+        try {
+            while ((t = jp.nextToken()) != JsonToken.END_ARRAY) {
+                // Note: must handle null explicitly here; value deserializers won't
+                AddressBalanceEntry entry;
+
+                if (t == JsonToken.START_OBJECT) {
+                    entry = (AddressBalanceEntry) entryDeserializer.deserialize(jp, ctxt);
+                    result.put(entry.getAddress(), new BalanceEntry(entry.getBalance(), entry.getReserved()));
+                } else {
+                    throw new JsonMappingException("unexpected token");
+                }
+            }
+        } catch (Exception e) {
+            throw new JsonMappingException("error", e);
+        }
+
+        return result;
+    }
+}

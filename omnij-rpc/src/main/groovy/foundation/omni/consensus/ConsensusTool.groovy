@@ -1,6 +1,7 @@
 package foundation.omni.consensus
 
 import foundation.omni.CurrencyID
+import foundation.omni.rpc.BalanceEntry
 import groovy.transform.TypeChecked
 import org.bitcoinj.core.Address
 
@@ -36,7 +37,7 @@ abstract class ConsensusTool implements ConsensusFetcher {
     }
 
     void output(ConsensusSnapshot snap, PrintWriter writer, boolean tsv) {
-        snap.entries.each { Address address, ConsensusEntry entry ->
+        snap.entries.each { Address address, BalanceEntry entry ->
             if (tsv) {
                 writer.println("${address}\t${entry.balance}\t${entry.reserved}")
             } else {
