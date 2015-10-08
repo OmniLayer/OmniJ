@@ -49,7 +49,7 @@ class ChestConsensusTool extends ConsensusTool {
             Address address = new Address(null, item.address)
             BalanceEntry entry = itemToEntry(item)
 
-            if (address != "" && entry.balance > 0) {
+            if (address != "" && (entry.balance > 0 || entry.reserved > 0)) {
                 map.put(address, entry)
             }
         }
