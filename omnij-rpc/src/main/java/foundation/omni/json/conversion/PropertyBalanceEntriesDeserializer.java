@@ -10,29 +10,31 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import foundation.omni.rpc.AddressBalanceEntries;
 import foundation.omni.rpc.AddressBalanceEntry;
 import foundation.omni.rpc.BalanceEntry;
+import foundation.omni.rpc.PropertyBalanceEntries;
+import foundation.omni.rpc.PropertyBalanceEntry;
 
 import java.io.IOException;
 
 /**
  *
  */
-public class PropertyBalanceEntriesDeserializer extends StdDeserializer<AddressBalanceEntries> {
+public class PropertyBalanceEntriesDeserializer extends StdDeserializer<PropertyBalanceEntries> {
 
     public PropertyBalanceEntriesDeserializer() { super(AddressBalanceEntries.class); }
 
     @Override
-    public AddressBalanceEntries deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        AddressBalanceEntries result = new AddressBalanceEntries();
-        JsonDeserializer<Object> entryDeserializer = ctxt.findRootValueDeserializer(ctxt.constructType(AddressBalanceEntry.class));
+    public PropertyBalanceEntries deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+        PropertyBalanceEntries result = new PropertyBalanceEntries();
+        JsonDeserializer<Object> entryDeserializer = ctxt.findRootValueDeserializer(ctxt.constructType(PropertyBalanceEntry.class));
         JsonToken t;
         try {
             while ((t = jp.nextToken()) != JsonToken.END_ARRAY) {
                 // Note: must handle null explicitly here; value deserializers won't
-                AddressBalanceEntry entry;
+                PropertyBalanceEntry entry;
 
                 if (t == JsonToken.START_OBJECT) {
-                    entry = (AddressBalanceEntry) entryDeserializer.deserialize(jp, ctxt);
-                    result.put(entry.getAddress(), new BalanceEntry(entry.getBalance(), entry.getReserved()));
+                    entry = (PropertyBalanceEntry) entryDeserializer.deserialize(jp, ctxt);
+                    result.put(entry.getPropertyid(), new BalanceEntry(entry.getBalance(), entry.getReserved()));
                 } else {
                     throw new JsonMappingException("unexpected token");
                 }
