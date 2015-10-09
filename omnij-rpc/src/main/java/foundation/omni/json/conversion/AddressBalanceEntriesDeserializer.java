@@ -16,6 +16,7 @@ import foundation.omni.rpc.AddressBalanceEntry;
 import foundation.omni.rpc.BalanceEntry;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  *
@@ -36,7 +37,10 @@ public class AddressBalanceEntriesDeserializer extends StdDeserializer<AddressBa
 
                 if (t == JsonToken.START_OBJECT) {
                     entry = (AddressBalanceEntry) entryDeserializer.deserialize(jp, ctxt);
-                    result.put(entry.getAddress(), new BalanceEntry(entry.getBalance(), entry.getReserved()));
+                    if (isNonZeroEntry(entry)) {
+                        // Only add entries with balance or reserved greater than zero.
+                        result.put(entry.getAddress(), new BalanceEntry(entry.getBalance(), entry.getReserved()));
+                    }
                 } else {
                     throw new JsonMappingException("unexpected token");
                 }
@@ -46,5 +50,9 @@ public class AddressBalanceEntriesDeserializer extends StdDeserializer<AddressBa
         }
 
         return result;
+    }
+
+    private boolean isNonZeroEntry(AddressBalanceEntry entry) {
+        return entry.getBalance().compareTo(BigDecimal.ZERO) == 1 || entry.getReserved().compareTo(BigDecimal.ZERO) == 1;
     }
 }
