@@ -1,5 +1,6 @@
 package foundation.omni.consensus
 
+import foundation.omni.rpc.BalanceEntry
 import groovy.transform.CompileStatic
 import groovy.transform.Immutable
 import foundation.omni.CurrencyID
@@ -31,5 +32,5 @@ class ConsensusSnapshot {
     /**
      * Consensus entries for all addresses, sorted by address
      */
-    SortedMap<Address, ConsensusEntry> entries
+    SortedMap<Address, BalanceEntry> entries
 }

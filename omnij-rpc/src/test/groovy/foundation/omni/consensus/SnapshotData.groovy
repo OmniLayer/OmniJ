@@ -1,6 +1,7 @@
 package foundation.omni.consensus
 
 import foundation.omni.CurrencyID
+import foundation.omni.rpc.BalanceEntry
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.ECKey
 import org.bitcoinj.params.MainNetParams
@@ -16,12 +17,12 @@ class SnapshotData {
     static Address b = new ECKey().toAddress(MainNetParams.get())
     static Address c = new ECKey().toAddress(MainNetParams.get())
 
-    static TreeMap<Address, ConsensusEntry> empty = new TreeMap([:])
-    static TreeMap<Address, ConsensusEntry> small1 = new TreeMap([(a): new ConsensusEntry(balance: 0, reserved: 0),
-                                                      (b): new ConsensusEntry(balance: 1.5G, reserved: 1.5G),
-                                                      (c): new ConsensusEntry(balance: 1G, reserved: 0)])
-    static TreeMap<Address, ConsensusEntry> small2 = new TreeMap([(a): new ConsensusEntry(balance: 0, reserved: 0),
-                                                      (b): new ConsensusEntry(balance: 1.5G, reserved: 0.5G)])
+    static TreeMap<Address, BalanceEntry> empty = new TreeMap([:])
+    static TreeMap<Address, BalanceEntry> small1 = new TreeMap([(a): new BalanceEntry(0, 0),
+                                                      (b): new BalanceEntry(1.5,  1.5),
+                                                      (c): new BalanceEntry(1,  0)])
+    static TreeMap<Address, BalanceEntry> small2 = new TreeMap([(a): new BalanceEntry(0,  0),
+                                                      (b): new BalanceEntry(1.5,  0.5)])
 
     static ConsensusSnapshot empty() {
         return createSnapshot("empty", empty)
@@ -35,7 +36,7 @@ class SnapshotData {
         return createSnapshot("small2", small2)
     }
 
-    static ConsensusSnapshot createSnapshot(String name, SortedMap<String, ConsensusEntry> entries) {
+    static ConsensusSnapshot createSnapshot(String name, SortedMap<Address, BalanceEntry> entries) {
         def snap = new ConsensusSnapshot(CurrencyID.MSC, -1, TestDataConsensusSource, testDataURI(name), entries)
         return snap
     }

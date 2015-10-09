@@ -25,4 +25,5 @@ public class CurrencyIDDeserializer extends JsonDeserializer<CurrencyID> {
             default:
                 throw ctxt.mappingException(Sha256Hash.class, token);
         }
-    }}
+    }
+}

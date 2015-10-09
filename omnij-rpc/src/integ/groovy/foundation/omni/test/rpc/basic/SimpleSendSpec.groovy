@@ -14,13 +14,13 @@ class SimpleSendSpec extends BaseRegTestSpec {
     def richAddress = getNewAddress()  // Should be an address we know has a > 0 balance,
                                               //      ... otherwise it will fail
                                               // We need to seed the address with coins
-    final static BigDecimal faucetBTC = 10.0
-    final static BigDecimal faucetMSC = 1000.0
+    final static faucetBTC = 10.btc
+    final static faucetMSC = 1000.divisible
 
     @Unroll
     def "Can simple send #amount MSC from one address to another"() {
         setup:
-        def faucetAddress = createFundedAddress(faucetBTC.btc, fundingMSC.divisible)
+        def faucetAddress = createFundedAddress(faucetBTC, faucetMSC)
 
         when: "we send MSC"
         def startBalance = omniGetBalance(faucetAddress, MSC).balance
@@ -104,7 +104,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         // treated as invalid by the Omni Core parser
 
         given: "a new, empty destination address"
-        def fundedAddress = createFundedAddress(faucetBTC, 1.0)
+        def fundedAddress = createFundedAddress(faucetBTC, 1.divisible)
         def toAddress = getNewAddress()
 
         when: "the amount to transfer exceeds the number owned and available by the sending address"
@@ -119,7 +119,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         // treated as invalid by the Omni Core parser
 
         given: "a new, empty destination address"
-        def fundedAddress = createFundedAddress(faucetBTC, 1.0)
+        def fundedAddress = createFundedAddress(faucetBTC, 1.divisible)
         def toAddress = getNewAddress()
 
         when: "the specified currency identifier is non-existent"

@@ -1,5 +1,6 @@
 package foundation.omni.consensus
 
+import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
 import groovy.json.JsonSlurper
 import foundation.omni.CurrencyID
@@ -35,34 +36,34 @@ class ChestConsensusTool extends ConsensusTool {
         tool.run(args.toList())
     }
 
-    private SortedMap<Address, ConsensusEntry> getConsensusForCurrency(CurrencyID currencyID) {
+    private SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
         def slurper = new JsonSlurper()
         String httpFile = "${file}?currencyid=${currencyID.getValue()}"
         def consensusURL = new URL(proto, host, port, httpFile)
 //        def balancesText =  consensusURL.getText()
         def balances = slurper.parse(consensusURL)
 
-        TreeMap<Address, ConsensusEntry> map = [:]
+        TreeMap<Address, BalanceEntry> map = [:]
         balances.each { item ->
 
             Address address = new Address(null, item.address)
-            ConsensusEntry entry = itemToEntry(item)
+            BalanceEntry entry = itemToEntry(item)
 
-            if (address != "" && entry.balance > 0) {
+            if (address != "" && (entry.balance > 0 || entry.reserved > 0)) {
                 map.put(address, entry)
             }
         }
         return map;
     }
 
-    private ConsensusEntry itemToEntry(Object item) {
+    private BalanceEntry itemToEntry(Object item) {
         BigDecimal balance = jsonToBigDecimal(item.balance)
         BigDecimal reserved = jsonToBigDecimal(item.reserved)
-        return new ConsensusEntry(balance: balance, reserved:reserved)
+        return new BalanceEntry(balance, reserved)
     }
 
     /* We're expecting input type String here */
-    private BigDecimal jsonToBigDecimal(Object balanceIn) {
+    private BigDecimal jsonToBigDecimal(String balanceIn) {
         BigDecimal balanceOut = new BigDecimal(balanceIn).setScale(8)
         return balanceOut
     }
@@ -125,7 +126,7 @@ class ChestConsensusTool extends ConsensusTool {
 
         Integer beforeBlockHeight = currentBlockHeight()
         Integer curBlockHeight
-        SortedMap<Address, ConsensusEntry> entries
+        SortedMap<Address, BalanceEntry> entries
         while (true) {
             entries = this.getConsensusForCurrency(currencyID)
             curBlockHeight = currentBlockHeight()

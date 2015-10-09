@@ -1,5 +1,6 @@
 package foundation.omni.json.conversion
 
+import com.fasterxml.jackson.databind.module.SimpleModule
 import com.msgilligan.bitcoinj.json.conversion.CoinSerializer
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniIndivisibleValue
@@ -49,7 +50,7 @@ class OmniValueSerializerSpec extends BaseObjectMapperSpec {
         '"1"'                   | OmniIndivisibleValue.ofWillets(Coin.SATOSHI.value)
     }
 
-    def configureModule(module) {
+    def configureModule(SimpleModule module) {
         module.addSerializer(OmniValue.class, new OmniValueSerializer())
     }
 

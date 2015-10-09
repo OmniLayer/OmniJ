@@ -1,5 +1,6 @@
 package foundation.omni.consensus
 
+import foundation.omni.rpc.BalanceEntry
 import groovy.transform.CompileStatic
 import groovy.transform.Immutable
 import org.bitcoinj.core.Address
@@ -7,7 +8,7 @@ import org.bitcoinj.core.Address
 /**
  * A pair of ConsensusEntries, with their Address with iteration support for Spock tests
  */
-@Immutable
+@Immutable(knownImmutableClasses = [BalanceEntry])
 @CompileStatic
 class ConsensusEntryPair implements Iterable<Object> {
     /**
@@ -17,11 +18,11 @@ class ConsensusEntryPair implements Iterable<Object> {
     /**
      * Consensus Entry from first source
      */
-    final ConsensusEntry entry1
+    final BalanceEntry entry1
     /**
      * Consensus Entry from second source
      */
-    final ConsensusEntry entry2
+    final BalanceEntry entry2
 
     /**
      * Useful for Spock tests
