@@ -69,12 +69,12 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
         omniGetTransaction(txid).valid
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.TMSC).balance == 1.5
-        omniGetBalance(otherAddress, CurrencyID.TMSC).balance == 0.5
+        omniGetBalance(actorAddress, CurrencyID.TMSC).balance.equals(1.5.divisible)
+        omniGetBalance(otherAddress, CurrencyID.TMSC).balance.equals(0.5.divisible)
 
         and: "tokens were credited to the participant"
-        omniGetBalance(actorAddress, currencyID).balance == 0.0
-        omniGetBalance(otherAddress, currencyID).balance == 2.5
+        omniGetBalance(actorAddress, currencyID).balance.equals(0.divisible)
+        omniGetBalance(otherAddress, currencyID).balance.equals(2.5.divisible)
     }
 
     def "A crowdsale can be closed with transaction type 53"() {
@@ -107,8 +107,8 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
         omniGetTransaction(txid).valid
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.TMSC).balance == 2.0
-        omniGetBalance(otherAddress, CurrencyID.TMSC).balance == 0.0
+        omniGetBalance(actorAddress, CurrencyID.TMSC).balance.equals(2.divisible)
+        omniGetBalance(otherAddress, CurrencyID.TMSC).balance.equals(0.divisible)
 
         and: "no tokens were credited to the participant"
         omniGetBalance(actorAddress, currencyID) == old(omniGetBalance(actorAddress, currencyID))

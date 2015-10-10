@@ -54,10 +54,10 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "the investor should get #expectedBalance MDiv"
-        omniGetBalance(investorAddress, propertyId).balance == expectedBalance.bigDecimalValue()
+        omniGetBalance(investorAddress, propertyId).balance.equals(expectedBalance)
 
         and: "the issuer receives the invested amount"
-        omniGetBalance(issuerAddress, currencyMSC).balance == startMSC + amountToInvest.bigDecimalValue()
+        omniGetBalance(issuerAddress, currencyMSC).balance.equals(startMSC + amountToInvest)
 
         when: "retrieving the transaction"
         def sendTx = omniGetTransaction(sendTxid)
@@ -88,12 +88,12 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         crowdsale.active
         crowdsale.issuer == issuerAddress.toString()
         crowdsale.propertyiddesired == currencyMSC.getValue()
-        crowdsale.tokensperunit as BigDecimal == 0.00000001.divisible.bigDecimalValue()
+        crowdsale.tokensperunit as BigDecimal == 0.00000001.divisible.numberValue()
         crowdsale.earlybonus == 0
         crowdsale.percenttoissuer == 0
         crowdsale.deadline == 7731414000
-        crowdsale.tokensissued as BigDecimal == expectedBalance.bigDecimalValue()
-        crowdsale.addedissuertokens as BigDecimal == 0.divisible.bigDecimalValue() // no bonus applied
+        crowdsale.tokensissued as BigDecimal == expectedBalance.numberValue()
+        crowdsale.addedissuertokens as BigDecimal == 0.divisible.numberValue() // no bonus applied
 
         when:
         def txidClose = closeCrowdsale(issuerAddress, propertyId) // bypass RPC layer
@@ -152,10 +152,10 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         generateBlock()
 
         then: "the investor should get #expectedBalance MDiv"
-        omniGetBalance(investorAddress, propertyId).balance == expectedBalance.bigDecimalValue()
+        omniGetBalance(investorAddress, propertyId).balance.equals(expectedBalance)
 
         and: "the issuer receives the invested amount"
-        omniGetBalance(issuerAddress, currencyMSC).balance == startMSC + amountToInvest.bigDecimalValue()
+        omniGetBalance(issuerAddress, currencyMSC).balance.equals(startMSC + amountToInvest)
 
         when: "retrieving the transaction"
         def sendTx = omniGetTransaction(sendTxid)
@@ -186,7 +186,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         crowdsale.active == !crowdsaleMaxed
         crowdsale.issuer == issuerAddress.toString()
         crowdsale.propertyiddesired == currencyMSC.getValue()
-        crowdsale.tokensperunit as BigDecimal == 92233720368.54775807.divisible.bigDecimalValue()
+        crowdsale.tokensperunit as BigDecimal == 92233720368.54775807.divisible.numberValue()
         crowdsale.earlybonus == 0
         crowdsale.percenttoissuer == 0
         crowdsale.deadline == 7731414000
@@ -194,8 +194,8 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
             assert crowdsale.closedearly
             assert crowdsale.maxtokens
         }
-        crowdsale.tokensissued as BigDecimal == expectedBalance.bigDecimalValue()
-        crowdsale.addedissuertokens as BigDecimal == 0.divisible.bigDecimalValue() // no bonus applied
+        crowdsale.tokensissued as BigDecimal == expectedBalance.numberValue()
+        crowdsale.addedissuertokens as BigDecimal == 0.divisible.numberValue() // no bonus applied
 
         when:
         def txidClose = closeCrowdsale(issuerAddress, propertyId) // bypass RPC layer
@@ -275,7 +275,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         sendTx.purchasedpropertyid == propertyId.getValue()
         sendTx.purchasedpropertyname == "TIndiv"
         !sendTx.purchasedpropertydivisible
-        sendTx.purchasedtokens as BigDecimal == expectedBalance.bigDecimalValue()
+        sendTx.purchasedtokens as Long == expectedBalance.numberValue()
         sendTx.issuertokens as BigDecimal == 0.0 // no bonus applied
         sendTx.valid
 
@@ -288,12 +288,12 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         crowdsale.active
         crowdsale.issuer == issuerAddress.toString()
         crowdsale.propertyiddesired == currencyMSC.getValue()
-        crowdsale.tokensperunit as BigDecimal == 3400.indivisible.bigDecimalValue()
+        crowdsale.tokensperunit as Long == 3400.indivisible.numberValue()
         crowdsale.earlybonus == 0
         crowdsale.percenttoissuer == 0
         crowdsale.deadline == 7731414000
-        crowdsale.tokensissued as BigDecimal == expectedBalance.bigDecimalValue()
-        crowdsale.addedissuertokens as BigDecimal == 0.divisible.bigDecimalValue() // no bonus applied
+        crowdsale.tokensissued as Long == expectedBalance.numberValue()
+        crowdsale.addedissuertokens as BigDecimal == 0.divisible.numberValue() // no bonus applied
 
         when:
         def txidClose = closeCrowdsale(issuerAddress, propertyId) // bypass RPC layer

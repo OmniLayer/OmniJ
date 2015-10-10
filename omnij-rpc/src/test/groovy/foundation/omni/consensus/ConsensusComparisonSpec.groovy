@@ -30,7 +30,7 @@ class ConsensusComparisonSpec extends Specification {
         }
 
         then: "we find no differences"
-        foundMismatch == false
+        !foundMismatch
         compareCount == compareSmall1.c1.entries.size()
         compareCount == compareSmall1.c2.entries.size()
     }

@@ -2,6 +2,7 @@ package foundation.omni.rpc;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import foundation.omni.OmniValue;
 import org.bitcoinj.core.Address;
 
 import java.math.BigDecimal;
@@ -13,13 +14,13 @@ import java.util.List;
 /**
  * Balance data for a specific Omni CurrencyID in a single Bitcoin address
  */
-public class BalanceEntry implements Iterable<BigDecimal>  {
-    protected final BigDecimal balance;     // TODO: balance and reserved should be type OmniValue
-    protected final BigDecimal reserved;
+public class BalanceEntry implements Iterable<OmniValue>  {
+    protected final OmniValue balance;     // TODO: balance and reserved should be type OmniValue
+    protected final OmniValue reserved;
 
     @JsonCreator
-    public BalanceEntry(@JsonProperty("balance") BigDecimal balance,
-                        @JsonProperty("reserved") BigDecimal reserved) {
+    public BalanceEntry(@JsonProperty("balance") OmniValue balance,
+                        @JsonProperty("reserved") OmniValue reserved) {
         this.balance = balance;
         this.reserved = reserved;
     }
@@ -44,11 +45,11 @@ public class BalanceEntry implements Iterable<BigDecimal>  {
         return result;
     }
 
-    public BigDecimal getBalance() {
+    public OmniValue getBalance() {
         return balance;
     }
 
-    public BigDecimal getReserved() {
+    public OmniValue getReserved() {
         return reserved;
     }
 
@@ -58,7 +59,7 @@ public class BalanceEntry implements Iterable<BigDecimal>  {
      * @return an iterator that will iterate the two BigDecimal fields
      */
     @Override
-    public Iterator<BigDecimal> iterator() {
+    public Iterator<OmniValue> iterator() {
         return Arrays.asList(balance, reserved).iterator();
     }
 

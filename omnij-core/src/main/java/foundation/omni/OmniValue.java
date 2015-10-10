@@ -231,4 +231,25 @@ public abstract class OmniValue extends NumberValue {
 
     @Deprecated
     public  abstract BigDecimal bigDecimalValue();
+
+    public OmniValue plus(OmniValue right) {
+        if (this instanceof OmniDivisibleValue && right instanceof OmniDivisibleValue) {
+            return OmniDivisibleValue.of(this.value + right.value);
+        } else if (this instanceof OmniIndivisibleValue && right instanceof OmniIndivisibleValue) {
+            return OmniIndivisibleValue.of(this.value + right.value);
+        } else {
+            throw new ArithmeticException("Can't use plus with mixed OmniDivisible and OmniIndvisible operands");
+        }
+    }
+
+    public OmniValue minus(OmniValue right) {
+        if (this instanceof OmniDivisibleValue && right instanceof OmniDivisibleValue) {
+            return OmniDivisibleValue.of(this.value - right.value);
+        } else if (this instanceof OmniIndivisibleValue && right instanceof OmniIndivisibleValue) {
+            return OmniIndivisibleValue.of(this.value - right.value);
+        } else {
+            throw new ArithmeticException("Can't use minus with mixed OmniDivisible and OmniIndvisible operands");
+        }
+    }
+
 }
