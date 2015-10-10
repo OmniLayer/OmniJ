@@ -116,8 +116,8 @@ class ConsensusCLI extends CliCommand {
 
     void output(ConsensusSnapshot snap, PrintWriter writer, boolean tsv) {
         snap.entries.each { Address address, BalanceEntry entry ->
-            String balance = entry.balance.toPlainString()
-            String reserved = entry.reserved.toPlainString()
+            String balance = entry.balance.toString()
+            String reserved = entry.reserved.toString()
             if (tsv) {
                 writer.println("${address}\t${balance}\t${reserved}")
             } else {
