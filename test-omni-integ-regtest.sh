@@ -27,7 +27,7 @@ ln -sf $MSCLOG $LOGDIR/mastercore.log
 rm -rf $DATADIR/regtest
 
 # Run omnicored in regtest mode
-$BTCD -regtest -datadir=$DATADIR -omnialertallowsender=any -omniactivationallowsender=any > $LOGDIR/bitcoin.log &
+$BTCD -regtest -datadir=$DATADIR -omnialertallowsender=any -omniactivationallowsender=any -paytxfee=0.0001 -minrelaytxfee=0.00001 > $LOGDIR/bitcoin.log &
 BTCSTATUS=$?
 BTCPID=$!
 
