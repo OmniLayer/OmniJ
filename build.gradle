@@ -10,7 +10,7 @@ buildscript {
 }
 
 ext.groovyVersion = '2.4.5'
-ext.bitcoinjAddonsVersion = '0.0.10'
+ext.bitcoinjAddonsVersion = '0.0.11'
 
 allprojects {
     apply plugin: 'java'
