@@ -30,7 +30,7 @@ allprojects {
 
 subprojects {
     dependencies {
-        compile 'org.bitcoinj:bitcoinj-core:0.13.2'
+        compile 'org.bitcoinj:bitcoinj-core:0.13.3'
         compile 'org.slf4j:slf4j-api:1.7.7'
 
         runtime 'org.slf4j:slf4j-jdk14:1.7.7'               // Runtime implementation of slf4j
