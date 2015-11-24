@@ -162,6 +162,37 @@ public class OmniExtendedClient extends OmniClient {
     }
 
     /**
+     *
+     * @param address
+     * @param ecosystem
+     * @param value
+     * @param previousPropertyId
+     * @param category
+     * @param subCategory
+     * @param label
+     * @param website
+     * @param info
+     * @return
+     * @throws JsonRPCException
+     * @throws IOException
+     */
+    public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value,
+                                      Long previousPropertyId,
+                                      String category,
+                                      String subCategory,
+                                      String label,
+                                      String website,
+                                      String info)
+            throws JsonRPCException, IOException {
+        String rawTxHex = builder.createPropertyHex(ecosystem,
+                value.getPropertyType(),
+                previousPropertyId,
+                category, subCategory, label, website, info, value);
+        Sha256Hash txid = omniSendRawTx(address, rawTxHex);
+        return txid;
+    }
+
+    /**
      * Closes a crowdsale.
      *
      * @param address     The issuance address

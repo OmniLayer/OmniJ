@@ -1,6 +1,6 @@
-= bitcoinj-addons Release Process
+= OmniJ Release Process
 
-== OmniJ Release Process
+== Main Release Process
 
 . Update `CHANGELOG.adoc`
 . Set versions

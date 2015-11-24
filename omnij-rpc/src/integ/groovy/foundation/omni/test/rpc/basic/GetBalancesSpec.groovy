@@ -32,10 +32,10 @@ class GetBalancesSpec extends BaseRegTestSpec {
         def tmscBalance = omniGetBalance(fundedAddress, TMSC)
 
         then:
-        mscBalance.balance == faucetMSC.numberValue()
-        mscBalance.reserved == 0.0
-        tmscBalance.balance == faucetMSC.numberValue()
-        tmscBalance.reserved == 0.0
+        mscBalance.balance.equals(faucetMSC)
+        mscBalance.reserved.equals(0.divisible)
+        tmscBalance.balance.equals(faucetMSC)
+        tmscBalance.reserved.equals(0.divisible)
     }
 
     def "omniGetAllBalancesForId returns correct balances"() {
@@ -44,10 +44,10 @@ class GetBalancesSpec extends BaseRegTestSpec {
         def tmscBalances = omniGetAllBalancesForId(TMSC)
 
         then:
-        mscBalances[fundedAddress].balance == faucetMSC.numberValue()
-        mscBalances[fundedAddress].reserved == 0.0
-        tmscBalances[fundedAddress].balance == faucetMSC.numberValue()
-        tmscBalances[fundedAddress].reserved == 0.0
+        mscBalances[fundedAddress].balance.equals(faucetMSC)
+        mscBalances[fundedAddress].reserved.equals(0.divisible)
+        tmscBalances[fundedAddress].balance.equals(faucetMSC)
+        tmscBalances[fundedAddress].reserved.equals(0.divisible)
     }
 
     def "omniGetAllBalancesForAddress returns correct balances"() {
@@ -55,9 +55,9 @@ class GetBalancesSpec extends BaseRegTestSpec {
         def balances = omniGetAllBalancesForAddress(fundedAddress)
 
         then:
-        balances[MSC].balance == faucetMSC.numberValue()
-        balances[MSC].reserved == 0.0
-        balances[TMSC].balance == faucetMSC.numberValue()
-        balances[TMSC].reserved == 0.0
+        balances[MSC].balance.equals(faucetMSC)
+        balances[MSC].reserved.equals(0.divisible)
+        balances[TMSC].balance.equals(faucetMSC)
+        balances[TMSC].reserved.equals(0.divisible)
     }
 }

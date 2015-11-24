@@ -2,6 +2,7 @@ package foundation.omni.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import foundation.omni.CurrencyID;
+import foundation.omni.OmniValue;
 import org.bitcoinj.core.Address;
 
 import java.math.BigDecimal;
@@ -13,8 +14,8 @@ public class PropertyBalanceEntry extends BalanceEntry {
     private final CurrencyID propertyid;
 
     public PropertyBalanceEntry(@JsonProperty("propertyid") CurrencyID propertyid,
-                               @JsonProperty("balance") BigDecimal balance,
-                               @JsonProperty("reserved") BigDecimal reserved) {
+                               @JsonProperty("balance") OmniValue balance,
+                               @JsonProperty("reserved") OmniValue reserved) {
         super(balance,reserved);
         this.propertyid = propertyid;
     }

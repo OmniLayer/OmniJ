@@ -1,5 +1,6 @@
 package foundation.omni.consensus
 
+import foundation.omni.PropertyType
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
 import groovy.json.JsonSlurper
@@ -18,6 +19,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
     static String file = "/v1/mastercoin_verify/addresses"
     static String revisionFile = "/v1/system/revision.json"
     static String listFile = "/v1/mastercoin_verify/properties"
+    static String propertyDetailsFile = "/v1/property"         // + /<id>.json
 
     OmniwalletConsensusTool(URI hostURI) {
         proto = "https"
@@ -35,34 +37,47 @@ class OmniwalletConsensusTool extends ConsensusTool {
         tool.run(args.toList())
     }
 
-    private SortedMap<Address, BalanceEntry> getConsensusForCurrency(URL consensusURL) {
-        def slurper = new JsonSlurper()
-        def balances = slurper.parse(consensusURL)
+    private SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
+        def propertyType = getPropertyType(currencyID)
+        def balances = new JsonSlurper().parse(consensusURL(currencyID))
 
         TreeMap<Address, BalanceEntry> map = [:]
 
         balances.each { item ->
 
             Address address = new Address(null, item.address)
-            BalanceEntry entry = itemToEntry(item)
+            BalanceEntry entry = itemToEntry(propertyType, item)
 
-            if (address != "" && (entry.balance > 0 || entry.reserved > 0)) {
+            if (address != "" && (entry.balance.numberValue() > 0 || entry.reserved.numberValue() > 0)) {
                 map.put(address, entry)
             }
         }
         return map;
     }
 
-    private BalanceEntry itemToEntry(Object item) {
+    private BalanceEntry itemToEntry(def propertyType, Object item) {
         BigDecimal balance = jsonToBigDecimal(item.balance)
         BigDecimal reserved = jsonToBigDecimal(item.reserved_balance)
-        return new BalanceEntry(balance, reserved)
+        if (propertyType == PropertyType.DIVISIBLE) {
+            return new BalanceEntry(balance.divisible, reserved.divisible)
+        } else {
+            return new BalanceEntry(balance.indivisible, reserved.indivisible)
+        }
     }
 
     /* We're expecting input type String here */
     private BigDecimal jsonToBigDecimal(Object balanceIn) {
         BigDecimal balanceOut =  new BigDecimal(balanceIn).setScale(8)
         return balanceOut
+    }
+
+    private PropertyType getPropertyType(CurrencyID currencyID) {
+        if ((currencyID == CurrencyID.MSC) || (currencyID == CurrencyID.TMSC)) {
+            return PropertyType.DIVISIBLE
+        }
+        def details = new JsonSlurper().parse(new URL(proto, host, port, "${propertyDetailsFile}/${currencyID.value}.json"))
+        int type = Integer.parseInt(details[0].propertyType)
+        return (type == 1) ? PropertyType.INDIVISIBLE : PropertyType.DIVISIBLE
     }
 
     @Override
@@ -116,9 +131,6 @@ class OmniwalletConsensusTool extends ConsensusTool {
 
     @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
-        String httpFile = "${file}?currency_id=${currencyID.getValue()}"
-        def consensusURL = new URL(proto, host, port, httpFile)
-
         /* Since getConsensusForCurrency() doesn't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
          *
@@ -130,7 +142,7 @@ class OmniwalletConsensusTool extends ConsensusTool {
         Integer curBlockHeight
         SortedMap<Address, BalanceEntry> entries
         while (true) {
-            entries = this.getConsensusForCurrency(consensusURL)
+            entries = this.getConsensusForCurrency(currencyID)
             curBlockHeight = currentBlockHeight()
             if (curBlockHeight == beforeBlockHeight) {
                 // If blockHeight didn't change, we're done
@@ -139,7 +151,12 @@ class OmniwalletConsensusTool extends ConsensusTool {
             // Otherwise we have to try again
             beforeBlockHeight = curBlockHeight
         }
-        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "Omniwallet", consensusURL.toURI(), entries);
+        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "Omniwallet", consensusURL(currencyID).toURI(), entries);
         return snap
     }
+
+    private consensusURL(CurrencyID currencyID) {
+        return new URL(proto, host, port, "${file}?currency_id=${currencyID.getValue()}")
+    }
+
 }

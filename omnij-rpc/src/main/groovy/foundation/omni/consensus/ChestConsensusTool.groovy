@@ -1,15 +1,18 @@
 package foundation.omni.consensus
 
+import foundation.omni.PropertyType
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
 import groovy.json.JsonSlurper
 import foundation.omni.CurrencyID
 import groovy.transform.TypeChecked
+import groovy.util.logging.Slf4j
 import org.bitcoinj.core.Address
 
 /**
  * Command-line tool and class for fetching Omni Chest consensus data
  */
+@Slf4j
 class ChestConsensusTool extends ConsensusTool {
     // omnichest.info doesn't have https:// support (yet?)
     static URI ChestHost_Live = new URI("http://omnichest.info");
@@ -37,35 +40,51 @@ class ChestConsensusTool extends ConsensusTool {
     }
 
     private SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
-        def slurper = new JsonSlurper()
-        String httpFile = "${file}?currencyid=${currencyID.getValue()}"
-        def consensusURL = new URL(proto, host, port, httpFile)
-//        def balancesText =  consensusURL.getText()
-        def balances = slurper.parse(consensusURL)
+        def propertyType = getPropertyType(currencyID)
+        def balances = new JsonSlurper().parse(consensusURL(currencyID))
 
         TreeMap<Address, BalanceEntry> map = [:]
         balances.each { item ->
 
             Address address = new Address(null, item.address)
-            BalanceEntry entry = itemToEntry(item)
+            BalanceEntry entry = itemToEntry(propertyType, item)
 
-            if (address != "" && (entry.balance > 0 || entry.reserved > 0)) {
+            if (address != "" && (entry.balance.numberValue() > 0 || entry.reserved.numberValue() > 0)) {
                 map.put(address, entry)
             }
         }
         return map;
     }
 
-    private BalanceEntry itemToEntry(Object item) {
+    private BalanceEntry itemToEntry(def propertyType, Object item) {
         BigDecimal balance = jsonToBigDecimal(item.balance)
         BigDecimal reserved = jsonToBigDecimal(item.reserved)
-        return new BalanceEntry(balance, reserved)
+
+        if (propertyType == PropertyType.DIVISIBLE) {
+            return new BalanceEntry(balance.divisible, reserved.divisible)
+        } else {
+
+            return new BalanceEntry(balance.indivisible, reserved.indivisible)
+        }
     }
 
     /* We're expecting input type String here */
     private BigDecimal jsonToBigDecimal(String balanceIn) {
         BigDecimal balanceOut = new BigDecimal(balanceIn).setScale(8)
         return balanceOut
+    }
+
+    private PropertyType getPropertyType(CurrencyID currencyID) {
+        if ((currencyID == CurrencyID.MSC) || (currencyID == CurrencyID.TMSC)) {
+            return PropertyType.DIVISIBLE
+        }
+        if (currencyID == CurrencyID.TetherUS) {
+            return PropertyType.DIVISIBLE
+        }
+        return PropertyType.INDIVISIBLE  // Assume MaidSafeCoin (handles current Jenkins consensus tests correctly)
+//        def details = new JsonSlurper().parse(new URL(proto, host, port, "${propertyDetailsFile}/${currencyID.value}.json"))
+//        int type = Integer.parseInt(details[0].propertyType)
+//        return (type == 1) ? PropertyType.INDIVISIBLE : PropertyType.DIVISIBLE
     }
 
     @Override
@@ -113,9 +132,6 @@ class ChestConsensusTool extends ConsensusTool {
 
     @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
-        String httpFile = "${file}?currencyid=${currencyID.getValue()}"
-        def consensusURL = new URL(proto, host, port, httpFile)
-
         /* Since getConsensusForCurrency can't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
          *
@@ -138,7 +154,12 @@ class ChestConsensusTool extends ConsensusTool {
             beforeBlockHeight = curBlockHeight
         }
 
-        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "OmniChest", consensusURL.toURI(), entries);
+        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "OmniChest", consensusURL(currencyID).toURI(), entries);
         return snap
     }
+
+    private consensusURL(CurrencyID currencyID) {
+        return new URL(proto, host, port, "${file}?currencyid=${currencyID.getValue()}")
+    }
+
 }

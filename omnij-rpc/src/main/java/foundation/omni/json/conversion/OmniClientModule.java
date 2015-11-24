@@ -20,6 +20,7 @@ public class OmniClientModule extends SimpleModule {
         super("OmniJMappingClient", new Version(1, 0, 0, null, null, null));
         this.addDeserializer(CurrencyID.class, new CurrencyIDDeserializer())
             .addDeserializer(AddressBalanceEntries.class, new AddressBalanceEntriesDeserializer())
+            .addDeserializer(OmniValue.class, new OmniValueDeserializer())
             .addDeserializer(PropertyBalanceEntries.class, new PropertyBalanceEntriesDeserializer())
             .addSerializer(CurrencyID.class, new CurrencyIDSerializer())
             .addSerializer(Ecosystem.class, new EcosystemSerializer())

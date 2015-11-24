@@ -32,8 +32,8 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def endBalance = omniGetBalance(faucetAddress, MSC).balance
 
         then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
-        amount.numberValue() == omniGetBalance(toAddress, MSC).balance
-        endBalance == startBalance - amount.numberValue()
+        omniGetBalance(toAddress, MSC).balance.equals(amount)
+        endBalance.equals(startBalance - amount)
 
         where:
         fundingMSC | amount

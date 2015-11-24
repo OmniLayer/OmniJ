@@ -7,6 +7,7 @@ import foundation.omni.rpc.SmartPropertyListInfo
 import spock.lang.Specification
 
 import static foundation.omni.CurrencyID.MSC
+import static foundation.omni.CurrencyID.MaidSafeCoin
 import static foundation.omni.CurrencyID.TMSC
 
 /**
@@ -25,7 +26,7 @@ class ChestServerSpec extends Specification {
         blockHeight > 323000  // Greater than a relatively recent main-net block
     }
 
-    def "Can get Chest consensus data"() {
+    def "Can get Chest consensus data (divisible)"() {
         setup:
         ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
 
@@ -34,6 +35,19 @@ class ChestServerSpec extends Specification {
 
         then: "something is there"
         snapshot.currencyID == MSC
+        snapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
+        snapshot.entries.size() >= 1
+    }
+
+    def "Can get Chest consensus data (indivisible)"() {
+        setup:
+        ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
+
+        when: "we get data"
+        def snapshot = fetcher.getConsensusSnapshot(MaidSafeCoin)
+
+        then: "something is there"
+        snapshot.currencyID == MaidSafeCoin
         snapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
         snapshot.entries.size() >= 1
     }

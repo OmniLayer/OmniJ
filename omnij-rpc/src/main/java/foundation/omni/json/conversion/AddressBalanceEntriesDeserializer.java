@@ -53,6 +53,6 @@ public class AddressBalanceEntriesDeserializer extends StdDeserializer<AddressBa
     }
 
     private boolean isNonZeroEntry(AddressBalanceEntry entry) {
-        return entry.getBalance().compareTo(BigDecimal.ZERO) == 1 || entry.getReserved().compareTo(BigDecimal.ZERO) == 1;
+        return entry.getBalance().getWillets() != 0 || entry.getReserved().getWillets() != 0;
     }
 }
