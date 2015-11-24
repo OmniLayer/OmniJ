@@ -252,4 +252,14 @@ public abstract class OmniValue extends NumberValue {
         }
     }
 
+    public OmniValue multiply(long right) {
+        if (this instanceof OmniDivisibleValue) {
+            return OmniDivisibleValue.of(this.value * right);
+        } else if (this instanceof OmniIndivisibleValue) {
+            return OmniIndivisibleValue.of(this.value * right);
+        } else {
+            throw new ArithmeticException("Can't use minus with mixed OmniDivisible and OmniIndvisible operands");
+        }
+    }
+
 }
