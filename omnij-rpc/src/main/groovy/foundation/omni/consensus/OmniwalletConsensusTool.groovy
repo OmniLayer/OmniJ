@@ -76,8 +76,8 @@ class OmniwalletConsensusTool extends ConsensusTool {
             return PropertyType.DIVISIBLE
         }
         def details = new JsonSlurper().parse(new URL(proto, host, port, "${propertyDetailsFile}/${currencyID.value}.json"))
-        int type = Integer.parse(details.propertyType)
-        return (type == 1) ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE
+        int type = Integer.parseInt(details[0].propertyType)
+        return (type == 1) ? PropertyType.INDIVISIBLE : PropertyType.DIVISIBLE
     }
 
     @Override
