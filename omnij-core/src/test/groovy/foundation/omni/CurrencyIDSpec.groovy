@@ -127,7 +127,7 @@ class CurrencyIDSpec extends Specification {
         CurrencyID currencyID = new CurrencyID(id)
 
         then: "exception is thrown"
-        NumberFormatException e = thrown()
+        IllegalArgumentException e = thrown()
 
         where:
         id << [-1, 4294967296]

@@ -37,15 +37,15 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
             case "TetherUS":
                 return TetherUS;
         }
-        throw new NumberFormatException();
+        throw new IllegalArgumentException("unknown currency name string");
     }
 
     public CurrencyID(long value) {
         if (value < MIN_VALUE) {
-            throw new NumberFormatException();
+            throw new IllegalArgumentException("below min");
         }
         if (value > MAX_VALUE) {
-            throw new NumberFormatException();
+            throw new IllegalArgumentException();
         }
         this.value = value;
     }
