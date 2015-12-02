@@ -3,14 +3,27 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.3.5
+
+Released: 2015.12.01
+
+=== Potentially Breaking
+
+* BigDecimal had been replaced by OmniValue in many places (same as v0.3.4 which wasn't published)
+
+=== Features/Changes
+
+* Omni Chest consensus tool can now distinguish between divisible/indivisible OmniValues by '.'
+* Fix numeric type issues in OverOfferDeactivationSpec.groovy
+
 == v0.3.4
 
-Released: 2015.11.24
+Tagged: 2015.11.24 (no JARs were published)
 
 === Potentially Breaking
 
 * BigDecimal had been replaced by OmniValue in many places
-* Omni Chest consensus tool has hardcoded divisible/indivisble OmniValue selection that needs work
+* Omni Chest consensus tool has hardcoded divisible/indivisible OmniValue selection that needs work
 
 === Features/Changes
 
