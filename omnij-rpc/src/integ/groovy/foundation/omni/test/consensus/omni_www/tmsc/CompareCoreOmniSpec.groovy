@@ -10,7 +10,7 @@ import static foundation.omni.CurrencyID.TMSC
 /**
  */
 @Title("Compare Omni Core vs. Omniwallet www host API for TMSC currency")
-@Ignore("Omni test ecosystem on integration branch now has features not supported on production servers")
+@Ignore("Omni test ecosystem on integration branch now has features not supported on current Omniwallet production server")
 class CompareCoreOmniSpec extends BaseConsensusSpec {
 
     void setupSpec() {
