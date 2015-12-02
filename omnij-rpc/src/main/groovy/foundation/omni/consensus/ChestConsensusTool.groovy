@@ -19,7 +19,7 @@ class ChestConsensusTool extends ConsensusTool {
     private final String proto
     private final String host
     private final int port
-    static String file = "/mastercoin_verify/addresses.aspx"
+    static String file = "/mastercoin_verify/addresses_dformat.aspx"
     static String listFile = "/mastercoin_verify/properties.aspx/"
     static String blockHeightFile = "/apireq.aspx?stat=customapireq_lastblockprocessed"
 
@@ -40,14 +40,13 @@ class ChestConsensusTool extends ConsensusTool {
     }
 
     private SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
-        def propertyType = getPropertyType(currencyID)
         def balances = new JsonSlurper().parse(consensusURL(currencyID))
 
         TreeMap<Address, BalanceEntry> map = [:]
         balances.each { item ->
 
             Address address = new Address(null, item.address)
-            BalanceEntry entry = itemToEntry(propertyType, item)
+            BalanceEntry entry = itemToEntry(item)
 
             if (address != "" && (entry.balance.numberValue() > 0 || entry.reserved.numberValue() > 0)) {
                 map.put(address, entry)
@@ -56,9 +55,11 @@ class ChestConsensusTool extends ConsensusTool {
         return map;
     }
 
-    private BalanceEntry itemToEntry(def propertyType, Object item) {
+    private BalanceEntry itemToEntry(Object item) {
         BigDecimal balance = jsonToBigDecimal(item.balance)
         BigDecimal reserved = jsonToBigDecimal(item.reserved)
+
+        def propertyType = ((String) item.balance).contains('.') ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE
 
         if (propertyType == PropertyType.DIVISIBLE) {
             return new BalanceEntry(balance.divisible, reserved.divisible)
@@ -72,19 +73,6 @@ class ChestConsensusTool extends ConsensusTool {
     private BigDecimal jsonToBigDecimal(String balanceIn) {
         BigDecimal balanceOut = new BigDecimal(balanceIn).setScale(8)
         return balanceOut
-    }
-
-    private PropertyType getPropertyType(CurrencyID currencyID) {
-        if ((currencyID == CurrencyID.MSC) || (currencyID == CurrencyID.TMSC)) {
-            return PropertyType.DIVISIBLE
-        }
-        if (currencyID == CurrencyID.TetherUS) {
-            return PropertyType.DIVISIBLE
-        }
-        return PropertyType.INDIVISIBLE  // Assume MaidSafeCoin (handles current Jenkins consensus tests correctly)
-//        def details = new JsonSlurper().parse(new URL(proto, host, port, "${propertyDetailsFile}/${currencyID.value}.json"))
-//        int type = Integer.parseInt(details[0].propertyType)
-//        return (type == 1) ? PropertyType.INDIVISIBLE : PropertyType.DIVISIBLE
     }
 
     @Override
