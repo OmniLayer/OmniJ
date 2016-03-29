@@ -234,9 +234,9 @@ public abstract class OmniValue extends NumberValue {
 
     public OmniValue plus(OmniValue right) {
         if (this instanceof OmniDivisibleValue && right instanceof OmniDivisibleValue) {
-            return OmniDivisibleValue.of(this.value + right.value);
+            return OmniDivisibleValue.ofWillets(this.value + right.value);
         } else if (this instanceof OmniIndivisibleValue && right instanceof OmniIndivisibleValue) {
-            return OmniIndivisibleValue.of(this.value + right.value);
+            return OmniIndivisibleValue.ofWillets(this.value + right.value);
         } else {
             throw new ArithmeticException("Can't use plus with mixed OmniDivisible and OmniIndvisible operands");
         }
