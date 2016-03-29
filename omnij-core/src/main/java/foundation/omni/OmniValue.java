@@ -70,6 +70,11 @@ public abstract class OmniValue extends NumberValue {
                 OmniDivisibleValue.of(amount) : OmniIndivisibleValue.of(amount);
     }
 
+    public static OmniValue ofWillets(long amount, PropertyType type) {
+        return type.equals(PropertyType.DIVISIBLE) ?
+                OmniDivisibleValue.ofWillets(amount) : OmniIndivisibleValue.ofWillets(amount);
+    }
+
     public long getWillets() {
         return value;
     }
