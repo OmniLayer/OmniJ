@@ -33,9 +33,9 @@ Tagged: 2015.11.24 (no JARs were published)
 * Update to bitcoinj 0.13.3, bitcoinj-addons 0.0.11
 * Replace BigDecimal with OmniValue in many more places
 ** rename MPBalanceEntry to BalanceEntry
-** BalanceEntry replaces ConsensEntry
-** BalanceEntry using OmniValue rather than BigDecimail
-* Use Jackson JSON mappping more effectively
+** BalanceEntry replaces ConsensusEntry
+** BalanceEntry using OmniValue rather than BigDecimal
+* Use Jackson JSON mapping more effectively
 
 == v0.3.3
 
