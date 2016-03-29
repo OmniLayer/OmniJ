@@ -7,6 +7,19 @@ import spock.lang.Unroll
  * Specification for CurrencyID class
  */
 class CurrencyIDSpec extends Specification {
+    def "BTC has value 0"() {
+        when: "we create BTC"
+        CurrencyID currency = new CurrencyID(0)
+
+        then: "the value is 0"
+        currency == CurrencyID.BTC
+        currency.getValue() == CurrencyID.BTC_VALUE
+        currency.getValue() == 0L
+
+        and: "it is in the right ecosystem"
+        currency.ecosystem == Ecosystem.MSC     // Is this right???
+    }
+
     def "MSC has value 1"() {
         when: "we create MSC"
         CurrencyID currency = new CurrencyID(1)
