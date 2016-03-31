@@ -1,0 +1,18 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+
+dependencies {
+    compile project(':omnij-core')
+    compile project(':omnij-rpc')
+
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'com.squareup.retrofit:converter-jackson:2.0.0-beta2'
+}
+
+sourceCompatibility = 1.8
+idea {
+    module {
+        jdkName = '1.8'
+//        languageLevel = '1.8'
+    }
+}

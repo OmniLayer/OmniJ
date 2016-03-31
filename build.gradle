@@ -16,7 +16,7 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
 
-    sourceCompatibility = 1.7
+    //sourceCompatibility = 1.7
 
     version = '0.3.6-SNAPSHOT'
     group = 'foundation.omni'
