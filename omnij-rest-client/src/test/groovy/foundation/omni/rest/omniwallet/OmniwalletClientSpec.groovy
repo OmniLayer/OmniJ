@@ -39,14 +39,14 @@ class OmniwalletClientSpec extends Specification {
 
         then:
         balances != null
-        balances[0].symbol == "MSC"
-        balances[0].id == MSC
+        balances[0].symbol == "BTC"
+        balances[0].id == BTC
         balances[0].value.numberValue() >= 0
-        balances[1].symbol == "TMSC"
-        balances[1].id == TMSC
+        balances[1].symbol == "MSC"
+        balances[1].id == MSC
         balances[1].value.numberValue() >= 0
-        balances[2].symbol == "BTC"
-        balances[2].id == BTC
+        balances[2].symbol == "TMSC"
+        balances[2].id == TMSC
         balances[2].value.numberValue() >= 0
     }
 
