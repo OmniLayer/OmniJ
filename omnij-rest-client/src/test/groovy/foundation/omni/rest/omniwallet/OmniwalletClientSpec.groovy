@@ -1,9 +1,10 @@
 package foundation.omni.rest.omniwallet
 
-import foundation.omni.CurrencyID
+import static foundation.omni.CurrencyID.*
 import foundation.omni.net.OmniMainNetParams
 import org.bitcoinj.core.Address
 import spock.lang.Specification
+
 
 /**
  *
@@ -22,10 +23,10 @@ class OmniwalletClientSpec extends Specification {
         then:
         balances != null
         balances[0].symbol == "SP31"
-        balances[0].id == new CurrencyID(31)
+        balances[0].id == USDT
         balances[0].value >= 0
         balances[1].symbol == "BTC"
-        balances[1].id == CurrencyID.BTC
+        balances[1].id == BTC
         balances[1].value.numberValue() >= 0
     }
 
@@ -39,13 +40,13 @@ class OmniwalletClientSpec extends Specification {
         then:
         balances != null
         balances[0].symbol == "MSC"
-        balances[0].id == CurrencyID.MSC
+        balances[0].id == MSC
         balances[0].value.numberValue() >= 0
         balances[1].symbol == "TMSC"
-        balances[1].id == CurrencyID.TMSC
+        balances[1].id == TMSC
         balances[1].value.numberValue() >= 0
         balances[2].symbol == "BTC"
-        balances[2].id == CurrencyID.BTC
+        balances[2].id == BTC
         balances[2].value.numberValue() >= 0
     }
 
@@ -58,7 +59,23 @@ class OmniwalletClientSpec extends Specification {
 
         then:
         balances != null
-        balances[testAddr][new CurrencyID(31)] >= 0
-        balances[testAddr][CurrencyID.BTC].numberValue() >= 0
+        balances[testAddr][USDT].numberValue() >= 0
+        balances[testAddr][BTC].numberValue() >= 0
+    }
+
+    def "load balances of addresses with multiple addresses"() {
+        given:
+        def client = new OmniwalletClient()
+
+        when:
+        def balances = client.balancesForAddresses([testAddr, exodusAddress])
+
+        then:
+        balances != null
+        balances[testAddr][USDT].numberValue() >= 0
+        balances[testAddr][BTC].numberValue() >= 0
+        balances[exodusAddress][MSC].numberValue() >= 0
+        balances[exodusAddress][TMSC].numberValue() >= 0
+        balances[exodusAddress][BTC].numberValue() >= 0
     }
 }
