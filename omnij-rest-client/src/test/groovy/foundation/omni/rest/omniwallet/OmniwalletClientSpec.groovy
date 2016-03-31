@@ -36,6 +36,7 @@ class OmniwalletClientSpec extends Specification {
 
         when:
         def balances = client.balancesForAddress(exodusAddress)
+        balances.sort{a, b -> a.id <=> b.id }
 
         then:
         balances != null
