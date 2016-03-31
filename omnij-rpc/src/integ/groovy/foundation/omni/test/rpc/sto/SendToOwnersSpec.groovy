@@ -72,11 +72,17 @@ class SendToOwnersSpec extends BaseRegTestSpec {
         e.message == "Invalid amount"
         e.responseJson.error.code == -3
 
-        when: "we check balances"
+        when: "we make a block"
+        generateBlock()
+
+        and: "we check balances"
         def endBalances = consensusTool.getConsensusSnapshot(currencyID)
 
         then: "balances unchanged"
-        startBalances == endBalances
+        endBalances.blockHeight == startBalances.blockHeight + 1
+        endBalances.currencyID == startBalances.currencyID
+        endBalances.sourceType == startBalances.sourceType
+        endBalances.entries == startBalances.entries
     }
 
     def "The generated hex-encoded transaction matches a valid reference transaction"() {

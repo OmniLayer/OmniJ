@@ -1,5 +1,6 @@
 package foundation.omni.consensus
 
+import foundation.omni.rpc.ConsensusSnapshot
 import spock.lang.Specification
 
 import static foundation.omni.CurrencyID.*

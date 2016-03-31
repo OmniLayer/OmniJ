@@ -1,25 +1,29 @@
-package foundation.omni.consensus
+package foundation.omni.rpc;
 
-import foundation.omni.CurrencyID
-import foundation.omni.rpc.SmartPropertyListInfo
+import foundation.omni.CurrencyID;
+
+import java.util.List;
 
 /**
  * Interface implemented by all consensus fetching tools.
+ * Should really be in the package foundation.omni.consensus, but is here as a workaround
+ * to what appears to be a Groovy joint-compilation issue.
  */
-interface ConsensusFetcher {
+public interface ConsensusFetcher {
     /**
      * Fetch a consensus snapshot for a currencyID
+     *
      * @param currencyID The currency to get consensus data for
      * @return Consensus data for all addresses owning currencyID
      */
-    ConsensusSnapshot           getConsensusSnapshot(CurrencyID currencyID)
+    ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID);
 
     /**
      * Fetch the current block height
      *
      * @return The current blockheight of the remote consensus server
      */
-    Integer currentBlockHeight()
+    Integer currentBlockHeight();
 
     /**
      * Get a list of properties
@@ -28,5 +32,5 @@ interface ConsensusFetcher {
      *
      * @return A list of property objects
      */
-    List<SmartPropertyListInfo> listProperties()
+    List<SmartPropertyListInfo> listProperties();
 }

@@ -3,6 +3,7 @@ package foundation.omni.consensus
 import com.msgilligan.bitcoinj.rpc.RPCURI
 import foundation.omni.CurrencyID
 import foundation.omni.rpc.BalanceEntry
+import foundation.omni.rpc.ConsensusSnapshot
 import foundation.omni.rpc.OmniClient
 import foundation.omni.rpc.SmartPropertyListInfo
 import foundation.omni.rpc.test.TestServers
@@ -14,7 +15,7 @@ import org.bitcoinj.params.MainNetParams
 /**
  * Command-line tool and class for fetching Omni Core consensus data
  */
-class OmniCoreConsensusTool extends ConsensusTool {
+class OmniCoreConsensusTool implements ConsensusTool {
     protected OmniClient client
 
     /**
@@ -45,11 +46,6 @@ class OmniCoreConsensusTool extends ConsensusTool {
     OmniCoreConsensusTool(OmniClient client)
     {
         this.client = client
-    }
-
-    @Override
-    URI getServerURI() {
-        return this.client.getServerURI()
     }
 
     public static void main(String[] args) {

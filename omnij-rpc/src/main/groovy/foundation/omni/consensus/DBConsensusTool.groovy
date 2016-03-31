@@ -1,5 +1,6 @@
 package foundation.omni.consensus
 
+import foundation.omni.rpc.ConsensusSnapshot
 import foundation.omni.rpc.SmartPropertyListInfo
 import groovy.sql.Sql
 import foundation.omni.CurrencyID
@@ -10,18 +11,13 @@ import javax.sql.DataSource
 /**
  * Command-line tool and class for fetching consensus data from OmniEngine DB
  */
-class DBConsensusTool extends ConsensusTool {
+class DBConsensusTool implements ConsensusTool {
     private final PGSimpleDataSource dataSource
     private final Sql sql = null
 
     DBConsensusTool(DataSource dataSource) {
         this.dataSource = dataSource
         this.sql = new Sql(dataSource)
-    }
-
-    @Override
-    URI getServerURI() {
-        return new URI(dataSource.getUrl().toURI())
     }
 
     public static void main(String[] args) {

@@ -3,7 +3,7 @@ package foundation.omni.test.consensus
 import foundation.omni.BaseMainNetSpec
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.ConsensusComparison
-import foundation.omni.consensus.ConsensusFetcher
+import foundation.omni.rpc.ConsensusFetcher
 import foundation.omni.consensus.OmniCoreConsensusTool
 import spock.lang.Shared
 import spock.lang.Subject

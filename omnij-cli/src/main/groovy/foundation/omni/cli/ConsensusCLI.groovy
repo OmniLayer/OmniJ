@@ -5,7 +5,7 @@ import com.msgilligan.bitcoinj.cli.CliOptions
 import com.msgilligan.bitcoinj.rpc.JsonRPCException
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.ChestConsensusTool
-import foundation.omni.consensus.ConsensusSnapshot
+import foundation.omni.rpc.ConsensusSnapshot
 import foundation.omni.consensus.ConsensusTool
 import foundation.omni.consensus.MultiPropertyComparison
 import foundation.omni.consensus.OmniCoreConsensusTool

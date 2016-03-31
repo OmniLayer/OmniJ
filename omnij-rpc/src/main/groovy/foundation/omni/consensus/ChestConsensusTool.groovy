@@ -2,6 +2,7 @@ package foundation.omni.consensus
 
 import foundation.omni.PropertyType
 import foundation.omni.rpc.BalanceEntry
+import foundation.omni.rpc.ConsensusSnapshot
 import foundation.omni.rpc.SmartPropertyListInfo
 import groovy.json.JsonSlurper
 import foundation.omni.CurrencyID
@@ -13,7 +14,7 @@ import org.bitcoinj.core.Address
  * Command-line tool and class for fetching Omni Chest consensus data
  */
 @Slf4j
-class ChestConsensusTool extends ConsensusTool {
+class ChestConsensusTool implements ConsensusTool {
     // omnichest.info doesn't have https:// support (yet?)
     static URI ChestHost_Live = new URI("http://omnichest.info");
     private final String proto
@@ -27,11 +28,6 @@ class ChestConsensusTool extends ConsensusTool {
         proto = chestURI.scheme
         port = chestURI.port
         host = chestURI.host
-    }
-
-    @Override
-    URI getServerURI() {
-        return new URI(proto, null, host, port, null, null, null)
     }
 
     public static void main(String[] args) {

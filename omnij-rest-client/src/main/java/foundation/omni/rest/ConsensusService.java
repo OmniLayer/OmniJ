@@ -3,5 +3,5 @@ package foundation.omni.rest;
 /**
  *
  */
-public interface ConsensusClient {
+public interface ConsensusService {
 }
