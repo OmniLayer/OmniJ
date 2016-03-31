@@ -2,7 +2,7 @@ package foundation.omni.test.consensus
 
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.consensus.OmniwalletConsensusTool
+import foundation.omni.consensus.OmniwalletConsensusFetcher
 import foundation.omni.rpc.SmartPropertyListInfo
 
 import static foundation.omni.CurrencyID.*
@@ -15,7 +15,7 @@ class OmniwalletServerSpec extends Specification {
 
     def "Can get Omniwallet block height"() {
         setup:
-        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_Live)
+        OmniwalletConsensusFetcher omniFetcher = new OmniwalletConsensusFetcher()
 
         when: "we get a block height"
         /* Private method, but we can still call it with Groovy for a test */
@@ -28,7 +28,7 @@ class OmniwalletServerSpec extends Specification {
 
     def "Can get Omniwallet consensus data"() {
         setup:
-        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_Live)
+        OmniwalletConsensusFetcher omniFetcher = new OmniwalletConsensusFetcher()
 
         when: "we get data"
         def omniSnapshot = omniFetcher.getConsensusSnapshot(MSC)
@@ -41,7 +41,7 @@ class OmniwalletServerSpec extends Specification {
 
     def "Can get Omniwallet property list"() {
         setup:
-        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_Live)
+        OmniwalletConsensusFetcher omniFetcher = new OmniwalletConsensusFetcher()
 
         when: "we get data"
         def properties = omniFetcher.listProperties()

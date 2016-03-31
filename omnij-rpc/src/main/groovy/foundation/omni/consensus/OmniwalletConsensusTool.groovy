@@ -5,12 +5,16 @@ package foundation.omni.consensus
  */
 class OmniwalletConsensusTool extends OmniwalletConsensusFetcher implements ConsensusTool   {
 
+    OmniwalletConsensusTool() {
+        super(OmniwalletConsensusFetcher.OmniHost_Live)
+    }
+
     OmniwalletConsensusTool(URI hostURI) {
         super(hostURI)
     }
 
     public static void main(String[] args) {
-        OmniwalletConsensusTool tool = new OmniwalletConsensusTool(OmniwalletConsensusFetcher.OmniHost_Live)
+        OmniwalletConsensusTool tool = new OmniwalletConsensusTool()
         tool.run(args.toList())
     }
 

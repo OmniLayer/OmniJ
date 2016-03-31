@@ -14,7 +14,7 @@ import static foundation.omni.CurrencyID.TMSC
 class CompareCoreOmniSpec extends BaseConsensusSpec {
 
     void setupSpec() {
-        setupComparisonForCurrency(new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_Live),
+        setupComparisonForCurrency(new OmniwalletConsensusTool(),
                 TMSC)
     }
 }
