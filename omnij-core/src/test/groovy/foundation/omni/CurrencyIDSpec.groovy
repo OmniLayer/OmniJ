@@ -174,6 +174,6 @@ class CurrencyIDSpec extends Specification {
         "MSC"          | CurrencyID.MSC_VALUE
         "TMSC"         | CurrencyID.TMSC_VALUE
         "MaidSafeCoin" | CurrencyID.MaidSafeCoin_VALUE
-        "TetherUS"     | CurrencyID.TetherUS_VALUE
+        "USDT"         | CurrencyID.USDT_VALUE
     }
 }

@@ -16,13 +16,19 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     public static final long    MSC_VALUE = 1;
     public static final long    TMSC_VALUE = 2;
     public static final long    MaidSafeCoin_VALUE = 3;
+    /** @deprecated */
     public static final long    TetherUS_VALUE = 31;
+    public static final long    USDT_VALUE = 31;
+    public static final long    EURT_VALUE = 41;
 
     public static final CurrencyID  BTC = new CurrencyID(BTC_VALUE);
     public static final CurrencyID  MSC = new CurrencyID(MSC_VALUE);
     public static final CurrencyID  TMSC = new CurrencyID(TMSC_VALUE);
     public static final CurrencyID  MaidSafeCoin = new CurrencyID(MaidSafeCoin_VALUE);
-    public static final CurrencyID  TetherUS = new CurrencyID(TetherUS_VALUE);
+    /** @deprecated */
+    public static final CurrencyID  TetherUS = new CurrencyID(USDT_VALUE);
+    public static final CurrencyID  USDT = new CurrencyID(USDT_VALUE);
+    public static final CurrencyID  EURT = new CurrencyID(EURT_VALUE);
 
     public static CurrencyID valueOf(String s) {
         switch (s) {
@@ -34,10 +40,12 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
                 return TMSC;
             case "MaidSafeCoin":
                 return MaidSafeCoin;
-            case "TetherUS":
-                return TetherUS;
+            case "USDT":
+                return USDT;
+            case "EURT":
+                return EURT;
         }
-        throw new IllegalArgumentException("unknown currency name string");
+        throw new IllegalArgumentException("unknown currency ticker string");
     }
 
     public CurrencyID(long value) {
