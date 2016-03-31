@@ -58,8 +58,8 @@ public class OmniwalletClient implements OmniBalanceService {
 
     private OkHttpClient initClient() {
         OkHttpClient client = new OkHttpClient();
-//        client.setConnectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-//        client.setReadTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        client.setConnectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        client.setReadTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
         return client;
     }
 
