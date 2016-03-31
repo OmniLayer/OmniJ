@@ -1,5 +1,10 @@
 package foundation.omni.rest.omniwallet
 
+import foundation.omni.CurrencyID
+import foundation.omni.Ecosystem
+import foundation.omni.consensus.OmniwalletConsensusTool
+import foundation.omni.rpc.SmartPropertyListInfo
+
 import static foundation.omni.CurrencyID.*
 import foundation.omni.net.OmniMainNetParams
 import org.bitcoinj.core.Address
@@ -12,6 +17,17 @@ import spock.lang.Specification
 class OmniwalletClientSpec extends Specification {
     final Address exodusAddress = OmniMainNetParams.get().exodusAddress;
     final Address testAddr = new Address(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
+
+    def "get block height" () {
+        given:
+        def client = new OmniwalletClient()
+
+        when:
+        def height = client.currentBlockHeight()
+
+        then: "height is a reasonable MainNet block height"
+        height > 400000
+    }
 
     def "load testAddr balance"() {
         given:
@@ -79,4 +95,60 @@ class OmniwalletClientSpec extends Specification {
         balances[exodusAddress][TMSC].numberValue() >= 0
         balances[exodusAddress][BTC].numberValue() >= 0
     }
+
+    def "Can get Omniwallet property list"() {
+        setup:
+        def client = new OmniwalletClient()
+
+        when: "we get data"
+        def properties = client.listProperties()
+
+        then: "we get a list of size >= 2"
+        properties != null
+        properties.size() >= 2
+
+        when: "we convert the list to a map"
+        // This may be unnecessary if we can assume the property list is ordered by propertyid
+        Map<CurrencyID, SmartPropertyListInfo> props = properties.collect{[it.propertyid, it]}.collectEntries()
+
+        then: "we can check MSC and TMSC are as expected"
+        props[MSC].propertyid == MSC
+        props[MSC].propertyid.ecosystem == Ecosystem.MSC
+        props[MSC].name == "Mastercoin" // Note: Omni Core returns "MasterCoin" with a capital-C
+        props[MSC].category == ""
+        props[MSC].subcategory == ""
+        props[MSC].data == ""
+        props[MSC].url == ""
+        props[MSC].divisible == null
+
+        props[TMSC].propertyid == TMSC
+        props[TMSC].propertyid.ecosystem == Ecosystem.TMSC
+        props[TMSC].name == "Test Mastercoin" // Note: Omni Core returns "Mastercoin" with a capital-C
+        props[TMSC].category == ""
+        props[TMSC].subcategory == ""
+        props[TMSC].data == ""
+        props[TMSC].url == ""
+        props[TMSC].divisible == null
+
+        // Assumes MainNet
+        props[USDT].propertyid == USDT
+        props[USDT].propertyid.ecosystem == Ecosystem.MSC
+        props[USDT].name == "TetherUS"
+        props[USDT].category == ""
+        props[USDT].subcategory == ""
+        props[USDT].data == ""
+        props[USDT].url == ""
+        props[USDT].divisible == null
+    }
+
+//    def "we can get consensus info"() {
+//        setup:
+//        def client = new OmniwalletClient()
+//
+//        when: "we get data"
+//        def balances = client.getConsensusForCurrency(MSC)
+//
+//        then: "something is there"
+//        balances.size() >= 1
+//    }
 }

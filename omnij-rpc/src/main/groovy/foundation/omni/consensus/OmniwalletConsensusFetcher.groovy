@@ -106,7 +106,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
         return snap
     }
 
-    private SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
+    public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
         def propertyType = getPropertyType(currencyID)
         def balances = new JsonSlurper().parse(consensusURL(currencyID))
 
