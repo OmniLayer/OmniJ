@@ -5,8 +5,9 @@ dependencies {
     compile project(':omnij-core')
     compile project(':omnij-rpc')
 
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
-    compile 'com.squareup.retrofit:converter-jackson:2.0.0-beta2'
+    compile 'com.squareup.retrofit2:retrofit:2.0.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+    compile 'com.squareup.retrofit2:converter-jackson:2.0.1'
 }
 
 sourceCompatibility = 1.8

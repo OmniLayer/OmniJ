@@ -1,7 +1,7 @@
 package foundation.omni.rest.omniwallet;
 
 
-import com.squareup.okhttp.OkHttpClient;
+import okhttp3.OkHttpClient;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniIndivisibleValue;
@@ -17,16 +17,16 @@ import foundation.omni.rpc.ConsensusSnapshot;
 import foundation.omni.rpc.SmartPropertyListInfo;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
-import retrofit.Call;
-import retrofit.Response;
-import retrofit.Retrofit;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.JacksonConverterFactory;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -79,9 +79,10 @@ public class OmniwalletClient implements OmniBalanceService, ConsensusFetcher {
     }
 
     private OkHttpClient initClient() {
-        OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-        client.setReadTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
+                .readTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
+                .build();
         return client;
     }
 
@@ -131,6 +132,10 @@ public class OmniwalletClient implements OmniBalanceService, ConsensusFetcher {
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
         return null;
     }
+
+
+    // TODO: Enable logging, see: http://stackoverflow.com/questions/32514410/logging-with-retrofit-2
+    // TODO: Debug and finish getConsensusForCurrency()
 
 //    public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
 //        List<Map<String, Object>> balances;
