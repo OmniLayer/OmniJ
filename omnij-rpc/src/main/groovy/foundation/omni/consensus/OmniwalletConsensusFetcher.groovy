@@ -131,7 +131,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
         return map;
     }
 
-    private static BalanceEntry itemToEntry(def propertyType, Object item) {
+    private BalanceEntry itemToEntry(def propertyType, Object item) {
         BigDecimal balance = jsonToBigDecimal(item.balance)
         BigDecimal reserved = jsonToBigDecimal(item.reserved_balance)
         if (propertyType == PropertyType.DIVISIBLE) {
@@ -143,7 +143,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
 
     /* We're expecting input type String here */
     @TypeChecked
-    private static BigDecimal jsonToBigDecimal(String balanceIn) {
+    private BigDecimal jsonToBigDecimal(String balanceIn) {
         BigDecimal balanceOut =  new BigDecimal(balanceIn).setScale(8)
         return balanceOut
     }
