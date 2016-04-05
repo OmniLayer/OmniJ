@@ -2,8 +2,8 @@ package foundation.omni.rest.omniwallet
 
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.consensus.OmniwalletConsensusTool
 import foundation.omni.rpc.SmartPropertyListInfo
+import spock.lang.Unroll
 
 import static foundation.omni.CurrencyID.*
 import foundation.omni.net.OmniMainNetParams
@@ -141,14 +141,18 @@ class OmniwalletClientSpec extends Specification {
         props[USDT].divisible == null
     }
 
-//    def "we can get consensus info"() {
-//        setup:
-//        def client = new OmniwalletClient()
-//
-//        when: "we get data"
-//        def balances = client.getConsensusForCurrency(MSC)
-//
-//        then: "something is there"
-//        balances.size() >= 1
-//    }
+    @Unroll
+    def "we can get consensus info for currency: #currency"() {
+        setup:
+        def client = new OmniwalletClient()
+
+        when: "we get data"
+        def balances = client.getConsensusForCurrency(currency)
+
+        then: "something is there"
+        balances.size() >= 1
+
+        where:
+        currency << [MSC, TMSC, MaidSafeCoin, USDT, EURT]
+    }
 }

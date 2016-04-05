@@ -88,6 +88,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
     }
 
     @Override
+    @TypeChecked
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
         /* Since getConsensusForCurrency() doesn't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
@@ -109,12 +110,12 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
             // Otherwise we have to try again
             beforeBlockHeight = curBlockHeight
         }
-        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "Omniwallet", consensusURL(currencyID).toURI(), entries);
+        def snap = new ConsensusSnapshot(currencyID, (Long) curBlockHeight, "Omniwallet", consensusURL(currencyID).toURI(), entries);
         return snap
     }
 
     public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
-        def propertyType = getPropertyType(currencyID)
+        PropertyType propertyType = getPropertyType(currencyID)
         def balances = new JsonSlurper().parse(consensusURL(currencyID))
 
         TreeMap<Address, BalanceEntry> map = [:]
@@ -131,7 +132,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
         return map;
     }
 
-    private BalanceEntry itemToEntry(def propertyType, Object item) {
+    protected BalanceEntry itemToEntry(PropertyType propertyType, Object item) {
         BigDecimal balance = jsonToBigDecimal(item.balance)
         BigDecimal reserved = jsonToBigDecimal(item.reserved_balance)
         if (propertyType == PropertyType.DIVISIBLE) {
@@ -143,12 +144,12 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
 
     /* We're expecting input type String here */
     @TypeChecked
-    private BigDecimal jsonToBigDecimal(String balanceIn) {
+    protected BigDecimal jsonToBigDecimal(String balanceIn) {
         BigDecimal balanceOut =  new BigDecimal(balanceIn).setScale(8)
         return balanceOut
     }
 
-    private PropertyType getPropertyType(CurrencyID currencyID) {
+    protected PropertyType getPropertyType(CurrencyID currencyID) {
         if ((currencyID == CurrencyID.MSC) || (currencyID == CurrencyID.TMSC)) {
             return PropertyType.DIVISIBLE
         }
@@ -158,7 +159,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
     }
 
     @TypeChecked
-    private consensusURL(CurrencyID currencyID) {
+    protected URL consensusURL(CurrencyID currencyID) {
         return new URL(proto, host, port, "${file}?currency_id=${currencyID.getValue()}")
     }
 

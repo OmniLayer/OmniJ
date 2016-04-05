@@ -12,7 +12,6 @@ import org.bitcoinj.core.Address
  */
 @TypeChecked
 trait ConsensusTool implements ConsensusFetcher {
-    //abstract URI getServerURI();
 
     void run(List<String> args) {
         Long currencyIDNum =  args[0] ? Long.parseLong(args[0], 10) : CurrencyID.MSC_VALUE

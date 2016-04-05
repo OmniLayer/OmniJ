@@ -1,6 +1,7 @@
 package foundation.omni.rest.omniwallet;
 
 
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniDivisibleValue;
@@ -15,6 +16,7 @@ import foundation.omni.rpc.BalanceEntry;
 import foundation.omni.rpc.ConsensusFetcher;
 import foundation.omni.rpc.ConsensusSnapshot;
 import foundation.omni.rpc.SmartPropertyListInfo;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import retrofit2.Call;
@@ -30,6 +32,8 @@ import retrofit2.http.Query;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +49,7 @@ public class OmniwalletClient implements OmniBalanceService, ConsensusFetcher {
     static final String omniwalletBase = "https://www.omniwallet.org";
     static final int CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
     static final int READ_TIMEOUT_MILLIS = 20 * 1000; // 20s
+    private Retrofit restAdapter;
     private OmniwalletService service;
 
 
@@ -61,29 +66,36 @@ public class OmniwalletClient implements OmniBalanceService, ConsensusFetcher {
         Call<List<Map<String, Object>>> verifyProperties();
 
         @GET("/v1/mastercoin_verify/addresses")
-        Call<List<Map<String, Object>>> verifyAddresses(@Query("currencyId") String currencyId);
+        Call<List<Map<String, Object>>> verifyAddresses(@Query("currency_id") String currencyId);
 
     }
 
     public OmniwalletClient() {
         OkHttpClient client = initClient();
 
-        Retrofit restAdapter = new Retrofit.Builder()
+        restAdapter = new Retrofit.Builder()
                 .client(client)
                 .baseUrl(omniwalletBase)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
-        //      .setLogLevel(Retrofit.LogLevel.FULL)    // Don't know how to do this in Retrofit 2.0
 
         service = restAdapter.create(OmniwalletService.class);
     }
 
     private OkHttpClient initClient() {
-        OkHttpClient client = new OkHttpClient.Builder()
+        boolean debug = true;
+
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
-                .readTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
-                .build();
-        return client;
+                .readTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+
+        if (debug) {
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(interceptor);
+        }
+
+        return builder.build();
     }
 
     List<BalanceInfo> balancesForAddress(Address address) {
@@ -130,28 +142,49 @@ public class OmniwalletClient implements OmniBalanceService, ConsensusFetcher {
 
     @Override
     public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
-        return null;
+        /* Since getConsensusForCurrency() doesn't return the blockHeight, we have to check
+         * blockHeight before and after the call to make sure it didn't change.
+         *
+         * Note: Omniwallet blockheight can lag behind Blockchain.info and Omni Core and this
+         * loop does not resolve that issue, it only makes sure the reported block height
+         * matches the data returned.
+         */
+        long beforeBlockHeight = currentBlockHeight();
+        long curBlockHeight;
+        SortedMap<Address, BalanceEntry> entries;
+        while (true) {
+            entries = this.getConsensusForCurrency(currencyID);
+            curBlockHeight = currentBlockHeight();
+            if (curBlockHeight == beforeBlockHeight) {
+                // If blockHeight didn't change, we're done
+                break;
+            }
+            // Otherwise we have to try again
+            beforeBlockHeight = curBlockHeight;
+        }
+        ConsensusSnapshot snap = new ConsensusSnapshot(currencyID,
+                                        (Long) curBlockHeight,
+                                        "Omniwallet",
+                                        consensusURI(currencyID),
+                                        entries);
+        return snap;
     }
 
-
-    // TODO: Enable logging, see: http://stackoverflow.com/questions/32514410/logging-with-retrofit-2
-    // TODO: Debug and finish getConsensusForCurrency()
-
-//    public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
-//        List<Map<String, Object>> balances;
-//        try {
-//            balances = service.verifyAddresses(Long.toString(currencyID.getValue())).execute().body();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        Map<Address, BalanceEntry> unsorted = balances.stream()
-//                .map(this::balanceMapper)
-//                .collect(Collectors.toMap(
-//                        AddressBalanceEntry::getAddress, address -> new BalanceEntry(address.getBalance(), address.getReserved())
-//                ));
-//        SortedMap<Address, BalanceEntry> sorted = new TreeMap<>(unsorted);
-//        return sorted;
-//    }
+    public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
+        List<Map<String, Object>> balances;
+        try {
+            balances = service.verifyAddresses(Long.toString(currencyID.getValue())).execute().body();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Map<Address, BalanceEntry> unsorted = balances.stream()
+                .map(this::balanceMapper)
+                .collect(Collectors.toMap(
+                        AddressBalanceEntry::getAddress, address -> new BalanceEntry(address.getBalance(), address.getReserved())
+                ));
+        SortedMap<Address, BalanceEntry> sorted = new TreeMap<>(unsorted);
+        return sorted;
+    }
 
     @Override
     public Integer currentBlockHeight() {
@@ -234,6 +267,14 @@ public class OmniwalletClient implements OmniBalanceService, ConsensusFetcher {
 
     private long toLong(Object obj) {
         return obj instanceof String ? Long.valueOf((String) obj) : (Integer) obj;
+    }
+
+    private URI consensusURI(CurrencyID currencyID) {
+        HttpUrl okUrl = restAdapter
+                .baseUrl()
+                .newBuilder("/v1/mastercoin_verify/addresses?currency_id=" + currencyID.getValue())
+                .build();
+        return okUrl.uri();
     }
 
     private BigDecimal toBigDecimal(Object obj) {
