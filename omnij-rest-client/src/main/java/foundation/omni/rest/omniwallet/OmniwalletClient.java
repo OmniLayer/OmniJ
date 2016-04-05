@@ -1,6 +1,7 @@
 package foundation.omni.rest.omniwallet;
 
 
+import foundation.omni.rest.ConsensusService;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import foundation.omni.CurrencyID;
@@ -45,7 +46,7 @@ import java.util.stream.Collectors;
 /**
  * Omniwallet RPC Java client
  */
-public class OmniwalletClient implements OmniBalanceService, ConsensusFetcher {
+public class OmniwalletClient implements ConsensusService {
     static final String omniwalletBase = "https://www.omniwallet.org";
     static final int CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
     static final int READ_TIMEOUT_MILLIS = 20 * 1000; // 20s
