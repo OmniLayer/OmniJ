@@ -17,7 +17,7 @@ image:https://travis-ci.org/OmniLayer/OmniJ.svg?branch=master["Build Status", li
 
 A Java/JVM implementation of the http://www.omnilayer.org[Omni Layer], an open-source, fully decentralized asset creation platform built on the Bitcoin blockchain.
 
-There are currently three subprojects of OmniJ. Each of which builds a JAR artifact.
+There are currently four subprojects of OmniJ. Each of which builds a JAR artifact.
 
 [options="header",frame="all"]
 |===
