@@ -243,7 +243,7 @@ public abstract class OmniValue extends NumberValue {
         } else if (this instanceof OmniIndivisibleValue && right instanceof OmniIndivisibleValue) {
             return OmniIndivisibleValue.ofWillets(this.value + right.value);
         } else {
-            throw new ArithmeticException("Can't use plus with mixed OmniDivisible and OmniIndvisible operands");
+            throw new ArithmeticException("Can't use plus with mixed OmniDivisible and OmniIndivisible operands");
         }
     }
 
@@ -253,7 +253,7 @@ public abstract class OmniValue extends NumberValue {
         } else if (this instanceof OmniIndivisibleValue && right instanceof OmniIndivisibleValue) {
             return OmniIndivisibleValue.of(this.value - right.value);
         } else {
-            throw new ArithmeticException("Can't use minus with mixed OmniDivisible and OmniIndvisible operands");
+            throw new ArithmeticException("Can't use minus with mixed OmniDivisible and OmniIndivisible operands");
         }
     }
 
@@ -263,7 +263,7 @@ public abstract class OmniValue extends NumberValue {
         } else if (this instanceof OmniIndivisibleValue) {
             return OmniIndivisibleValue.of(this.value * right);
         } else {
-            throw new ArithmeticException("Can't use minus with mixed OmniDivisible and OmniIndvisible operands");
+            throw new ArithmeticException("Can't use multiply with class other than OmniDivisible or OmniIndivisible");
         }
     }
 
