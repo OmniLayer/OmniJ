@@ -16,7 +16,7 @@ class OmniDivisibleValueSpec extends Specification {
         OmniValue value = OmniDivisibleValue.ofWillets(willets)
 
         then: "it is created correctly"
-        value.bigDecimalValue() == expectedValue
+        value.numberValue() == expectedValue
 
         where:
         willets                 | expectedValue
@@ -91,7 +91,7 @@ class OmniDivisibleValueSpec extends Specification {
         OmniDivisibleValue value = OmniDivisibleValue.of(val)
 
         then: "it is created correctly"
-        value.bigDecimalValue() == val
+        value.numberValue() == val
 
         where:
         val << [0,
@@ -172,7 +172,7 @@ class OmniDivisibleValueSpec extends Specification {
     }
 
     @Unroll
-    def "Addition works: #a + #b == #c"(Number a, Number b, Number c) {
+    def "Addition works: #a + #b == #c"(BigDecimal a, BigDecimal b, BigDecimal c) {
         when:
         def A = OmniDivisibleValue.of(a)
         def B = OmniDivisibleValue.of(b)
@@ -188,7 +188,7 @@ class OmniDivisibleValueSpec extends Specification {
     }
 
     @Unroll
-    def "Multiplication works: #a * #b == #c"(Number a, Number b, Number c) {
+    def "Multiplication works: #a * #b == #c"(BigDecimal a, long b, BigDecimal c) {
         when:
         def A = OmniDivisibleValue.of(a)
         def C = OmniDivisibleValue.of(c)
@@ -204,7 +204,7 @@ class OmniDivisibleValueSpec extends Specification {
 
 
     @Unroll
-    def "Division works: #a / #b == #c"(Number a, Number b, Number c) {
+    def "Division works: #a / #b == #c"(BigDecimal a, long b, BigDecimal c) {
         when:
         def A = OmniDivisibleValue.of(a)
         def C = OmniDivisibleValue.of(c)
