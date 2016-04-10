@@ -3,6 +3,7 @@ package foundation.omni.rest.omniwallet
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.rpc.SmartPropertyListInfo
+import spock.lang.Shared
 import spock.lang.Unroll
 
 import static foundation.omni.CurrencyID.*
@@ -18,10 +19,9 @@ class OmniwalletClientSpec extends Specification {
     final Address exodusAddress = OmniMainNetParams.get().exodusAddress;
     final Address testAddr = new Address(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
 
-    def "get block height" () {
-        given:
-        def client = new OmniwalletClient()
+    @Shared def client
 
+    def "get block height" () {
         when:
         def height = client.currentBlockHeight()
 
@@ -30,9 +30,6 @@ class OmniwalletClientSpec extends Specification {
     }
 
     def "load testAddr balance"() {
-        given:
-        def client = new OmniwalletClient()
-
         when:
         def balances = client.balancesForAddress(testAddr)
 
@@ -47,9 +44,6 @@ class OmniwalletClientSpec extends Specification {
     }
 
     def "load exodusAddress balance"() {
-        given:
-        def client = new OmniwalletClient()
-
         when:
         def balances = client.balancesForAddress(exodusAddress)
         balances.sort{a, b -> a.id <=> b.id }
@@ -68,9 +62,6 @@ class OmniwalletClientSpec extends Specification {
     }
 
     def "load balances of addresses with single address"() {
-        given:
-        def client = new OmniwalletClient()
-
         when:
         def balances = client.balancesForAddresses([testAddr])
 
@@ -81,9 +72,6 @@ class OmniwalletClientSpec extends Specification {
     }
 
     def "load balances of addresses with multiple addresses"() {
-        given:
-        def client = new OmniwalletClient()
-
         when:
         def balances = client.balancesForAddresses([testAddr, exodusAddress])
 
@@ -97,9 +85,6 @@ class OmniwalletClientSpec extends Specification {
     }
 
     def "Can get Omniwallet property list"() {
-        setup:
-        def client = new OmniwalletClient()
-
         when: "we get data"
         def properties = client.listProperties()
 
@@ -143,9 +128,6 @@ class OmniwalletClientSpec extends Specification {
 
     @Unroll
     def "we can get consensus info for currency: #currency"() {
-        setup:
-        def client = new OmniwalletClient()
-
         when: "we get data"
         def balances = client.getConsensusForCurrency(currency)
 
@@ -154,5 +136,9 @@ class OmniwalletClientSpec extends Specification {
 
         where:
         currency << [MSC, TMSC, MaidSafeCoin, USDT, EURT]
+    }
+
+    def setup() {
+        client = new OmniwalletClient()
     }
 }
