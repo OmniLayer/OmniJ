@@ -47,7 +47,10 @@ import java.util.stream.Collectors;
  * Omniwallet RPC Java client
  */
 public class OmniwalletClient implements ConsensusService {
+    // This client will not work with current Omniwallet production server
     static final String omniwalletBase = "https://www.omniwallet.org";
+    // We need to use staging server until new version is released
+    static final String stagingBase = "https://staging.omniwallet.org";
     static final int CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
     static final int READ_TIMEOUT_MILLIS = 20 * 1000; // 20s
     private Retrofit restAdapter;
@@ -76,7 +79,7 @@ public class OmniwalletClient implements ConsensusService {
 
         restAdapter = new Retrofit.Builder()
                 .client(client)
-                .baseUrl(omniwalletBase)
+                .baseUrl(stagingBase)   // Use staging server until that version is released
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
 
