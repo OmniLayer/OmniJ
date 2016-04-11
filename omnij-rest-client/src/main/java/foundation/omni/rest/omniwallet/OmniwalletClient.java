@@ -210,9 +210,13 @@ public class OmniwalletClient implements ConsensusService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        List<SmartPropertyListInfo> result = properties.stream()
-                .map(this::propertyMapper)
-                .collect(Collectors.toList());
+        List<SmartPropertyListInfo> result = new ArrayList<>();
+        properties.forEach(prop -> {
+            SmartPropertyListInfo info = propertyMapper(prop);
+            if (info != null) {
+                result.add(info);
+            }
+        });
         return result;
     }
 
@@ -226,8 +230,10 @@ public class OmniwalletClient implements ConsensusService {
             return null;
         }
 
-        BigDecimal balance = jsonToBigDecimal((String) item.get("balance"));
-        BigDecimal reserved = jsonToBigDecimal((String) item.get("reserved_balance"));
+        String balanceStr = (String) item.get("balance");
+        String reservedStr = (String) item.get("reserved_balance");
+        BigDecimal balance = jsonToBigDecimal(balanceStr != null ? balanceStr : "0");
+        BigDecimal reserved = jsonToBigDecimal(reservedStr != null ? reservedStr : "0");
 
         // TODO: This should distinguish between Divisible and Indivisible!!
         AddressBalanceEntry balanceEntry = new AddressBalanceEntry(address,
@@ -249,7 +255,8 @@ public class OmniwalletClient implements ConsensusService {
         } catch (NumberFormatException e) {
             id = null;
         }
-        if (id != null && id != CurrencyID.BTC) {
+        String protocol = (String) property.get("Protocol");
+        if (id != null && protocol.equals("Omni")) {
             String name = (String) property.get("name");
             String category = "";
             String subCategory = "";
