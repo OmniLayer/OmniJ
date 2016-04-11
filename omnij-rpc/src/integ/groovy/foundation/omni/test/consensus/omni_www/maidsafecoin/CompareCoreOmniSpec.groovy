@@ -4,7 +4,7 @@ import foundation.omni.consensus.OmniwalletConsensusTool
 import foundation.omni.test.consensus.BaseConsensusSpec
 import spock.lang.Title
 
-import static foundation.omni.CurrencyID.MaidSafeCoin
+import static foundation.omni.CurrencyID.MAID
 
 /**
  */
@@ -13,6 +13,6 @@ class CompareCoreOmniSpec extends BaseConsensusSpec {
 
     void setupSpec() {
         setupComparisonForCurrency(new OmniwalletConsensusTool(),
-        MaidSafeCoin)
+        MAID)
     }
 }

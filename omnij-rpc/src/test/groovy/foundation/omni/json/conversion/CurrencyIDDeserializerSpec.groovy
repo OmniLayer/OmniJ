@@ -27,8 +27,8 @@ class CurrencyIDDeserializerSpec extends BaseObjectMapperSpec {
         '0'         | CurrencyID.BTC
         '1'         | CurrencyID.MSC
         '2'         | CurrencyID.TMSC
-        '3'         | CurrencyID.MaidSafeCoin
-        '31'        | CurrencyID.TetherUS
+        '3'         | CurrencyID.MAID
+        '31'        | CurrencyID.USDT
     }
 
     @Override

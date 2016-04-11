@@ -48,12 +48,18 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
                 return MSC;
             case "TMSC":
                 return TMSC;
-            case "MaidSafeCoin":
-                return MaidSafeCoin;
+            case "MAID":
+                return MAID;
             case "USDT":
                 return USDT;
+            case "AMP":
+                return AMP;
             case "EURT":
                 return EURT;
+            case "SEC":
+                return SEC;
+            case "AGRS":
+                return AGRS;
         }
         throw new IllegalArgumentException("unknown currency ticker string");
     }

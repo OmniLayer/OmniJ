@@ -135,7 +135,7 @@ class OmniwalletClientSpec extends Specification {
         balances.size() >= 1
 
         where:
-        currency << [MSC, TMSC, MaidSafeCoin, USDT, EURT]
+        currency << [MSC, TMSC, MAID, USDT, EURT]
     }
 
     def setup() {

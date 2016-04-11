@@ -7,7 +7,7 @@ import foundation.omni.rpc.SmartPropertyListInfo
 import spock.lang.Specification
 
 import static foundation.omni.CurrencyID.MSC
-import static foundation.omni.CurrencyID.MaidSafeCoin
+import static foundation.omni.CurrencyID.MAID
 import static foundation.omni.CurrencyID.TMSC
 
 /**
@@ -44,10 +44,10 @@ class ChestServerSpec extends Specification {
         ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
 
         when: "we get data"
-        def snapshot = fetcher.getConsensusSnapshot(MaidSafeCoin)
+        def snapshot = fetcher.getConsensusSnapshot(MAID)
 
         then: "something is there"
-        snapshot.currencyID == MaidSafeCoin
+        snapshot.currencyID == MAID
         snapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
         snapshot.entries.size() >= 1
     }

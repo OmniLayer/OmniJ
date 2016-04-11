@@ -4,7 +4,7 @@ import foundation.omni.test.consensus.remote_core.CompareCoreCoreBaseSpec
 import spock.lang.Ignore
 import spock.lang.Title
 
-import static foundation.omni.CurrencyID.MaidSafeCoin
+import static foundation.omni.CurrencyID.MAID
 
 /**
  * Local Omni Core vs Remote Omni Core consensus comparison for <code>MaidSafeCoin</code>
@@ -14,6 +14,6 @@ import static foundation.omni.CurrencyID.MaidSafeCoin
 class CompareCoreCoreSpec extends CompareCoreCoreBaseSpec {
 
     void setupSpec() {
-        setupCoreCoreComparisonForCurrency(MaidSafeCoin)
+        setupCoreCoreComparisonForCurrency(MAID)
     }
 }

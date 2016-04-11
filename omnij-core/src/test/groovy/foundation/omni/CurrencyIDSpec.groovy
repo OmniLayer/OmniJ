@@ -173,7 +173,7 @@ class CurrencyIDSpec extends Specification {
         "BTC"          | CurrencyID.BTC_VALUE
         "MSC"          | CurrencyID.MSC_VALUE
         "TMSC"         | CurrencyID.TMSC_VALUE
-        "MaidSafeCoin" | CurrencyID.MaidSafeCoin_VALUE
+        "MAID"         | CurrencyID.MAID_VALUE
         "USDT"         | CurrencyID.USDT_VALUE
     }
 }
