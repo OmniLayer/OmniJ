@@ -87,7 +87,7 @@ public class OmniwalletClient implements ConsensusService {
     }
 
     private OkHttpClient initClient() {
-        boolean debug = true;
+        boolean debug = false;
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
