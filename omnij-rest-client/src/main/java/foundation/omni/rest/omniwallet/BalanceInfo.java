@@ -7,8 +7,8 @@ import foundation.omni.OmniValue;
  *
  */
 public class BalanceInfo {
-    CurrencyID id;
-    OmniValue value;
+    public CurrencyID id;
+    public OmniValue value;
     String symbol;
     OmniValue pendingpos;
     OmniValue pendingneg;

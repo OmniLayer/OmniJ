@@ -26,9 +26,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
 
     @TypeChecked
     OmniwalletConsensusFetcher () {
-        proto = "https"
-        port = 443;
-        host = OmniHost_Live.host;
+        this(OmniHost_Live);
     }
 
     @TypeChecked

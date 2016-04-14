@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -114,7 +115,7 @@ public class OmniwalletClient implements ConsensusService {
             return null;
         }
         List<Map<String, Object>> balances = (List<Map<String, Object>>) result.get("balance");
-        List<BalanceInfo> list = new ArrayList<BalanceInfo>();
+        List<BalanceInfo> list = new ArrayList<>();
         balances.stream().forEach(bal -> {
             BalanceInfo b = new BalanceInfo();
             b.id = new CurrencyID(toLong(bal.get("id")));
@@ -153,8 +154,8 @@ public class OmniwalletClient implements ConsensusService {
          * loop does not resolve that issue, it only makes sure the reported block height
          * matches the data returned.
          */
-        long beforeBlockHeight = currentBlockHeight();
-        long curBlockHeight;
+        int beforeBlockHeight = currentBlockHeight();
+        int curBlockHeight;
         SortedMap<Address, BalanceEntry> entries;
         while (true) {
             entries = this.getConsensusForCurrency(currencyID);
@@ -167,7 +168,7 @@ public class OmniwalletClient implements ConsensusService {
             beforeBlockHeight = curBlockHeight;
         }
         ConsensusSnapshot snap = new ConsensusSnapshot(currencyID,
-                                        (Long) curBlockHeight,
+                                        curBlockHeight,
                                         "Omniwallet",
                                         consensusURI(currencyID),
                                         entries);
@@ -181,8 +182,14 @@ public class OmniwalletClient implements ConsensusService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        Function<Map<String, Object>, AddressBalanceEntry> mapper = null;
+        if (currencyID.equals(currencyID.MAID) || currencyID.equals(currencyID.SEC)) {
+            mapper = this::indivBalanceMapper;
+        } else {
+            mapper = this::divisBalanceMapper;
+        }
         Map<Address, BalanceEntry> unsorted = balances.stream()
-                .map(this::balanceMapper)
+                .map(mapper)
                 .collect(Collectors.toMap(
                         AddressBalanceEntry::getAddress, address -> new BalanceEntry(address.getBalance(), address.getReserved())
                 ));
@@ -232,18 +239,71 @@ public class OmniwalletClient implements ConsensusService {
 
         String balanceStr = (String) item.get("balance");
         String reservedStr = (String) item.get("reserved_balance");
-        BigDecimal balance = jsonToBigDecimal(balanceStr != null ? balanceStr : "0");
-        BigDecimal reserved = jsonToBigDecimal(reservedStr != null ? reservedStr : "0");
+        OmniValue balance = stringToOmniValue(balanceStr);
+        OmniValue reserved = (reservedStr != null) ?
+                                    stringToOmniValue(reservedStr) :
+                                    OmniValue.of(0, balance.getPropertyType());
+        // Workaround for reserved balances
 
-        // TODO: This should distinguish between Divisible and Indivisible!!
-        AddressBalanceEntry balanceEntry = new AddressBalanceEntry(address,
-                OmniDivisibleValue.of(balance), OmniDivisibleValue.of(reserved));
+        if ((balance.getPropertyType() == PropertyType.DIVISIBLE) &&
+                (reserved.getPropertyType() == PropertyType.INDIVISIBLE) &&
+                (reserved.getWillets() == 0)) {
+            reserved = OmniDivisibleValue.of(0);
+        }
+
+        AddressBalanceEntry balanceEntry = new AddressBalanceEntry(address, balance, reserved);
         return balanceEntry;
     }
 
-    private static BigDecimal jsonToBigDecimal(String balanceIn) {
-        BigDecimal balanceOut =  new BigDecimal(balanceIn).setScale(8);
-        return balanceOut;
+    private AddressBalanceEntry divisBalanceMapper(Map<String, Object> item) {
+
+        Address address;
+        try {
+            address = new Address(null, (String) item.get("address"));
+        } catch (AddressFormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        String balanceStr = (String) item.get("balance");
+        String reservedStr = (String) item.get("reserved_balance");
+        OmniDivisibleValue balance = OmniDivisibleValue.of(new BigDecimal(balanceStr));
+        OmniDivisibleValue reserved = (reservedStr != null) ?
+                OmniDivisibleValue.of(new BigDecimal(reservedStr)) :
+                OmniDivisibleValue.of(0);
+
+        AddressBalanceEntry balanceEntry = new AddressBalanceEntry(address, balance, reserved);
+        return balanceEntry;
+    }
+
+    private AddressBalanceEntry indivBalanceMapper(Map<String, Object> item) {
+
+        Address address;
+        try {
+            address = new Address(null, (String) item.get("address"));
+        } catch (AddressFormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        String balanceStr = (String) item.get("balance");
+        String reservedStr = (String) item.get("reserved_balance");
+        OmniIndivisibleValue balance = OmniIndivisibleValue.of(Long.valueOf(balanceStr));
+        OmniIndivisibleValue reserved = (reservedStr != null) ?
+                OmniIndivisibleValue.of(Long.valueOf(balanceStr)) :
+                OmniIndivisibleValue.of(0);
+
+        AddressBalanceEntry balanceEntry = new AddressBalanceEntry(address, balance, reserved);
+        return balanceEntry;
+    }
+
+    private static OmniValue stringToOmniValue(String valueString) {
+        boolean divisible = valueString.contains(".");  // Divisible amounts always contain a decimal point
+        if (divisible) {
+            return OmniValue.of(new BigDecimal(valueString), PropertyType.DIVISIBLE);
+        } else {
+            return OmniValue.of(Long.valueOf(valueString), PropertyType.INDIVISIBLE);
+        }
     }
 
 

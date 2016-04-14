@@ -2,6 +2,8 @@ package foundation.omni.rest.omniwallet
 
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
+import foundation.omni.PropertyType
+import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
 import spock.lang.Shared
 import spock.lang.Unroll
@@ -128,14 +130,22 @@ class OmniwalletClientSpec extends Specification {
 
     @Unroll
     def "we can get consensus info for currency: #currency"() {
+        setup:
+        def propType = ((currency == MAID) || (currency == SEC)) ?
+                        PropertyType.INDIVISIBLE : PropertyType.DIVISIBLE;
         when: "we get data"
-        def balances = client.getConsensusForCurrency(currency)
+        SortedMap<Address, BalanceEntry> balances = client.getConsensusForCurrency(currency)
 
         then: "something is there"
         balances.size() >= 1
 
+        and: "all balances of correct property type"
+        balances.every {address, entry ->
+            entry.balance.propertyType == propType && entry.reserved.propertyType == propType
+        }
+
         where:
-        currency << [MSC, TMSC, MAID, USDT, EURT]
+        currency << [MSC, TMSC, MAID, USDT, AGRS, EURT, SEC]
     }
 
     def setup() {

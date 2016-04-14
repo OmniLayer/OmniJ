@@ -21,7 +21,7 @@ public class ConsensusSnapshot {
     /**
      * Bitcoin block height (aka blockCount) at time of snapshot
      */
-    private final Long blockHeight;
+    private final int blockHeight;
 
     /**
      * A string identifying the source of the consensus data
@@ -42,7 +42,7 @@ public class ConsensusSnapshot {
     return currencyID;
     }
 
-    public final Long getBlockHeight() {
+    public final int getBlockHeight() {
         return blockHeight;
     }
 
@@ -58,12 +58,35 @@ public class ConsensusSnapshot {
         return entries;
     }
 
-    public ConsensusSnapshot(CurrencyID currencyID, Long blockHeight, String sourceType, URI sourceURI, SortedMap<Address, BalanceEntry> entries)
+    /**
+     *
+     * @param currencyID
+     * @param blockHeight
+     * @param sourceType
+     * @param sourceURI
+     * @param entries
+     */
+    public ConsensusSnapshot(CurrencyID currencyID, int blockHeight, String sourceType, URI sourceURI, SortedMap<Address, BalanceEntry> entries)
     {
+
         this.currencyID = currencyID;
         this.blockHeight = blockHeight;
         this.sourceType = sourceType;
         this.sourceURI = sourceURI;
         this.entries = entries;
+    }
+
+    /**
+     *
+     * @param currencyID
+     * @param blockHeight
+     * @param sourceType
+     * @param sourceURI
+     * @param entries
+     * @deprecated Use constructor with Integer blockHeight
+     */
+    public ConsensusSnapshot(CurrencyID currencyID, Long blockHeight, String sourceType, URI sourceURI, SortedMap<Address, BalanceEntry> entries)
+    {
+        this(currencyID, blockHeight.intValue(), sourceType, sourceURI, entries);
     }
 }
