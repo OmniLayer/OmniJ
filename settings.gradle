@@ -1,2 +1,3 @@
-include 'omnij-core', 'omnij-dsl', 'omnij-rpc', 'omnij-cli', 'omnij-rest-client'
+include 'omnij-core', 'omnij-dsl', 'omnij-rpc', 'omnij-cli', 'omnij-rest-client', 'omnij-money'
+
 
