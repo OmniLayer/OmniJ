@@ -23,8 +23,6 @@ import java.util.SortedMap;
  *
  */
 public class OmniCoreClient extends OmniCoreConsensusFetcher implements ConsensusService {
-    OmniClient client;
-
     public OmniCoreClient(NetworkParameters netParms, URI server, String rpcuser, String rpcpassword) {
         super(netParms, server, rpcuser, rpcpassword);
     }
