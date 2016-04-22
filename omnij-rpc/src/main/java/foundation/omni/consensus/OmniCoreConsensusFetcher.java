@@ -101,8 +101,8 @@ public class OmniCoreConsensusFetcher implements ConsensusFetcher {
         /* Since omni_getallbalancesforid doesn't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
          */
-        Integer beforeBlockHeight = currentBlockHeight();
-        Integer curBlockHeight;
+        int beforeBlockHeight = currentBlockHeight();
+        int curBlockHeight;
         SortedMap<Address, BalanceEntry> entries;
         while (true) {
             entries = this.getConsensusForCurrency(currencyID);
