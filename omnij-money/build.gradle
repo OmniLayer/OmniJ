@@ -4,6 +4,7 @@ dependencies {
     compile "com.msgilligan:bitcoinj-money:${bitcoinjAddonsVersion}"
 
     compile 'org.javamoney:moneta-bp:1.0'
-
     compile 'org.knowm.xchange:xchange-poloniex:4.0.0'
 }
+
+sourceCompatibility = 1.7

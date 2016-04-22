@@ -35,6 +35,7 @@ subprojects {
 
         runtime 'org.slf4j:slf4j-jdk14:1.7.7'               // Runtime implementation of slf4j
 
+        testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
         testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
             exclude module: "groovy-all"
         }

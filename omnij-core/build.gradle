@@ -1,6 +1,5 @@
 dependencies {
     compile 'javax.money:money-api-bp:1.0'
 
-    testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
-    testCompile "com.msgilligan:bitcoinj-groovy:${bitcoinjAddonsVersion}"
+    testCompile "com.msgilligan:bitcoinj-dsl:${bitcoinjAddonsVersion}"
 }

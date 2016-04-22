@@ -16,7 +16,7 @@ dependencies {
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
 
     testCompile project(':omnij-dsl')
-    testCompile "com.msgilligan:bitcoinj-groovy:${bitcoinjAddonsVersion}"
+    testCompile "com.msgilligan:bitcoinj-dsl:${bitcoinjAddonsVersion}"
     testCompile 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests
 }
 
