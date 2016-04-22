@@ -57,7 +57,7 @@ class OmniwalletServerSpec extends Specification {
         then: "we can check MSC and TMSC are as expected"
         props[MSC].propertyid == MSC
         props[MSC].propertyid.ecosystem == Ecosystem.MSC
-        props[MSC].name == "Mastercoin" // Note: Omni Core returns "MasterCoin" with a capital-C
+        props[MSC].name == "Omni" // Note: Omni Core returns "MasterCoin" with a capital-C
         props[MSC].category == ""
         props[MSC].subcategory == ""
         props[MSC].data == ""
@@ -66,7 +66,7 @@ class OmniwalletServerSpec extends Specification {
 
         props[TMSC].propertyid == TMSC
         props[TMSC].propertyid.ecosystem == Ecosystem.TMSC
-        props[TMSC].name == "Test Mastercoin" // Note: Omni Core returns "Mastercoin" with a capital-C
+        props[TMSC].name == "Test Omni" // Note: Omni Core returns "Mastercoin" with a capital-C
         props[TMSC].category == ""
         props[TMSC].subcategory == ""
         props[TMSC].data == ""
