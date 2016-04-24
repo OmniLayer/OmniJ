@@ -21,6 +21,14 @@ class PoloniexXChangeRateProviderSpec extends Specification {
         rate.factor.numberValue(BigDecimal.class) > 0
     }
 
+    def "can list currency codes"() {
+        when:
+        def markets = provider.exchange.metaData.marketMetaDataMap
+
+        then:
+        markets.size() > 0
+    }
+
     def setup() {
         provider = new PoloniexXChangeRateProvider()
     }

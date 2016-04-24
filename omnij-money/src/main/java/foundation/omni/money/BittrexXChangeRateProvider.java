@@ -9,6 +9,6 @@ import org.knowm.xchange.currency.CurrencyPair;
  */
 public class BittrexXChangeRateProvider extends BaseXChangeExchangeRateProvider {
     public BittrexXChangeRateProvider() {
-        super(BittrexExchange.class, new CurrencyPair("OMNI", "BTC"), "OMNI", "BTC");
+        super(BittrexExchange.class, "BTC", "OMNI");
     }
 }
