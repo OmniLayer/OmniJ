@@ -10,7 +10,7 @@ import com.msgilligan.bitcoinj.money.BaseXChangeExchangeRateProvider;
  */
 public class PoloniexXChangeRateProvider extends BaseXChangeExchangeRateProvider {
     public PoloniexXChangeRateProvider() {
-        super(PoloniexExchange.class, "OMNI", "BTC");
+        super(PoloniexExchange.class, "OMNI/BTC", "MAID/BTC", "AMP/BTC");
     }
 
 }
