@@ -6,7 +6,7 @@ import org.knowm.xchange.poloniex.PoloniexExchange;
 import com.msgilligan.bitcoinj.money.BaseXChangeExchangeRateProvider;
 
 /**
- * Exchange rate provider currently hardcoded for OMNIBTC only
+ * Poloniex wrapper
  */
 public class PoloniexXChangeRateProvider extends BaseXChangeExchangeRateProvider {
     public PoloniexXChangeRateProvider() {
