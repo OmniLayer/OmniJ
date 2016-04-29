@@ -1,5 +1,6 @@
 package foundation.omni.money;
 
+import foundation.omni.CurrencyID;
 import foundation.omni.PropertyType;
 import org.javamoney.moneta.CurrencyUnitBuilder;
 
@@ -24,7 +25,7 @@ public class OmniCurrencyProvider implements CurrencyProviderSpi {
 
     final private static Set<OmniCurrencyCode> codes = new HashSet<>(Arrays.asList(OMNI, MAID, USDT, AMP, SEC, AGRS));
 
-    private final CurrencyContext CONTEXT = CurrencyContextBuilder.of("OmniCurrencyContextProvider")
+    private static final CurrencyContext CONTEXT = CurrencyContextBuilder.of("OmniCurrencyContextProvider")
             .build();
 
     private final Set<CurrencyUnit> omniSet;
@@ -52,7 +53,7 @@ public class OmniCurrencyProvider implements CurrencyProviderSpi {
      */
     @Override
     public Set<CurrencyUnit> getCurrencies(CurrencyQuery query){
-        // Empty matches everything, return all supported currencies.
+        // Empty matches everything, return all well-known currencies.
         if (query.getCurrencyCodes().isEmpty()) {
             return omniSet;
         }
@@ -78,12 +79,41 @@ public class OmniCurrencyProvider implements CurrencyProviderSpi {
                 return unit;
             }
         }
+        if (code.startsWith(OmniCurrencyCode.realEcosystemPrefix)) {
+            String nnn = code.split("#")[1];
+            long number = Long.parseLong(nnn);
+            if (CurrencyID.isValidReal(number)) {
+                return build(code);
+            }
+        }
+        if (code.startsWith(OmniCurrencyCode.testEcosystemPrefix)) {
+            String nnn = code.split("#")[1];
+            long number = Long.parseLong(nnn);
+            if (CurrencyID.isValidTest(number)) {
+                return build(code);
+            }
+        }
         return null;
     }
 
-    private CurrencyUnit build(OmniCurrencyCode code) {
+    private static CurrencyUnit build(OmniCurrencyCode code) {
         return CurrencyUnitBuilder.of(code.name(), CONTEXT)
                 .setDefaultFractionDigits(code.type() == PropertyType.DIVISIBLE ? divisbleFractionDigits : indivisbleFractionDigits)
                 .build();
     }
+
+    private static CurrencyUnit build(String code) {
+        int digits = divisbleFractionDigits;
+        if (code.equals(MAID.name()) || code.equals(SEC.name())) {
+            digits = indivisbleFractionDigits;
+        }
+        return CurrencyUnitBuilder.of(code, CONTEXT)
+                .setDefaultFractionDigits(digits)
+                .build();
+    }
+
+    public static CurrencyUnit build(CurrencyID id) {
+        return build(OmniCurrencyCode.idToCodeString(id));
+    }
+
 }

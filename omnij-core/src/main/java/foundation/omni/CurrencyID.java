@@ -69,7 +69,7 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
             throw new IllegalArgumentException("below min");
         }
         if (value > MAX_VALUE) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("above max");
         }
         this.value = value;
     }
@@ -84,6 +84,34 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
         } else {
             return Ecosystem.TMSC;
         }
+    }
+
+    /**
+     * is valid BTC or Real ecosystem or Test ecosystem
+     * @param value currency id number
+     * @return true if valid
+     */
+    public static boolean isValid(long value) {
+        return ((value >= MIN_VALUE) && (value <= MAX_VALUE));
+    }
+
+    /**
+     * Is valid real ecosystem value
+     * Note BTC is not a valid real ecosystem value
+     * @param value currency id number
+     * @return true if valid
+     */
+    public static boolean isValidReal(long value) {
+        return (value == MSC_VALUE) || ((value > TMSC_VALUE) && (value <= MAX_REAL_ECOSYSTEM_VALUE));
+    }
+
+    /**
+     * Is valid test ecosystem value
+     * @param value currency id number
+     * @return true if valid
+     */
+    public static boolean isValidTest(long value) {
+        return ((value == TMSC_VALUE) ||(value > MAX_REAL_ECOSYSTEM_VALUE) && (value <= MAX_VALUE));
     }
 
     public long getValue() {
