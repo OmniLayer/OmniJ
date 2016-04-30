@@ -5,6 +5,7 @@ import foundation.omni.Ecosystem
 import org.bitcoinj.core.Address
 import spock.lang.Shared
 import spock.lang.Stepwise
+import spock.lang.Unroll
 
 /**
  * Specification for the activation of the all pair trading of the distributed token exchange.
@@ -163,6 +164,79 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
 
         and:
         omniGetBalance(actorAddress, tokenA) == balanceAtStart
+    }
+
+    @Unroll
+    def "Exact trade match: #amountSPX SPX for #amountSPY SPY"() {
+        when:
+        def traderA = createFundedAddress(startBTC, zeroAmount, false) // offers SPX
+        def traderB = createFundedAddress(startBTC, zeroAmount, false) // offers SPY
+        def propertySPX = fundNewProperty(traderA, amountSPX, ecosystem)
+        def propertySPY = fundNewProperty(traderB, amountSPY, ecosystem)
+
+        then:
+        omniGetBalance(traderA, propertySPY).balance == zeroAmount
+        omniGetBalance(traderA, propertySPX).balance == amountSPX.numberValue()
+        omniGetBalance(traderB, propertySPY).balance == amountSPY.numberValue()
+        omniGetBalance(traderB, propertySPX).balance == zeroAmount
+
+        when: "trader A offers SPX and desired SPY"
+        def txidOfferA = omniSendTrade(traderA, propertySPX, amountSPX, propertySPY, amountSPY)
+        generateBlock()
+
+        then: "it is a valid open order"
+        omniGetTrade(txidOfferA).valid
+        omniGetTrade(txidOfferA).status == "open"
+        omniGetTrade(txidOfferA).propertyidforsale == propertySPX.getValue()
+        omniGetTrade(txidOfferA).propertyiddesired == propertySPY.getValue()
+        omniGetTrade(txidOfferA).unitprice == unitPrice
+
+        and: "there is an offering for the new property in the orderbook"
+        omniGetOrderbook(propertySPX, propertySPY).size() == 1
+
+        and: "the offered amount is now reserved"
+        omniGetBalance(traderA, propertySPX).balance == zeroAmount
+        omniGetBalance(traderA, propertySPX).reserved == amountSPX.numberValue()
+
+        when: "trader B offers SPY and desires SPX"
+        def txidOfferB = omniSendTrade(traderB, propertySPY, amountSPY, propertySPX, amountSPX)
+        generateBlock()
+
+        then: "the order is filled"
+        omniGetTrade(txidOfferB).valid
+        omniGetTrade(txidOfferB).status == "filled"
+        omniGetTrade(txidOfferB).propertyidforsale == propertySPY.getValue()
+        omniGetTrade(txidOfferB).propertyiddesired == propertySPX.getValue()
+        omniGetTrade(txidOfferB).unitprice == inversePrice
+
+        and: "the offering is no longer listed in the orderbook"
+        omniGetOrderbook(propertySPX, propertySPY).size() == 0
+
+        and:
+        omniGetBalance(traderA, propertySPY).balance == amountSPY.numberValue()
+        omniGetBalance(traderA, propertySPX).balance == zeroAmount
+        omniGetBalance(traderB, propertySPY).balance == zeroAmount
+        omniGetBalance(traderB, propertySPX).balance == amountSPX.numberValue()
+
+        and:
+        omniGetBalance(traderA, propertySPY).reserved == zeroAmount
+        omniGetBalance(traderA, propertySPX).reserved == zeroAmount
+        omniGetBalance(traderB, propertySPY).reserved == zeroAmount
+        omniGetBalance(traderB, propertySPX).reserved == zeroAmount
+
+        where:
+        ecosystem      | amountSPX                        | amountSPY                        | unitPrice                                                                | inversePrice
+        Ecosystem.MSC  |                    1.indivisible |                    1.indivisible |                   "1.00000000000000000000000000000000000000000000000000" |           "1.00000000000000000000000000000000000000000000000000"
+        Ecosystem.TMSC |                    2.indivisible |  9223372036854775807.indivisible | "4611686018427387903.50000000000000000000000000000000000000000000000000" |           "0.00000000000000000021684043449710088682500044719043"
+        Ecosystem.MSC  |  9223372036854775807.indivisible |  9223372036854775806.indivisible |                   "0.99999999999999999989157978275144955658749977640478" |           "1.00000000000000000010842021724855044342425516710344"
+        Ecosystem.TMSC |                    1.indivisible |           0.00000001.divisible   |                   "0.00000001000000000000000000000000000000000000000000" |   "100000000.00000000000000000000000000000000000000000000000000"
+        Ecosystem.MSC  |                    2.indivisible | 92233720368.54775807.divisible   |         "46116860184.27387903500000000000000000000000000000000000000000" |           "0.00000000002168404344971008868250004471904340924471"
+        Ecosystem.TMSC |          10000000000.indivisible | 9999999999.99999999.divisible    |                   "0.99999999999999999900000000000000000000000000000000" |           "1.00000000000000000100000000000000000100000000000000"
+        Ecosystem.MSC  |           0.00000001.divisible   |                    1.indivisible |           "100000000.00000000000000000000000000000000000000000000000000" |           "0.00000001000000000000000000000000000000000000000000"
+        Ecosystem.TMSC | 92233720368.54775807.divisible   |                    2.indivisible |                   "0.00000000002168404344971008868250004471904340924471" | "46116860184.27387903500000000000000000000000000000000000000000"
+        Ecosystem.MSC  |  9999999999.99999999.divisible   |          10000000000.indivisible |                   "1.00000000000000000100000000000000000100000000000000" |           "0.99999999999999999900000000000000000000000000000000"
+        Ecosystem.TMSC |           0.00000001.divisible   |           0.00000001.divisible   |                   "1.00000000000000000000000000000000000000000000000000" |           "1.00000000000000000000000000000000000000000000000000"
+        Ecosystem.MSC  |           0.00000001.divisible   | 92233720368.54775807.divisible   | "9223372036854775807.00000000000000000000000000000000000000000000000000" |           "0.00000000000000000010842021724855044341250022359522"
     }
 
 }
