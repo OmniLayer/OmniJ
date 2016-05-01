@@ -73,4 +73,12 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
             throw new AssumptionViolatedException("Feature $featureId is already live")
         }
     }
+
+    def skipIfVersionOlderThan(def minClientVersion) {
+        def clientInfo = omniGetInfo()
+        def clientVersion = clientInfo.omnicoreversion_int
+        if (clientVersion < minClientVersion) {
+            throw new AssumptionViolatedException("Requires at least version $minClientVersion, but is $clientVersion")
+        }
+    }
 }

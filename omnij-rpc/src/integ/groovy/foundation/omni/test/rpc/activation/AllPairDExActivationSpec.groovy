@@ -26,6 +26,7 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
 
     def beforeSpec() {
         skipIfActivated(allPairDExFeatureId)
+        skipIfVersionOlderThan(1100000)
     }
 
     def setupSpec() {
