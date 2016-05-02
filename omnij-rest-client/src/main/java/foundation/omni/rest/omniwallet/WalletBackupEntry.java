@@ -17,8 +17,12 @@ public class WalletBackupEntry {
                              @JsonProperty("privkey") String privkey,
                              @JsonProperty("pubkey") String pubkey) {
         this.address = address;
-        this.privkey = privkey;
-        this.pubkey = pubkey;
+//        this.privkey = privkey;
+//        this.pubkey = pubkey;
+        // Null these out so they don't stay in memory or get saved to disk.
+        // This may change alter.
+        this.privkey = null;
+        this.pubkey = null;
     }
 
 
