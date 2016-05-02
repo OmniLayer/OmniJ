@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  *
@@ -42,11 +43,14 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
     }
 
     private List<BalanceInfo> balancesForAddress(Address address) {
-        SortedMap<CurrencyID, BalanceEntry> entries;
+        SortedMap<CurrencyID, BalanceEntry> entries = new TreeMap<>();
         try {
             entries = client.omniGetAllBalancesForAddress(address);
         } catch (JsonRPCException e) {
-            throw new RuntimeException(e);
+            if (!e.getMessage().equals("Address not found")) {
+                throw new RuntimeException(e);
+            }
+            // otherwise return empty entries map
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ParseException e) {
