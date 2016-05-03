@@ -25,6 +25,10 @@ public class WalletBackupEntry {
         this.pubkey = null;
     }
 
+    public WalletBackupEntry(Address address) {
+        this(address.toString(), "", "");
+    }
+
 
     @JsonIgnore
     public Address getAddressObject() {
