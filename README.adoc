@@ -17,7 +17,7 @@ image:https://travis-ci.org/OmniLayer/OmniJ.svg?branch=master["Build Status", li
 
 A Java/JVM implementation of the http://www.omnilayer.org[Omni Layer], an open-source, fully decentralized asset creation platform built on the Bitcoin blockchain.
 
-There are currently four subprojects of OmniJ. Each of which builds a JAR artifact.
+There are currently six subprojects of OmniJ. Each of which builds a JAR artifact.
 
 [options="header",frame="all"]
 |===
@@ -30,6 +30,14 @@ There are currently four subprojects of OmniJ. Each of which builds a JAR artifa
 | omnij-dsl
 | Domain Specific Language (DSL) support for Omni
 | JDK 7+, Groovy language
+
+| omnij-money
+| JavaMoney support for Omni currency codes and exchanges
+| JDK 7+, Java-only, tests in Groovy/Spock
+
+| omnij-rest-client
+| JavaMoney support for Omni currency codes and exchanges
+| JDK 8+, Java-only, tests in Groovy/Spock
 
 | omnij-rpc
 | Omni Core RPC library, command-line API/tools, integration tests
@@ -90,6 +98,12 @@ After a successful build, the jars will be in the following locations:
 
 | omnij-dsl
 | omnij-dsl/build/libs/omnij-dsl-_version_.jar
+
+| omnij-money
+| omnij-dsl/build/libs/omnij-money-_version_.jar
+
+| omnij-rest-client
+| omnij-dsl/build/libs/omnij-rest-client-_version_.jar
 
 | omnij-rpc
 | omnij-rpc/build/libs/omnij-rpc-_version_.jar
