@@ -18,7 +18,7 @@ allprojects {
 
     //sourceCompatibility = 1.7
 
-    version = '0.3.6-SNAPSHOT'
+    version = '0.3.6'
     group = 'foundation.omni'
 
     repositories {

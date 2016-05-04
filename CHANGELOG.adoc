@@ -3,6 +3,18 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.3.6
+
+Released: 2016.05.04
+
+=== Features/Changes
+
+* New omnij-money module (Java Money implementation for OMNI and all Omni smart properties)
+* New omnij-rest-client module (common interface for OmniCore and Omniwallet REST API)
+* Add CurrencyID constants for USDT, EURT, MAID, AMP, SEC, AGRS
+* Upgrade to bitcoinj-addons 0.0.13
+* Upgrade to Groovy 2.4.6, bitcoinj 0.13.6, and Gradle 2.12
+
 == v0.3.5
 
 Released: 2015.12.01
