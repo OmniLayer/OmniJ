@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- *
+ * Define JSON format of Omniwallet backup file for Jackson JSON library.
+ * Also provide static methods for reading and writing from a File.
  */
 public class WalletBackupFile {
     public List<WalletBackupEntry> addresses;

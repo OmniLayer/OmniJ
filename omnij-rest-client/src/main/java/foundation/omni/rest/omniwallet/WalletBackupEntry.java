@@ -20,7 +20,7 @@ public class WalletBackupEntry {
 //        this.privkey = privkey;
 //        this.pubkey = pubkey;
         // Null these out so they don't stay in memory or get saved to disk.
-        // This may change alter.
+        // This may change later.
         this.privkey = null;
         this.pubkey = null;
     }
