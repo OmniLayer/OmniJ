@@ -29,6 +29,7 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
     static final protected Short metaDExFeatureId = 2
     static final protected Short unallocatedFeatureId = 3
     static final protected Short overOffersFeatureId = 5
+    static final protected Short allPairDExFeatureId = 8
 
     // Default values
     static protected Integer minClientVersion = 0
@@ -70,6 +71,14 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
         }
         if (activations.completedactivations.any( { it.featureid == featureId } )) {
             throw new AssumptionViolatedException("Feature $featureId is already live")
+        }
+    }
+
+    def skipIfVersionOlderThan(def minClientVersion) {
+        def clientInfo = omniGetInfo()
+        def clientVersion = clientInfo.omnicoreversion_int
+        if (clientVersion < minClientVersion) {
+            throw new AssumptionViolatedException("Requires at least version $minClientVersion, but is $clientVersion")
         }
     }
 }

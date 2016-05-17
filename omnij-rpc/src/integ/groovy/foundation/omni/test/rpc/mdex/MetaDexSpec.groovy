@@ -70,10 +70,14 @@ class MetaDexSpec extends BaseRegTestSpec {
         txTradeC.amountforsale as BigDecimal == 0.00000001.divisible.bigDecimalValue()
         txTradeC.propertyiddesired == propertySPX.getValue()
         txTradeC.amountdesired as BigDecimal == 10.indivisible.bigDecimalValue()
-        txTradeC.unitprice == "0.00000000100000000000000000000000000000000000000000"
         txTradeC.amountremaining as BigDecimal == 0.00000001.divisible.bigDecimalValue()
         txTradeC.amounttofill as BigDecimal == 10.indivisible.bigDecimalValue()
         txTradeC.matches.size == 0
+        if (omniGetInfo().omnicoreversion_int < 1100000) {
+            assert txTradeC.unitprice == "0.00000000100000000000000000000000000000000000000000"
+        } else {
+            assert txTradeC.unitprice == "1000000000.00000000000000000000000000000000000000000000000000"
+        }
     }
 
     /**
@@ -136,10 +140,14 @@ class MetaDexSpec extends BaseRegTestSpec {
         txTradeB.amountforsale as BigDecimal == 0.55.divisible.bigDecimalValue()
         txTradeB.propertyiddesired == propertySPX.getValue()
         txTradeB.amountdesired as BigDecimal == 5.indivisible.bigDecimalValue()
-        txTradeB.unitprice == "0.11000000000000000000000000000000000000000000000000"
         txTradeB.amountremaining as BigDecimal == 0.05.divisible.bigDecimalValue()
         txTradeB.amounttofill as BigDecimal == 1.indivisible.bigDecimalValue()
         txTradeB.matches.size == 1
+        if (omniGetInfo().omnicoreversion_int < 1100000) {
+            assert txTradeB.unitprice == "0.11000000000000000000000000000000000000000000000000"
+        } else {
+            assert txTradeB.unitprice == "9.09090909090909090909090909090909090909090909090909"
+        }
 
         when:
         def tradeMatchB = txTradeB.matches.find { it.txid == txidTradeA.toString() } as Map<String, Object>
