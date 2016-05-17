@@ -14,7 +14,11 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
 
     public static final long    BTC_VALUE = 0;
     public static final long    OMNI_VALUE = 1;
+    /** @deprecated */
+    public static final long    MSC_VALUE = 1;
     public static final long    TOMNI_VALUE = 2;
+    /** @deprecated */
+    public static final long    TMSC_VALUE = 2;
     public static final long    MAID_VALUE = 3; // MaidSafeCoin
     /** @deprecated */
     public static final long    MaidSafeCoin_VALUE = 3;
@@ -28,7 +32,11 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
 
     public static final CurrencyID  BTC = new CurrencyID(BTC_VALUE);
     public static final CurrencyID  OMNI = new CurrencyID(OMNI_VALUE);
+    /** @deprecated */
+    public static final CurrencyID  MSC = new CurrencyID(OMNI_VALUE);
     public static final CurrencyID  TOMNI = new CurrencyID(TOMNI_VALUE);
+    /** @deprecated */
+    public static final CurrencyID  TMSC = new CurrencyID(TOMNI_VALUE);
     public static final CurrencyID  MAID = new CurrencyID(MAID_VALUE);
     /** @deprecated */
     public static final CurrencyID  MaidSafeCoin = new CurrencyID(MAID_VALUE);
