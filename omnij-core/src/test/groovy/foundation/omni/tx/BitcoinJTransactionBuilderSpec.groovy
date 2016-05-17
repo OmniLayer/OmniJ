@@ -1,23 +1,16 @@
 package foundation.omni.tx
 
 import foundation.omni.OmniDivisibleValue
-import foundation.omni.net.OmniNetworkParameters
 import org.bitcoinj.core.Coin
-import org.bitcoinj.core.ECKey
-import org.bitcoinj.core.InsufficientMoneyException
 import org.bitcoinj.core.Sha256Hash
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.TransactionInput
 import org.bitcoinj.core.TransactionOutPoint
-import org.bitcoinj.core.TransactionOutput
-import org.bitcoinj.params.MainNetParams
 import org.bitcoinj.params.RegTestParams
 import org.bitcoinj.script.Script
 import org.bitcoinj.script.ScriptBuilder
-import org.spongycastle.util.encoders.Hex
-import spock.lang.Specification
 
-import static foundation.omni.CurrencyID.MSC
+import static foundation.omni.CurrencyID.OMNI
 
 
 /**
@@ -38,7 +31,7 @@ class BitcoinJTransactionBuilderSpec extends BaseTxSpec {
 
         when:
         def toAddress = senderAddr
-        def txHex = builder.createSimpleSendHex(MSC, OmniDivisibleValue.of(1))
+        def txHex = builder.createSimpleSendHex(OMNI, OmniDivisibleValue.of(1))
         def payload = hex(txHex)
         Transaction tx = encoder.encodeObfuscated(senderKey, payload, senderAddr.toString())
         tx.addOutput(Coin.MILLICOIN, omniParams.exodusAddress)

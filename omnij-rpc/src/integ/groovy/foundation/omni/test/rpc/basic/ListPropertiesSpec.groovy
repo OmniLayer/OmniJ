@@ -5,8 +5,8 @@ import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import spock.lang.Ignore
 
-import static foundation.omni.CurrencyID.MSC
-import static foundation.omni.CurrencyID.TMSC
+import static foundation.omni.CurrencyID.OMNI
+import static foundation.omni.CurrencyID.TOMNI
 import foundation.omni.rpc.SmartPropertyListInfo
 
 /**
@@ -27,23 +27,23 @@ class ListPropertiesSpec extends BaseRegTestSpec {
         // This may be unnecessary if we can assume the property list is ordered by propertyid
         Map<CurrencyID, SmartPropertyListInfo> props = properties.collect{[it.propertyid, it]}.collectEntries()
 
-        then: "we can check MSC and TMSC are as expected"
-        props[MSC].propertyid == MSC
-        props[MSC].propertyid.ecosystem == Ecosystem.MSC
-        props[MSC].name == "MasterCoin"
-        props[MSC].category == "N/A"
-        props[MSC].subcategory == "N/A"
-        props[MSC].data == "***data***"
-        props[MSC].url == "www.mastercoin.org"
-        props[MSC].divisible
+        then: "we can check OMNI and TOMNI are as expected"
+        props[OMNI].propertyid == OMNI
+        props[OMNI].propertyid.ecosystem == Ecosystem.MSC
+        props[OMNI].name == "MasterCoin"
+        props[OMNI].category == "N/A"
+        props[OMNI].subcategory == "N/A"
+        props[OMNI].data == "***data***"
+        props[OMNI].url == "www.mastercoin.org"
+        props[OMNI].divisible
 
-        props[TMSC].propertyid == TMSC
-        props[TMSC].propertyid.ecosystem == Ecosystem.TMSC
-        props[TMSC].name == "Test MasterCoin"
-        props[TMSC].category == "N/A"
-        props[TMSC].subcategory == "N/A"
-        props[TMSC].data == "***data***"
-        props[TMSC].url == "www.mastercoin.org"
-        props[TMSC].divisible
+        props[TOMNI].propertyid == TOMNI
+        props[TOMNI].propertyid.ecosystem == Ecosystem.TMSC
+        props[TOMNI].name == "Test MasterCoin"
+        props[TOMNI].category == "N/A"
+        props[TOMNI].subcategory == "N/A"
+        props[TOMNI].data == "***data***"
+        props[TOMNI].url == "www.mastercoin.org"
+        props[TOMNI].divisible
     }
 }

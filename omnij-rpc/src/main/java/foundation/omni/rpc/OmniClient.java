@@ -135,7 +135,7 @@ public class OmniClient extends BitcoinExtendedClient {
     }
 
     /**
-     * Lists currently active offers on the distributed BTC/MSC exchange.
+     * Lists currently active offers on the distributed BTC/OMNI exchange.
      *
      * @return A list with information about the active offers
      */

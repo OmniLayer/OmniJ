@@ -148,7 +148,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
     }
 
     protected PropertyType getPropertyType(CurrencyID currencyID) {
-        if ((currencyID == CurrencyID.MSC) || (currencyID == CurrencyID.TMSC)) {
+        if ((currencyID == CurrencyID.OMNI) || (currencyID == CurrencyID.TOMNI)) {
             return PropertyType.DIVISIBLE
         }
         def details = new JsonSlurper().parse(new URL(proto, host, port, "${propertyDetailsFile}/${currencyID.value}.json"))

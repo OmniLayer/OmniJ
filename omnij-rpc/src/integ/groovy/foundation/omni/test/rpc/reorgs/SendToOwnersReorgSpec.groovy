@@ -15,7 +15,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         def dummyOwnerAddress = createFundedAddress(startBTC, startMSC)
 
         when: "broadcasting and confirming a send to owners transaction"
-        def txid = omniSendSTO(senderAddress, CurrencyID.TMSC, sendAmount)
+        def txid = omniSendSTO(senderAddress, CurrencyID.TOMNI, sendAmount)
         def blockHashOfSend = generateAndGetBlockHash()
 
         then: "the transaction is valid"
@@ -116,7 +116,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         generateBlock()
 
         then:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance == startMSC
         omniGetBalance(actorAddress, tokenID).balance == 100.0 - 20.0
         omniGetBalance(ownerA, tokenID).balance == 10.0
         omniGetBalance(ownerB, tokenID).balance == 10.0
@@ -147,7 +147,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
 
         and: "the actor was charged"
         omniGetBalance(actorAddress, tokenID).balance == 100.0 - 20.0 - 30.0
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC - (2 * 0.00000001)
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance == startMSC - (2 * 0.00000001)
 
         when: "sending a second STO transaction"
         def secondTxid = omniSendSTO(actorAddress, tokenID, 30.divisible)
@@ -193,6 +193,6 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         omniGetBalance(actorAddress, tokenID).balance == 100.0 - 20.0 - 30.0 - 50.0
         omniGetBalance(ownerA, tokenID).balance == 10.0 + 15.0 + 25.0 // initial + first STO + third STO
         omniGetBalance(ownerB, tokenID).balance == 10.0 + 15.0 + 25.0
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC - (4 * 0.00000001) // fee for each owner
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance == startMSC - (4 * 0.00000001) // fee for each owner
     }
 }

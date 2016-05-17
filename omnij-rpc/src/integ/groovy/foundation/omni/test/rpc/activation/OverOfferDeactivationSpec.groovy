@@ -30,12 +30,12 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
     def "Offering more than available on the distributed exchange is valid before the deactivation"() {
         setup:
         def actorAddress = createFundedAddress(startBTC, startMSC)
-        def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.MSC).balance
+        def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.OMNI).balance
         def orderAmountMSC = (OmniDivisibleValue) balanceAtStart * 5 // more than available!
         def orderAmountBTC = Coin.valueOf(orderAmountMSC.willets)
         when:
         def txid = createDexSellOffer(
-                actorAddress, CurrencyID.MSC, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
+                actorAddress, CurrencyID.OMNI, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
         generateBlock()
 
         then:
@@ -44,8 +44,8 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         omniGetTransaction(txid).amount as BigDecimal == balanceAtStart.numberValue() // less than offered!
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance.numberValue() == 0.0
-        omniGetBalance(actorAddress, CurrencyID.MSC).reserved.numberValue() == balanceAtStart.numberValue()
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance.numberValue() == 0.0
+        omniGetBalance(actorAddress, CurrencyID.OMNI).reserved.numberValue() == balanceAtStart.numberValue()
     }
 
     def "Feature identifier 5 can be used to schedule the deactivation of \"over-offers\""() {
@@ -64,7 +64,7 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
     def "Offering more than available on the distributed exchange is still valid until the feature activation"() {
         setup:
         def actorAddress = createFundedAddress(startBTC, startMSC)
-        def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.MSC).balance
+        def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.OMNI).balance
         def orderAmountMSC = (OmniDivisibleValue) balanceAtStart * 5 // more than available!
         def orderAmountBTC = Coin.valueOf(orderAmountMSC.willets)
         def blockBeforeActivation = activationBlock - 1
@@ -75,7 +75,7 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
 
         when:
         def txid = createDexSellOffer(
-                actorAddress, CurrencyID.MSC, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
+                actorAddress, CurrencyID.OMNI, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
         generateBlock()
 
         then:
@@ -84,40 +84,40 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         omniGetTransaction(txid).amount as BigDecimal == balanceAtStart.numberValue() // less than offered!
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance.numberValue() == 0.0
-        omniGetBalance(actorAddress, CurrencyID.MSC).reserved.numberValue() == balanceAtStart.numberValue()
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance.numberValue() == 0.0
+        omniGetBalance(actorAddress, CurrencyID.OMNI).reserved.numberValue() == balanceAtStart.numberValue()
     }
 
     def "After the successful activation of the feature, it is no longer valid to offer more than available"() {
         setup:
         def actorAddress = createFundedAddress(startBTC, startMSC)
-        def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.MSC).balance
+        def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.OMNI).balance
         def orderAmountMSC = (OmniDivisibleValue) balanceAtStart * 5 // more than available!
         def orderAmountBTC = Coin.valueOf(orderAmountMSC.willets)
 
         when:
         def txid = createDexSellOffer(
-                actorAddress, CurrencyID.MSC, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
+                actorAddress, CurrencyID.OMNI, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
         generateBlock()
 
         then:
         omniGetTransaction(txid).valid == false
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance.numberValue() == balanceAtStart.numberValue()
-        omniGetBalance(actorAddress, CurrencyID.MSC).reserved.numberValue() == 0.0
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance.numberValue() == balanceAtStart.numberValue()
+        omniGetBalance(actorAddress, CurrencyID.OMNI).reserved.numberValue() == 0.0
     }
 
     def "The activation has no effect on orders, which offer exactly the balance that is available"() {
         setup:
         def actorAddress = createFundedAddress(startBTC, startMSC)
-        def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.MSC).balance
+        def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.OMNI).balance
         def orderAmountMSC = (OmniDivisibleValue) balanceAtStart
         def orderAmountBTC = Coin.valueOf(orderAmountMSC.willets)
 
         when:
         def txid = createDexSellOffer(
-                actorAddress, CurrencyID.MSC, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
+                actorAddress, CurrencyID.OMNI, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
         generateBlock()
 
         then:
@@ -125,7 +125,7 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         omniGetTransaction(txid).amount as BigDecimal == orderAmountMSC.numberValue()
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance.numberValue() == 0.0
-        omniGetBalance(actorAddress, CurrencyID.MSC).reserved.numberValue() == orderAmountMSC.numberValue()
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance.numberValue() == 0.0
+        omniGetBalance(actorAddress, CurrencyID.OMNI).reserved.numberValue() == orderAmountMSC.numberValue()
     }
 }

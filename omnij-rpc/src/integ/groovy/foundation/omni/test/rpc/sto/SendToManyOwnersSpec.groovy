@@ -7,7 +7,7 @@ import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
 import spock.lang.Unroll
 
-import static foundation.omni.CurrencyID.MSC
+import static foundation.omni.CurrencyID.OMNI
 
 /**
  * Creates several "send to owners" transactions.
@@ -45,11 +45,11 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         def currencySPT = fundNewProperty(actorAddress, OmniValue.of(fundingSPT, propertyType), Ecosystem.MSC)
 
         // Check funding balances of actor
-        def startingBalanceMSC = omniGetBalance(actorAddress, MSC)
+        def startingBalanceMSC = omniGetBalance(actorAddress, OMNI)
         def startingBalanceSPT = omniGetBalance(actorAddress, currencySPT)
 
         print "\n"
-        println String.format("The actor was funded with: %s MSC", startingBalanceMSC.balance.toPlainString())
+        println String.format("The actor was funded with: %s OMNI", startingBalanceMSC.balance.toPlainString())
         println String.format("The actor was funded with: %s SPT", startingBalanceSPT.balance.toPlainString())
         print "\n"
 
@@ -70,11 +70,11 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         generateBlock()
 
         // Check starting balances of actor
-        def reallyBalanceMSC = omniGetBalance(actorAddress, MSC)
+        def reallyBalanceMSC = omniGetBalance(actorAddress, OMNI)
         def reallyBalanceSPT = omniGetBalance(actorAddress, currencySPT)
 
         print "\n"
-        println String.format("The actor now has: %s MSC and should have %s MSC",
+        println String.format("The actor now has: %s OMNI and should have %s OMNI",
                 reallyBalanceMSC.balance.toPlainString(), actorMSC.toPlainString())
         println String.format("The actor now has: %s SPT and should have %s SPT",
                 reallyBalanceSPT.balance.toPlainString(), actorSPT.toPlainString())
@@ -109,12 +109,12 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         }
 
         // Check final balances of actor
-        def finalBalanceMSC = omniGetBalance(actorAddress, MSC)
+        def finalBalanceMSC = omniGetBalance(actorAddress, OMNI)
         def finalBalanceSPT = omniGetBalance(actorAddress, currencySPT)
 
         print "\n"
         println String.format(
-                "The actor ends up with: %s MSC and should have 0.0 MSC %s", finalBalanceMSC.balance.toPlainString(),
+                "The actor ends up with: %s OMNI and should have 0.0 OMNI %s", finalBalanceMSC.balance.toPlainString(),
                 (finalBalanceMSC.balance != 0.0) ? "<------- FAIL" : "")
         println String.format(
                 "The actor ends up with: %s SPT and should have 0.0 SPT %s", finalBalanceSPT.balance.toPlainString(),
@@ -143,7 +143,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         def currencySPT = fundNewProperty(actorAddress, fundingSPT, propertyType, Ecosystem.MSC)
 
         // Check funding balances of actor
-        def startingBalanceMSC = omniGetBalance(actorAddress, MSC)
+        def startingBalanceMSC = omniGetBalance(actorAddress, OMNI)
         def startingBalanceSPT = omniGetBalance(actorAddress, currencySPT)
         assert startingBalanceMSC.balance == actorMSC
         assert startingBalanceSPT.balance == fundingSPT
@@ -164,7 +164,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         generateBlock()
 
         // Check starting balances of actor
-        def reallyBalanceMSC = omniGetBalance(actorAddress, MSC)
+        def reallyBalanceMSC = omniGetBalance(actorAddress, OMNI)
         def reallyBalanceSPT = omniGetBalance(actorAddress, currencySPT)
         assert reallyBalanceMSC.balance == actorMSC
         assert reallyBalanceSPT.balance == actorSPT.numberValue()
@@ -192,7 +192,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         }
 
         // Check final balances of actor
-        def finalBalanceMSC = omniGetBalance(actorAddress, MSC)
+        def finalBalanceMSC = omniGetBalance(actorAddress, OMNI)
         def finalBalanceSPT = omniGetBalance(actorAddress, currencySPT)
         assert finalBalanceMSC.balance == 0.0
         assert finalBalanceSPT.balance == 0.0

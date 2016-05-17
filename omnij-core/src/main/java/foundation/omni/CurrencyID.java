@@ -13,8 +13,8 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     public static final long   MAX_TEST_ECOSYSTEM_VALUE = MAX_VALUE;
 
     public static final long    BTC_VALUE = 0;
-    public static final long    MSC_VALUE = 1;
-    public static final long    TMSC_VALUE = 2;
+    public static final long    OMNI_VALUE = 1;
+    public static final long    TOMNI_VALUE = 2;
     public static final long    MAID_VALUE = 3; // MaidSafeCoin
     /** @deprecated */
     public static final long    MaidSafeCoin_VALUE = 3;
@@ -27,8 +27,8 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     public static final long    AGRS_VALUE = 58; // Agoras
 
     public static final CurrencyID  BTC = new CurrencyID(BTC_VALUE);
-    public static final CurrencyID  MSC = new CurrencyID(MSC_VALUE);
-    public static final CurrencyID  TMSC = new CurrencyID(TMSC_VALUE);
+    public static final CurrencyID  OMNI = new CurrencyID(OMNI_VALUE);
+    public static final CurrencyID  TOMNI = new CurrencyID(TOMNI_VALUE);
     public static final CurrencyID  MAID = new CurrencyID(MAID_VALUE);
     /** @deprecated */
     public static final CurrencyID  MaidSafeCoin = new CurrencyID(MAID_VALUE);
@@ -44,10 +44,10 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
         switch (s) {
             case "BTC":
                 return BTC;
-            case "MSC":
-                return MSC;
-            case "TMSC":
-                return TMSC;
+            case "OMNI":
+                return OMNI;
+            case "TOMNI":
+                return TOMNI;
             case "MAID":
                 return MAID;
             case "USDT":
@@ -75,9 +75,9 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     }
 
     public Ecosystem getEcosystem() {
-        if (value == MSC_VALUE) {
+        if (value == OMNI_VALUE) {
             return Ecosystem.MSC;
-        } else if (value == TMSC_VALUE) {
+        } else if (value == TOMNI_VALUE) {
             return Ecosystem.TMSC;
         } else if (value <= MAX_REAL_ECOSYSTEM_VALUE) {
             return Ecosystem.MSC;
@@ -102,7 +102,7 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
      * @return true if valid
      */
     public static boolean isValidReal(long value) {
-        return (value == MSC_VALUE) || ((value > TMSC_VALUE) && (value <= MAX_REAL_ECOSYSTEM_VALUE));
+        return (value == OMNI_VALUE) || ((value > TOMNI_VALUE) && (value <= MAX_REAL_ECOSYSTEM_VALUE));
     }
 
     /**
@@ -111,7 +111,7 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
      * @return true if valid
      */
     public static boolean isValidTest(long value) {
-        return ((value == TMSC_VALUE) ||(value > MAX_REAL_ECOSYSTEM_VALUE) && (value <= MAX_VALUE));
+        return ((value == TOMNI_VALUE) ||(value > MAX_REAL_ECOSYSTEM_VALUE) && (value <= MAX_VALUE));
     }
 
     public long getValue() {

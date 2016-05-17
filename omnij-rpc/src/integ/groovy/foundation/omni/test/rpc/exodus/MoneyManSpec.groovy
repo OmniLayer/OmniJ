@@ -9,8 +9,8 @@ import org.bitcoinj.core.Coin
 import spock.lang.Shared
 import spock.lang.Stepwise
 
-import static foundation.omni.CurrencyID.MSC
-import static foundation.omni.CurrencyID.TMSC
+import static foundation.omni.CurrencyID.OMNI
+import static foundation.omni.CurrencyID.TOMNI
 
 @Stepwise
 class MoneyManSpec extends BaseRegTestSpec {
@@ -48,27 +48,27 @@ class MoneyManSpec extends BaseRegTestSpec {
         then: "transaction was confirmed"
         tx.confirmations == 1
 
-        and: "The balances for the account we just sent MSC to is correct"
+        and: "The balances for the account we just sent OMNI to is correct"
         getBitcoinBalance(testAddress) == extraAmount
-        omniGetBalance(testAddress, MSC).balance ==  MoneyMan.toOmni(sendAmount).numberValue()
-        omniGetBalance(testAddress, TMSC).balance == MoneyMan.toOmni(sendAmount).numberValue()
+        omniGetBalance(testAddress, OMNI).balance ==  MoneyMan.toOmni(sendAmount).numberValue()
+        omniGetBalance(testAddress, TOMNI).balance == MoneyMan.toOmni(sendAmount).numberValue()
     }
 
     def "check Spec setup"() {
         // This test is really an integration test of createFundedAddress()
         expect:
         getBitcoinBalance(faucetAddress) == faucetBTC
-        omniGetBalance(faucetAddress, MSC).balance == MoneyMan.toOmni(sendAmount).numberValue()
-        omniGetBalance(faucetAddress, TMSC).balance == MoneyMan.toOmni(sendAmount).numberValue()
+        omniGetBalance(faucetAddress, OMNI).balance == MoneyMan.toOmni(sendAmount).numberValue()
+        omniGetBalance(faucetAddress, TOMNI).balance == MoneyMan.toOmni(sendAmount).numberValue()
     }
 
     def "Simple send MSC from one address to another" () {
         // This test either duplicates or should be moved to MSCSimpleSendSpec
 
-        when: "we send MSC"
-        def senderBalance = omniGetBalance(faucetAddress, MSC)
+        when: "we send OMNI"
+        def senderBalance = omniGetBalance(faucetAddress, OMNI)
         def toAddress = getNewAddress()
-        def txid = client.omniSend(faucetAddress, toAddress, MSC, simpleSendAmount)
+        def txid = client.omniSend(faucetAddress, toAddress, OMNI, simpleSendAmount)
         def tx = client.getTransaction(txid)
 
         then: "we got a non-zero transaction id"
@@ -77,10 +77,10 @@ class MoneyManSpec extends BaseRegTestSpec {
 
         when: "a block is generated"
         generateBlock()
-        def newSenderBalance = client.omniGetBalance(faucetAddress, MSC)
-        def receiverBalance = client.omniGetBalance(toAddress, MSC)
+        def newSenderBalance = client.omniGetBalance(faucetAddress, OMNI)
+        def receiverBalance = client.omniGetBalance(toAddress, OMNI)
 
-        then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
+        then: "the toAddress has the correct OMNI balance and source address is reduced by right amount"
         receiverBalance.balance == simpleSendAmount.numberValue()
         newSenderBalance.balance == senderBalance.balance - simpleSendAmount.numberValue()
     }
@@ -88,16 +88,16 @@ class MoneyManSpec extends BaseRegTestSpec {
     def "Send MSC back to same adddress" () {
         // This test either duplicates or should be moved to MSCSimpleSendSpec
 
-        when: "we send MSC"
-        def wealthyBalance = omniGetBalance(faucetAddress, MSC).balance
-        def txid = omniSend(faucetAddress, faucetAddress, MSC, 10.12345678.divisible)
+        when: "we send OMNI"
+        def wealthyBalance = omniGetBalance(faucetAddress, OMNI).balance
+        def txid = omniSend(faucetAddress, faucetAddress, OMNI, 10.12345678.divisible)
 
         then: "we got a non-zero transaction id"
         txid != OmniClient.zeroHash
 
         when: "a block is generated"
         generateBlock()
-        def newWealthyBalance = omniGetBalance(faucetAddress, MSC).balance
+        def newWealthyBalance = omniGetBalance(faucetAddress, OMNI).balance
 
         then: "balance is unchanged"
         newWealthyBalance == wealthyBalance

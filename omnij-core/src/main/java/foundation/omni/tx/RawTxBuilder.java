@@ -39,8 +39,8 @@ public class RawTxBuilder {
      *
      * Currency amounts are Long values in satoshis/willets
      *
-     * @param currencyId Currency ID to sell MSC or TMSC only
-     * @param amountForSale Amount of MSC/TMSC for sale
+     * @param currencyId Currency ID to sell OMNI or TOMNI only
+     * @param amountForSale Amount of OMNI/TOMNI for sale
      * @param amountDesired Amount of BTC desired
      * @param paymentWindow Time period in blocks
      * @param commitmentFee Minimum Bitcoin transaction fee

@@ -4,8 +4,6 @@ import foundation.omni.CurrencyID;
 import foundation.omni.PropertyType;
 import static foundation.omni.PropertyType.*;
 
-import javax.money.CurrencyUnit;
-
 /**
  * CurrencyCode for base and popular OMNI currencies
  * Base is OMNI and TOMNI
@@ -13,8 +11,8 @@ import javax.money.CurrencyUnit;
  */
 public enum OmniCurrencyCode {
     BTC(CurrencyID.BTC, DIVISIBLE),
-    OMNI(CurrencyID.MSC, DIVISIBLE),
-    TOMNI(CurrencyID.TMSC, DIVISIBLE),
+    OMNI(CurrencyID.OMNI, DIVISIBLE),
+    TOMNI(CurrencyID.TOMNI, DIVISIBLE),
     MAID(CurrencyID.MAID, INDIVISIBLE),
     USDT(CurrencyID.USDT, DIVISIBLE),
     AMP(CurrencyID.AMP, DIVISIBLE),
@@ -43,9 +41,9 @@ public enum OmniCurrencyCode {
         final long value = id.getValue();
         if (value == CurrencyID.BTC_VALUE) {
             return BTC.name();
-        } else if (value == CurrencyID.MSC_VALUE) {
+        } else if (value == CurrencyID.OMNI_VALUE) {
             return OMNI.name();
-        } else if (value == CurrencyID.TMSC_VALUE) {
+        } else if (value == CurrencyID.TOMNI_VALUE) {
             return TOMNI.name();
         } else if (value == CurrencyID.MAID_VALUE) {
             return MAID.name();

@@ -21,12 +21,12 @@ class CurrencyIDSpec extends Specification {
     }
 
     def "MSC has value 1"() {
-        when: "we create MSC"
+        when: "we create OMNI"
         CurrencyID currency = new CurrencyID(1)
 
         then: "the value is 1"
-        currency == CurrencyID.MSC
-        currency.getValue() == CurrencyID.MSC_VALUE
+        currency == CurrencyID.OMNI
+        currency.getValue() == CurrencyID.OMNI_VALUE
         currency.getValue() == 1L
 
         and: "it is in the right ecosystem"
@@ -34,12 +34,12 @@ class CurrencyIDSpec extends Specification {
     }
 
     def "TMSC has value 2"() {
-        when: "we create TMSC"
+        when: "we create TOMNI"
         CurrencyID currency = new CurrencyID(2)
 
         then: "the value is 2"
-        currency == CurrencyID.TMSC
-        currency.getValue() == CurrencyID.TMSC_VALUE
+        currency == CurrencyID.TOMNI
+        currency.getValue() == CurrencyID.TOMNI_VALUE
         currency.getValue() == 2L
 
         and: "it is in the right ecosystem"
@@ -171,8 +171,8 @@ class CurrencyIDSpec extends Specification {
         where:
         str            | value
         "BTC"          | CurrencyID.BTC_VALUE
-        "MSC"          | CurrencyID.MSC_VALUE
-        "TMSC"         | CurrencyID.TMSC_VALUE
+        "OMNI"          | CurrencyID.OMNI_VALUE
+        "TOMNI"         | CurrencyID.TOMNI_VALUE
         "MAID"         | CurrencyID.MAID_VALUE
         "USDT"         | CurrencyID.USDT_VALUE
     }

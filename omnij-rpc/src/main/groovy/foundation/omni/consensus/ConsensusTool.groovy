@@ -14,7 +14,7 @@ import org.bitcoinj.core.Address
 trait ConsensusTool implements ConsensusFetcher {
 
     void run(List<String> args) {
-        Long currencyIDNum =  args[0] ? Long.parseLong(args[0], 10) : CurrencyID.MSC_VALUE
+        Long currencyIDNum =  args[0] ? Long.parseLong(args[0], 10) : CurrencyID.OMNI_VALUE
         CurrencyID currencyID = new CurrencyID(currencyIDNum)
 
         String fileName = args[1]

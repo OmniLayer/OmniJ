@@ -4,8 +4,6 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.OmniDivisibleValue
-import foundation.omni.OmniValue
-import foundation.omni.PropertyType
 import org.bitcoinj.core.Coin
 import org.junit.internal.AssumptionViolatedException
 import spock.lang.Unroll
@@ -26,7 +24,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         def actorB = createFundedAddress(startBTC, zeroAmount, false)
         def actorC = createFundedAddress(startBTC, 0.00000001.divisible, false)
         def actorD = createFundedAddress(startBTC, 0.00000001.divisible, false)
-        def propertyMSC = CurrencyID.MSC
+        def propertyMSC = CurrencyID.OMNI
         def propertySPX = fundNewProperty(actorB, 10.divisible, propertyMSC.ecosystem)
 
         when:
@@ -84,7 +82,7 @@ class MetaDexSpec extends BaseRegTestSpec {
     def "Two orders can match, and both can be partially filled"() {
         def actorA = createFundedAddress(startBTC, zeroAmount, false)
         def actorB = createFundedAddress(startBTC, 0.55.divisible, false)
-        def propertyMSC = CurrencyID.MSC
+        def propertyMSC = CurrencyID.OMNI
         def propertySPX = fundNewProperty(actorA, 25.indivisible, propertyMSC.ecosystem)
 
         when:
@@ -158,7 +156,7 @@ class MetaDexSpec extends BaseRegTestSpec {
     def "Orders fill with the maximal amount at the best price possible"() {
         def actorA = createFundedAddress(startBTC, 0.00000020.divisible, false)
         def actorB = createFundedAddress(startBTC, zeroAmount, false)
-        def propertyMSC = CurrencyID.TMSC
+        def propertyMSC = CurrencyID.TOMNI
         def propertySPX = fundNewProperty(actorB, 12.divisible, propertyMSC.ecosystem)
 
         when:
@@ -189,7 +187,7 @@ class MetaDexSpec extends BaseRegTestSpec {
     def "Orders with inverted price and different amounts for sale match"() {
         def actorA = createFundedAddress(startBTC, zeroAmount, false)
         def actorB = createFundedAddress(startBTC, 1.66666666.divisible, false)
-        def propertyMSC = CurrencyID.MSC
+        def propertyMSC = CurrencyID.OMNI
         def propertySPX = fundNewProperty(actorA, 1.divisible, propertyMSC.ecosystem)
 
         when:
@@ -220,7 +218,7 @@ class MetaDexSpec extends BaseRegTestSpec {
     def "Intermediate results are not truncated or rounded"() {
         def actorA = createFundedAddress(startBTC, 23.divisible, false)
         def actorB = createFundedAddress(startBTC, zeroAmount, false)
-        def propertyMSC = CurrencyID.TMSC
+        def propertyMSC = CurrencyID.TOMNI
         def propertySPX = fundNewProperty(actorB, 50.divisible, propertyMSC.ecosystem)
 
         when:
@@ -320,22 +318,22 @@ class MetaDexSpec extends BaseRegTestSpec {
         omniGetBalance(traderB, propertySPX).reserved == 0.0
 
         where:
-        amountSPX                       | propertyMSC     | amountMSC
-        3.0.divisible                   | CurrencyID.MSC  | 6.0.divisible
-        2.0.divisible                   | CurrencyID.TMSC | 0.6.divisible
-        50.0.divisible                  | CurrencyID.MSC  | 0.1.divisible
-        0.99999999.divisible            | CurrencyID.TMSC | 0.11111111.divisible
-        3333.33333333.divisible         | CurrencyID.MSC  | 0.0125.divisible
-        0.03.divisible                  | CurrencyID.TMSC | 0.009.divisible
-        0.00000001.divisible            | CurrencyID.MSC  | 0.00000003.divisible
-        10000000001.0.divisible         | CurrencyID.TMSC | 0.00000002.divisible
-        92233720368.54775807.divisible  | CurrencyID.MSC  | 0.00000001.divisible
-        7.indivisible                   | CurrencyID.TMSC | 0.33333333.divisible
-        1.indivisible                   | CurrencyID.MSC  | 0.00000001.divisible
-        33333.indivisible               | CurrencyID.TMSC | 0.0001.divisible
-        4815162342.indivisible          | CurrencyID.MSC  | 0.00101011.divisible
-        1000000000000000051.indivisible | CurrencyID.TMSC | 0.00000001.divisible
-        9223372036854775807.indivisible | CurrencyID.MSC  | 0.00000006.divisible
+        amountSPX                       | propertyMSC      | amountMSC
+        3.0.divisible                   | CurrencyID.OMNI  | 6.0.divisible
+        2.0.divisible                   | CurrencyID.TOMNI | 0.6.divisible
+        50.0.divisible                  | CurrencyID.OMNI  | 0.1.divisible
+        0.99999999.divisible            | CurrencyID.TOMNI | 0.11111111.divisible
+        3333.33333333.divisible         | CurrencyID.OMNI  | 0.0125.divisible
+        0.03.divisible                  | CurrencyID.TOMNI | 0.009.divisible
+        0.00000001.divisible            | CurrencyID.OMNI  | 0.00000003.divisible
+        10000000001.0.divisible         | CurrencyID.TOMNI | 0.00000002.divisible
+        92233720368.54775807.divisible  | CurrencyID.OMNI  | 0.00000001.divisible
+        7.indivisible                   | CurrencyID.TOMNI | 0.33333333.divisible
+        1.indivisible                   | CurrencyID.OMNI  | 0.00000001.divisible
+        33333.indivisible               | CurrencyID.TOMNI | 0.0001.divisible
+        4815162342.indivisible          | CurrencyID.OMNI  | 0.00101011.divisible
+        1000000000000000051.indivisible | CurrencyID.TOMNI | 0.00000001.divisible
+        9223372036854775807.indivisible | CurrencyID.OMNI  | 0.00000006.divisible
     }
 
     @Unroll
@@ -395,21 +393,21 @@ class MetaDexSpec extends BaseRegTestSpec {
 
         where:
         amountSPX                       | propertyMSC     | amountMSC
-        101.indivisible                 | CurrencyID.MSC  | 0.1.divisible
-        100.02.divisible                | CurrencyID.MSC  | 0.01.divisible
-        1000003.indivisible             | CurrencyID.MSC  | 0.001.divisible
-        10000.0004.divisible            | CurrencyID.MSC  | 0.0001.divisible
-        100000000005.indivisible        | CurrencyID.MSC  | 0.00001.divisible
-        1000000.0000006.divisible       | CurrencyID.MSC  | 0.000001.divisible
-        1000000000000007.indivisible    | CurrencyID.MSC  | 0.0000001.divisible
-        100000000.00000008.divisible    | CurrencyID.TMSC | 0.00000007.divisible
-        444444444444444449.indivisible  | CurrencyID.TMSC | 0.00000051.divisible
-        92233720368.54775807.divisible  | CurrencyID.TMSC | 0.00000001.divisible
-        353535.indivisible              | CurrencyID.TMSC | 0.07171717.divisible
-        0.0000513.divisible             | CurrencyID.TMSC | 0.00005511.divisible
-        100.indivisible                 | CurrencyID.TMSC | 0.00002222.divisible
-        0.77777776.divisible            | CurrencyID.TMSC | 0.00000333.divisible
-        9223372036854775807.indivisible | CurrencyID.TMSC | 0.00000021.divisible
+        101.indivisible                 | CurrencyID.OMNI | 0.1.divisible
+        100.02.divisible                | CurrencyID.OMNI  | 0.01.divisible
+        1000003.indivisible             | CurrencyID.OMNI  | 0.001.divisible
+        10000.0004.divisible            | CurrencyID.OMNI  | 0.0001.divisible
+        100000000005.indivisible        | CurrencyID.OMNI  | 0.00001.divisible
+        1000000.0000006.divisible       | CurrencyID.OMNI  | 0.000001.divisible
+        1000000000000007.indivisible    | CurrencyID.OMNI  | 0.0000001.divisible
+        100000000.00000008.divisible    | CurrencyID.TOMNI | 0.00000007.divisible
+        444444444444444449.indivisible  | CurrencyID.TOMNI | 0.00000051.divisible
+        92233720368.54775807.divisible  | CurrencyID.TOMNI | 0.00000001.divisible
+        353535.indivisible              | CurrencyID.TOMNI | 0.07171717.divisible
+        0.0000513.divisible             | CurrencyID.TOMNI | 0.00005511.divisible
+        100.indivisible                 | CurrencyID.TOMNI | 0.00002222.divisible
+        0.77777776.divisible            | CurrencyID.TOMNI | 0.00000333.divisible
+        9223372036854775807.indivisible | CurrencyID.TOMNI | 0.00000021.divisible
     }
 
     def setupSpec() {

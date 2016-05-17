@@ -22,17 +22,17 @@ class SimpleSendSpec extends BaseRegTestSpec {
         setup:
         def faucetAddress = createFundedAddress(faucetBTC, faucetMSC)
 
-        when: "we send MSC"
-        def startBalance = omniGetBalance(faucetAddress, MSC).balance
+        when: "we send OMNI"
+        def startBalance = omniGetBalance(faucetAddress, OMNI).balance
         def toAddress = getNewAddress()
-        omniSend(faucetAddress, toAddress, MSC, amount)
+        omniSend(faucetAddress, toAddress, OMNI, amount)
 
         and: "a block is generated"
         generateBlock()
-        def endBalance = omniGetBalance(faucetAddress, MSC).balance
+        def endBalance = omniGetBalance(faucetAddress, OMNI).balance
 
-        then: "the toAddress has the correct MSC balance and source address is reduced by right amount"
-        omniGetBalance(toAddress, MSC).balance.equals(amount)
+        then: "the toAddress has the correct OMNI balance and source address is reduced by right amount"
+        omniGetBalance(toAddress, OMNI).balance.equals(amount)
         endBalance.equals(startBalance - amount)
 
         where:
@@ -50,7 +50,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def toAddress = getNewAddress()
 
         when: "the amount to transfer is zero"
-        omniSend(fundedAddress, toAddress, MSC, 0.divisible)
+        omniSend(fundedAddress, toAddress, OMNI, 0.divisible)
         // TODO: Test sending a negative amount of coins?
         // TODO: Check that the *right type* of exceptions are thrown
         // Currently it seems they're all 500s
@@ -72,7 +72,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def toAddress = getNewAddress()
 
         when: "the amount to transfer is zero"
-        omniSend(fundedAddress, toAddress, MSC, (-1.0).divisible)
+        omniSend(fundedAddress, toAddress, OMNI, (-1.0).divisible)
         // TODO: Test sending a negative amount of coins?
         // TODO: Check that the *right type* of exceptions are thrown
         // Currently it seems they're all 500s
@@ -93,7 +93,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def toAddress = getNewAddress()
 
         when: "the sending address has zero coins in its available balance for the specified currency identifier"
-        def txid = client.omniSend(emptyAddress, toAddress, MSC, 1.divisible)
+        def txid = client.omniSend(emptyAddress, toAddress, OMNI, 1.divisible)
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
@@ -108,7 +108,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def toAddress = getNewAddress()
 
         when: "the amount to transfer exceeds the number owned and available by the sending address"
-        omniSend(fundedAddress, toAddress, MSC, 1.00000001.divisible)
+        omniSend(fundedAddress, toAddress, OMNI, 1.00000001.divisible)
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
@@ -131,7 +131,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         e.responseJson.error.code == -8
     }
 
-//    def "TODO: test currencies other than MSC - when implemented"() {}
+//    def "TODO: test currencies other than OMNI - when implemented"() {}
 //    def "TODO: test savings address -- when implemented"() {}
 //    def "TODO: test invalid transaction version -- raw"() {}
 //    def "TODO: test invalid transaction type - raw"() {}

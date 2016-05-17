@@ -11,10 +11,10 @@ import static foundation.omni.money.OmniCurrencyCode.*
 class OmniCurrencyCodeSpec extends Specification {
     def "test OMNI code"() {
         expect:
-        OMNI.id() == CurrencyID.MSC
+        OMNI.id() == CurrencyID.OMNI
         OMNI.id().ecosystem == Ecosystem.MSC
         OMNI.name() == "OMNI"
-        TOMNI.id() == CurrencyID.TMSC
+        TOMNI.id() == CurrencyID.TOMNI
         TOMNI.id().ecosystem == Ecosystem.TMSC
         TOMNI.name() == "TOMNI"
     }

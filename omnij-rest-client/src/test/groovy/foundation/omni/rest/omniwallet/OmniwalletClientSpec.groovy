@@ -56,10 +56,10 @@ class OmniwalletClientSpec extends Specification {
         balances[0].id == BTC
         balances[0].value.numberValue() >= 0
         balances[1].symbol == "OMNI"
-        balances[1].id == MSC
+        balances[1].id == OMNI
         balances[1].value.numberValue() >= 0
         balances[2].symbol == "T-OMNI"
-        balances[2].id == TMSC
+        balances[2].id == TOMNI
         balances[2].value.numberValue() >= 0
     }
 
@@ -81,8 +81,8 @@ class OmniwalletClientSpec extends Specification {
         balances != null
         balances[testAddr][USDT].numberValue() >= 0
         balances[testAddr][BTC].numberValue() >= 0
-        balances[exodusAddress][MSC].numberValue() >= 0
-        balances[exodusAddress][TMSC].numberValue() >= 0
+        balances[exodusAddress][OMNI].numberValue() >= 0
+        balances[exodusAddress][TOMNI].numberValue() >= 0
         balances[exodusAddress][BTC].numberValue() >= 0
     }
 
@@ -98,24 +98,24 @@ class OmniwalletClientSpec extends Specification {
         // This may be unnecessary if we can assume the property list is ordered by propertyid
         Map<CurrencyID, SmartPropertyListInfo> props = properties.collect{[it.propertyid, it]}.collectEntries()
 
-        then: "we can check MSC and TMSC are as expected"
-        props[MSC].propertyid == MSC
-        props[MSC].propertyid.ecosystem == Ecosystem.MSC
-        props[MSC].name == "Omni" // Note: Omni Core returns "MasterCoin" with a capital-C
-        props[MSC].category == ""
-        props[MSC].subcategory == ""
-        props[MSC].data == ""
-        props[MSC].url == ""
-        props[MSC].divisible == null
+        then: "we can check OMNI and TOMNI are as expected"
+        props[OMNI].propertyid == OMNI
+        props[OMNI].propertyid.ecosystem == Ecosystem.MSC
+        props[OMNI].name == "Omni" // Note: Omni Core returns "MasterCoin" with a capital-C
+        props[OMNI].category == ""
+        props[OMNI].subcategory == ""
+        props[OMNI].data == ""
+        props[OMNI].url == ""
+        props[OMNI].divisible == null
 
-        props[TMSC].propertyid == TMSC
-        props[TMSC].propertyid.ecosystem == Ecosystem.TMSC
-        props[TMSC].name == "Test Omni" // Note: Omni Core returns "Mastercoin" with a capital-C
-        props[TMSC].category == ""
-        props[TMSC].subcategory == ""
-        props[TMSC].data == ""
-        props[TMSC].url == ""
-        props[TMSC].divisible == null
+        props[TOMNI].propertyid == TOMNI
+        props[TOMNI].propertyid.ecosystem == Ecosystem.TMSC
+        props[TOMNI].name == "Test Omni" // Note: Omni Core returns "Mastercoin" with a capital-C
+        props[TOMNI].category == ""
+        props[TOMNI].subcategory == ""
+        props[TOMNI].data == ""
+        props[TOMNI].url == ""
+        props[TOMNI].divisible == null
 
         // Assumes MainNet
         props[USDT].propertyid == USDT
@@ -145,7 +145,7 @@ class OmniwalletClientSpec extends Specification {
         }
 
         where:
-        currency << [MSC, TMSC, MAID, USDT, AGRS, EURT, SEC]
+        currency << [OMNI, TOMNI, MAID, USDT, AGRS, EURT, SEC]
     }
 
     def setup() {

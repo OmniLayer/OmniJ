@@ -26,10 +26,10 @@ class RPCSmokeTestSpec extends BaseMainNetSpec {
         def mscFetcher = new OmniCoreConsensusTool(client)
 
         when: "we get data"
-        def mscSnapshot = mscFetcher.getConsensusSnapshot(MSC)
+        def mscSnapshot = mscFetcher.getConsensusSnapshot(OMNI)
 
         then: "it is there"
-        mscSnapshot.currencyID == MSC
+        mscSnapshot.currencyID == OMNI
         mscSnapshot.entries.size() >= 1
     }
 

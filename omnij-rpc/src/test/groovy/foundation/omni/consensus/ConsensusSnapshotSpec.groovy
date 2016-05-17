@@ -11,10 +11,10 @@ import static foundation.omni.CurrencyID.*
 class ConsensusSnapshotSpec extends Specification {
     def "can be created from test data"() {
         when:
-        def snap = new ConsensusSnapshot(MSC, -1, SnapshotData.TestDataConsensusSource, SnapshotData.testDataURI("empty"), SnapshotData.empty)
+        def snap = new ConsensusSnapshot(OMNI, -1, SnapshotData.TestDataConsensusSource, SnapshotData.testDataURI("empty"), SnapshotData.empty)
 
         then:
-        snap.currencyID == MSC
+        snap.currencyID == OMNI
         snap.blockHeight == -1
         snap.sourceType == SnapshotData.TestDataConsensusSource
         snap.sourceURI == SnapshotData.testDataURI("empty")
@@ -23,11 +23,11 @@ class ConsensusSnapshotSpec extends Specification {
 
     def "is immutable"() {
         when: "we try to set one of the properties"
-        def snap = new ConsensusSnapshot(MSC, -1, SnapshotData.TestDataConsensusSource, SnapshotData.testDataURI("empty"), SnapshotData.empty)
-        snap.currencyID = TMSC
+        def snap = new ConsensusSnapshot(OMNI, -1, SnapshotData.TestDataConsensusSource, SnapshotData.testDataURI("empty"), SnapshotData.empty)
+        snap.currencyID = TOMNI
 
         then: "an exception is thrown and value isn't changed"
         ReadOnlyPropertyException e = thrown()
-        snap.currencyID == MSC
+        snap.currencyID == OMNI
     }
 }

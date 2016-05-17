@@ -10,7 +10,6 @@ import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
 import foundation.omni.CurrencyID
-import foundation.omni.net.OmniNetworkParameters
 import foundation.omni.rpc.OmniClientDelegate
 
 /**
@@ -31,17 +30,17 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
     }
 
     /**
-     * Request MSC/Omni for testing
+     * Request OMNI/Omni for testing
      *
      * TODO: Convert parameters and math to use OmniValue/Long
-     * @param toAddress Address requesting MSC/Omni
+     * @param toAddress Address requesting OMNI/Omni
      * @param requestedMSC Amount requested
      * @param allowIntermediate allow intermediate receiver
      * @return txid
      */
     Sha256Hash requestMSC(Address toAddress, OmniDivisibleValue requestedMSC, Boolean allowIntermediate) {
-        // For 1.0 BTC an amount of 100.0 MSC is generated, resulting in a minimal purchase amount of
-        // 0.00000100 MSC for 0.00000001 BTC
+        // For 1.0 BTC an amount of 100.0 OMNI is generated, resulting in a minimal purchase amount of
+        // 0.00000100 OMNI for 0.00000001 BTC
         Coin btcForMSC = (requestedMSC.willets / 100).setScale(0, BigDecimal.ROUND_UP).satoshi
         OmniDivisibleValue actualMSC = OmniDivisibleValue.ofWillets(btcForMSC.value * 100)
 
@@ -62,19 +61,19 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
             BigDecimal dustForPayload = ((((148 + 80) * 3) / 1000) * stdRelayTxFee.value).setScale(8, BigDecimal.ROUND_UP)
 
             // Simple send transactions have a dust output for the receiver reference, a marker output and an output
-            // for the actual payload. MSC and TMSC are forwarded in two transactions, so this amount, as well as the
+            // for the actual payload. OMNI and TOMNI are forwarded in two transactions, so this amount, as well as the
             // transaction fee, have to be paid twice
             BigDecimal additionalRequiredDecimal = (dustForExodus + dustForReference + dustForPayload + stdTxFee.value) * 2
             Coin additionalRequired = additionalRequiredDecimal.satoshi
             log.debug "requestMSC: requesting ${additionalRequired} additional bitcoin"
             requestBitcoin(toAddress, additionalRequired)
 
-            // The excessive amount of MSC is sent to a new address to get rid of it
+            // The excessive amount of OMNI is sent to a new address to get rid of it
             def junkAddress = newAddress
 
             // TODO: can we always get away with not generating a block inbetween?
-            def extraTxidMSC = omniSend(toAddress, junkAddress, CurrencyID.MSC, excessiveMSC)
-            def extraTxidTMSC = omniSend(toAddress, junkAddress, CurrencyID.TMSC, excessiveMSC)
+            def extraTxidMSC = omniSend(toAddress, junkAddress, CurrencyID.OMNI, excessiveMSC)
+            def extraTxidTMSC = omniSend(toAddress, junkAddress, CurrencyID.TOMNI, excessiveMSC)
         }
 
         // TODO: when using an intermediate receiver, this txid doesn't reflect the whole picture
@@ -115,7 +114,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
         Boolean check = true
         if (check && confirmTransactions) {
             assert getBitcoinBalance(fundedAddress).value >= requestedBTC.value
-            assert omniGetBalance(fundedAddress, CurrencyID.MSC).balance >= requestedMSC.numberValue()
+            assert omniGetBalance(fundedAddress, CurrencyID.OMNI).balance >= requestedMSC.numberValue()
             log.debug "balances verified, fundedAddress has {} and {} Omni", requestedBTC.toFriendlyString(), requestedMSC
         }
 

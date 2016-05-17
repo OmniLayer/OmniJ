@@ -1,15 +1,11 @@
 package foundation.omni.test.rpc.basic
 
 import foundation.omni.BaseRegTestSpec
-import foundation.omni.CurrencyID
-import foundation.omni.rpc.BalanceEntry
 import org.bitcoinj.core.Address
 import spock.lang.Shared
-import spock.lang.Specification
-import spock.lang.Stepwise
 
-import static foundation.omni.CurrencyID.MSC
-import static foundation.omni.CurrencyID.TMSC
+import static foundation.omni.CurrencyID.OMNI
+import static foundation.omni.CurrencyID.TOMNI
 
 
 /**
@@ -28,8 +24,8 @@ class GetBalancesSpec extends BaseRegTestSpec {
 
     def "omniGetBalance returns correct balances"() {
         when:
-        def mscBalance = omniGetBalance(fundedAddress, MSC)
-        def tmscBalance = omniGetBalance(fundedAddress, TMSC)
+        def mscBalance = omniGetBalance(fundedAddress, OMNI)
+        def tmscBalance = omniGetBalance(fundedAddress, TOMNI)
 
         then:
         mscBalance.balance.equals(faucetMSC)
@@ -40,8 +36,8 @@ class GetBalancesSpec extends BaseRegTestSpec {
 
     def "omniGetAllBalancesForId returns correct balances"() {
         when:
-        def mscBalances = omniGetAllBalancesForId(MSC)
-        def tmscBalances = omniGetAllBalancesForId(TMSC)
+        def mscBalances = omniGetAllBalancesForId(OMNI)
+        def tmscBalances = omniGetAllBalancesForId(TOMNI)
 
         then:
         mscBalances[fundedAddress].balance.equals(faucetMSC)
@@ -55,9 +51,9 @@ class GetBalancesSpec extends BaseRegTestSpec {
         def balances = omniGetAllBalancesForAddress(fundedAddress)
 
         then:
-        balances[MSC].balance.equals(faucetMSC)
-        balances[MSC].reserved.equals(0.divisible)
-        balances[TMSC].balance.equals(faucetMSC)
-        balances[TMSC].reserved.equals(0.divisible)
+        balances[OMNI].balance.equals(faucetMSC)
+        balances[OMNI].reserved.equals(0.divisible)
+        balances[TOMNI].balance.equals(faucetMSC)
+        balances[TOMNI].reserved.equals(0.divisible)
     }
 }

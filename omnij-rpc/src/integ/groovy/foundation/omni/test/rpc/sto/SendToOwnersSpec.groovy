@@ -3,7 +3,6 @@ package foundation.omni.test.rpc.sto
 import com.msgilligan.bitcoinj.rpc.JsonRPCStatusException
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
-import foundation.omni.OmniDivisibleValue
 import foundation.omni.consensus.ConsensusTool
 import foundation.omni.consensus.OmniCoreConsensusTool
 import spock.lang.Shared
@@ -30,7 +29,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
         def startingMSC = 1000.divisible
         def amountSent = 100.divisible
         def fundedAddress = createFundedAddress(startingBTC, startingMSC)
-        def currencyID = TMSC
+        def currencyID = TOMNI
         def expectedBalance = 0.0
 
         when: "We Send to Owners"
@@ -61,7 +60,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
     def "STO fails when amount sent is zero"() {
         setup:
         def fundedAddress = createFundedAddress(10.0, 100.0)
-        def currencyID = TMSC
+        def currencyID = TOMNI
         def startBalances = consensusTool.getConsensusSnapshot(currencyID)
 
         when: "We Send to Owners with amount equal zero"

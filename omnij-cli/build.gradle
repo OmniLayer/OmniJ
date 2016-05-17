@@ -21,7 +21,7 @@ def roboExeName = "btcstatus"
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'BTC/MSC Status', 'Implementation-Version': version, 'Consensus-Class': mainClassName
+        attributes 'Implementation-Title': 'BTC/OMNI Status', 'Implementation-Version': version, 'Consensus-Class': mainClassName
     }
 }
 

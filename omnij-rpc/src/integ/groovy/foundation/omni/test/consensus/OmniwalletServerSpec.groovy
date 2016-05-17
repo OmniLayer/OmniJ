@@ -31,10 +31,10 @@ class OmniwalletServerSpec extends Specification {
         OmniwalletConsensusFetcher omniFetcher = new OmniwalletConsensusFetcher()
 
         when: "we get data"
-        def omniSnapshot = omniFetcher.getConsensusSnapshot(MSC)
+        def omniSnapshot = omniFetcher.getConsensusSnapshot(OMNI)
 
         then: "something is there"
-        omniSnapshot.currencyID == MSC
+        omniSnapshot.currencyID == OMNI
         omniSnapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
         omniSnapshot.entries.size() >= 1
     }
@@ -54,23 +54,23 @@ class OmniwalletServerSpec extends Specification {
         // This may be unnecessary if we can assume the property list is ordered by propertyid
         Map<CurrencyID, SmartPropertyListInfo> props = properties.collect{[it.propertyid, it]}.collectEntries()
 
-        then: "we can check MSC and TMSC are as expected"
-        props[MSC].propertyid == MSC
-        props[MSC].propertyid.ecosystem == Ecosystem.MSC
-        props[MSC].name == "Omni" // Note: Omni Core returns "MasterCoin" with a capital-C
-        props[MSC].category == ""
-        props[MSC].subcategory == ""
-        props[MSC].data == ""
-        props[MSC].url == ""
-        props[MSC].divisible == null
+        then: "we can check OMNI and TOMNI are as expected"
+        props[OMNI].propertyid == OMNI
+        props[OMNI].propertyid.ecosystem == Ecosystem.MSC
+        props[OMNI].name == "Omni" // Note: Omni Core returns "MasterCoin" with a capital-C
+        props[OMNI].category == ""
+        props[OMNI].subcategory == ""
+        props[OMNI].data == ""
+        props[OMNI].url == ""
+        props[OMNI].divisible == null
 
-        props[TMSC].propertyid == TMSC
-        props[TMSC].propertyid.ecosystem == Ecosystem.TMSC
-        props[TMSC].name == "Test Omni" // Note: Omni Core returns "Mastercoin" with a capital-C
-        props[TMSC].category == ""
-        props[TMSC].subcategory == ""
-        props[TMSC].data == ""
-        props[TMSC].url == ""
-        props[TMSC].divisible == null
+        props[TOMNI].propertyid == TOMNI
+        props[TOMNI].propertyid.ecosystem == Ecosystem.TMSC
+        props[TOMNI].name == "Test Omni" // Note: Omni Core returns "Mastercoin" with a capital-C
+        props[TOMNI].category == ""
+        props[TOMNI].subcategory == ""
+        props[TOMNI].data == ""
+        props[TOMNI].url == ""
+        props[TOMNI].divisible == null
     }
 }

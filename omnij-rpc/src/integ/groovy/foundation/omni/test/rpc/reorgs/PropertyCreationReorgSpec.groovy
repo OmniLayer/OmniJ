@@ -44,13 +44,13 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         def lastMainPropertyID = mainProperties.last().propertyid
         def lastTestPropertyID = testProperties.last().propertyid
 
-        if (lastMainPropertyID == CurrencyID.MSC) {
-            nextMainPropertyID = new CurrencyID(CurrencyID.TMSC_VALUE + 1)
+        if (lastMainPropertyID == CurrencyID.OMNI) {
+            nextMainPropertyID = new CurrencyID(CurrencyID.TOMNI_VALUE + 1)
         } else {
             nextMainPropertyID = new CurrencyID(lastMainPropertyID.getValue() + 1)
         }
 
-        if (lastTestPropertyID == CurrencyID.TMSC) {
+        if (lastTestPropertyID == CurrencyID.TOMNI) {
             nextTestPropertyID = new CurrencyID(2147483651L)
         } else {
             nextTestPropertyID = new CurrencyID(lastTestPropertyID.getValue() + 1)

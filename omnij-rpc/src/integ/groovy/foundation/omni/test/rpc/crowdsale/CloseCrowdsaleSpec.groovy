@@ -21,7 +21,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
         actorAddress = createFundedAddress(startBTC, startMSC)
         otherAddress = createFundedAddress(startBTC, startMSC)
 
-        def txid = createCrowdsale(actorAddress, Ecosystem.TMSC, PropertyType.DIVISIBLE, CurrencyID.TMSC, 500000000L,
+        def txid = createCrowdsale(actorAddress, Ecosystem.TMSC, PropertyType.DIVISIBLE, CurrencyID.TOMNI, 500000000L,
                                    2147483648L, 0 as Byte, 0 as Byte)
         generateBlock()
         def creationTx = omniGetTransaction(txid)
@@ -62,15 +62,15 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
 
     def "Before closing a crowdsale, tokens can be purchased"() {
         when:
-        def txid = omniSend(otherAddress, actorAddress, CurrencyID.TMSC, 0.5.divisible)
+        def txid = omniSend(otherAddress, actorAddress, CurrencyID.TOMNI, 0.5.divisible)
         generateBlock()
 
         then:
         omniGetTransaction(txid).valid
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.TMSC).balance.equals(1.5.divisible)
-        omniGetBalance(otherAddress, CurrencyID.TMSC).balance.equals(0.5.divisible)
+        omniGetBalance(actorAddress, CurrencyID.TOMNI).balance.equals(1.5.divisible)
+        omniGetBalance(otherAddress, CurrencyID.TOMNI).balance.equals(0.5.divisible)
 
         and: "tokens were credited to the participant"
         omniGetBalance(actorAddress, currencyID).balance.equals(0.divisible)
@@ -100,15 +100,15 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
 
     def "Sending tokens, after a crowdsale was closed, does not grant tokens"() {
         when:
-        def txid = omniSend(otherAddress, actorAddress, CurrencyID.TMSC, 0.5.divisible)
+        def txid = omniSend(otherAddress, actorAddress, CurrencyID.TOMNI, 0.5.divisible)
         generateBlock()
 
         then:
         omniGetTransaction(txid).valid
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.TMSC).balance.equals(2.divisible)
-        omniGetBalance(otherAddress, CurrencyID.TMSC).balance.equals(0.divisible)
+        omniGetBalance(actorAddress, CurrencyID.TOMNI).balance.equals(2.divisible)
+        omniGetBalance(otherAddress, CurrencyID.TOMNI).balance.equals(0.divisible)
 
         and: "no tokens were credited to the participant"
         omniGetBalance(actorAddress, currencyID) == old(omniGetBalance(actorAddress, currencyID))

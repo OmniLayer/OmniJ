@@ -276,7 +276,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         def numberOfAllOwners = omniGetProperty(currencyMSC).size()
         if ((startMSC.willets - amountSTO.willets) < (numberOfAllOwners - 1)) {
-            throw new AssumptionViolatedException("actor may not have enough MSC to pay the fee")
+            throw new AssumptionViolatedException("actor may not have enough OMNI to pay the fee")
         }
 
         // fund participants
@@ -316,7 +316,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def amountReceivedOwnerB = ownerBalanceB.balance - (startMSC - reservedOwnerB).bigDecimalValue()
         def amountReceivedOwnerC = ownerBalanceC.balance - (startMSC - reservedOwnerC).bigDecimalValue()
 
-        then: "the actor really spent MSC and the owners received MSC"
+        then: "the actor really spent OMNI and the owners received OMNI"
         amountSpentActor > 0.0
         0.0 < amountReceivedOwnerA
         0.0 < amountReceivedOwnerB
@@ -334,7 +334,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     }
 
     /**
-     * Parses the property identifier and creates a new property, if it's neither MSC or TMSC.
+     * Parses the property identifier and creates a new property, if it's neither OMNI or TOMNI.
      */
     CurrencyID getStoProperty(Address actorAddress, def data) {
         def propertyType = new PropertyType(Integer.valueOf(data.PropertyType))
@@ -348,7 +348,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
             numberOfTokens += OmniValue.of((BigDecimal) amountAvailableOwners.sum(), propertyType)
         }
 
-        if (propertyName == "MSC" || propertyName == "TMSC") {
+        if (propertyName == "OMNI" || propertyName == "TOMNI") {
             if (numberOfTokens > 0) {
                 assert numberOfTokens.propertyType == PropertyType.DIVISIBLE
                 requestMSC(actorAddress, (OmniDivisibleValue) numberOfTokens)

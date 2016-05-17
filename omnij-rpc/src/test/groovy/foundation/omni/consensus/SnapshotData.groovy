@@ -38,7 +38,7 @@ class SnapshotData {
     }
 
     static ConsensusSnapshot createSnapshot(String name, SortedMap<Address, BalanceEntry> entries) {
-        def snap = new ConsensusSnapshot(CurrencyID.MSC, -1, TestDataConsensusSource, testDataURI(name), entries)
+        def snap = new ConsensusSnapshot(CurrencyID.OMNI, -1, TestDataConsensusSource, testDataURI(name), entries)
         return snap
     }
 

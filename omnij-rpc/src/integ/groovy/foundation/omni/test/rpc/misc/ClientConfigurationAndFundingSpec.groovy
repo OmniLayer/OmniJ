@@ -14,8 +14,8 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         def pristineAddress = newAddress
 
         Coin balanceBTC = getBitcoinBalance(pristineAddress, 0, 9999999)
-        def balanceMSC = omniGetBalance(pristineAddress, CurrencyID.MSC)
-        def balanceTMSC = omniGetBalance(pristineAddress, CurrencyID.TMSC)
+        def balanceMSC = omniGetBalance(pristineAddress, CurrencyID.OMNI)
+        def balanceTMSC = omniGetBalance(pristineAddress, CurrencyID.TOMNI)
 
         expect: "zero balances"
         balanceBTC == Coin.ZERO
@@ -140,11 +140,11 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         then:
         getBitcoinBalance(receiverAddress) == 0.btc
         getBitcoinBalance(senderAddress) == startBTC
-        omniGetBalance(receiverAddress, CurrencyID.MSC).balance == 0.0
-        omniGetBalance(senderAddress, CurrencyID.MSC).balance == startMSC
+        omniGetBalance(receiverAddress, CurrencyID.OMNI).balance == 0.0
+        omniGetBalance(senderAddress, CurrencyID.OMNI).balance == startMSC
 
         when:
-        def txid = omniSend(senderAddress, receiverAddress, CurrencyID.MSC, startMSC)
+        def txid = omniSend(senderAddress, receiverAddress, CurrencyID.OMNI, startMSC)
         generateBlock()
 
         then:
@@ -155,8 +155,8 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         def sendTx = omniGetTransaction(txid)
         sendTx.confirmations == 1
         sendTx.valid == true
-        omniGetBalance(receiverAddress, CurrencyID.MSC).balance == startMSC
-        omniGetBalance(senderAddress, CurrencyID.MSC).balance == 0.0
+        omniGetBalance(receiverAddress, CurrencyID.OMNI).balance == startMSC
+        omniGetBalance(senderAddress, CurrencyID.OMNI).balance == 0.0
 
         where:
         relayTxFee = stdRelayTxFee
@@ -168,7 +168,7 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
     def "Requesting #requestedAmount MSC adds exactly that amount to the receivers MSC balance"() {
         given:
         def fundedAddress = newAddress
-        def balanceAtStart = omniGetBalance(fundedAddress, CurrencyID.MSC)
+        def balanceAtStart = omniGetBalance(fundedAddress, CurrencyID.OMNI)
 
         when:
         def requestedOmni = OmniDivisibleValue.of(requestedAmount)
@@ -177,7 +177,7 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
 
         then:
         def fundingTx = getTransaction(txid)
-        def balanceConfirmed = omniGetBalance(fundedAddress, CurrencyID.MSC)
+        def balanceConfirmed = omniGetBalance(fundedAddress, CurrencyID.OMNI)
 
         fundingTx.confirmations > 0
         balanceConfirmed.balance == balanceAtStart.balance + requestedOmni.bigDecimalValue()

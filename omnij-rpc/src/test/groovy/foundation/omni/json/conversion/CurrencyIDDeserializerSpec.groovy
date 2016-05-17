@@ -2,10 +2,6 @@ package foundation.omni.json.conversion
 
 import com.fasterxml.jackson.databind.module.SimpleModule
 import foundation.omni.CurrencyID
-import foundation.omni.OmniValue
-import org.bitcoinj.core.Coin
-import org.bitcoinj.core.NetworkParameters
-import spock.lang.Specification
 import spock.lang.Unroll
 
 
@@ -25,8 +21,8 @@ class CurrencyIDDeserializerSpec extends BaseObjectMapperSpec {
         where:
         fragment    | expectedResult
         '0'         | CurrencyID.BTC
-        '1'         | CurrencyID.MSC
-        '2'         | CurrencyID.TMSC
+        '1'         | CurrencyID.OMNI
+        '2'         | CurrencyID.TOMNI
         '3'         | CurrencyID.MAID
         '31'        | CurrencyID.USDT
     }
