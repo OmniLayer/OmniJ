@@ -12,10 +12,10 @@ class OmniCurrencyCodeSpec extends Specification {
     def "test OMNI code"() {
         expect:
         OMNI.id() == CurrencyID.OMNI
-        OMNI.id().ecosystem == Ecosystem.MSC
+        OMNI.id().ecosystem == Ecosystem.OMNI
         OMNI.name() == "OMNI"
         TOMNI.id() == CurrencyID.TOMNI
-        TOMNI.id().ecosystem == Ecosystem.TMSC
+        TOMNI.id().ecosystem == Ecosystem.TOMNI
         TOMNI.name() == "TOMNI"
     }
 }

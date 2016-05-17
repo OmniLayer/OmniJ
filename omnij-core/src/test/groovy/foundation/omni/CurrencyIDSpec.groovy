@@ -17,7 +17,7 @@ class CurrencyIDSpec extends Specification {
         currency.getValue() == 0L
 
         and: "it is in the right ecosystem"
-        currency.ecosystem == Ecosystem.MSC     // Is this right???
+        currency.ecosystem == Ecosystem.OMNI     // Is this right???
     }
 
     def "MSC has value 1"() {
@@ -30,7 +30,7 @@ class CurrencyIDSpec extends Specification {
         currency.getValue() == 1L
 
         and: "it is in the right ecosystem"
-        currency.ecosystem == Ecosystem.MSC
+        currency.ecosystem == Ecosystem.OMNI
     }
 
     def "TMSC has value 2"() {
@@ -43,7 +43,7 @@ class CurrencyIDSpec extends Specification {
         currency.getValue() == 2L
 
         and: "it is in the right ecosystem"
-        currency.ecosystem == Ecosystem.TMSC
+        currency.ecosystem == Ecosystem.TOMNI
     }
 
     @Unroll
@@ -56,12 +56,12 @@ class CurrencyIDSpec extends Specification {
 
         where:
         id | ecosystem
-        1 | Ecosystem.MSC
-        2 | Ecosystem.TMSC
-        3 | Ecosystem.MSC
-        2147483647 | Ecosystem.MSC
-        2147483647L + 1 | Ecosystem.TMSC
-        4294967295 | Ecosystem.TMSC
+        1 | Ecosystem.OMNI
+        2 | Ecosystem.TOMNI
+        3 | Ecosystem.OMNI
+        2147483647 | Ecosystem.OMNI
+        2147483647L + 1 | Ecosystem.TOMNI
+        4294967295 | Ecosystem.TOMNI
     }
 
     @Unroll

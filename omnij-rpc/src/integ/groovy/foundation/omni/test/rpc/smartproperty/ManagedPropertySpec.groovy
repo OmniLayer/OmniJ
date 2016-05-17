@@ -25,12 +25,12 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def setupSpec() {
         actorAddress = createFundedAddress(startBTC, zeroAmount)
         otherAddress = createFundedAddress(startBTC, zeroAmount)
-        nonManagedID = fundNewProperty(actorAddress, 10.divisible, Ecosystem.MSC)
+        nonManagedID = fundNewProperty(actorAddress, 10.divisible, Ecosystem.OMNI)
     }
 
     def "A managed property can be created with transaction type 54"() {
         when:
-        creationTxid = createManagedProperty(actorAddress, Ecosystem.MSC, PropertyType.INDIVISIBLE, "Test Category",
+        creationTxid = createManagedProperty(actorAddress, Ecosystem.OMNI, PropertyType.INDIVISIBLE, "Test Category",
                                              "Test Subcategory", "ManagedTokens", "http://www.omnilayer.org",
                                              "This is a test for managed properties")
         generateBlock()

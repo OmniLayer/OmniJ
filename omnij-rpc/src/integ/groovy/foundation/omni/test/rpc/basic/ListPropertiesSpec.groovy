@@ -29,7 +29,7 @@ class ListPropertiesSpec extends BaseRegTestSpec {
 
         then: "we can check OMNI and TOMNI are as expected"
         props[OMNI].propertyid == OMNI
-        props[OMNI].propertyid.ecosystem == Ecosystem.MSC
+        props[OMNI].propertyid.ecosystem == Ecosystem.OMNI
         props[OMNI].name == "MasterCoin"
         props[OMNI].category == "N/A"
         props[OMNI].subcategory == "N/A"
@@ -38,7 +38,7 @@ class ListPropertiesSpec extends BaseRegTestSpec {
         props[OMNI].divisible
 
         props[TOMNI].propertyid == TOMNI
-        props[TOMNI].propertyid.ecosystem == Ecosystem.TMSC
+        props[TOMNI].propertyid.ecosystem == Ecosystem.TOMNI
         props[TOMNI].name == "Test MasterCoin"
         props[TOMNI].category == "N/A"
         props[TOMNI].subcategory == "N/A"

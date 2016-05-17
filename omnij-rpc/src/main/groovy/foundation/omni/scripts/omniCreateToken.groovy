@@ -13,7 +13,7 @@ def managerAddress = funder.createFundedAddress(1.btc, 100.divisible)
 println "Created funded address: ${managerAddress}"
 
 // Create a managed property
-def creationTxId = client.createManagedProperty(managerAddress, Ecosystem.MSC, PropertyType.INDIVISIBLE, "Test Category",
+def creationTxId = client.createManagedProperty(managerAddress, Ecosystem.OMNI, PropertyType.INDIVISIBLE, "Test Category",
         "Test Subcategory", "ManagedTokens", "http://www.omnilayer.org",
         "This is a test for managed properties")
 env.waitForBlocks(1)

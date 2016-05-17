@@ -48,7 +48,7 @@ class SendAllSpec extends BaseRegTestSpec {
         subSends[0].amount as BigDecimal == startMSC.numberValue()
 
         and:
-        if (ecosystem == Ecosystem.MSC) {
+        if (ecosystem == Ecosystem.OMNI) {
             assert omniGetBalance(actorAddress, CurrencyID.OMNI).balance == zeroAmount
             assert omniGetBalance(actorAddress, CurrencyID.TOMNI).balance == startMSC.numberValue()
             assert omniGetBalance(otherAddress, CurrencyID.OMNI).balance == startMSC.numberValue()
@@ -61,7 +61,7 @@ class SendAllSpec extends BaseRegTestSpec {
         }
 
         where:
-        ecosystem << [Ecosystem.MSC, Ecosystem.TMSC]
+        ecosystem << [Ecosystem.OMNI, Ecosystem.TOMNI]
     }
 
     @Unroll
@@ -93,7 +93,7 @@ class SendAllSpec extends BaseRegTestSpec {
         omniGetBalance(otherAddress, CurrencyID.TOMNI).balance == startMSC.numberValue()
 
         where:
-        ecosystem << [Ecosystem.MSC, Ecosystem.TMSC]
+        ecosystem << [Ecosystem.OMNI, Ecosystem.TOMNI]
     }
 
     @Unroll
@@ -130,11 +130,11 @@ class SendAllSpec extends BaseRegTestSpec {
         omniGetBalance(otherAddress, nonManagedID).balance == 6.0
 
         where:
-        ecosystem << [Ecosystem.MSC, Ecosystem.TMSC]
+        ecosystem << [Ecosystem.OMNI, Ecosystem.TOMNI]
     }
 
     def ecosystemToString(Ecosystem ecosystem) {
-        if (ecosystem == Ecosystem.MSC) {
+        if (ecosystem == Ecosystem.OMNI) {
             return "main"
         } else {
             return "test"

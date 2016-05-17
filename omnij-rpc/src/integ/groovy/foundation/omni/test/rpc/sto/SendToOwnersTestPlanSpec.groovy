@@ -125,7 +125,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     }
 
     def "STO Property ID is non-existent"() {
-        def ecosystem = Ecosystem.TMSC
+        def ecosystem = Ecosystem.TOMNI
         def propertyType = PropertyType.DIVISIBLE
         def amountSTO = 1.0
         def startMSC = 2.0.divisible    // test/demo of Omni NumberCategory meta-programming
@@ -155,7 +155,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     }
 
     def "STO Property ID is 0 - bitcoin"() {
-        def ecosystem = Ecosystem.TMSC
+        def ecosystem = Ecosystem.TOMNI
         Coin btcAvailable = 0.001.btc
         Coin btcAvailableOwners = 1.0.btc
         OmniDivisibleValue amountSTO = 0.0001.divisible
@@ -196,7 +196,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     }
 
     def "Sender owns all the coins of the STO Property, other addresses had non-zero balances but now zero balances"() {
-        def ecosystem = Ecosystem.TMSC
+        def ecosystem = Ecosystem.TOMNI
         def propertyType = PropertyType.DIVISIBLE
         def amountSTO = OmniDivisibleValue.of(1.0)
         def startMSC = OmniDivisibleValue.of(1.0)
@@ -263,7 +263,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     }
 
     def "Owners with similar effective balances, but different available/reserved ratios, receive the same amount"() {
-        def ecosystem = Ecosystem.TMSC
+        def ecosystem = Ecosystem.TOMNI
 //        def propertyType = PropertyType.DIVISIBLE
         def startMSC = 100.divisible
         def amountSTO = 99.divisible

@@ -100,7 +100,7 @@ class OmniwalletClientSpec extends Specification {
 
         then: "we can check OMNI and TOMNI are as expected"
         props[OMNI].propertyid == OMNI
-        props[OMNI].propertyid.ecosystem == Ecosystem.MSC
+        props[OMNI].propertyid.ecosystem == Ecosystem.OMNI
         props[OMNI].name == "Omni" // Note: Omni Core returns "MasterCoin" with a capital-C
         props[OMNI].category == ""
         props[OMNI].subcategory == ""
@@ -109,7 +109,7 @@ class OmniwalletClientSpec extends Specification {
         props[OMNI].divisible == null
 
         props[TOMNI].propertyid == TOMNI
-        props[TOMNI].propertyid.ecosystem == Ecosystem.TMSC
+        props[TOMNI].propertyid.ecosystem == Ecosystem.TOMNI
         props[TOMNI].name == "Test Omni" // Note: Omni Core returns "Mastercoin" with a capital-C
         props[TOMNI].category == ""
         props[TOMNI].subcategory == ""
@@ -119,7 +119,7 @@ class OmniwalletClientSpec extends Specification {
 
         // Assumes MainNet
         props[USDT].propertyid == USDT
-        props[USDT].propertyid.ecosystem == Ecosystem.MSC
+        props[USDT].propertyid.ecosystem == Ecosystem.OMNI
         props[USDT].name == "TetherUS"
         props[USDT].category == ""
         props[USDT].subcategory == ""

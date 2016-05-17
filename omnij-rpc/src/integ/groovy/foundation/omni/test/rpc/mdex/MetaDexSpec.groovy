@@ -253,8 +253,8 @@ class MetaDexSpec extends BaseRegTestSpec {
 
     def "One side of the trade must either be MSC or TMSC"() {
         def actorAdress = createFundedAddress(startBTC, zeroAmount, false)
-        def propertySPA = fundNewProperty(actorAdress, 20.divisible, Ecosystem.TMSC)
-        def propertySPB = fundNewProperty(actorAdress, 10.divisible, Ecosystem.TMSC)
+        def propertySPA = fundNewProperty(actorAdress, 20.divisible, Ecosystem.TOMNI)
+        def propertySPB = fundNewProperty(actorAdress, 10.divisible, Ecosystem.TOMNI)
 
         when:
         def txidTrade = omniSendTrade(actorAdress, propertySPA, 1.divisible, propertySPB, 1.divisible)
@@ -273,7 +273,7 @@ class MetaDexSpec extends BaseRegTestSpec {
     @Unroll
     def "Exact trade match: #amountMSC MSC for #amountSPX SPX"() {
         when:
-        def traderA = createFundedAddress(startBTC, amountMSC, false)  // offers MSC
+        def traderA = createFundedAddress(startBTC, amountMSC, false)  // offers OMNI
         def traderB = createFundedAddress(startBTC, zeroAmount, false) // offers SPX
         def propertySPX = fundNewProperty(traderB, amountSPX, propertyMSC.ecosystem)
 
@@ -283,7 +283,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         omniGetBalance(traderB, propertyMSC).balance == 0.0
         omniGetBalance(traderB, propertySPX).balance == amountSPX.numberValue()
 
-        when: "trader A offers MSC and desired SPX"
+        when: "trader A offers OMNI and desired SPX"
         def txidOfferA = omniSendTrade(traderA, propertyMSC, amountMSC, propertySPX, amountSPX)
         generateBlock()
 
@@ -300,7 +300,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         omniGetBalance(traderA, propertyMSC).balance == zeroAmount.numberValue()
         omniGetBalance(traderA, propertyMSC).reserved == amountMSC.numberValue()
 
-        when: "trader B offers SPX and desires MSC"
+        when: "trader B offers SPX and desires OMNI"
         def txidOfferB = omniSendTrade(traderB, propertySPX, amountSPX, propertyMSC, amountMSC)
         generateBlock()
 
@@ -348,7 +348,7 @@ class MetaDexSpec extends BaseRegTestSpec {
     def "Exact trade match: #amountSPX SPX for #amountMSC MSC"() {
         when:
         def traderA = createFundedAddress(startBTC, zeroAmount, false) // offers SPX
-        def traderB = createFundedAddress(startBTC, amountMSC, false)  // offers MSC
+        def traderB = createFundedAddress(startBTC, amountMSC, false)  // offers OMNI
         def propertySPX = fundNewProperty(traderA, amountSPX, propertyMSC.ecosystem)
 
         then:
@@ -357,7 +357,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         omniGetBalance(traderB, propertyMSC).balance == amountMSC.numberValue()
         omniGetBalance(traderB, propertySPX).balance == 0.0
 
-        when: "trader A offers SPX and desired MSC"
+        when: "trader A offers SPX and desired OMNI"
         def txidOfferA = omniSendTrade(traderA, propertySPX, amountSPX, propertyMSC, amountMSC)
         generateBlock()
 
@@ -374,7 +374,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         omniGetBalance(traderA, propertySPX).balance == 0.0
         omniGetBalance(traderA, propertySPX).reserved == amountSPX.numberValue()
 
-        when: "trader B offers MSC and desires SPX"
+        when: "trader B offers OMNI and desires SPX"
         def txidOfferB = omniSendTrade(traderB, propertyMSC, amountMSC, propertySPX, amountSPX)
         generateBlock()
 

@@ -81,7 +81,7 @@ class RawTxBuilderSpec extends Specification {
     def "The hex-encoded raw transaction matches valid reference: create property [type 50, version 0]"() {
         when:
         def txHex = builder.createPropertyHex(
-                Ecosystem.MSC,             // ecosystem: main
+                Ecosystem.OMNI,             // ecosystem: main
                 PropertyType.INDIVISIBLE,  // property type: indivisible tokens
                 0,                         // previous property: none
                 "Companies",               // category
@@ -99,7 +99,7 @@ class RawTxBuilderSpec extends Specification {
     def "The hex-encoded raw transaction matches valid reference: create crowdsale [type 51, version 0]"() {
         when:
         def txHex = builder.createCrowdsaleHex(
-                Ecosystem.MSC,             // ecosystem: main
+                Ecosystem.OMNI,             // ecosystem: main
                 PropertyType.INDIVISIBLE,  // property type: indivisible tokens
                 0,                         // previous property: none
                 "Companies",               // category
@@ -130,7 +130,7 @@ class RawTxBuilderSpec extends Specification {
     def "The hex-encoded raw transaction matches valid reference: create managed property [type 54, version 0]"() {
         when:
         def txHex = builder.createManagedPropertyHex(
-                Ecosystem.MSC,             // ecosystem: main
+                Ecosystem.OMNI,             // ecosystem: main
                 PropertyType.INDIVISIBLE,  // property type: indivisible tokens
                 0,                         // previous property: none
                 "Companies",               // category

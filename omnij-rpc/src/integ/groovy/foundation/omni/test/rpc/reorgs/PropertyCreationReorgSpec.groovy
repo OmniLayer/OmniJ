@@ -34,13 +34,13 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         // tokens, other than the hardcoded base tokens
         def dummyA = createFundedAddress(Coin.CENT, 0.divisible, false)
         def dummyB = createFundedAddress(Coin.CENT, 0.divisible, false)
-        fundNewProperty(dummyA, 3405691582.indivisible, Ecosystem.MSC)
-        fundNewProperty(dummyB, 4276994270.indivisible, Ecosystem.TMSC)
+        fundNewProperty(dummyA, 3405691582.indivisible, Ecosystem.OMNI)
+        fundNewProperty(dummyB, 4276994270.indivisible, Ecosystem.TOMNI)
         generateBlock()
 
         propertyListAtStart = omniListProperties()
-        def mainProperties = propertyListAtStart.findAll { it.propertyid.ecosystem == Ecosystem.MSC }
-        def testProperties = propertyListAtStart.findAll { it.propertyid.ecosystem == Ecosystem.TMSC }
+        def mainProperties = propertyListAtStart.findAll { it.propertyid.ecosystem == Ecosystem.OMNI }
+        def testProperties = propertyListAtStart.findAll { it.propertyid.ecosystem == Ecosystem.TOMNI }
         def lastMainPropertyID = mainProperties.last().propertyid
         def lastTestPropertyID = testProperties.last().propertyid
 
@@ -112,11 +112,11 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         thrown(JsonRPCStatusException)
 
         where:
-        ecosystem      | value              | extraBlocks | expectedCurrencyID
-        Ecosystem.MSC  | 150.indivisible    | 51          | nextMainPropertyID
-        Ecosystem.MSC  | 1.0.divisible      | 3           | nextMainPropertyID
-        Ecosystem.TMSC | 350.indivisible    | 53          | nextTestPropertyID
-        Ecosystem.TMSC | 2.5.divisible      | 0           | nextTestPropertyID
+        ecosystem       | value           | extraBlocks | expectedCurrencyID
+        Ecosystem.OMNI  | 150.indivisible | 51          | nextMainPropertyID
+        Ecosystem.OMNI  | 1.0.divisible   | 3           | nextMainPropertyID
+        Ecosystem.TOMNI | 350.indivisible | 53          | nextTestPropertyID
+        Ecosystem.TOMNI | 2.5.divisible   | 0           | nextTestPropertyID
     }
 
 }

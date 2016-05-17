@@ -21,13 +21,13 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
         actorAddress = createFundedAddress(startBTC, startMSC)
         otherAddress = createFundedAddress(startBTC, startMSC)
 
-        def txid = createCrowdsale(actorAddress, Ecosystem.TMSC, PropertyType.DIVISIBLE, CurrencyID.TOMNI, 500000000L,
+        def txid = createCrowdsale(actorAddress, Ecosystem.TOMNI, PropertyType.DIVISIBLE, CurrencyID.TOMNI, 500000000L,
                                    2147483648L, 0 as Byte, 0 as Byte)
         generateBlock()
         def creationTx = omniGetTransaction(txid)
         assert (creationTx.valid)
         currencyID = new CurrencyID(creationTx.propertyid as Long)
-        nonCrowdsaleID = fundNewProperty(actorAddress, 500.divisible, Ecosystem.TMSC)
+        nonCrowdsaleID = fundNewProperty(actorAddress, 500.divisible, Ecosystem.TOMNI)
     }
 
     def "Closing a non-existing crowdsale is invalid"() {

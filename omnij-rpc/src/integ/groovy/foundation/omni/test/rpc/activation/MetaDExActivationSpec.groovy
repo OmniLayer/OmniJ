@@ -31,8 +31,8 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
     def setupSpec() {
         actorAddress = createFundedAddress(startBTC, startMSC)
-        mainID = fundNewProperty(actorAddress, 10.divisible, Ecosystem.MSC)
-        testID = fundNewProperty(actorAddress, 15.divisible, Ecosystem.TMSC)
+        mainID = fundNewProperty(actorAddress, 10.divisible, Ecosystem.OMNI)
+        testID = fundNewProperty(actorAddress, 15.divisible, Ecosystem.TOMNI)
     }
 
     def "Creating trades involving test ecosystem tokens before the activation is valid"() {
@@ -65,7 +65,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         omniGetBalance(actorAddress, testID).reserved == balanceAtStart.reserved + amountForSale.numberValue()
 
         when:
-        def cancelTxid = omniSendCancelAllTrades(actorAddress, Ecosystem.TMSC)
+        def cancelTxid = omniSendCancelAllTrades(actorAddress, Ecosystem.TOMNI)
         generateBlock()
 
         then:

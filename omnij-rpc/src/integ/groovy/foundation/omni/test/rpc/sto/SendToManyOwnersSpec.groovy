@@ -42,7 +42,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
 
         // Create property
         println String.format("Creating a new %s with %s units ...", propertyType.toString(), fundingSPT.toPlainString())
-        def currencySPT = fundNewProperty(actorAddress, OmniValue.of(fundingSPT, propertyType), Ecosystem.MSC)
+        def currencySPT = fundNewProperty(actorAddress, OmniValue.of(fundingSPT, propertyType), Ecosystem.OMNI)
 
         // Check funding balances of actor
         def startingBalanceMSC = omniGetBalance(actorAddress, OMNI)
@@ -140,7 +140,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
         def actorAddress = createFundedAddress(1.0, actorMSC, false)
 
         // Create property
-        def currencySPT = fundNewProperty(actorAddress, fundingSPT, propertyType, Ecosystem.MSC)
+        def currencySPT = fundNewProperty(actorAddress, fundingSPT, propertyType, Ecosystem.OMNI)
 
         // Check funding balances of actor
         def startingBalanceMSC = omniGetBalance(actorAddress, OMNI)

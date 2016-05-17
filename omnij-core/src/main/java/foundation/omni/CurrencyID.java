@@ -76,13 +76,13 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
 
     public Ecosystem getEcosystem() {
         if (value == OMNI_VALUE) {
-            return Ecosystem.MSC;
+            return Ecosystem.OMNI;
         } else if (value == TOMNI_VALUE) {
-            return Ecosystem.TMSC;
+            return Ecosystem.TOMNI;
         } else if (value <= MAX_REAL_ECOSYSTEM_VALUE) {
-            return Ecosystem.MSC;
+            return Ecosystem.OMNI;
         } else {
-            return Ecosystem.TMSC;
+            return Ecosystem.TOMNI;
         }
     }
 

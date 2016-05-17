@@ -10,21 +10,21 @@ class EcosystemSpec extends Specification {
 
     def "Real MSC Ecosystem has value 1"() {
         when: "we create real ecosystem"
-        Ecosystem ecosystem = Ecosystem.MSC
+        Ecosystem ecosystem = Ecosystem.OMNI
 
         then: "the value is 1"
-        ecosystem == Ecosystem.MSC
-        ecosystem.getValue() == Ecosystem.MSC_VALUE
+        ecosystem == Ecosystem.OMNI
+        ecosystem.getValue() == Ecosystem.OMNI_VALUE
         ecosystem.getValue() == (short) 1
     }
 
     def "Test MSC Ecosystem has value 2"() {
         when: "we create test ecosystem"
-        Ecosystem ecosystem = Ecosystem.TMSC
+        Ecosystem ecosystem = Ecosystem.TOMNI
 
         then: "the value is 2"
-        ecosystem == Ecosystem.TMSC
-        ecosystem.getValue() == Ecosystem.TMSC_VALUE
+        ecosystem == Ecosystem.TOMNI
+        ecosystem.getValue() == Ecosystem.TOMNI_VALUE
         ecosystem.getValue() == (short) 2
     }
 
@@ -46,9 +46,9 @@ class EcosystemSpec extends Specification {
         ecosystem.toString() == ecosystemAsString
 
         where:
-        ecosystem         | ecosystemAsString
-        Ecosystem.MSC     | "Ecosystem:1"
-        Ecosystem.TMSC    | "Ecosystem:2"
+        ecosystem       | ecosystemAsString
+        Ecosystem.OMNI  | "Ecosystem:1"
+        Ecosystem.TOMNI | "Ecosystem:2"
     }
 
 }

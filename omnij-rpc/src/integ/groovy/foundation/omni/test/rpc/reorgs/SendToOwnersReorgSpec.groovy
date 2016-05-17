@@ -38,7 +38,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         def dummyOwnerB = newAddress
         def dummyOwnerC = newAddress
 
-        def ecosystem = Ecosystem.MSC
+        def ecosystem = Ecosystem.OMNI
         def amountToCreate = OmniValue.of(153, PropertyType.INDIVISIBLE)
 
         def txidCreation = createProperty(senderAddress, ecosystem, amountToCreate)
@@ -108,7 +108,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
     def "Historical STO transactions are not affected by reorganizations"() {
         when:
         def actorAddress = createFundedAddress(startBTC, startMSC)
-        def tokenID = fundNewProperty(actorAddress, 100.divisible, Ecosystem.MSC)
+        def tokenID = fundNewProperty(actorAddress, 100.divisible, Ecosystem.OMNI)
         def ownerA = newAddress
         def ownerB = newAddress
         omniSend(actorAddress, ownerA, tokenID, 10.divisible)
