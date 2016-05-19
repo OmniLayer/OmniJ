@@ -1,7 +1,7 @@
 package foundation.omni;
 
 /**
- * Number type to represent a Omni Protocol Currency ID
+ * Omni Protocol Currency ID
  */
 public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     private final long value;

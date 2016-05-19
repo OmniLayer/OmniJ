@@ -31,7 +31,7 @@ import java.util.SortedMap;
 // - omni_gettradehistoryforpair
 // - omni_gettradehistoryforaddress
 
-// TODO: replace depreciated RPCs for 0.0.10:
+// TODO: replace deprecated RPCs for 0.0.10:
 // - send_MP -> omni_send
 // - sendtoowners_MP -> omni_sendsto
 // - sendrawtx_MP -> omni_sendrawtx
