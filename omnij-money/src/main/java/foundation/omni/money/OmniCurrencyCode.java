@@ -2,6 +2,10 @@ package foundation.omni.money;
 
 import foundation.omni.CurrencyID;
 import foundation.omni.PropertyType;
+
+import java.util.Arrays;
+import java.util.List;
+
 import static foundation.omni.PropertyType.*;
 
 /**
@@ -21,6 +25,8 @@ public enum OmniCurrencyCode {
 
     public static String realEcosystemPrefix = "OMNI_SPT#";
     public static String testEcosystemPrefix = "TOMNI_SPT#";
+    public static List<OmniCurrencyCode> assignedCodes =
+            Arrays.asList(OmniCurrencyCode.class.getEnumConstants());
     private final CurrencyID id;
     private final PropertyType type;
 
@@ -39,25 +45,30 @@ public enum OmniCurrencyCode {
 
     public static String idToCodeString(CurrencyID id) {
         final long value = id.getValue();
-        if (value == CurrencyID.BTC_VALUE) {
-            return BTC.name();
-        } else if (value == CurrencyID.OMNI_VALUE) {
-            return OMNI.name();
-        } else if (value == CurrencyID.TOMNI_VALUE) {
-            return TOMNI.name();
-        } else if (value == CurrencyID.MAID_VALUE) {
-            return MAID.name();
-        } else if (value == CurrencyID.USDT_VALUE) {
-            return USDT.name();
-        } else if (value == CurrencyID.AMP_VALUE) {
-            return AMP.name();
-        } else if (value == CurrencyID.SEC_VALUE) {
-            return SEC.name();
-        } else if (value == CurrencyID.AGRS_VALUE) {
-            return AGRS.name();
-        } else if (CurrencyID.isValidReal(value)) {
+
+        for (OmniCurrencyCode candidate : assignedCodes) {
+            if (value == candidate.id.getValue()) {
+                return candidate.name();
+            }
+        }
+        if (CurrencyID.isValidReal(value)) {
             return realEcosystemPrefix + value;
         }
         return testEcosystemPrefix + value;
+    }
+
+    public static CurrencyID codeToId(String code) {
+        for (OmniCurrencyCode candidate : assignedCodes) {
+            if (code.equals(candidate.name())) {
+                return candidate.id;
+            }
+        }
+        // TODO: More strict validation of string format
+        if (code.startsWith(realEcosystemPrefix) || code.startsWith(testEcosystemPrefix)) {
+            String num = code.split("#")[1];
+            Long val = Long.parseLong(num);
+            return new CurrencyID(val);
+        }
+        return null;
     }
 }
