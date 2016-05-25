@@ -1,3 +1,3 @@
 moduleName=OmniJ Groovy extensions
-moduleVersion=0.3.7-SNAPSHOT
+moduleVersion=0.3.7
 extensionClasses=foundation.omni.dsl.categories.NumberCategory

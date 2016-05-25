@@ -3,6 +3,19 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.3.7
+
+Released: 2016.05.25
+
+=== Features/Changes
+
+* Token rename `MSC` -> `OMNI` and `TMSC` -> `TOMNI` (old names are still present, but deprecated)
+* 2-way conversion between ISO-style currency codes (e.g. "OMNI", "USDT") and `CurrencyID`
+* Code cleanup in `OmniTxBuilder` in preparation for improved fee calculation
+* All-pair trading integration tests added
+* Upgrade to bitcoinj-addons 0.1.0
+* Upgrade to bitcoinj 0.14.1
+
 == v0.3.6
 
 Released: 2016.05.04
