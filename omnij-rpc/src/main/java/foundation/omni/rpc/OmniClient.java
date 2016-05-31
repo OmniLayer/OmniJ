@@ -588,4 +588,86 @@ public class OmniClient extends BitcoinExtendedClient {
         Map<String, List<Map<String, Object>>> activations = send("omni_getactivations");
         return activations;
     }
+
+    /**
+     * Obtains the current amount of fees cached (pending distribution).
+     *
+     * If a property ID is supplied the results will be filtered to show this property ID only. If no property ID is
+     * supplied the results will contain all properties that currently have fees cached pending distribution.
+     *
+     * @param propertyid the identifier of the property to filter results on
+     * @return A list of amounts of fees cached
+     * @since Omni Core 0.0.11
+     */
+    public List<Map<String, Object>> omniGetFeeCache(CurrencyID propertyid)
+            throws JsonRPCException, IOException {
+        List<Map<String, Object>> cache = send("omni_getfeecache", propertyid);
+        return cache;
+    }
+
+    /**
+     * Obtains the amount at which cached fees will be distributed.
+     *
+     * If a property ID is supplied the results will be filtered to show this property ID only.  If no property ID is
+     * supplied the results will contain all properties.
+     *
+     * @param propertyId the identifier of the property to filter results on
+     * @return A list of amounts of fees required to trigger distribution
+     * @since Omni Core 0.0.11
+     */
+    public List<Map<String, Object>> omniGetFeeTrigger(CurrencyID propertyId)
+            throws JsonRPCException, IOException {
+        List<Map<String, Object>> triggers = send("omni_getfeetrigger", propertyId);
+        return triggers;
+    }
+
+    /**
+     * Obtains the current percentage share of fees addresses would receive if a distribution were to occur.
+     *
+     * If an address is supplied the results will be filtered to show this address only. If no address is supplied the
+     * results will be filtered to show wallet addresses only.
+     *
+     * If an ecosystem is supplied the results will reflect the fee share for that ecosystem (main or test). If no
+     * ecosystem is supplied the results will reflect the main ecosystem.
+     *
+     * @param address   the address to filter results on
+     * @param ecosystem the ecosystem to obtain the current percentage fee share
+     * @return A list of percentages of fees the address(es) will receive based on the current state
+     * @since Omni Core 0.0.11
+     */
+    public List<Map<String, Object>> omniGetFeeShare(Address address, Ecosystem ecosystem)
+            throws JsonRPCException, IOException {
+        List<Map<String, Object>> shares = send("omni_getfeeshare", address, ecosystem);
+        return shares;
+    }
+
+    /**
+     * Obtains data for a past distribution of fees.
+     *
+     * A distribution ID must be supplied to identify the distribution to obtain data for.
+     *
+     * @param distributionId the identifier of the distribution to obtain data for
+     * @return Information about a fee distribution
+     * @since Omni Core 0.0.11
+     */
+    public Map<String, Object> omniGetFeeDistribution(Integer distributionId)
+            throws JsonRPCException, IOException {
+        Map<String, Object> info = send("omni_getfeedistribution", distributionId);
+        return info;
+    }
+
+    /**
+     * Obtains data for past distributions of fees for a property.
+     *
+     * A property ID must be supplied to retrieve past distributions for.
+     *
+     * @param propertyId the identifier of the property to retrieve past distributions for
+     * @return A list of fee distributions
+     * @since Omni Core 0.0.11
+     */
+    public List<Map<String, Object>> omniGetFeeDistributions(CurrencyID propertyId)
+            throws JsonRPCException, IOException {
+        List<Map<String, Object>> infos = send("omni_getfeedistributions", propertyId);
+        return infos;
+    }
 }
