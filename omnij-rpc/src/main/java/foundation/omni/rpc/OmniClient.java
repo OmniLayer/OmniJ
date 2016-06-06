@@ -637,7 +637,12 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public List<Map<String, Object>> omniGetFeeShare(Address address, Ecosystem ecosystem)
             throws JsonRPCException, IOException {
-        List<Map<String, Object>> shares = send("omni_getfeeshare", address, ecosystem);
+        List<Map<String, Object>> shares;
+        if (address == null) {
+            shares = send("omni_getfeeshare", "", ecosystem);
+        } else {
+            shares = send("omni_getfeeshare", address, ecosystem);
+        }
         return shares;
     }
 
