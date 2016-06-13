@@ -55,6 +55,10 @@ public class OmniCoreConsensusFetcher implements ConsensusFetcher {
         this.client = client;
     }
 
+    public OmniClient getOmniClient() {
+        return client;
+    }
+
     public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
         SortedMap<Address, BalanceEntry> balances = null;
         try {
