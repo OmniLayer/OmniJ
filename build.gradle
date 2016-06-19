@@ -10,7 +10,7 @@ buildscript {
 }
 
 ext.groovyVersion = '2.4.7'
-ext.bitcoinjAddonsVersion = '0.1.0'
+ext.bitcoinjAddonsVersion = '0.1.1'
 ext.slf4jVersion = '1.7.21'
 
 allprojects {
