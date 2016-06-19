@@ -1,5 +1,6 @@
 package foundation.omni.rest.omnicore;
 
+import com.msgilligan.bitcoinj.json.pojo.AddressGroupingItem;
 import com.msgilligan.bitcoinj.rpc.JsonRPCException;
 import foundation.omni.CurrencyID;
 import foundation.omni.consensus.OmniCoreConsensusFetcher;
@@ -40,6 +41,27 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
             balances.put(address, bal);
         });
         return balances;
+    }
+
+    /**
+     * Get all addresses in a wallet
+     * Requires wallet support to be active
+     * @return A list of addresses
+     */
+    public List<Address> getWalletAddresses() {
+        // Get a list of every address
+        List<Address> addresses = new ArrayList<>();
+        try {
+            List<List<AddressGroupingItem>> addressItems = client.listAddressGroupings();
+            addressItems.forEach(group -> group.forEach( item -> {
+                addresses.add(item.getAddress());
+            }));
+        } catch (JsonRPCException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return addresses;
     }
 
     private List<BalanceInfo> balancesForAddress(Address address) {
