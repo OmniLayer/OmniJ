@@ -9,12 +9,10 @@ import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniIndivisibleValue;
 import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
-import foundation.omni.rest.OmniBalanceService;
 import foundation.omni.rest.OmniJBalances;
 import foundation.omni.rest.WalletAddressBalance;
 import foundation.omni.rpc.AddressBalanceEntry;
 import foundation.omni.rpc.BalanceEntry;
-import foundation.omni.rpc.ConsensusFetcher;
 import foundation.omni.rpc.ConsensusSnapshot;
 import foundation.omni.rpc.SmartPropertyListInfo;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -28,13 +26,11 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +41,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Omniwallet RPC Java client
+ * Omniwallet REST Java client
  */
 public class OmniwalletClient implements ConsensusService {
     static final String omniwalletBase = "https://www.omniwallet.org";
@@ -101,20 +97,28 @@ public class OmniwalletClient implements ConsensusService {
         return builder.build();
     }
 
-    List<BalanceInfo> balancesForAddress(Address address) {
+    @Override
+    public WalletAddressBalance balancesForAddress(Address address) {
+        List<BalanceInfo> infos = balanceInfosForAddress(address);
+        WalletAddressBalance result = new WalletAddressBalance();
+        infos.forEach(info -> result.put(info.id, info.value));
+        return result;
+    }
+
+    private List<BalanceInfo> balanceInfosForAddress(Address address) {
         Response<Map<String, Object>> response;
-        Map<String, Object> result = null;
+        Map<String, Object> result;
+        List<BalanceInfo> list = new ArrayList<>();
 
         try {
             response = service.balancesForAddress(address.toString()).execute();
             result = response.body();
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return list;
         }
         List<Map<String, Object>> balances = (List<Map<String, Object>>) result.get("balance");
-        List<BalanceInfo> list = new ArrayList<>();
-        balances.stream().forEach(bal -> {
+        balances.forEach(bal -> {
             BalanceInfo b = new BalanceInfo();
             b.id = new CurrencyID(toLong(bal.get("id")));
             b.symbol = (String) bal.get("symbol");
@@ -125,6 +129,7 @@ public class OmniwalletClient implements ConsensusService {
             b.pendingpos = toOmniValue(toLong(bal.get("pendingpos")), type);
             list.add(b);
         });
+
         return list;
     }
 
@@ -133,11 +138,7 @@ public class OmniwalletClient implements ConsensusService {
         OmniJBalances balances = new OmniJBalances();
 
         addresses.stream().forEach(address -> {
-            List<BalanceInfo> result = balancesForAddress(address);
-            WalletAddressBalance bal = new WalletAddressBalance();
-            result.stream().forEach(bi -> {
-                bal.put(bi.id, bi.value);
-            });
+            WalletAddressBalance bal = balancesForAddress(address);
             balances.put(address, bal);
         });
         return balances;
@@ -180,8 +181,8 @@ public class OmniwalletClient implements ConsensusService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Function<Map<String, Object>, AddressBalanceEntry> mapper = null;
-        if (currencyID.equals(currencyID.MAID) || currencyID.equals(currencyID.SEC)) {
+        Function<Map<String, Object>, AddressBalanceEntry> mapper;
+        if (currencyID.equals(CurrencyID.MAID) || currencyID.equals(CurrencyID.SEC)) {
             mapper = this::indivBalanceMapper;
         } else {
             mapper = this::divisBalanceMapper;
@@ -229,7 +230,7 @@ public class OmniwalletClient implements ConsensusService {
 
         Address address;
         try {
-            address = new Address(null, (String) item.get("address"));
+            address = Address.fromBase58(null, (String) item.get("address"));
         } catch (AddressFormatException e) {
             e.printStackTrace();
             return null;
@@ -257,7 +258,7 @@ public class OmniwalletClient implements ConsensusService {
 
         Address address;
         try {
-            address = new Address(null, (String) item.get("address"));
+            address = Address.fromBase58(null, (String) item.get("address"));
         } catch (AddressFormatException e) {
             e.printStackTrace();
             return null;
@@ -278,7 +279,7 @@ public class OmniwalletClient implements ConsensusService {
 
         Address address;
         try {
-            address = new Address(null, (String) item.get("address"));
+            address = Address.fromBase58(null, (String) item.get("address"));
         } catch (AddressFormatException e) {
             e.printStackTrace();
             return null;
@@ -358,7 +359,7 @@ public class OmniwalletClient implements ConsensusService {
     private Address toAddress(String addressString) {
         Address a;
         try {
-            a = new Address(null, addressString);
+            a = Address.fromBase58(null, addressString);
         } catch (AddressFormatException e) {
             a = null;
         }

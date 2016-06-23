@@ -22,7 +22,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
- *
+ * Omni Core "REST" client that implements same interfaces as Omniwallet REST client
  */
 public class OmniCoreClient extends OmniCoreConsensusFetcher implements ConsensusService {
     public OmniCoreClient(NetworkParameters netParms, URI server, String rpcuser, String rpcpassword) {
@@ -32,12 +32,8 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
     @Override
     public OmniJBalances balancesForAddresses(List<Address> addresses) {
         OmniJBalances balances = new OmniJBalances();
-        addresses.stream().forEach(address -> {
-            List<BalanceInfo> result = balancesForAddress(address);
-            WalletAddressBalance bal = new WalletAddressBalance();
-            result.stream().forEach(bi -> {
-                bal.put(bi.id, bi.value);
-            });
+        addresses.forEach(address -> {
+            WalletAddressBalance bal = balancesForAddress(address);
             balances.put(address, bal);
         });
         return balances;
@@ -64,7 +60,8 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
         return addresses;
     }
 
-    private List<BalanceInfo> balancesForAddress(Address address) {
+    @Override
+    public WalletAddressBalance balancesForAddress(Address address) {
         SortedMap<CurrencyID, BalanceEntry> entries = new TreeMap<>();
         try {
             entries = client.omniGetAllBalancesForAddress(address);
@@ -78,14 +75,12 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        List<BalanceInfo> list = new ArrayList<>();
+
+        WalletAddressBalance result = new WalletAddressBalance();
         entries.forEach((id, be) -> {
-            BalanceInfo info = new BalanceInfo();
-            info.id = id;
-            info.value = be.getBalance().plus(be.getReserved());
-            list.add(info);
+            result.put(id, be.getBalance().plus(be.getReserved()));
         });
-        return list;
+        return result;
     }
 }
 
