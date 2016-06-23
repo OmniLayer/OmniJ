@@ -33,7 +33,7 @@ class OmniwalletClientSpec extends Specification {
 
     def "load testAddr balance"() {
         when:
-        def balances = client.balancesForAddress(testAddr)
+        def balances = client.balanceInfosForAddress(testAddr)
 
         then:
         balances != null
@@ -47,7 +47,7 @@ class OmniwalletClientSpec extends Specification {
 
     def "load exodusAddress balance"() {
         when:
-        def balances = client.balancesForAddress(exodusAddress)
+        def balances = client.balanceInfosForAddress(exodusAddress)
         balances.sort{a, b -> a.id <=> b.id }
 
         then:
