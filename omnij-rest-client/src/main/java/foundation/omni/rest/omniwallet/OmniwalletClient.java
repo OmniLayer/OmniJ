@@ -105,6 +105,7 @@ public class OmniwalletClient implements ConsensusService {
         return result;
     }
 
+    // TODO: The returned `value` field of this method doesn't include reserved balance
     private List<BalanceInfo> balanceInfosForAddress(Address address) {
         Response<Map<String, Object>> response;
         Map<String, Object> result;
@@ -182,6 +183,8 @@ public class OmniwalletClient implements ConsensusService {
             throw new RuntimeException(e);
         }
         Function<Map<String, Object>, AddressBalanceEntry> mapper;
+        // TODO: We need an accurate way of determining divisible vs indivisible
+        // unused balanceMapper tried to use stringToOmniValue() but apparently that didn't work
         if (currencyID.equals(CurrencyID.MAID) || currencyID.equals(CurrencyID.SEC)) {
             mapper = this::indivBalanceMapper;
         } else {
