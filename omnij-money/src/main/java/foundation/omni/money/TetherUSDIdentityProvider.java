@@ -3,6 +3,8 @@ package foundation.omni.money;
 
 import java.math.BigDecimal;
 
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 import javax.money.convert.ConversionQuery;
 import javax.money.convert.ExchangeRate;
 import javax.money.convert.ProviderContext;
@@ -10,8 +12,10 @@ import javax.money.convert.ProviderContextBuilder;
 import javax.money.convert.RateType;
 
 import com.msgilligan.bitcoinj.money.CurrencyUnitPair;
+import com.msgilligan.bitcoinj.money.ExchangeRateChange;
 import com.msgilligan.bitcoinj.money.ExchangeRateObserver;
 import com.msgilligan.bitcoinj.money.ObservableExchangeRateProvider;
+import org.javamoney.moneta.CurrencyUnitBuilder;
 import org.javamoney.moneta.ExchangeRateBuilder;
 import org.javamoney.moneta.spi.AbstractRateProvider;
 import org.javamoney.moneta.spi.DefaultNumberValue;
@@ -20,6 +24,9 @@ import org.javamoney.moneta.spi.DefaultNumberValue;
  * Based on Moneta Identity provider licensed under Apache license
  */
 public class TetherUSDIdentityProvider extends AbstractRateProvider implements ObservableExchangeRateProvider {
+
+    private CurrencyUnit base = Monetary.getCurrency("USDT");
+    private CurrencyUnit target= Monetary.getCurrency("USD");
 
     /**
      * The {@link javax.money.convert.ConversionContext} of this provider.
@@ -58,6 +65,20 @@ public class TetherUSDIdentityProvider extends AbstractRateProvider implements O
         return null;
     }
 
+    private ExchangeRateChange buildExchangeRateChange() {
+        return new ExchangeRateChange(buildExchangeRate(), 0);
+
+    }
+
+    private ExchangeRate buildExchangeRate() {
+        ExchangeRateBuilder builder = new ExchangeRateBuilder(getContext().getProviderName(), RateType.OTHER)
+                .setBase(base);
+        builder.setTerm(target);
+        builder.setFactor(DefaultNumberValue.of(BigDecimal.ONE));
+        return builder.build();
+
+    }
+
     /*
      * (non-Javadoc)
 	 *
@@ -76,7 +97,8 @@ public class TetherUSDIdentityProvider extends AbstractRateProvider implements O
 
     @Override
     public void registerExchangeRateObserver(CurrencyUnitPair pair, ExchangeRateObserver observer) {
-        // NOOP because rate never changes
+        // Call the observer once to set the fixed exchange rate
+        observer.onExchangeRateChange(buildExchangeRateChange());
     }
 
     @Override
