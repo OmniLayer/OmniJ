@@ -39,7 +39,7 @@ class OmniwalletClientSpec extends Specification {
         balances != null
         balances[0].symbol == "SP31"
         balances[0].id == USDT
-        balances[0].value >= 0
+        balances[0].value.numberValue() >= 0
         balances[1].symbol == "BTC"
         balances[1].id == BTC
         balances[1].value.numberValue() >= 0
