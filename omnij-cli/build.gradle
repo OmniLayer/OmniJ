@@ -62,6 +62,7 @@ task regTest(type: Test) {
     }
 
     systemProperty 'regtest', true
+    systemProperty 'java.util.logging.config.file', "${project.projectDir}/src/integ/logging.properties"
     systemProperties ([ "omni.test.rpcTestUser": rpcTestUser,
                         "omni.test.rpcTestPassword": rpcTestPassword,
     ])

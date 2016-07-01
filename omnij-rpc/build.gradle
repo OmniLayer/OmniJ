@@ -65,6 +65,7 @@ class IntegrationTest extends Test {
 class RegTest extends IntegrationTest {
     public RegTest() {
         systemProperty 'regtest', true
+        systemProperty 'java.util.logging.config.file', "${project.projectDir}/src/integ/logging.properties"
         systemProperties ([ 'omni.test.rpcTestUser': project.rpcTestUser,
                             'omni.test.rpcTestPassword': project.rpcTestPassword,
         ])
