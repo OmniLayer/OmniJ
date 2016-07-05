@@ -37,7 +37,7 @@ class BitcoinJTransactionBuilderSpec extends BaseTxSpec {
         tx.addOutput(Coin.MILLICOIN, omniParams.exodusAddress)
         tx.addOutput(Coin.CENT, toAddress)
         Script script = ScriptBuilder.createInputScript(null)
-        def outPoint = new TransactionOutPoint(netParams, 1, Sha256Hash.create("boppitybop".getBytes()))
+        def outPoint = new TransactionOutPoint(netParams, 1, Sha256Hash.of("boppitybop".getBytes()))
 
         TransactionInput input = new TransactionInput(netParams, null, script.program, outPoint, null)
         tx.addInput(input)

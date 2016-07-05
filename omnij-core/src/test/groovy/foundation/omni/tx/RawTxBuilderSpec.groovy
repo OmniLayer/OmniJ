@@ -60,7 +60,7 @@ class RawTxBuilderSpec extends Specification {
         def txHex = builder.createMetaDexSellOfferHex(
                 CurrencyID.OMNI,       // property
                 OmniDivisibleValue.of(2.5),            // amount for sale: 2.5 OMNI
-                CurrencyID.TetherUS,  // property desired
+                CurrencyID.USDT,  // property desired
                 OmniDivisibleValue.of(50),          // amount desired: 50.0 TetherUS
                 (Byte) 1)             // sub-action: new offer
 

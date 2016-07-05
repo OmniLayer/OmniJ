@@ -1,8 +1,5 @@
 package foundation.omni.tx
 
-import spock.lang.Specification
-
-
 /**
  *
  */
