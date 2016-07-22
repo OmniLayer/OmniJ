@@ -31,12 +31,11 @@ public class EncodeMultisig {
     /**
      * Encode data into transaction outputs
      *
-     * @param redeemingKey
-     * @param data
+     * @param redeemingKey key that can be used redeem transaction output (1 of n multisig)
+     * @param data Data bytes to encode into multisig output
      * @return Incomplete transaction with TransactionOutputs
      */
     public Transaction encode(ECKey redeemingKey, byte[] data) {
-        List<TransactionOutput> outputs = null;
         List<ECKey> dataAsKeys = PubKeyConversion.convert(data);
         int numGroups = (dataAsKeys.size() + (maxDataKeys - 1)) / (maxDataKeys);
 
@@ -57,7 +56,7 @@ public class EncodeMultisig {
             List<ECKey> redeemableGroup = new ArrayList<ECKey>();
             redeemableGroup.add(redeemingKey);
             redeemableGroup.addAll(group);
-            Script script = ScriptBuilder.createMultiSigOutputScript(1, redeemableGroup); // 1 of group.size() multisig
+            Script script = ScriptBuilder.createMultiSigOutputScript(1, redeemableGroup); // 1 of redeemableGroup.size() multisig
             TransactionOutput output = new TransactionOutput(netParams, null, Coin.ZERO, script.getProgram());
             output.setValue(output.getMinNonDustValue());
             txClassB.addOutput(output);
