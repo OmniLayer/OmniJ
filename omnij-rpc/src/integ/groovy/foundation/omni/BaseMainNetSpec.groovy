@@ -27,7 +27,7 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
     {
         client = new OmniCLIClient(MainNetParams.get(), RPCURI.defaultMainNetURI, rpcTestUser, rpcTestPassword)
     }
-    static final Integer rpcWaitTimeoutSeconds = 3*60*60  // Wait up to 3 hours for RPC response
+    static final Integer rpcWaitTimeoutSeconds = 6*60*60  // Wait up to 6 hours for RPC response
 
     /**
      * Wait for RPC server to be responding and to be in sync with the Bitcoin Blockchain
