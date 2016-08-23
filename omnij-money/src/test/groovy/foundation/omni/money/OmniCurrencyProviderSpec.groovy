@@ -33,7 +33,7 @@ class OmniCurrencyProviderSpec extends Specification {
         Set<CurrencyUnit> currencies = provider.getCurrencies(query)
 
         then:
-        currencies.size() == 6
+        currencies.size() == 7
     }
 
     def "returns OMNI for OMNI query" () {
