@@ -48,7 +48,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         maybeSkipReservedMetaDexTests(sptReserved, sptReservedOwners)
                                        OmniValue
         given:
-        //log.debug "Creating startMSC from: {} + {}", mscAvailable, mscReserved
+        //log.debug "Creating startOmni from: {} + {}", mscAvailable, mscReserved
         def startMSC = OmniDivisibleValue.of(mscAvailable + mscReserved)
         def actorAddress = createFundedAddress(startBTC, startMSC, false)
         def currencyMSC = new CurrencyID(ecosystem.getValue())
@@ -136,7 +136,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def currencyMSC = new CurrencyID(ecosystem.getValue())
         def currencySPT = new CurrencyID(4294967295L) // does not exist
 
-        given: "the actor starts with #startMSC #currencyMSC"
+        given: "the actor starts with #startOmni #currencyMSC"
         assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
 
         when: "#amountSTO is sent to owners of #currencySPT"

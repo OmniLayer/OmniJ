@@ -15,16 +15,16 @@ class SimpleSendSpec extends BaseRegTestSpec {
                                               //      ... otherwise it will fail
                                               // We need to seed the address with coins
     final static faucetBTC = 10.btc
-    final static faucetMSC = 1000.divisible
+    final static faucetOmni = 1000.divisible
 
     @Unroll
     def "Can simple send #amount MSC from one address to another"() {
         setup:
-        def faucetAddress = createFundedAddress(faucetBTC, faucetMSC)
-
-        when: "we send OMNI"
+        def faucetAddress = createFundedAddress(faucetBTC, faucetOmni)
         def startBalance = omniGetBalance(faucetAddress, OMNI).balance
         def toAddress = getNewAddress()
+
+        when: "we send OMNI"
         omniSend(faucetAddress, toAddress, OMNI, amount)
 
         and: "a block is generated"
@@ -46,7 +46,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
         // treated as invalid by the Omni Core parser
         given: "a new, empty destination address"
-        def fundedAddress = createFundedAddress(faucetBTC, faucetMSC)
+        def fundedAddress = createFundedAddress(faucetBTC, faucetOmni)
         def toAddress = getNewAddress()
 
         when: "the amount to transfer is zero"
@@ -68,7 +68,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         // treated as invalid by the Omni Core parser
 
         given: "a new, empty destination address"
-        def fundedAddress = createFundedAddress(faucetBTC, faucetMSC)
+        def fundedAddress = createFundedAddress(faucetBTC, faucetOmni)
         def toAddress = getNewAddress()
 
         when: "the amount to transfer is zero"
