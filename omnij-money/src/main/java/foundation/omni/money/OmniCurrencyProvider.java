@@ -23,7 +23,7 @@ public class OmniCurrencyProvider implements CurrencyProviderSpi {
     final static int divisbleFractionDigits = 8;
     final static int indivisbleFractionDigits = 0;
 
-    final private static Set<OmniCurrencyCode> codes = new HashSet<>(Arrays.asList(OMNI, MAID, USDT, AMP, SEC, AGRS));
+    final private static Set<OmniCurrencyCode> codes = new HashSet<>(Arrays.asList(OMNI, MAID, USDT, AMP, SEC, AGRS, PDC));
 
     private static final CurrencyContext CONTEXT = CurrencyContextBuilder.of("OmniCurrencyContextProvider")
             .build();

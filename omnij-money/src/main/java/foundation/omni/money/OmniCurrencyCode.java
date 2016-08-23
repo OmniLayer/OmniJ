@@ -21,7 +21,8 @@ public enum OmniCurrencyCode {
     USDT(CurrencyID.USDT, DIVISIBLE),
     AMP(CurrencyID.AMP, DIVISIBLE),
     SEC(CurrencyID.SEC, INDIVISIBLE),
-    AGRS(CurrencyID.AGRS, DIVISIBLE);
+    AGRS(CurrencyID.AGRS, DIVISIBLE),
+    PDC(CurrencyID.PDC, INDIVISIBLE);
 
     public static String realEcosystemPrefix = "OMNI_SPT#";
     public static String testEcosystemPrefix = "TOMNI_SPT#";

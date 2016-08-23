@@ -10,6 +10,6 @@ import org.knowm.xchange.currency.CurrencyPair;
  */
 public class BittrexXChangeRateProvider extends BaseXChangeExchangeRateProvider {
     public BittrexXChangeRateProvider() {
-        super(BittrexExchange.class, "OMNI/BTC", "MAID/BTC", "AMP/BTC", "AGRS/BTC", "SEC/BTC", "BTC/USDT");
+        super(BittrexExchange.class, "OMNI/BTC", "MAID/BTC", "AMP/BTC", "AGRS/BTC", "SEC/BTC", "PDC/BTC", "BTC/USDT");
     }
 }

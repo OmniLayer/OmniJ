@@ -29,6 +29,7 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     public static final long    EURT_VALUE = 41;
     public static final long    SEC_VALUE = 56; // SafeExchangeCoin
     public static final long    AGRS_VALUE = 58; // Agoras
+    public static final long    PDC_VALUE = 59; // Project Decorum Coin
 
     public static final CurrencyID  BTC = new CurrencyID(BTC_VALUE);
     public static final CurrencyID  OMNI = new CurrencyID(OMNI_VALUE);
@@ -47,6 +48,7 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     public static final CurrencyID  EURT = new CurrencyID(EURT_VALUE);
     public static final CurrencyID  SEC = new CurrencyID(SEC_VALUE);
     public static final CurrencyID  AGRS = new CurrencyID(AGRS_VALUE);
+    public static final CurrencyID  PDC = new CurrencyID(PDC_VALUE);
 
     public static CurrencyID valueOf(String s) {
         switch (s) {
