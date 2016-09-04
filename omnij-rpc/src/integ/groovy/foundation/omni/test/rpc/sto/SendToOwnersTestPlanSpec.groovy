@@ -137,7 +137,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def currencySPT = new CurrencyID(4294967295L) // does not exist
 
         given: "the actor starts with #startOmni #currencyMSC"
-        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
+        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC
 
         when: "#amountSTO is sent to owners of #currencySPT"
         def txid = executeSendToOwners(actorAddress, currencySPT, OmniValue.of(amountSTO, propertyType), expectException)
@@ -151,7 +151,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         }
 
         and: "the sender's balance is still the same"
-        omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
+        omniGetBalance(actorAddress, currencyMSC).balance == startMSC
     }
 
     def "STO Property ID is 0 - bitcoin"() {
@@ -170,7 +170,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def ownerB = createFundedAddress(btcAvailableOwners, startMSC)
 
         then: "they have a certain amount of tokens and coins"
-        omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
+        omniGetBalance(actorAddress, currencyMSC).balance == startMSC
         getBitcoinBalance(actorAddress) == btcAvailable
         getBitcoinBalance(ownerA) == btcAvailableOwners
         getBitcoinBalance(ownerB) == btcAvailableOwners
@@ -190,7 +190,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         getBitcoinBalance(actorAddress) >= (btcAvailable - (stdTxFee * 2))
 
         and: "all other balances are still the same"
-        omniGetBalance(actorAddress, currencyMSC).balance == startMSC.bigDecimalValue()
+        omniGetBalance(actorAddress, currencyMSC).balance == startMSC
         getBitcoinBalance(ownerA) == btcAvailableOwners
         getBitcoinBalance(ownerB) == btcAvailableOwners
     }
@@ -208,9 +208,9 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def ownerA = createFundedAddress(startBTC, startMSC)
         def ownerB = createFundedAddress(startBTC, startMSC)
 
-        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC.numberValue()
-        assert omniGetBalance(ownerA, currencyMSC).balance == startMSC.numberValue()
-        assert omniGetBalance(ownerB, currencyMSC).balance == startMSC.numberValue()
+        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC
+        assert omniGetBalance(ownerA, currencyMSC).balance == startMSC
+        assert omniGetBalance(ownerB, currencyMSC).balance == startMSC
 
         // Create property
 //        def numberOfTokens = amountSTO
@@ -225,14 +225,14 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def currencySPT = new CurrencyID(txCreation.propertyid)
 
         // Owner A has the tokens
-        assert omniGetBalance(actorAddress, currencySPT).balance == 0.0
-        assert omniGetBalance(ownerA, currencySPT).balance == amountSTO.numberValue()
-        assert omniGetBalance(ownerB, currencySPT).balance == 0.0
+        assert omniGetBalance(actorAddress, currencySPT).balance == 0.0.divisible
+        assert omniGetBalance(ownerA, currencySPT).balance == amountSTO
+        assert omniGetBalance(ownerB, currencySPT).balance == 0.0 .divisible
 
         // Owner A sends half of the tokens to owner B
         omniSend(ownerA, ownerB, currencySPT, (amountSTO / 2L))
         generateBlock()
-        assert omniGetBalance(actorAddress, currencySPT).balance == 0.0
+        assert omniGetBalance(actorAddress, currencySPT).balance == 0.0.divisible
         assert omniGetBalance(ownerA, currencySPT).balance == (amountSTO.numberValue() / 2)
         assert omniGetBalance(ownerB, currencySPT).balance == (amountSTO.numberValue() / 2)
 
@@ -240,9 +240,9 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         omniSend(ownerA, actorAddress, currencySPT, (amountSTO / 2))
         omniSend(ownerB, actorAddress, currencySPT, (amountSTO / 2))
         generateBlock()
-        assert omniGetBalance(actorAddress, currencySPT).balance == amountSTO.bigDecimalValue()
-        assert omniGetBalance(ownerA, currencySPT).balance == 0.0
-        assert omniGetBalance(ownerB, currencySPT).balance == 0.0
+        assert omniGetBalance(actorAddress, currencySPT).balance == amountSTO
+        assert omniGetBalance(ownerA, currencySPT).balance == 0.0.divisible
+        assert omniGetBalance(ownerB, currencySPT).balance == 0.0.divisible
 
         when: "#amountSTO is sent to owners of #currencySPT"
         def txid = executeSendToOwners(actorAddress, currencySPT, amountSTO, expectException)
@@ -256,10 +256,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         }
 
         and: "all balances still the same"
-        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC.numberValue()
-        assert omniGetBalance(actorAddress, currencySPT).balance == amountSTO.numberValue()
-        assert omniGetBalance(ownerA, currencySPT).balance == 0.0
-        assert omniGetBalance(ownerB, currencySPT).balance == 0.0
+        assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC
+        assert omniGetBalance(actorAddress, currencySPT).balance == amountSTO
+        assert omniGetBalance(ownerA, currencySPT).balance == 0.0.divisible
+        assert omniGetBalance(ownerB, currencySPT).balance == 0.0.divisible
     }
 
     def "Owners with similar effective balances, but different available/reserved ratios, receive the same amount"() {
@@ -290,10 +290,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         reserveAmountMSC(ownerB, currencyMSC, reservedOwnerB)
 
         // confirm starting balances
-        assertBalance(actorAddress, currencyMSC, startMSC.bigDecimalValue(), 0.0)
-        assertBalance(ownerA, currencyMSC, (startMSC - reservedOwnerA).bigDecimalValue(), reservedOwnerA.bigDecimalValue())
-        assertBalance(ownerB, currencyMSC, (startMSC - reservedOwnerB).bigDecimalValue(), reservedOwnerB.bigDecimalValue())
-        assertBalance(ownerC, currencyMSC, (startMSC - reservedOwnerC).bigDecimalValue(), reservedOwnerC.bigDecimalValue())
+        assertBalance(actorAddress, currencyMSC, startMSC.numberValue(), 0.0)
+        assertBalance(ownerA, currencyMSC, (startMSC - reservedOwnerA).numberValue(), reservedOwnerA.numberValue())
+        assertBalance(ownerB, currencyMSC, (startMSC - reservedOwnerB).numberValue(), reservedOwnerB.numberValue())
+        assertBalance(ownerC, currencyMSC, (startMSC - reservedOwnerC).numberValue(), reservedOwnerC.numberValue())
 
         when: "#amountSTO is sent to three owners with similar effective balance of #currencyMSC"
         def txid = executeSendToOwners(actorAddress, currencyMSC, amountSTO, expectException)
@@ -311,10 +311,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def ownerBalanceA = omniGetBalance(ownerA, currencyMSC)
         def ownerBalanceB = omniGetBalance(ownerB, currencyMSC)
         def ownerBalanceC = omniGetBalance(ownerC, currencyMSC)
-        def amountSpentActor = startMSC.bigDecimalValue() - actorBalance.balance
-        def amountReceivedOwnerA = ownerBalanceA.balance - (startMSC - reservedOwnerA).bigDecimalValue()
-        def amountReceivedOwnerB = ownerBalanceB.balance - (startMSC - reservedOwnerB).bigDecimalValue()
-        def amountReceivedOwnerC = ownerBalanceC.balance - (startMSC - reservedOwnerC).bigDecimalValue()
+        def amountSpentActor = startMSC - actorBalance.balance
+        def amountReceivedOwnerA = ownerBalanceA.balance - (startMSC - reservedOwnerA)
+        def amountReceivedOwnerB = ownerBalanceB.balance - (startMSC - reservedOwnerB)
+        def amountReceivedOwnerC = ownerBalanceC.balance - (startMSC - reservedOwnerC)
 
         then: "the actor really spent OMNI and the owners received OMNI"
         amountSpentActor > 0.0
@@ -323,10 +323,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         0.0 < amountReceivedOwnerC
 
         and: "the reserved balances are unchanged"
-        actorBalance.reserved  == 0.0
-        ownerBalanceA.reserved == reservedOwnerA.bigDecimalValue()
-        ownerBalanceB.reserved == reservedOwnerB.bigDecimalValue()
-        ownerBalanceC.reserved == reservedOwnerC.bigDecimalValue()
+        actorBalance.reserved  == 0.0.divisible
+        ownerBalanceA.reserved == reservedOwnerA
+        ownerBalanceB.reserved == reservedOwnerB
+        ownerBalanceC.reserved == reservedOwnerC
 
         and: "the three owners received exactly the same amount"
         amountReceivedOwnerA == amountReceivedOwnerB
@@ -421,17 +421,19 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         }
     }
 
-    void assertBalance(Address address, CurrencyID currency, OmniValue expectedAvailable, OmniValue expectedReserved) {
-        assertBalance(address,currency,expectedAvailable.bigDecimalValue(),expectedReserved.bigDecimalValue())
-    }
-
     /**
      * Short cut to confirm a balance.
      */
-    void assertBalance(Address address, CurrencyID currency, BigDecimal expectedAvailable, BigDecimal expectedReserved) {
+    void assertBalance(Address address, CurrencyID currency, OmniValue expectedAvailable, OmniValue expectedReserved) {
         def balance = omniGetBalance(address, currency)
         assert balance.balance == expectedAvailable
         assert balance.reserved == expectedReserved
+    }
+
+    void assertBalance(Address address, CurrencyID currency, BigDecimal expectedAvailable, BigDecimal expectedReserved) {
+        def balance = omniGetBalance(address, currency)
+        assert balance.balance.numberValue() == expectedAvailable
+        assert balance.reserved.numberValue() == expectedReserved
     }
 
 }

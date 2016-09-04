@@ -17,14 +17,6 @@ import foundation.omni.rpc.OmniClientDelegate
  */
 trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelegate {
 
-
-
-    @Deprecated
-    Sha256Hash requestMSC(Address toAddress, BigDecimal requestedMSC) {
-        return requestMSC(toAddress, OmniDivisibleValue.of(requestedMSC), true)
-    }
-
-
     Sha256Hash requestMSC(Address toAddress, OmniDivisibleValue requestedOmni) {
         return requestMSC(toAddress, requestedOmni, true)
     }
