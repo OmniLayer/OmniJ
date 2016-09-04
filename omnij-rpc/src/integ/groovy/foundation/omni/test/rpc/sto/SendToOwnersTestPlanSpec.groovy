@@ -329,8 +329,8 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         ownerBalanceC.reserved == reservedOwnerC
 
         and: "the three owners received exactly the same amount"
-        amountReceivedOwnerA == amountReceivedOwnerB
-        amountReceivedOwnerB == amountReceivedOwnerC
+        amountReceivedOwnerA == amountReceivedOwnerB.numberValue()
+        amountReceivedOwnerB == amountReceivedOwnerC.numberValue()
     }
 
     /**

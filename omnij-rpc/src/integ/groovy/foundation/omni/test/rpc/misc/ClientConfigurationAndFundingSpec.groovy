@@ -180,7 +180,7 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         def balanceConfirmed = omniGetBalance(fundedAddress, CurrencyID.OMNI)
 
         fundingTx.confirmations > 0
-        balanceConfirmed.balance == balanceAtStart.balance + requestedOmni
+        balanceConfirmed.balance == balanceAtStart.balance + requestedOmni.numberValue()
         balanceConfirmed.reserved == balanceAtStart.reserved
 
         where:
