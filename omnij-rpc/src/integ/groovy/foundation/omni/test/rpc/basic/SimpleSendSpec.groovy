@@ -51,9 +51,6 @@ class SimpleSendSpec extends BaseRegTestSpec {
 
         when: "the amount to transfer is zero"
         omniSend(fundedAddress, toAddress, OMNI, 0.divisible)
-        // TODO: Test sending a negative amount of coins?
-        // TODO: Check that the *right type* of exceptions are thrown
-        // Currently it seems they're all 500s
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
@@ -62,7 +59,6 @@ class SimpleSendSpec extends BaseRegTestSpec {
         // TODO: Verify that blockchain state didn't change
     }
 
-    @Ignore("Can't have negative OmniValues -- need to rewrite this test using a lower-level send")
     def "When the amount to transfer is negative, Simple Sends are rejected by the RPC"() {
         // Note: We also need to submit via P2P and confirm these same invalid tx'es and make sure they are
         // treated as invalid by the Omni Core parser
@@ -71,16 +67,14 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def fundedAddress = createFundedAddress(faucetBTC, faucetOmni)
         def toAddress = getNewAddress()
 
-        when: "the amount to transfer is zero"
-        omniSend(fundedAddress, toAddress, OMNI, (-1.0).divisible)
-        // TODO: Test sending a negative amount of coins?
-        // TODO: Check that the *right type* of exceptions are thrown
-        // Currently it seems they're all 500s
+        when: "the amount to transfer is negative"
+        // Use lower-level send because OmniValue won't allow negative values
+        send("send_MP", toAddress.toString(), OMNI.value, -1.0)
 
         then: "exception is thrown"
         JsonRPCStatusException e = thrown()
-        e.message == "Invalid amount"
-        e.responseJson.error.code == -3
+        e.message.startsWith("omni_send \"fromaddress\" \"toaddress\" propertyid \"amount\" ( \"redeemaddress\" \"referenceamount\" )")
+        e.responseJson.error.code == -1
         // TODO: Verify that blockchain state didn't change
     }
 
