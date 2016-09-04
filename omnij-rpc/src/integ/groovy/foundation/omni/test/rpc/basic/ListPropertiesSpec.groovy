@@ -12,7 +12,6 @@ import foundation.omni.rpc.SmartPropertyListInfo
 /**
  * Specification for {@code "omni_listproperties"}.
  */
-@Ignore("due to incompatibility with Omni Core 0.0.10")
 class ListPropertiesSpec extends BaseRegTestSpec {
 
     def "Returns a property list with correct MSC and TMSC entries"() {
@@ -30,20 +29,20 @@ class ListPropertiesSpec extends BaseRegTestSpec {
         then: "we can check OMNI and TOMNI are as expected"
         props[OMNI].propertyid == OMNI
         props[OMNI].propertyid.ecosystem == Ecosystem.OMNI
-        props[OMNI].name == "MasterCoin"
+        props[OMNI].name == "Omni"
         props[OMNI].category == "N/A"
         props[OMNI].subcategory == "N/A"
-        props[OMNI].data == "***data***"
-        props[OMNI].url == "www.mastercoin.org"
+        props[OMNI].data == "Omni serve as the binding between Bitcoin, smart properties and contracts created on the Omni Layer."
+        props[OMNI].url == "http://www.omnilayer.org"
         props[OMNI].divisible
 
         props[TOMNI].propertyid == TOMNI
         props[TOMNI].propertyid.ecosystem == Ecosystem.TOMNI
-        props[TOMNI].name == "Test MasterCoin"
+        props[TOMNI].name == "Test Omni"
         props[TOMNI].category == "N/A"
         props[TOMNI].subcategory == "N/A"
-        props[TOMNI].data == "***data***"
-        props[TOMNI].url == "www.mastercoin.org"
+        props[TOMNI].data == "Test Omni serve as the binding between Bitcoin, smart properties and contracts created on the Omni Layer."
+        props[TOMNI].url == "http://www.omnilayer.org"
         props[TOMNI].divisible
     }
 }
