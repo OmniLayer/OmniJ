@@ -22,14 +22,20 @@ public class OmniTxBuilder {
     private final OmniNetworkParameters omniParams;
     private final RawTxBuilder builder = new RawTxBuilder();
     private final EncodeMultisig transactionEncoder;
+    private final FeeCalculator feeCalculator;
 
     /**
      * @param netParams The Bitcoin network to construct transactions for
      */
     public OmniTxBuilder(NetworkParameters netParams) {
+        this(netParams, new DefaultFixedFeeCalculator());
+    }
+
+    public OmniTxBuilder(NetworkParameters netParams, FeeCalculator feeCalculator) {
         this.netParams = netParams;
         this.omniParams = OmniNetworkParameters.fromBitcoinParms(netParams);
         this.transactionEncoder = new EncodeMultisig(netParams);
+        this.feeCalculator = feeCalculator;
     }
 
     /**
@@ -153,7 +159,8 @@ public class OmniTxBuilder {
      */
     private Transaction makeChangeOutput(Transaction tx, Address changeAddress, long totalInputAmount) throws InsufficientMoneyException {
         long amountOut    = sum(tx.getOutputs());   // Sum of outputs, this transaction
-        long amountChange = totalInputAmount - amountOut - Transaction.REFERENCE_DEFAULT_MIN_TX_FEE.value;
+        long fee = feeCalculator.calculateFee(tx).getValue();
+        long amountChange = totalInputAmount - amountOut - fee;
 
         // If change is negative, transaction is invalid
         if (amountChange < 0) {
