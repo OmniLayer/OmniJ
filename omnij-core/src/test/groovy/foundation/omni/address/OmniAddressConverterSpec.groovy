@@ -70,7 +70,7 @@ class OmniAddressConverterSpec extends Specification {
 
         when: "we convert to BTC"
         def btcAddress = OmniAddressConverter.omniToBTC(omniAddress)
-        println "omni address -> btc address: ${btcAddress} -> ${omniAddress}"
+        println "omni address -> btc address: ${omniAddress} -> ${btcAddress} "
 
         then: "it's a valid BTC address"
         btcAddress.parameters == btcParams
