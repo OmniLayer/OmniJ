@@ -3,3 +3,6 @@ dependencies {
 
     testCompile "com.msgilligan:bitcoinj-dsl:${bitcoinjAddonsVersion}"
 }
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7

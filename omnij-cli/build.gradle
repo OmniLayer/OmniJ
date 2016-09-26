@@ -16,6 +16,9 @@ dependencies {
     robovm  "org.codehaus.groovy:groovy:${groovyVersion}:grooid"
 }
 
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 mainClassName = "foundation.omni.cli.ConsensusCLI"
 def roboExeName = "btcstatus"
 
