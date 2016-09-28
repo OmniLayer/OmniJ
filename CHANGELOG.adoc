@@ -5,17 +5,23 @@ A high-level view of the changes in each OmniJ binary release.
 
 == v0.4.0
 
-Not released yet
+Released: 2016.09.28
 
 === Features/Changes
 
-* The 0.4.x branch will be the last to support Omni Core releases prior to 0.0.10
+* The 0.4.x branch will be the last to support Omni Core releases 0.0.10 and earlier
 * Add RPCs for fee distribution system
+* Pluggable fee calculator interface for `OmniTxBuilder`
+* Add `OmniScriptingClient` with dynamic method support for all RPC methods
+* Add PDC currency ticker symbol
+* Proof-of-concept address converters for Omni "Safe" addresses
 * Additional tests for fee distribution and feature activation
-* Further improvements in `omnij-rest-client` module to support OmniPortfolio
+* Further improvements in `omnij-rest-client` module to support *OmniPortfolio*
+* Bug fix for Omni transaction generation on TestNet
+* All modules except `omnij-rest-client` should now be Java 7 compatible JARs
 * Fix https://github.com/OmniLayer/OmniJ/issues/127[Issue #127]: Test log spammed since update to bitcoinj 0.14.1
 * Update to Groovy 2.4.7
-* Update to bitcoinj-addons 0.1.2
+* Update to bitcoinj-addons 0.1.3
 * Update to bitcoinj 0.14.3
 * Other library updates
 
