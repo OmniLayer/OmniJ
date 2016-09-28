@@ -8,9 +8,14 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.ScriptException;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.crypto.TransactionSignature;
+import org.bitcoinj.script.Script;
+import org.bitcoinj.script.ScriptBuilder;
 
 import java.util.Collection;
 
@@ -77,13 +82,26 @@ public class OmniTxBuilder {
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 
-        makeChangeOutput(tx, fromAddress, sum(unspentOutputs));  // Return change to the fromAddress
-
-        // Add all UTXOs for fromAddress as signed inputs
+        // Add all UTXOs for fromAddress as unsigned inputs, so fee calculator can use length
         for (TransactionOutput output : unspentOutputs) {
-            tx.addSignedInput(output, fromKey);
+            tx.addInput(output);
         }
 
+        makeChangeOutput(tx, fromAddress, sum(unspentOutputs));  // Calculate fees/change and, if any, return to the fromAddress
+
+        // Sign the transaction inputs
+        for (int i = 0; i < tx.getInputs().size(); i++) {
+            TransactionInput input = tx.getInput(i);
+            Script scriptPubKey = input.getConnectedOutput().getScriptPubKey();
+            TransactionSignature signature = tx.calculateSignature(i, fromKey, scriptPubKey, Transaction.SigHash.ALL, false);
+            if (scriptPubKey.isSentToRawPubKey())
+                input.setScriptSig(ScriptBuilder.createInputScript(signature));
+            else if (scriptPubKey.isSentToAddress())
+                input.setScriptSig(ScriptBuilder.createInputScript(signature, fromKey));
+            else
+                throw new ScriptException("Don't know how to sign for this kind of scriptPubKey: " + scriptPubKey);
+
+        }
         return tx;
     }
 
@@ -103,11 +121,11 @@ public class OmniTxBuilder {
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 
-        makeChangeOutput(tx, fromAddress, sumInputs(inputs));
-
         for (TransactionInput input : inputs) {
             tx.addInput(input);
         }
+
+        makeChangeOutput(tx, fromAddress, sumInputs(inputs));   // Calculate change and, if any, return to the fromAddress
 
         return tx;
     }
