@@ -8,11 +8,11 @@
 .. omnij-dsl `ExtensionModule`
 .. `README.adoc`
 . Commit version bump and changelog.
-. Tag: `git tag -a v0.x.y -m "Release 0.x.y"`
-. Push: `git push --tags origin master`
 . Full build, test
 .. `./gradlew clean jenkinsBuild regTest`
-. Publish to Bintray: 
+. Tag: `git tag -a v0.x.y -m "Release 0.x.y"`
+. Push: `git push --tags origin master`
+. Publish to Bintray:
 .. `./gradlew bintrayUpload`
 .. Confirm publish of artifacts in Bintray Web UI.
 . TBD: Update github-pages site (not set up yet)
