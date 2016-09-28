@@ -5,7 +5,7 @@ def groovydocSpec = {
     if (project != rootProject) source = project.sourceSets.main.groovy + project.sourceSets.main.java
     groovyClasspath = project.configurations.jansi
 
-    overview = rootProject.file('src/main/java/overview.html')
+    overviewText = project.resources.text.fromFile(rootProject.file('src/main/java/overview.html'))
     includePrivate = false
     link 'http://docs.oracle.com/javase/7/docs/api/', 'java.', 'org.xml.', ' javax.xml.', 'javax.sql.', 'javax.net.', 'org.w3c.'
     link 'http://commons.apache.org/proper/commons-cli/javadocs/api-release/', 'org.apache.commons.cli.'
