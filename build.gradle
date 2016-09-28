@@ -17,8 +17,6 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
 
-    //sourceCompatibility = 1.7
-
     version = '0.4.0-SNAPSHOT'
     group = 'foundation.omni'
 
@@ -31,13 +29,13 @@ allprojects {
 
 subprojects {
     dependencies {
-        compile 'org.bitcoinj:bitcoinj-core:0.14.1'
+        compile 'org.bitcoinj:bitcoinj-core:0.14.3'
         compile "org.slf4j:slf4j-api:${slf4jVersion}"
 
         runtime "org.slf4j:slf4j-jdk14:${slf4jVersion}"               // Runtime implementation of slf4j
 
         testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
-        testCompile("org.spockframework:spock-core:1.1-groovy-2.4-rc-1") {
+        testCompile("org.spockframework:spock-core:1.1-groovy-2.4-rc-2") {
             exclude module: "groovy-all"
         }
     }
