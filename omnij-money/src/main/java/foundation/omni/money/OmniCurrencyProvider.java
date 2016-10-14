@@ -17,11 +17,10 @@ import java.util.Set;
 import static foundation.omni.money.OmniCurrencyCode.*;
 /**
  * First cut at Omni Currency Provider
- * First version is OMNI only, other currencies will be added soon
  */
 public class OmniCurrencyProvider implements CurrencyProviderSpi {
-    final static int divisbleFractionDigits = 8;
-    final static int indivisbleFractionDigits = 0;
+    final static int divisibleFractionDigits = 8;
+    final static int indivisibleFractionDigits = 0;
 
     final private static Set<OmniCurrencyCode> codes = new HashSet<>(Arrays.asList(OMNI, MAID, USDT, AMP, SEC, AGRS, PDC));
 
@@ -98,14 +97,14 @@ public class OmniCurrencyProvider implements CurrencyProviderSpi {
 
     private static CurrencyUnit build(OmniCurrencyCode code) {
         return CurrencyUnitBuilder.of(code.name(), CONTEXT)
-                .setDefaultFractionDigits(code.type() == PropertyType.DIVISIBLE ? divisbleFractionDigits : indivisbleFractionDigits)
+                .setDefaultFractionDigits(code.type() == PropertyType.DIVISIBLE ? divisibleFractionDigits : indivisibleFractionDigits)
                 .build();
     }
 
     private static CurrencyUnit build(String code) {
-        int digits = divisbleFractionDigits;
+        int digits = divisibleFractionDigits;
         if (code.equals(MAID.name()) || code.equals(SEC.name())) {
-            digits = indivisbleFractionDigits;
+            digits = indivisibleFractionDigits;
         }
         return CurrencyUnitBuilder.of(code, CONTEXT)
                 .setDefaultFractionDigits(digits)
