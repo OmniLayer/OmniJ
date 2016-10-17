@@ -15,6 +15,7 @@
 . Publish to Bintray:
 .. `./gradlew bintrayUpload`
 .. Confirm publish of artifacts in Bintray Web UI.
+. Update Github https://github.com/OmniLayer/OmniJ/releases[OmniJ Releases] page.
 . TBD: Update github-pages site (not set up yet)
 
 == Announcements
