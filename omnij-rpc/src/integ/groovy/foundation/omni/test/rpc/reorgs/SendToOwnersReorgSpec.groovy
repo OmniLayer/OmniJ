@@ -4,6 +4,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.OmniValue
 import foundation.omni.PropertyType
+import org.bitcoinj.core.Coin
 
 class SendToOwnersReorgSpec extends BaseReorgSpec {
 
@@ -164,6 +165,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         // secondOrphanedTx.confirmations == -1 TODO: activate after Omni Core adjustment
 
         when: "creating a third STO transaction"
+        requestBitcoin(actorAddress, Coin.CENT)  // maybe use startBTC instead
         def thirdTxid = omniSendSTO(actorAddress, tokenID, 50.divisible)
         generateBlock()
         def thirdTx = omniGetSTO(thirdTxid)
