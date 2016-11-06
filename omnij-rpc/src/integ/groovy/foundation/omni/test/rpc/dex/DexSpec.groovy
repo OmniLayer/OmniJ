@@ -258,7 +258,7 @@ class DexSpec extends BaseRegTestSpec {
         generateBlock()
 
         and: "B accepts the offer"
-        def acceptTxid = acceptDexOffer(actorB, currencyOffered, offeredMSC, actorA)
+        def acceptTxid = omniSendDExAccept(actorB, actorA, currencyOffered, offeredMSC, false)
         generateBlock()
 
         then: "both transactions are valid"
