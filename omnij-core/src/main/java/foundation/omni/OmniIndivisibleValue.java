@@ -1,8 +1,6 @@
 package foundation.omni;
 
-import javax.money.NumberValue;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.MathContext;
 
 /**
@@ -33,8 +31,8 @@ public final class OmniIndivisibleValue extends OmniValue {
         return OmniIndivisibleValue.of(willets);
     }
 
-    private OmniIndivisibleValue(long value) {
-        super(value);
+    private OmniIndivisibleValue(long willets) {
+        super(willets);
     }
 
     @Override
@@ -49,7 +47,7 @@ public final class OmniIndivisibleValue extends OmniValue {
 
     @Override
     public Long numberValue() {
-        return value;
+        return willets;
     }
 
     @Deprecated
@@ -58,7 +56,7 @@ public final class OmniIndivisibleValue extends OmniValue {
     }
 
     private BigDecimal asBigDecimal() {
-        return new BigDecimal(value);
+        return new BigDecimal(willets);
     }
 
     @Override
@@ -67,11 +65,11 @@ public final class OmniIndivisibleValue extends OmniValue {
     }
 
     public OmniIndivisibleValue plus(OmniIndivisibleValue right) {
-        return OmniIndivisibleValue.of(this.value + right.value);
+        return OmniIndivisibleValue.of(this.willets + right.willets);
     }
 
     public OmniIndivisibleValue minus(OmniIndivisibleValue right) {
-        return OmniIndivisibleValue.of(this.value - right.value);
+        return OmniIndivisibleValue.of(this.willets - right.willets);
     }
 
 }

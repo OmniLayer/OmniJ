@@ -14,9 +14,6 @@ import foundation.omni.OmniIndivisibleValue
 @CompileStatic
 @Category(Number)
 class NumberCategory {
-    private static final BigDecimal willetsPerBTCDecimal = new BigDecimal(OmniDivisibleValue.willetsPerCoin)
-    private static final BigInteger willetsPerBTCBigInt = BigInteger.valueOf(OmniDivisibleValue.willetsPerCoin)
-
     /**
      * Treat number as a decimal, divisible amount of an Omni currency
      *
