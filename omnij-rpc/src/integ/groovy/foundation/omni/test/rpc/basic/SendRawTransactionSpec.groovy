@@ -21,7 +21,7 @@ class SendRawTransactionSpec extends BaseRegTestSpec {
 
     def setup() {
         activeAddress = createFundedAddress(startBTC, startMSC)
-        passiveAddress = getnewaddress()
+        passiveAddress = getNewAddress()
     }
 
     def "Create raw transaction with reference address"() {

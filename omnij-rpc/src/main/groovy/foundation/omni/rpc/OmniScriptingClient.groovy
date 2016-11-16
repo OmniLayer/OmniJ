@@ -10,7 +10,7 @@ import java.io.IOException;
  * No args constructor reads bitcoin.conf
  * Allows dynamic methods to access new RPCs
  */
-public class OmniScriptingClient extends OmniExtendedClient implements DynamicRPCFallback {
+public class OmniScriptingClient extends OmniClient implements DynamicRPCFallback {
 
     public OmniScriptingClient() {
         super(BitcoinConfFile.readDefaultConfig().getRPCConfig());

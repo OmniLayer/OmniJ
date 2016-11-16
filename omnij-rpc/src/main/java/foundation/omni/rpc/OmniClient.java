@@ -263,8 +263,13 @@ public class OmniClient extends BitcoinExtendedClient {
                                       Coin amountDesired, Byte paymentWindow, Coin commitmentFee,
                                       Byte action)
             throws JsonRPCException, IOException {
-        return send("omni_senddexsell", Sha256Hash.class, fromAddress, currencyId, amountForSale, amountDesired,
-                                                            paymentWindow, commitmentFee, action);
+        return send("omni_senddexsell", Sha256Hash.class,
+                fromAddress, currencyId,
+                amountForSale,
+                amountDesired.toString(),   // Omni Core expects string for BTC value, unlike BTC RPCs?
+                paymentWindow,
+                commitmentFee.toString(),
+                action);
     }
 
     /**

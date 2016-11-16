@@ -383,7 +383,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         Coin commitFee = 0.0001.btc
         Byte action = 1 // new offer
 
-        def txid = createDexSellOffer(actorAddress, currency, amount, desiredBTC, blockSpan, commitFee, action)
+        def txid = omniSendDExSell(actorAddress, currency, amount, desiredBTC, blockSpan, commitFee, action)
         generateBlock()
 
         def transaction = omniGetTransaction(txid)
