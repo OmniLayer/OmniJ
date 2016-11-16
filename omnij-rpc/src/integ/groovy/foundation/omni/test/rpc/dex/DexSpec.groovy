@@ -6,8 +6,8 @@ import foundation.omni.OmniDivisibleValue
 import org.bitcoinj.core.Coin
 import spock.lang.Unroll
 
-import static CurrencyID.OMNI
-import static CurrencyID.TOMNI
+import static foundation.omni.CurrencyID.OMNI
+import static foundation.omni.CurrencyID.TOMNI
 
 /**
  * Specification for the traditional distributed exchange

@@ -1,7 +1,7 @@
 package foundation.omni.test;
 
 import com.msgilligan.bitcoinj.test.RegTestFundingSource;
-import foundation.omni.rpc.OmniCLIClient;
+import foundation.omni.rpc.test.OmniTestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 public class RegTestOmniFundingSource extends RegTestFundingSource implements OmniTestSupport, OmniFundingSource  {
     private static final Logger log = LoggerFactory.getLogger(RegTestFundingSource.class);
 
-    public RegTestOmniFundingSource(OmniCLIClient client) {
+    public RegTestOmniFundingSource(OmniTestClient client) {
         super(client);          // Set BitcoinExtendedClient in superclass
-        foundation_omni_rpc_OmniClientDelegate__client = client;   // Set Omni client here
+        foundation_omni_test_OmniTestClientDelegate__client = client;   // Set Omni client here
     }
 }

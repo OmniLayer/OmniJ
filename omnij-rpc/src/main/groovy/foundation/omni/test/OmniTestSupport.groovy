@@ -15,7 +15,7 @@ import foundation.omni.rpc.OmniClientDelegate
 /**
  * Test support functions intended to be mixed-in to Spock test specs
  */
-trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelegate {
+trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDelegate {
 
     Sha256Hash requestMSC(Address toAddress, OmniDivisibleValue requestedOmni) {
         return requestMSC(toAddress, requestedOmni, true)
@@ -91,7 +91,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
         def fundedAddress = newAddress
 
         if (requestedMSC.willets > 0) {
-            def txidMSC = requestMSC(fundedAddress, requestedMSC)
+            def txidMSC = requestMSC(fundedAddress, (OmniDivisibleValue) requestedMSC)
         }
 
         if (requestedBTC.value > 0) {
@@ -119,7 +119,17 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
     }
 
     CurrencyID fundNewProperty(Address address, OmniValue amount, Ecosystem ecosystem) {
-        def txidCreation = createProperty(address, ecosystem, amount)
+        def txidCreation = omniSendIssuanceFixed(address,
+                ecosystem,
+                amount.getPropertyType(),
+                new CurrencyID(0),  // previousId
+                "",                 // category
+                "",                 // subCategory
+                "name",             // name
+                "",                 // url
+                "",                 // data
+                amount);
+
         generateBlock()
         def txCreation = omniGetTransaction(txidCreation)
         assert txCreation.valid == true
@@ -128,7 +138,15 @@ trait OmniTestSupport implements BTCTestSupport, OmniClientDelegate, RawTxDelega
     }
 
     CurrencyID fundManagedProperty(Address address, PropertyType type, Ecosystem ecosystem) {
-        def txidCreation = createManagedProperty(address, ecosystem, type, "", "", "MSP", "", "")
+        def txidCreation = omniSendIssuanceManaged(address,
+                ecosystem,
+                type,
+                new CurrencyID(0),  // previousId
+                "",                 // category
+                "",                 // subCategory
+                "MSP",
+                "",                 // url
+                "")                 // data
         generateBlock()
         def txCreation = omniGetTransaction(txidCreation)
         assert txCreation.valid == true
