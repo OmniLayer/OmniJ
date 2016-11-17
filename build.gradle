@@ -17,7 +17,7 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
 
-    version = '0.5.0'
+    version = '0.5.1-SNAPSHOT'
     group = 'foundation.omni'
 
     repositories {
