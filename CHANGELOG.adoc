@@ -3,14 +3,24 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
-== v0.5.0-SNAPSHOT
+== v0.5.0
 
-Released: In development
+Released: 2016.11.16
+
+=== Potentially Breaking
+
+* The 0.5.x branch requires Omni Core 0.0.11.1 or later
+* https://github.com/OmniLayer/OmniJ/commit/d067b26550a1628321451730be6738f28322c9d3[d067b26] - Send `omni_`* RPC method names rather than *`_MP`
+* https://github.com/OmniLayer/OmniJ/pull/135[PR #135] -`OmniExtendedClient` is deprecated (use methods/RPCs in `OmniClient` instead)
 
 === Features/Changes
 
-* The 0.5.x branch requires Omni Core 0.0.11.1 or later
+* Tweaks to integration tests for Omni Core Bitcoin 0.13 rebase
+* Update to bitcoinj-addons 0.2.1
 
+=== Internal
+
+* https://github.com/OmniLayer/OmniJ/commit/03e447ecd6366eac12afc30f650e7a6fa2df5b76[03e447e] - The `value` protected member of `OmniValue` is now called `willets`
 
 == v0.4.0
 
