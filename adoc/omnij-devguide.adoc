@@ -22,18 +22,46 @@ skinparam shadowing false
 hide empty members
 
 namespace com.msgilligan.bitcoinj.rpc {
+    interface UntypedRPCClient
+    abstract class AbstractRPCClient
+
     class RPCClient
-    RPCClient <|-- class DynamicRPCClient << Groovy >>
+    class BitcoinClient
+    class BitcoinExtendedClient
+
+    interface DynamicRPCFallback << Groovy, trait >>
+    class DynamicRPCClient << Groovy >>
+    class BitcoinScriptingClient << Groovy >>
+    class BitcoinCLIClient << Groovy >>
+
+    UntypedRPCClient <|.. AbstractRPCClient
+    AbstractRPCClient <|-- RPCClient
+
+    UntypedRPCClient <|.. DynamicRPCFallback
+    RPCClient <|-- DynamicRPCClient
+    DynamicRPCFallback <|.. DynamicRPCClient
+
     RPCClient <|-- BitcoinClient
-    BitcoinClient <|-- class BitcoinCLIClient << Groovy >>
+    BitcoinClient <|-- BitcoinExtendedClient
+    BitcoinExtendedClient <|-- BitcoinScriptingClient
+    DynamicRPCFallback <|.. BitcoinScriptingClient
+    BitcoinClient <|-- class BitcoinCLIClient
 }
+
 
 namespace foundation.omni.rpc {
-    com.msgilligan.bitcoinj.rpc.BitcoinClient <|-- OmniClient
-    OmniClient <|-- OmniExtendedClient
-    OmniExtendedClient <|-- class OmniCLIClient << Groovy >>
-}
-....
+    class OmniClient
+    class OmniScriptingClient << Groovy >>
+    class OmniCLIClient << Groovy >>
 
+
+    com.msgilligan.bitcoinj.rpc.BitcoinExtendedClient <|-- OmniClient
+    OmniClient <|-- OmniScriptingClient
+    com.msgilligan.bitcoinj.rpc.DynamicRPCFallback <|.. OmniScriptingClient
+    OmniClient <|-- class OmniCLIClient
+}
+
+
+....
 
 
