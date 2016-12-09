@@ -29,7 +29,7 @@ class DexVersionsSpec extends BaseRegTestSpec {
 
         when:
         def txid = omniSendRawTx(actorAddress, rawTx)
-        generateBlock()
+        generate()
 
         and:
         def offerTx = omniGetTransaction(txid)
@@ -57,7 +57,7 @@ class DexVersionsSpec extends BaseRegTestSpec {
 
         when:
         def txid = omniSendRawTx(actorAddress, rawTx)
-        generateBlock()
+        generate()
 
         and:
         def offerTx = omniGetTransaction(txid)
@@ -84,7 +84,7 @@ class DexVersionsSpec extends BaseRegTestSpec {
 
         when:
         def txid = omniSendRawTx(actorAddress, rawTx)
-        generateBlock()
+        generate()
 
         and:
         omniGetTransaction(txid)
@@ -111,7 +111,7 @@ class DexVersionsSpec extends BaseRegTestSpec {
 
         when:
         def txid = omniSendRawTx(actorAddress, rawTx)
-        generateBlock()
+        generate()
 
         and:
         def offerTx = omniGetTransaction(txid)

@@ -35,14 +35,14 @@ class MoneyManSpec extends BaseRegTestSpec {
         def txid = sendToAddress(testAddress, sendAmount + extraAmount + stdTxFee)
 
         and: "we generate a block"
-        generateBlock()
+        generate()
 
         then: "we have the correct amount of BTC in faucetAddress's account"
         getBitcoinBalance(testAddress) == sendAmount + extraAmount + stdTxFee
 
         when: "We send the BTC to the moneyManAddress and generate a block"
         txid = sendBitcoin(testAddress, omniNetParams.moneyManAddress, sendAmount)
-        generateBlock()
+        generate()
         def tx = client.getTransaction(txid)
 
         then: "transaction was confirmed"
@@ -76,7 +76,7 @@ class MoneyManSpec extends BaseRegTestSpec {
         tx
 
         when: "a block is generated"
-        generateBlock()
+        generate()
         def newSenderBalance = client.omniGetBalance(faucetAddress, OMNI)
         def receiverBalance = client.omniGetBalance(toAddress, OMNI)
 
@@ -96,7 +96,7 @@ class MoneyManSpec extends BaseRegTestSpec {
         txid != OmniClient.zeroHash
 
         when: "a block is generated"
-        generateBlock()
+        generate()
         def newWealthyBalance = omniGetBalance(faucetAddress, OMNI).balance
 
         then: "balance is unchanged"

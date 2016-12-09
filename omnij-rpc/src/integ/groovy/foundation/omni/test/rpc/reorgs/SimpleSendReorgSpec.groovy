@@ -29,7 +29,7 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
 
         when: "a new block is mined"
         clearMemPool()
-        generateBlock()
+        generate()
 
         then: "the send transaction is no longer valid"
         !checkTransactionValidity(txid)
@@ -57,7 +57,7 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
         when: "invalidating the block with the send transaction and after a new block is mined"
         invalidateBlock(blockHashOfSend)
         clearMemPool()
-        generateBlock()
+        generate()
 
         then: "the send transaction is no longer valid and the balances before the send are restored"
         !checkTransactionValidity(txid)
@@ -67,7 +67,7 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
         when: "rolling back all blocks until before the initial funding"
         invalidateBlock(blockHashBeforeFunding)
         clearMemPool()
-        generateBlock()
+        generate()
 
         then: "the actors have zero balances"
         omniGetBalance(senderAddress, CurrencyID.OMNI).balance == 0.0

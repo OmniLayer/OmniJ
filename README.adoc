@@ -193,7 +193,7 @@ These sample Spock "feature tests" are from the file https://github.com/OmniLaye
                           "Test Subcategory", "ManagedTokens",
                           "http://www.omnilayer.org",
                           "This is a test for managed properties")
-        generateBlock()
+        generate()
         def creationTx = omniGetTransaction(creationTxid)
         currencyID = new CurrencyID(creationTx.propertyid as Long)
 

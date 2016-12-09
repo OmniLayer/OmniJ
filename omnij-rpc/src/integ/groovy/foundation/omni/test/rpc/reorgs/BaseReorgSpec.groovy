@@ -20,7 +20,7 @@ abstract class BaseReorgSpec extends BaseRegTestSpec {
 
     Sha256Hash generateAndGetBlockHash() throws AssumptionViolatedException
     {
-        List<Sha256Hash> result = generateBlock()
+        List<Sha256Hash> result = generate()
         if (result == null) {
             throw new AssumptionViolatedException('The client is not based on Bitcoin Core 0.10')
         }

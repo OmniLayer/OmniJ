@@ -36,7 +36,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
         when: "creating a new crowdsale with 0.00000001 MDiv per unit invested"
         def crowdsaleTxid = omniSendRawTx(issuerAddress, rawTx)
-        generateBlock()
+        generate()
 
         then: "the crowdsale is valid"
         def crowdsaleTx = omniGetTransaction(crowdsaleTxid)
@@ -49,7 +49,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
         when: "participant invests #amountToInvest OMNI"
         def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest)
-        generateBlock()
+        generate()
 
         then: "the investor should get #expectedBalance MDiv"
         omniGetBalance(investorAddress, propertyId).balance.equals(expectedBalance)
@@ -95,7 +95,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
         when:
         def txidClose = closeCrowdsale(issuerAddress, propertyId) // bypass RPC layer
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txidClose).valid
@@ -134,7 +134,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
         when: "creating a new crowdsale with 0.00000001 MDiv per unit invested"
         def crowdsaleTxid = omniSendRawTx(issuerAddress, rawTx)
-        generateBlock()
+        generate()
 
         then: "the crowdsale is valid"
         def crowdsaleTx = omniGetTransaction(crowdsaleTxid)
@@ -147,7 +147,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
         when: "participant invests #amountToInvest OMNI"
         def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest)
-        generateBlock()
+        generate()
 
         then: "the investor should get #expectedBalance MDiv"
         omniGetBalance(investorAddress, propertyId).balance.equals(expectedBalance)
@@ -197,7 +197,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
         when:
         def txidClose = closeCrowdsale(issuerAddress, propertyId) // bypass RPC layer
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txidClose).valid == !crowdsaleMaxed
@@ -236,7 +236,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
         when: "creating a new crowdsale with 3400 TIndiv per unit invested"
         def crowdsaleTxid = omniSendRawTx(issuerAddress, rawTx)
-        generateBlock()
+        generate()
 
         then: "the crowdsale is valid"
         def crowdsaleTx = omniGetTransaction(crowdsaleTxid)
@@ -249,7 +249,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
         when: "participant invests #amountToInvest TOMNI"
         def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest)
-        generateBlock()
+        generate()
 
         then: "the investor should get #expectedBalance TIndiv"
         omniGetBalance(investorAddress, propertyId).balance.longValue() == expectedBalance.longValue()
@@ -295,7 +295,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
         when:
         def txidClose = closeCrowdsale(issuerAddress, propertyId) // bypass RPC layer
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txidClose).valid

@@ -28,7 +28,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         omniSend(faucetAddress, toAddress, OMNI, amount)
 
         and: "a block is generated"
-        generateBlock()
+        generate()
         def endBalance = omniGetBalance(faucetAddress, OMNI).balance
 
         then: "the toAddress has the correct OMNI balance and source address is reduced by right amount"

@@ -43,7 +43,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
         when:
         def tradeTxid = omniSendTrade(actorAddress, testID, amountForSale, CurrencyID.TOMNI, amountDesired)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(tradeTxid).valid
@@ -66,7 +66,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
         when:
         def cancelTxid = omniSendCancelAllTrades(actorAddress, Ecosystem.TOMNI)
-        generateBlock()
+        generate()
 
         then:
         omniGetTrade(cancelTxid).valid
@@ -86,7 +86,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
     def "Creating trades involving main ecosystem tokens before the activation is invalid"() {
         when:
         def txid = omniSendTrade(actorAddress, mainID, 5.divisible, CurrencyID.OMNI, 2.divisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false
@@ -102,7 +102,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
         when:
         def txid = omniSendActivation(actorAddress, metaDExFeatureId, activationBlock, minClientVersion)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid
@@ -128,7 +128,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
     def "Creating trades involving main ecosystem tokens during the grace period is still invalid"() {
         when:
         def txid = omniSendTrade(actorAddress, CurrencyID.OMNI, startMSC, mainID, 25.divisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false
@@ -141,7 +141,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
     def "After the successful activation of the feature, the feature activation completed"() {
         setup:
         while (getBlockCount() < activationBlock) {
-            generateBlock()
+            generate()
         }
 
         when:
@@ -171,7 +171,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
         when:
         def tradeTxid = omniSendTrade(actorAddress, CurrencyID.OMNI, amountForSale, mainID, amountDesired)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(tradeTxid).valid
@@ -194,7 +194,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
         when:
         def cancelTxid = omniSendCancelTradesByPrice(actorAddress, CurrencyID.OMNI, amountForSale, mainID, amountDesired)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(cancelTxid).valid

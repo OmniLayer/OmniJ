@@ -33,7 +33,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         creationTxid = createManagedProperty(actorAddress, Ecosystem.OMNI, PropertyType.INDIVISIBLE, "Test Category",
                                              "Test Subcategory", "ManagedTokens", "http://www.omnilayer.org",
                                              "This is a test for managed properties")
-        generateBlock()
+        generate()
         def creationTx = omniGetTransaction(creationTxid)
         currencyID = new CurrencyID(creationTx.propertyid as Long)
 
@@ -95,7 +95,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "New tokens can be granted with transaction type 55"() {
         when:
         def txid = grantTokens(actorAddress, currencyID, 100.indivisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).txid == txid.toString()
@@ -126,7 +126,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "Tokens can be granted several times"() {
         when:
         def txid = grantTokens(actorAddress, currencyID, 170.indivisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).txid == txid.toString()
@@ -144,7 +144,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "It's impossible to grant tokens for an non-existing property"() {
         when:
         def txid = grantTokens(otherAddress, new CurrencyID(CurrencyID.MAX_REAL_ECOSYSTEM_VALUE), 1.indivisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false
@@ -153,7 +153,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "Granting tokens for a property with fixed supply is invalid"() {
         when:
         def txid = grantTokens(actorAddress, nonManagedID, 1.indivisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false
@@ -166,7 +166,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "Tokens can only be granted by the issuer on record"() {
         when:
         def txid = grantTokens(otherAddress, currencyID, 500.indivisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false
@@ -180,7 +180,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "Up to a total of 9223372036854775807 tokens can be granted"() {
         when:
         def txid = grantTokens(actorAddress, currencyID, 9223372036854775537.indivisible) // MAX - already granted tokens
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid
@@ -195,7 +195,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "Granting more than 9223372036854775807 tokens in total is invalid"() {
         when:
         def txid = grantTokens(actorAddress, currencyID, 1.indivisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false
@@ -208,7 +208,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "Granted tokens can be transfered as usual"() {
         when:
         def txid = omniSend(actorAddress, otherAddress, currencyID, 1.indivisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid
@@ -223,7 +223,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "Sending of granted tokens does not remove the limit of total tokens"() {
         when:
         def txid = grantTokens(actorAddress, currencyID, 1.indivisible) // MAX < total + 1 (!)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false
@@ -237,7 +237,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "Tokens of managed properties can be revoked with transaction type 56"() {
         when:
         def txid = revokeTokens(actorAddress, currencyID, 9223372036854775805.indivisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).txid == txid.toString()
@@ -267,7 +267,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "It's impossible to revoke tokens for an non-existing property"() {
         when:
         def txid = revokeTokens(otherAddress, new CurrencyID(CurrencyID.MAX_REAL_ECOSYSTEM_VALUE), 1.divisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false
@@ -277,7 +277,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "Tokens can only be revoked by the issuer on record"() {
         when:
         def txid = revokeTokens(otherAddress, currencyID, 1.divisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false
@@ -291,7 +291,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "Revoking tokens for a property with fixed supply is invalid"() {
         when:
         def txid = revokeTokens(actorAddress, nonManagedID, 1.divisible)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false
@@ -304,7 +304,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
     def "Revoking more tokens than available is not possible"() {
         when:
         def txid = revokeTokens(actorAddress, currencyID, 100.divisible) // issuer has less than 100 tokens
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false

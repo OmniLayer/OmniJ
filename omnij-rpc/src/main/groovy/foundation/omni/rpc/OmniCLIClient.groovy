@@ -43,15 +43,10 @@ class OmniCLIClient extends OmniClient {
 
     /**
      * Enable or disable hashing to attempt to find the next block
-     * <p>
-     * In RegTest mode <code>setgenerate</code> is used to mine 1 or more blocks
-     * on command.
-     * <p>
+     *
      * @param generate to enable generation, true; to disable, false.
      * @param genproclimit (optional) the number of logical processors to use. Defaults to 1; use -1 to use all available processors.
-     * @return Bitcoin 0.10.0+: A list containing the block header hashes of the generated blocks or null
-     *                        if no blocks were generated
-     *                        Bitcoin 0.9.x: empty list
+     * @return A list containing the block header hashes of the generated blocks or null if no blocks were generated
      */
     List<Sha256Hash> setgenerate(Boolean generate, Long genproclimit = null) {
         return setGenerate(generate, genproclimit);

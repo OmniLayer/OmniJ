@@ -28,7 +28,7 @@ class DexSpec extends BaseRegTestSpec {
         when: "creating an offer with action = 1"
         def offerTxid = createDexSellOffer(
                 fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generateBlock()
+        generate()
 
         and: "retrieving information about the offer"
         def offerTx = omniGetTransaction(offerTxid)
@@ -69,7 +69,7 @@ class DexSpec extends BaseRegTestSpec {
         when: "an offer of #currencyId is created"
         def offerTxid = createDexSellOffer(
                 fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generateBlock()
+        generate()
 
         then: "the transaction should be a valid offering of #currencyOffered"
         def offerTx = omniGetTransaction(offerTxid)
@@ -89,7 +89,7 @@ class DexSpec extends BaseRegTestSpec {
         when: "the amount offered for sale exceeds the sending address's available balance"
         def offerTxid = createDexSellOffer(
                 fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generateBlock()
+        generate()
 
         then: "this indicates to sell all tokens that are available"
         def offerTx = omniGetTransaction(offerTxid)
@@ -112,7 +112,7 @@ class DexSpec extends BaseRegTestSpec {
         when: "an amount is offered for sale"
         def offerTxid = createDexSellOffer(
                 fundedAddress, currencyOffered, amountOffered, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generateBlock()
+        generate()
 
         then: "the offered amount is reserved and subtracted from the available balance"
         def offerTx = omniGetTransaction(offerTxid)
@@ -133,14 +133,14 @@ class DexSpec extends BaseRegTestSpec {
         when: "the sell offer is published"
         def offerTxid = createDexSellOffer(
                 fundedAddress, currencyOffered, offerMSC, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generateBlock()
+        generate()
 
         and: "additional tokens are received"
         def offerBeforeReceivingMore = omniGetTransaction(offerTxid)
         def balanceBeforeReceivingMore = omniGetBalance(fundedAddress, currencyOffered)
         def otherAddress = createFundedAddress(startBTC, startOtherMSC)
         def sendTxid = omniSend(otherAddress, fundedAddress, currencyOffered, additionalMSC)
-        generateBlock()
+        generate()
 
         then: "any tokens received are added to the available balance"
         def balanceNow = omniGetBalance(fundedAddress, currencyOffered)
@@ -167,12 +167,12 @@ class DexSpec extends BaseRegTestSpec {
         when: "there is already an active offer accepting BTC"
         def firstOfferTxid = createDexSellOffer(
                 fundedAddress, currencyOffered, firstOfferMSC, firstOfferBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generateBlock()
+        generate()
 
         and: "and another offer accepting BTC is made"
         def secondOfferTxid = createDexSellOffer(
                 fundedAddress, currencyOffered, secondOfferMSC, secondOfferBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generateBlock()
+        generate()
 
         then: "the other offer is rejected"
         omniGetTransaction(firstOfferTxid).valid == true
@@ -192,7 +192,7 @@ class DexSpec extends BaseRegTestSpec {
         when: "creating an offer with action 1"
         def offerTxid = createDexSellOffer(
                 fundedAddress, currencyOffered, offeredMSC, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(offerTxid).valid
@@ -208,7 +208,7 @@ class DexSpec extends BaseRegTestSpec {
         when: "updating an offer with action = 2"
         def updateTxid = createDexSellOffer(
                 fundedAddress, currencyOffered, updatedMSC, updatedBTC, stdBlockSpan, stdCommitFee, actionUpdate)
-        generateBlock()
+        generate()
 
         and: "retrieving information about the update"
         def updateTx = omniGetTransaction(updateTxid)
@@ -225,7 +225,7 @@ class DexSpec extends BaseRegTestSpec {
         when: "cancelling an offer with action = 3"
         def cancelTxid = createDexSellOffer(
                 fundedAddress, currencyOffered, 0.divisible, 0.btc, 0 as Byte, 0.btc, actionCancel)
-        generateBlock()
+        generate()
 
         and: "retrieving information about the cancel"
         def cancelTx = omniGetTransaction(cancelTxid)
@@ -255,11 +255,11 @@ class DexSpec extends BaseRegTestSpec {
         when: "A offers OMNI"
         def offerTxid = createDexSellOffer(
                 actorA, currencyOffered, offeredMSC, desiredBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generateBlock()
+        generate()
 
         and: "B accepts the offer"
         def acceptTxid = omniSendDExAccept(actorB, actorA, currencyOffered, offeredMSC, false)
-        generateBlock()
+        generate()
 
         then: "both transactions are valid"
         omniGetTransaction(offerTxid).valid

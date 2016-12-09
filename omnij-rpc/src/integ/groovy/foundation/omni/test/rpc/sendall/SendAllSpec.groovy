@@ -26,7 +26,7 @@ class SendAllSpec extends BaseRegTestSpec {
 
         when:
         def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
-        generateBlock()
+        generate()
         def sendTx = omniGetTransaction(sendTxid)
 
         then: "the transaction is valid"
@@ -71,7 +71,7 @@ class SendAllSpec extends BaseRegTestSpec {
         def otherAddress = newAddress
         omniSend(actorAddress, otherAddress, CurrencyID.OMNI, startMSC)
         omniSend(actorAddress, otherAddress, CurrencyID.TOMNI, startMSC)
-        generateBlock()
+        generate()
 
         then:
         omniGetBalance(actorAddress, CurrencyID.OMNI).balance == zeroAmount
@@ -81,7 +81,7 @@ class SendAllSpec extends BaseRegTestSpec {
 
         when:
         def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(sendTxid).valid == false
@@ -110,7 +110,7 @@ class SendAllSpec extends BaseRegTestSpec {
 
         when:
         def tradeTxid = omniSendTrade(actorAddress, nonManagedID, 4.divisible, tradeCurrency, 4.divisible)
-        generateBlock()
+        generate()
         def tradeTx = omniGetTransaction(tradeTxid)
 
         then:
@@ -120,7 +120,7 @@ class SendAllSpec extends BaseRegTestSpec {
 
         when:
         def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
-        generateBlock()
+        generate()
         def sendTx = omniGetTransaction(sendTxid)
 
         then:

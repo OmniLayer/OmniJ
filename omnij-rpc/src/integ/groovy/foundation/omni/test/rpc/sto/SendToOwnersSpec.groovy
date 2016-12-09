@@ -39,7 +39,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
         omniSendSTO(fundedAddress, currencyID, amountSent)
 
         and: "We generate a block"
-        generateBlock()
+        generate()
 
         // The fee for each receiver is #stoFeePerAddress
         if (numberOfHolders > 1) {
@@ -72,7 +72,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
         e.responseJson.error.code == -3
 
         when: "we make a block"
-        generateBlock()
+        generate()
 
         and: "we check balances"
         def endBalances = consensusTool.getConsensusSnapshot(currencyID)
