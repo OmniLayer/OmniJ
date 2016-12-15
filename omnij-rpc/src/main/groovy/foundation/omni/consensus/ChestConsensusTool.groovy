@@ -16,13 +16,13 @@ import org.bitcoinj.core.Address
 @Slf4j
 class ChestConsensusTool implements ConsensusTool {
     // omnichest.info doesn't have https:// support (yet?)
-    static URI ChestHost_Live = new URI("http://omnichest.info");
+    static URI ChestHost_Live = new URI("http://omniexplorer.info");
     private final String proto
     private final String host
     private final int port
     static String file = "/mastercoin_verify/addresses_dformat.aspx"
     static String listFile = "/mastercoin_verify/properties.aspx/"
-    static String blockHeightFile = "/apireq.aspx?stat=customapireq_lastblockprocessed"
+    static String blockHeightFile = "/ask.aspx?api=customapireq_lastblockprocessed"
 
     ChestConsensusTool(URI chestURI) {
         proto = chestURI.scheme
