@@ -98,7 +98,7 @@ public class OmniwalletClient implements ConsensusService {
     }
 
     @Override
-    public WalletAddressBalance balancesForAddress(Address address) {
+    public WalletAddressBalance balancesForAddress(Address address) throws IOException {
         List<BalanceInfo> infos = balanceInfosForAddress(address);
         WalletAddressBalance result = new WalletAddressBalance();
         infos.forEach(info -> result.put(info.id, info.value));
@@ -106,16 +106,14 @@ public class OmniwalletClient implements ConsensusService {
     }
 
     // TODO: The returned `value` field of this method doesn't include reserved balance
-    private List<BalanceInfo> balanceInfosForAddress(Address address) {
-        Response<Map<String, Object>> response;
-        Map<String, Object> result;
+    private List<BalanceInfo> balanceInfosForAddress(Address address) throws IOException {
         List<BalanceInfo> list = new ArrayList<>();
-
-        try {
-            response = service.balancesForAddress(address.toString()).execute();
-            result = response.body();
-        } catch (IOException e) {
-            e.printStackTrace();
+        Response<Map<String, Object>> response = service.balancesForAddress(address.toString()).execute();
+        if (!response.isSuccessful()) {
+            throw new IOException("Unsuccessful response in balanceInfosForAddress");
+        }
+        Map<String, Object> result = response.body();
+        if (result == null) {
             return list;
         }
         List<Map<String, Object>> balances = (List<Map<String, Object>>) result.get("balance");
@@ -135,13 +133,12 @@ public class OmniwalletClient implements ConsensusService {
     }
 
     @Override
-    public OmniJBalances balancesForAddresses(List<Address> addresses) {
+    public OmniJBalances balancesForAddresses(List<Address> addresses) throws IOException {
         OmniJBalances balances = new OmniJBalances();
 
-        addresses.stream().forEach(address -> {
-            WalletAddressBalance bal = balancesForAddress(address);
-            balances.put(address, bal);
-        });
+        for (Address address : addresses) {
+            balances.put(address, balancesForAddress(address));
+        }
         return balances;
     }
 
