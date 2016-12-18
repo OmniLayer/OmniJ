@@ -11,17 +11,17 @@ import groovy.util.logging.Slf4j
 import org.bitcoinj.core.Address
 
 /**
- * Command-line tool and class for fetching Omni Chest consensus data
+ * Command-line tool and class for fetching OmniExplorer (formerly OmniChest) consensus data
  */
 @Slf4j
 class ChestConsensusTool implements ConsensusTool {
-    // omnichest.info doesn't have https:// support (yet?)
+    // omniexplorer.info doesn't have https:// support (yet?)
     static URI ChestHost_Live = new URI("http://omniexplorer.info");
     private final String proto
     private final String host
     private final int port
-    static String file = "/mastercoin_verify/addresses_dformat.aspx"
-    static String listFile = "/mastercoin_verify/properties.aspx/"
+    static String file = "/ask.aspx?api=getpropertybalances"
+    static String listFile = "/ask.aspx?api=getproperties"
     static String blockHeightFile = "/ask.aspx?api=customapireq_lastblockprocessed"
 
     ChestConsensusTool(URI chestURI) {
@@ -100,7 +100,7 @@ class ChestConsensusTool implements ConsensusTool {
                 String subCategory = ""
                 String data = ""
                 String url = ""
-                Boolean divisible = null
+                Boolean divisible = (Boolean) jsonProp.get("divisible")
                 SmartPropertyListInfo prop = new SmartPropertyListInfo(id,
                         name,
                         category,
@@ -143,7 +143,7 @@ class ChestConsensusTool implements ConsensusTool {
     }
 
     private consensusURL(CurrencyID currencyID) {
-        return new URL(proto, host, port, "${file}?currencyid=${currencyID.getValue()}")
+        return new URL(proto, host, port, "${file}&prop=${currencyID.getValue()}")
     }
 
 }
