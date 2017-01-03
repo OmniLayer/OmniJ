@@ -53,9 +53,9 @@ public class RawTxBuilder {
                 currencyId.getValue(),
                 amountForSale.getWillets(),
                 amountDesired.value,
-                paymentWindow.byteValue(),
+                paymentWindow,
                 commitmentFee.value,
-                action.byteValue());
+                action);
         return rawTxHex;
     }
 
@@ -69,7 +69,7 @@ public class RawTxBuilder {
                 amountForSale.getWillets(),
                 currencyDesired.getValue(),
                 amountDesired.getWillets(),
-                action.byteValue());
+                action);
         return rawTxHex;
     }
 
@@ -121,8 +121,8 @@ public class RawTxBuilder {
                 propertyDesired.getValue(),
                 tokensPerUnit,
                 deadline,
-                earlyBirdBonus.byteValue(),
-                issuerBonus.byteValue());
+                earlyBirdBonus,
+                issuerBonus);
         return rawTxHex;
     }
 

@@ -19,6 +19,7 @@ ext.slf4jVersion = '1.7.21'
 allprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
+    apply plugin: 'findbugs'
 
     version = '0.5.1-SNAPSHOT'
     group = 'foundation.omni'
@@ -28,6 +29,14 @@ allprojects {
         //mavenLocal()   // Uncomment to work with local snapshots
         maven { url 'https://dl.bintray.com/msgilligan/maven' } // bitcoinj-addons (RPC client)
     }
+
+    tasks.withType(FindBugs) {
+        reports {
+            xml.enabled false
+            html.enabled true
+        }
+    }
+
 }
 
 subprojects {

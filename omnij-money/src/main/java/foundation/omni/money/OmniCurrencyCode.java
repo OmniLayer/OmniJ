@@ -24,9 +24,9 @@ public enum OmniCurrencyCode {
     AGRS(CurrencyID.AGRS, DIVISIBLE),
     PDC(CurrencyID.PDC, INDIVISIBLE);
 
-    public static String realEcosystemPrefix = "OMNI_SPT#";
-    public static String testEcosystemPrefix = "TOMNI_SPT#";
-    public static List<OmniCurrencyCode> assignedCodes =
+    public static final String realEcosystemPrefix = "OMNI_SPT#";
+    public static final String testEcosystemPrefix = "TOMNI_SPT#";
+    static final List<OmniCurrencyCode> assignedCodes =
             Arrays.asList(OmniCurrencyCode.class.getEnumConstants());
     private final CurrencyID id;
     private final PropertyType type;

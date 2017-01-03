@@ -1,5 +1,6 @@
 package foundation.omni.tx;
 
+import com.google.common.base.Charsets;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Sha256Hash;
 
@@ -21,7 +22,7 @@ public class Obfuscation {
     /**
      *
      * @param input
-     * @param seed
+     * @param seed (Is this always a Bitcoin address?)
      * @return
      */
     public static byte[] obfuscate(final byte[] input, final String seed) {
@@ -57,7 +58,7 @@ public class Obfuscation {
     }
 
     private static String upperSha256(String string) {
-        return Sha256Hash.of(string.getBytes()).toString().toUpperCase();
+        return Sha256Hash.of(string.getBytes(Charsets.UTF_8)).toString().toUpperCase();
     }
 
     /**

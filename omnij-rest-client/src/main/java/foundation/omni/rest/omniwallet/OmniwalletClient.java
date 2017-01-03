@@ -120,12 +120,12 @@ public class OmniwalletClient implements ConsensusService {
         balances.forEach(bal -> {
             BalanceInfo b = new BalanceInfo();
             b.id = new CurrencyID(toLong(bal.get("id")));
-            b.symbol = (String) bal.get("symbol");
+            //b.symbol = (String) bal.get("symbol");
             boolean divisible = (boolean) bal.get("divisible");
             PropertyType type = divisible ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
             b.value = toOmniValue(toLong(bal.get("value")), type);
-            b.pendingneg = toOmniValue(toLong(bal.get("pendingneg")), type);
-            b.pendingpos = toOmniValue(toLong(bal.get("pendingpos")), type);
+            //b.pendingneg = toOmniValue(toLong(bal.get("pendingneg")), type);
+            //b.pendingpos = toOmniValue(toLong(bal.get("pendingpos")), type);
             list.add(b);
         });
 
@@ -287,9 +287,9 @@ public class OmniwalletClient implements ConsensusService {
 
         String balanceStr = (String) item.get("balance");
         String reservedStr = (String) item.get("reserved_balance");
-        OmniIndivisibleValue balance = OmniIndivisibleValue.of(Long.valueOf(balanceStr));
+        OmniIndivisibleValue balance = OmniIndivisibleValue.of(Long.parseLong(balanceStr));
         OmniIndivisibleValue reserved = (reservedStr != null) ?
-                OmniIndivisibleValue.of(Long.valueOf(balanceStr)) :
+                OmniIndivisibleValue.of(Long.parseLong(balanceStr)) :
                 OmniIndivisibleValue.of(0);
 
         AddressBalanceEntry balanceEntry = new AddressBalanceEntry(address, balance, reserved);
@@ -301,7 +301,7 @@ public class OmniwalletClient implements ConsensusService {
         if (divisible) {
             return OmniValue.of(new BigDecimal(valueString), PropertyType.DIVISIBLE);
         } else {
-            return OmniValue.of(Long.valueOf(valueString), PropertyType.INDIVISIBLE);
+            return OmniValue.of(Long.parseLong(valueString), PropertyType.INDIVISIBLE);
         }
     }
 
@@ -336,7 +336,7 @@ public class OmniwalletClient implements ConsensusService {
 
 
     private long toLong(Object obj) {
-        return obj instanceof String ? Long.valueOf((String) obj) : (Integer) obj;
+        return obj instanceof String ? Long.parseLong((String) obj) : (Integer) obj;
     }
 
     private URI consensusURI(CurrencyID currencyID) {

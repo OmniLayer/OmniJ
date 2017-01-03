@@ -153,4 +153,12 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     public int compareTo(CurrencyID o) {
         return Long.compare(this.value, o.value);
     }
+
+    /**
+     * Make a clone of this object (also used by Groovy's @Immutable annotation)
+     * @return a clone
+     */
+    public CurrencyID clone() {
+        return new CurrencyID(this.value);
+    }
 }
