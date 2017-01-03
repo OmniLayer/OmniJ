@@ -1,9 +1,9 @@
 package foundation.omni.tx;
 
-import com.google.common.base.Charsets;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Sha256Hash;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 /**
@@ -58,7 +58,7 @@ public class Obfuscation {
     }
 
     private static String upperSha256(String string) {
-        return Sha256Hash.of(string.getBytes(Charsets.UTF_8)).toString().toUpperCase();
+        return Sha256Hash.of(string.getBytes(StandardCharsets.UTF_8)).toString().toUpperCase();
     }
 
     /**
