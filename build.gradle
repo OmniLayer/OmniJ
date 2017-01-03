@@ -20,6 +20,7 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
     apply plugin: 'findbugs'
+    //apply plugin: 'pmd'
 
     version = '0.5.1-SNAPSHOT'
     group = 'foundation.omni'

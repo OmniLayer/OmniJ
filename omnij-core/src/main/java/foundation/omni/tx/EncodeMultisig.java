@@ -42,7 +42,7 @@ public class EncodeMultisig {
         // Create groups of keys, one group per multisig output
         List<List <ECKey>> keysByOutput = new ArrayList<List <ECKey>>();
         for (int n = 0 ; n < numGroups ; n++) {
-            int groupSize = Math.min(numGroups - n, (maxDataKeys));
+            int groupSize = Math.min(numGroups - n, maxDataKeys);
             int from = n * (maxDataKeys);
             int to = from + groupSize;
             List<ECKey> group = dataAsKeys.subList(from, to);

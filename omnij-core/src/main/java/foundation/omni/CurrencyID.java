@@ -102,7 +102,7 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
      * @return true if valid
      */
     public static boolean isValid(long value) {
-        return ((value >= MIN_VALUE) && (value <= MAX_VALUE));
+        return (value >= MIN_VALUE) && (value <= MAX_VALUE);
     }
 
     /**
@@ -121,7 +121,7 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
      * @return true if valid
      */
     public static boolean isValidTest(long value) {
-        return ((value == TOMNI_VALUE) ||(value > MAX_REAL_ECOSYSTEM_VALUE) && (value <= MAX_VALUE));
+        return (value == TOMNI_VALUE) || (value > MAX_REAL_ECOSYSTEM_VALUE) && (value <= MAX_VALUE);
     }
 
     public long getValue() {
