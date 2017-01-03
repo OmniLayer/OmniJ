@@ -38,6 +38,17 @@ allprojects {
         }
     }
 
+    tasks.withType(JavaCompile) {
+        doFirst {
+            if (sourceCompatibility == '1.7' && System.env.JDK7_HOME != null) {
+                options.bootClasspath = "$System.env.JDK7_HOME/jre/lib/rt.jar"
+                //options.bootClasspath += "$File.pathSeparator$System.env.JDK7_HOME/jre/lib/jce.jar"
+                // use the line above as an example to add jce.jar
+                // and other specific JDK jars
+            }
+        }
+    }
+
 }
 
 subprojects {
@@ -60,6 +71,7 @@ subprojects {
     test {
         testLogging.showStandardStreams = true
     }
+
 }
 
 apply from: 'gradle/idea.gradle'
