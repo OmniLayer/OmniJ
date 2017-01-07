@@ -85,5 +85,6 @@ task testReport(type: TestReport) {
     reportOn subprojects*.test
 }
 
-task jenkinsBuild(dependsOn: [build, testReport, groovydocAll, asciidoctor])
+task buildCI(dependsOn: [build, testReport, groovydocAll, asciidoctor])
+task jenkinsBuild(dependsOn: buildCI)
 
