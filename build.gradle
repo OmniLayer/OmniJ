@@ -13,16 +13,16 @@ plugins {
 }
 
 ext.groovyVersion = '2.4.7'
-ext.bitcoinjAddonsVersion = '0.2.1'
+//ext.bitcoinjAddonsVersion = '0.2.1' // now set in gradle.properties
 ext.slf4jVersion = '1.7.21'
 
 allprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
-    apply plugin: 'findbugs'
+    //apply plugin: 'findbugs'
     //apply plugin: 'pmd'
 
-    version = '0.5.1-SNAPSHOT'
+    version = omnijVersion
     group = 'foundation.omni'
 
     repositories {
