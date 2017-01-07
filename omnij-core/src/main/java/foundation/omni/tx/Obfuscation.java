@@ -20,10 +20,10 @@ public class Obfuscation {
     }
 
     /**
-     *
-     * @param input
+     * Obfuscate an message (Omni Transaction)
+     * @param input message to obfuscate
      * @param seed (Is this always a Bitcoin address?)
-     * @return
+     * @return obfuscated message
      */
     public static byte[] obfuscate(final byte[] input, final String seed) {
         int nFullChunks = input.length / EncodingClassB.chunkSize;                    // number of full chunks
@@ -62,10 +62,10 @@ public class Obfuscation {
     }
 
     /**
-     *
-     * @param string
-     * @param bytes
-     * @return
+     * XOR hash
+     * @param string Hex string
+     * @param bytes binary to xor
+     * @return xor'ed result
      */
     private static byte[] xorHashMix(String string, byte[] bytes) {
         byte[] strBytes = RawTxBuilder.hexToBinary(string);

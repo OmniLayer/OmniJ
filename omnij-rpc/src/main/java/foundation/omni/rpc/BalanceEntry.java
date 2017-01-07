@@ -15,7 +15,7 @@ import java.util.List;
  * Balance data for a specific Omni CurrencyID in a single Bitcoin address
  */
 public class BalanceEntry implements Iterable<OmniValue>  {
-    protected final OmniValue balance;     // TODO: balance and reserved should be type OmniValue
+    protected final OmniValue balance;
     protected final OmniValue reserved;
 
     @JsonCreator

@@ -15,7 +15,7 @@ public final class OmniIndivisibleValue extends OmniValue {
     /**
      * Create OmniDivisibleValue of the specified amount
      * @param amount Number of Omni tokens
-     * @return
+     * @return OmniDivisibleValue representing amount tokens
      */
     public static OmniIndivisibleValue of(long amount) {
         return new OmniIndivisibleValue(amount);

@@ -74,6 +74,7 @@ public class OmniTxBuilder {
      * @param unspentOutputs A collection of unspent outputs for funding the transaction
      * @param refAddress The Omni reference address (for the reference output)
      * @param payload Omni transaction payload as a raw byte array
+     * @throws InsufficientMoneyException Not enough bitcoin for fees
      * @return Signed and ready-to-send Transaction
      */
     public Transaction createSignedOmniTransaction(ECKey fromKey, Collection<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload)
@@ -113,7 +114,7 @@ public class OmniTxBuilder {
      * @param refAddress The Omni reference address (for the reference output)
      * @param payload Omni transaction payload as a raw byte array
      * @return Unsigned OmniTransaction Transaction
-     * @throws InsufficientMoneyException
+     * @throws InsufficientMoneyException Not enough bitcoin for fees
      */
     public Transaction createUnsignedOmniTransaction(ECKey fromKey, Collection<TransactionInput> inputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
@@ -138,6 +139,7 @@ public class OmniTxBuilder {
      * @param toAddress The Omni reference address (for the reference output, destination address in this case)
      * @param currencyID The Omni currency ID
      * @param amount The currency amount in willets
+     * @throws InsufficientMoneyException Not enough bitcoin for fees
      * @return Signed and ready-to-send Transaction
      */
     public Transaction createSignedSimpleSend(ECKey fromKey, Collection<TransactionOutput> unspentOutputs, Address toAddress, CurrencyID currencyID, OmniValue amount)
@@ -156,7 +158,7 @@ public class OmniTxBuilder {
      * @param currencyID The Omni currency ID
      * @param amount The currency amount in willets
      * @return unsigned transaction
-     * @throws InsufficientMoneyException
+     * @throws InsufficientMoneyException Not enough bitcoin for fees
      */
     public Transaction createUnsignedSimpleSend(ECKey fromKey, Collection<TransactionInput> inputs, Address toAddress, CurrencyID currencyID, OmniValue amount)
             throws InsufficientMoneyException {
@@ -173,7 +175,7 @@ public class OmniTxBuilder {
      * @param changeAddress address for output
      * @param totalInputAmount total of inputs (in satoshis)
      * @return The modified transaction
-     * @throws InsufficientMoneyException
+     * @throws InsufficientMoneyException Not enough bitcoin for fees
      */
     private Transaction makeChangeOutput(Transaction tx, Address changeAddress, long totalInputAmount) throws InsufficientMoneyException {
         long amountOut    = sum(tx.getOutputs());   // Sum of outputs, this transaction

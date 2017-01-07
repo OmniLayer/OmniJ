@@ -67,8 +67,6 @@ public class OmniCoreConsensusFetcher implements ConsensusFetcher {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
         } catch (AddressFormatException e) {
             throw new RuntimeException(e);
         }

@@ -69,8 +69,8 @@ public abstract class OmniValue extends NumberValue {
     /**
      * <p>Make sure a BigInteger value is a valid Omni "number of coins" (willets) value</p>
      *
-     * @param willets
-     * @throws ArithmeticException
+     * @param willets "number of coins" (willets) value to check
+     * @throws ArithmeticException if less than minimum or greater than maximum allowed value
      */
     public static void checkValue(BigInteger willets) throws ArithmeticException {
         if (willets.compareTo(BigInteger.valueOf(MIN_VALUE)) == -1) {
@@ -88,7 +88,7 @@ public abstract class OmniValue extends NumberValue {
      * it's not less than MIN_VALUE</p>
      *
      * @param willets value to check.
-     * @throws ArithmeticException
+     * @throws ArithmeticException if less than minimum allowed value
      */
     public static void checkValue(long willets) throws ArithmeticException {
         if (willets < MIN_VALUE) {

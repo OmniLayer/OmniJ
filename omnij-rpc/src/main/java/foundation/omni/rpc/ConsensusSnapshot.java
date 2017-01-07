@@ -59,12 +59,12 @@ public class ConsensusSnapshot {
     }
 
     /**
-     *
-     * @param currencyID
-     * @param blockHeight
-     * @param sourceType
-     * @param sourceURI
-     * @param entries
+     * ConsensusSnapshot from SortedMap and parameters
+     * @param currencyID currency id
+     * @param blockHeight blockheight of snapshot
+     * @param sourceType type of server returning the snapshot
+     * @param sourceURI URI of server returning the snapshot
+     * @param entries map of balance entries
      */
     public ConsensusSnapshot(CurrencyID currencyID, int blockHeight, String sourceType, URI sourceURI, SortedMap<Address, BalanceEntry> entries)
     {
@@ -77,14 +77,15 @@ public class ConsensusSnapshot {
     }
 
     /**
-     *
-     * @param currencyID
-     * @param blockHeight
-     * @param sourceType
-     * @param sourceURI
-     * @param entries
-     * @deprecated Use constructor with Integer blockHeight
+     * ConsensusSnapshot from SortedMap and parameters
+     * @param currencyID currency id
+     * @param blockHeight blockheight of snapshot
+     * @param sourceType type of server returning the snapshot
+     * @param sourceURI URI of server returning the snapshot
+     * @param entries map of balance entries
+     * @deprecated Use constructor with int blockHeight
      */
+    @Deprecated
     public ConsensusSnapshot(CurrencyID currencyID, Long blockHeight, String sourceType, URI sourceURI, SortedMap<Address, BalanceEntry> entries)
     {
         this(currencyID, blockHeight.intValue(), sourceType, sourceURI, entries);

@@ -39,9 +39,12 @@ public class OmniExtendedClient extends OmniClient {
     /**
      * Creates and broadcasts a "send to owners" transaction.
      *
+     * @param address     address
      * @param currencyId  The identifier of the currency
      * @param amount      The number of tokens to distribute (assumed in willets)
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      * @deprecated Use {@link OmniClient#omniSendSTO} instead
      */
     @Deprecated
@@ -63,6 +66,8 @@ public class OmniExtendedClient extends OmniClient {
      * @param commitmentFee  The minimum transaction fee required to be paid as commitment when accepting this offer
      * @param action         The action applied to the offer (1 = new, 2 = update, 3 = cancel)
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      * @deprecated Use {@link OmniClient#omniSendDExSell} instead
      */
     @Deprecated
@@ -83,6 +88,8 @@ public class OmniExtendedClient extends OmniClient {
      * @param amount       The amount of tokens to purchase
      * @param toAddress    The address of the offer
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      * @deprecated Use {@link OmniClient#omniSendDExAccept} instead
      */
     @Deprecated
@@ -106,6 +113,8 @@ public class OmniExtendedClient extends OmniClient {
      * @param amountDesired     The amount of desired Currency (divisible token, decimal format)
      * @param action            The action applied to the offer (1 = new, 2 = update, 3 = cancel)
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      * @deprecated Use {@link OmniClient#omniSendTrade} instead
      */
     @Deprecated
@@ -130,6 +139,8 @@ public class OmniExtendedClient extends OmniClient {
      * @param earlyBirdBonus   The bonus percentage per week
      * @param issuerBonus      The bonus for the issuer
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      * @deprecated Use {@link OmniClient#omniSendIssuanceCrowdsale} instead
      */
     @Deprecated
@@ -150,6 +161,8 @@ public class OmniExtendedClient extends OmniClient {
      * @param ecosystem  The ecosystem to create the property in
      * @param value      Amount (and property type)
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      * @deprecated Use {@link OmniClient#omniSendIssuanceFixed} instead
      */
     @Deprecated
@@ -166,6 +179,8 @@ public class OmniExtendedClient extends OmniClient {
      * @param value      Amount (and property type)
      * @param label      The label or title of the property
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      * @deprecated Use {@link OmniClient#omniSendIssuanceFixed} instead
      */
     @Deprecated
@@ -178,18 +193,18 @@ public class OmniExtendedClient extends OmniClient {
 
     /**
      *
-     * @param address
-     * @param ecosystem
-     * @param value
-     * @param previousPropertyId
-     * @param category
-     * @param subCategory
-     * @param label
-     * @param website
-     * @param info
-     * @return
-     * @throws JsonRPCException
-     * @throws IOException
+     * @param address deprecated
+     * @param ecosystem deprecated
+     * @param value deprecated
+     * @param previousPropertyId deprecated
+     * @param category  deprecated
+     * @param subCategory deprecated
+     * @param label deprecated
+     * @param website  deprecated
+     * @param info deprecated
+     * @return deprecated
+     * @throws JsonRPCException deprecated
+     * @throws IOException deprecated
      * @deprecated Use {@link OmniClient#omniSendIssuanceFixed} instead
      */
     @Deprecated
@@ -215,6 +230,8 @@ public class OmniExtendedClient extends OmniClient {
      * @param address     The issuance address
      * @param currencyID  The identifier of the crowdsale
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      * @deprecated Use {@link OmniClient#omniSendCloseCrowdsale} instead
      */
     @Deprecated
@@ -236,6 +253,8 @@ public class OmniExtendedClient extends OmniClient {
      * @param website      The website website
      * @param info         Additional information
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      * @deprecated Use {@link OmniClient#omniSendIssuanceManaged} instead
      */
     @Deprecated
@@ -255,6 +274,8 @@ public class OmniExtendedClient extends OmniClient {
      * @param currencyID  The identifier of the property
      * @param amount      The number of tokens to grant
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      * @deprecated Use {@link OmniClient#omniSendGrant} instead
      */
     @Deprecated
@@ -272,6 +293,8 @@ public class OmniExtendedClient extends OmniClient {
      * @param currencyID  The identifier of the property
      * @param amount      The number of tokens to revoke
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      * @deprecated Use {@link OmniClient#omniSendRevoke} instead
      */
     @Deprecated
@@ -289,6 +312,8 @@ public class OmniExtendedClient extends OmniClient {
      * @param currencyID   The identifier of the property
      * @param toAddress    The new issuer on record
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      * @deprecated Use {@link OmniClient#omniSendChangeIssuer} instead
      */
     @Deprecated

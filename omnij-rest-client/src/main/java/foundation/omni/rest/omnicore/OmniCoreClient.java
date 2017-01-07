@@ -72,8 +72,6 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
             // otherwise return empty entries map
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
         }
 
         WalletAddressBalance result = new WalletAddressBalance();

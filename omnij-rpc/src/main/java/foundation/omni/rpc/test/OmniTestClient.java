@@ -41,7 +41,9 @@ public class OmniTestClient extends OmniClient {
      *
      * @param currencyId  The identifier of the currency
      * @param amount      The number of tokens to distribute (assumed in willets)
-     * @return The transaction hash
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash sendToOwners(Address address, CurrencyID currencyId, OmniValue amount) throws JsonRPCException, IOException {
         //  ... but it doesn't matter since  createSendToOwnersHex just converts back to willets.
@@ -60,7 +62,9 @@ public class OmniTestClient extends OmniClient {
      * @param paymentWindow  The payment window measured in blocks
      * @param commitmentFee  The minimum transaction fee required to be paid as commitment when accepting this offer
      * @param action         The action applied to the offer (1 = new, 2 = update, 3 = cancel)
-     * @return The transaction hash
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, OmniDivisibleValue amountForSale,
                                          Coin amountDesired, Byte paymentWindow, Coin commitmentFee,
@@ -78,7 +82,9 @@ public class OmniTestClient extends OmniClient {
      * @param currencyId   The token to purchase
      * @param amount       The amount of tokens to purchase
      * @param toAddress    The address of the offer
-     * @return The transaction hash
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash acceptDexOffer(Address fromAddress, CurrencyID currencyId, OmniDivisibleValue amount, Address toAddress)
             throws JsonRPCException, IOException {
@@ -99,7 +105,9 @@ public class OmniTestClient extends OmniClient {
      * @param currencyDesired   The identifier of the currency for sale
      * @param amountDesired     The amount of desired Currency (divisible token, decimal format)
      * @param action            The action applied to the offer (1 = new, 2 = update, 3 = cancel)
-     * @return The transaction hash
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash createMetaDexSellOffer(Address address, CurrencyID currencyForSale, OmniDivisibleValue amountForSale,
                                              CurrencyID currencyDesired, OmniDivisibleValue amountDesired,
@@ -121,7 +129,9 @@ public class OmniTestClient extends OmniClient {
      * @param deadline         The deadline as UNIX timestamp
      * @param earlyBirdBonus   The bonus percentage per week
      * @param issuerBonus      The bonus for the issuer
-     * @return The transaction hash
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash createCrowdsale(Address address, Ecosystem ecosystem, PropertyType propertyType,
                                       CurrencyID propertyDesired, Long tokensPerUnit, Long deadline,
@@ -139,7 +149,9 @@ public class OmniTestClient extends OmniClient {
      * @param address    The issuance address
      * @param ecosystem  The ecosystem to create the property in
      * @param value      Amount (and property type)
-     * @return The transaction hash
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value)
             throws JsonRPCException, IOException {
@@ -153,7 +165,9 @@ public class OmniTestClient extends OmniClient {
      * @param ecosystem  The ecosystem to create the property in
      * @param value      Amount (and property type)
      * @param label      The label or title of the property
-     * @return The transaction hash
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value, String label)
             throws JsonRPCException, IOException {
@@ -163,19 +177,19 @@ public class OmniTestClient extends OmniClient {
     }
 
     /**
-     *
-     * @param address
-     * @param ecosystem
-     * @param value
-     * @param previousPropertyId
-     * @param category
-     * @param subCategory
+     * Create property
+     * @param address    The issuance address
+     * @param ecosystem  The ecosystem to create the property in
+     * @param value      Amount (and property type)
+     * @param previousPropertyId an identifier of a predecessor token (0 for new tokens)
+     * @param category a category for the new tokens (can be "")
+     * @param subCategory a subcategory for the new tokens (can be "")
      * @param label
-     * @param website
+     * @param website an URL for further information about the new tokens (can be "")
      * @param info
-     * @return
-     * @throws JsonRPCException
-     * @throws IOException
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value,
                                      Long previousPropertyId,
@@ -198,7 +212,9 @@ public class OmniTestClient extends OmniClient {
      *
      * @param address     The issuance address
      * @param currencyID  The identifier of the crowdsale
-     * @return The transaction hash
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash closeCrowdsale(Address address, CurrencyID currencyID) throws JsonRPCException, IOException {
         String rawTxHex = builder.createCloseCrowdsaleHex(currencyID);
@@ -217,7 +233,9 @@ public class OmniTestClient extends OmniClient {
      * @param label        The label or title of the property to create
      * @param website      The website website
      * @param info         Additional information
-     * @return The transaction hash
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash createManagedProperty(Address address, Ecosystem ecosystem, PropertyType type, String category,
                                             String subCategory, String label, String website, String info)
@@ -234,7 +252,9 @@ public class OmniTestClient extends OmniClient {
      * @param address     The issuance address
      * @param currencyID  The identifier of the property
      * @param amount      The number of tokens to grant
-     * @return The transaction hash
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash grantTokens(Address address, CurrencyID currencyID, OmniValue amount)
             throws JsonRPCException, IOException {
@@ -249,7 +269,9 @@ public class OmniTestClient extends OmniClient {
      * @param address     The issuance address
      * @param currencyID  The identifier of the property
      * @param amount      The number of tokens to revoke
-     * @return The transaction hash
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash revokeTokens(Address address, CurrencyID currencyID, OmniValue amount)
             throws JsonRPCException, IOException {
@@ -264,7 +286,9 @@ public class OmniTestClient extends OmniClient {
      * @param fromAddress  The issuance address
      * @param currencyID   The identifier of the property
      * @param toAddress    The new issuer on record
-     * @return The transaction hash
+     * @return transaction hash/id
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
      */
     public Sha256Hash changeIssuer(Address fromAddress, CurrencyID currencyID, Address toAddress)
             throws JsonRPCException, IOException {

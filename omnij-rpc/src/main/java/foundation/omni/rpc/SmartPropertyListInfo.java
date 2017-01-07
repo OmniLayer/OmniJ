@@ -32,6 +32,7 @@ public class SmartPropertyListInfo {
     }
 
     /**
+     * @return currency id
      * @deprecated Use getPropertyid()
      */
     @Deprecated
@@ -52,6 +53,7 @@ public class SmartPropertyListInfo {
     }
 
     /**
+     * @return subcategory
      * @deprecated Use getSubcategory()
      */
     public String getSubCategory() {

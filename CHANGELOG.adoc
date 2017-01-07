@@ -3,6 +3,14 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.5.1-SNAPSHOT
+
+Released: Under development
+
+=== Potentially Breaking
+
+* Some exceptions, such as `ParseException` are no longer declared, you may need to remove some catch statements.
+
 == v0.5.0
 
 Released: 2016.11.16

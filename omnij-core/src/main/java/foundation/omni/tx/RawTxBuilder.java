@@ -20,6 +20,9 @@ public class RawTxBuilder {
 
     /**
      * Creates a hex-encoded raw transaction of type 0: "simple send".
+     * @param currencyId currency ID to send
+     * @param amount amount to send
+     * @return Hex encoded string for the transaction
      */
     public String createSimpleSendHex(CurrencyID currencyId, OmniValue amount) {
         String rawTxHex = String.format("00000000%08x%016x", currencyId.getValue(), amount.getWillets());
@@ -28,6 +31,9 @@ public class RawTxBuilder {
 
     /**
      * Creates a hex-encoded raw transaction of type 3: "send to owners".
+     * @param currencyId currency ID to send
+     * @param amount amount to send to all owners
+     * @return Hex encoded string for the transaction
      */
     public String createSendToOwnersHex(CurrencyID currencyId, OmniValue amount) {
         String rawTxHex = String.format("00000003%08x%016x", currencyId.getValue(), amount.getWillets());
@@ -61,6 +67,12 @@ public class RawTxBuilder {
 
     /**
      * Creates a hex-encoded raw transaction of type 21: "trade tokens for tokens".
+     * @param currencyForSale currency to sell
+     * @param amountForSale amount to sell
+     * @param currencyDesired currency desired in exchange
+     * @param amountDesired amount of other currency desired
+     * @param action action
+     * @return The hex-encoded raw transaction
      */
     public String createMetaDexSellOfferHex(CurrencyID currencyForSale, OmniValue amountForSale, CurrencyID currencyDesired,
                                             OmniValue amountDesired, Byte action) {
@@ -75,6 +87,9 @@ public class RawTxBuilder {
 
     /**
      * Creates a hex-encoded raw transaction of type 22: "purchase tokens with bitcoins".
+     * @param currencyId currency ID to purchase
+     * @param amount amount to purchase
+     * @return The hex-encoded raw transaction
      */
     public String createAcceptDexOfferHex(CurrencyID currencyId, OmniValue amount) {
         String rawTxHex = String.format("00000016%08x%016x",
@@ -85,6 +100,16 @@ public class RawTxBuilder {
 
     /**
      * Creates a hex-encoded raw transaction of type 50: "create a property with fixed supply".
+     * @param ecosystem main or test ecosystem
+     * @param propertyType divisible or indivisible
+     * @param previousPropertyId an identifier of a predecessor token (0 for new tokens)
+     * @param category a category for the new tokens (can be "")
+     * @param subCategory a subcategory for the new tokens (can be "")
+     * @param label
+     * @param website an URL for further information about the new tokens (can be "")
+     * @param info
+     * @param amount the number of tokens to create
+     * @return The hex-encoded raw transaction
      */
     public String createPropertyHex(Ecosystem ecosystem, PropertyType propertyType, Long previousPropertyId,
                                     String category, String subCategory, String label, String website, String info,
@@ -104,6 +129,20 @@ public class RawTxBuilder {
 
     /**
      * Creates a hex-encoded raw transaction of type 51: "create a property via crowdsale with variable supply".
+     * @param ecosystem main or test ecosystem
+     * @param propertyType divisible or indivisible
+     * @param previousPropertyId an identifier of a predecessor token (0 for new crowdsales)
+     * @param category a category for the new tokens (can be "")
+     * @param subCategory a subcategory for the new tokens (can be "")
+     * @param label
+     * @param website an URL for further information about the new tokens (can be "")
+     * @param info
+     * @param propertyDesired the identifier of a token eligible to participate in the crowdsale
+     * @param tokensPerUnit the amount of tokens granted per unit invested in the crowdsale
+     * @param deadline the deadline of the crowdsale as Unix timestamp
+     * @param earlyBirdBonus an early bird bonus for participants in percent per week
+     * @param issuerBonus a percentage of tokens that will be granted to the issuer
+     * @return The hex-encoded raw transaction
      */
     public String createCrowdsaleHex(Ecosystem ecosystem, PropertyType propertyType, Long previousPropertyId,
                                      String category, String subCategory, String label, String website, String info,
@@ -128,6 +167,8 @@ public class RawTxBuilder {
 
     /**
      * Creates a hex-encoded raw transaction of type 53: "close a crowdsale manually".
+     * @param currencyId currency id of crowdsale
+     * @return The hex-encoded raw transaction
      */
     public String createCloseCrowdsaleHex(CurrencyID currencyId) {
         String rawTxHex = String.format("00000035%08x", currencyId.getValue());
@@ -136,6 +177,15 @@ public class RawTxBuilder {
 
     /**
      * Creates a hex-encoded raw transaction of type 54: "create a managed property with variable supply".
+     * @param ecosystem Omni ecosystem
+     * @param propertyType divisible or indivisible
+     * @param previousPropertyId an identifier of a predecessor token (0 for new tokens)
+     * @param category a category for the new tokens (can be "")
+     * @param subCategory a subcategory for the new tokens (can be "")
+     * @param label
+     * @param website an URL for further information about the new tokens (can be "")
+     * @param info
+     * @return The hex-encoded raw transaction
      */
     public String createManagedPropertyHex(Ecosystem ecosystem, PropertyType propertyType, Long previousPropertyId,
                                            String category, String subCategory, String label, String website,
@@ -154,6 +204,10 @@ public class RawTxBuilder {
 
     /**
      * Creates a hex-encoded raw transaction of type 55: "grant tokens for a managed property".
+     * @param currencyId currency id for grant
+     * @param amount amount to grant
+     * @param memo memo
+     * @return The hex-encoded raw transaction
      */
     public String createGrantTokensHex(CurrencyID currencyId, OmniValue amount, String memo) {
         String rawTxHex = String.format("00000037%08x%016x%s00", currencyId.getValue(), amount.getWillets(), toHexString(memo));
@@ -162,6 +216,10 @@ public class RawTxBuilder {
 
     /**
      * Creates a hex-encoded raw transaction of type 56: "revoke tokens of a managed property".
+     * @param currencyId currency id for revoke
+     * @param amount amount to revoke
+     * @param memo memo
+     * @return The hex-encoded raw transaction
      */
     public String createRevokeTokensHex(CurrencyID currencyId, OmniValue amount, String memo) {
         String rawTxHex = String.format("00000038%08x%016x%s00", currencyId.getValue(), amount.getWillets(), toHexString(memo));
@@ -170,6 +228,8 @@ public class RawTxBuilder {
 
     /**
      * Creates a hex-encoded raw transaction of type 70: "change manager of a managed property".
+     * @param currencyId currency id to change manager
+     * @return The hex-encoded raw transaction
      */
     public String createChangePropertyManagerHex(CurrencyID currencyId) {
         String rawTxHex = String.format("00000046%08x", currencyId.getValue());
