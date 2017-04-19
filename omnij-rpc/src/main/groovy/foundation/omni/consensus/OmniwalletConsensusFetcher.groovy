@@ -20,6 +20,10 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
     static String revisionFile = "/v1/system/revision.json"
     static String listFile = "/v1/mastercoin_verify/properties"
     static String propertyDetailsFile = "/v1/property"         // + /<id>.json
+
+    static final Map owExtraHeaders = ['User-Agent': 'OmniJ/OmniwalletConsensusFetcher']
+    static final Map owParameters = [requestProperties: owExtraHeaders]
+
     private final String proto
     private final String host
     private final int port
@@ -40,7 +44,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
     Integer currentBlockHeight() {
         def revisionURL = new URL(proto, host, port, revisionFile)
         def slurper = new JsonSlurper()
-        def revisionInfo = slurper.parse(revisionURL)
+        def revisionInfo = slurper.parse(revisionURL, owParameters)
         return revisionInfo.last_block
     }
 
@@ -53,7 +57,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
     List<SmartPropertyListInfo> listProperties() {
         def listPropUrl = new URL(proto, host, port, listFile)
         def slurper = new JsonSlurper()
-        List<Map<String, Object>> props = (List<Map<String, Object>>) slurper.parse(listPropUrl)
+        List<Map<String, Object>> props = (List<Map<String, Object>>) slurper.parse(listPropUrl, owParameters)
         List<SmartPropertyListInfo> propList = new ArrayList<SmartPropertyListInfo>()
         for (Map jsonProp : props) {
             // TODO: Should this mapping be done by Jackson?
@@ -114,7 +118,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
 
     public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
         PropertyType propertyType = getPropertyType(currencyID)
-        def balances = new JsonSlurper().parse(consensusURL(currencyID))
+        def balances = new JsonSlurper().parse(consensusURL(currencyID), owParameters)
 
         TreeMap<Address, BalanceEntry> map = [:]
 
@@ -151,7 +155,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
         if ((currencyID == CurrencyID.OMNI) || (currencyID == CurrencyID.TOMNI)) {
             return PropertyType.DIVISIBLE
         }
-        def details = new JsonSlurper().parse(new URL(proto, host, port, "${propertyDetailsFile}/${currencyID.value}.json"))
+        def details = new JsonSlurper().parse(new URL(proto, host, port, "${propertyDetailsFile}/${currencyID.value}.json"), owParameters)
         int type = Integer.parseInt(details[0].propertyType)
         return (type == 1) ? PropertyType.INDIVISIBLE : PropertyType.DIVISIBLE
     }

@@ -13,6 +13,19 @@ import spock.lang.Specification
  */
 class OmniwalletServerSpec extends Specification {
 
+   static final owExtraHeaders = ['User-Agent': 'OmniJ Test Script']
+
+    def "Groovy handles Omniwallet TLS (CloudFlare) correctly"() {
+        setup:
+        def url = new URL("https://www.omniwallet.org:/v1/system/revision.json")
+
+        when:
+        def text =  url.getText([requestProperties: owExtraHeaders])
+
+        then:
+        text.startsWith('{')
+    }
+
     def "Can get Omniwallet block height"() {
         setup:
         OmniwalletConsensusFetcher omniFetcher = new OmniwalletConsensusFetcher()
