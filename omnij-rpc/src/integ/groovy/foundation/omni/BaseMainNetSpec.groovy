@@ -51,7 +51,7 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
         try {
             infoMP = client.omniGetInfo()
         } catch (JsonRPCStatusException e) {
-            /* swallow */
+            log.error "Exception calling omniGetInfo()"
         }
         if (infoMP?.mastercoreversion) {
             omniVersion = infoMP.mastercoreversion.toString()
