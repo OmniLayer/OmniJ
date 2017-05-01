@@ -7,8 +7,18 @@ A high-level view of the changes in each OmniJ binary release.
 
 Released: Under development
 
+=== Features/Changes
+
+* Assorted code, build, JavaDoc improvements
+* `build.gradle` reads `JDK7_HOME` environment variable to compile Java 7 modules with correct classpath
+* Updates for OmniChest -> OmniExplorer
+* Update to bitcoinj-addons 0.2.2
+* Update to Groovy 2.4.10
+* Update to SLF4j 1.7.25
+
 === Potentially Breaking
 
+* `OmniBalanceService` methods now throw `IOException`
 * Some exceptions, such as `ParseException` are no longer declared, you may need to remove some catch statements.
 * Deprecated `ConsensusEntry` Groovy class removed
 

@@ -21,7 +21,7 @@ class OmniwalletClientSpec extends Specification {
     final Address exodusAddress = OmniMainNetParams.get().exodusAddress;
     final Address testAddr = new Address(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
 
-    @Shared def client
+    @Shared OmniwalletClient client
 
     def "get block height" () {
         when:
@@ -47,7 +47,7 @@ class OmniwalletClientSpec extends Specification {
 
     def "load exodusAddress balance"() {
         when:
-        def balances = client.balanceInfosForAddress(exodusAddress)
+        List<BalanceInfo> balances = client.balanceInfosForAddress(exodusAddress)
         balances.sort{a, b -> a.id <=> b.id }
 
         then:
