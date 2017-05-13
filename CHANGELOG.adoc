@@ -15,6 +15,7 @@ Released: Under development
 * Update to Gradle 3.5
 * Update to bitcoinj-addons 0.2.2
 * Update to Groovy 2.4.10
+* Update to Spock 1.1
 * Update to SLF4j 1.7.25
 
 === Potentially Breaking
