@@ -15,12 +15,12 @@ public class OmniTestNetParams extends OmniNetworkParameters {
         super();
         params = TestNet3Params.get();
         try {
-            exodusAddress = new Address(params, ExodusAddress);
+            exodusAddress = Address.fromBase58(params, ExodusAddress);
         } catch (AddressFormatException e) {
             exodusAddress = null;
         }
         try {
-            moneyManAddress = new Address(params, MoneyManAddress);
+            moneyManAddress = Address.fromBase58(params, MoneyManAddress);
         } catch (AddressFormatException e) {
             moneyManAddress = null;
         }

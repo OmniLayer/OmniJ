@@ -16,7 +16,7 @@ import com.msgilligan.bitcoinj.money.ExchangeRateChange;
 import com.msgilligan.bitcoinj.money.ExchangeRateObserver;
 import com.msgilligan.bitcoinj.money.ObservableExchangeRateProvider;
 import org.javamoney.moneta.CurrencyUnitBuilder;
-import org.javamoney.moneta.ExchangeRateBuilder;
+import org.javamoney.moneta.convert.ExchangeRateBuilder;
 import org.javamoney.moneta.spi.AbstractRateProvider;
 import org.javamoney.moneta.spi.DefaultNumberValue;
 

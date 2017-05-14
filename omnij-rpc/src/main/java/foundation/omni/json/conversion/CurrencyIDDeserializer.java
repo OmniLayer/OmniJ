@@ -23,7 +23,8 @@ public class CurrencyIDDeserializer extends JsonDeserializer<CurrencyID> {
                 long val = p.getNumberValue().longValue();
                 return new CurrencyID(val);
             default:
-                throw ctxt.mappingException(Sha256Hash.class, token);
+                ctxt.handleUnexpectedToken(Sha256Hash.class, p);
+                return null;
         }
     }
 }

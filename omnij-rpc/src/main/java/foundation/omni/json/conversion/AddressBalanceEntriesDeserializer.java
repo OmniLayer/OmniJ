@@ -42,11 +42,11 @@ public class AddressBalanceEntriesDeserializer extends StdDeserializer<AddressBa
                         result.put(entry.getAddress(), new BalanceEntry(entry.getBalance(), entry.getReserved()));
                     }
                 } else {
-                    throw new JsonMappingException("unexpected token");
+                    throw new JsonMappingException(jp, "unexpected token");
                 }
             }
         } catch (Exception e) {
-            throw new JsonMappingException("error", e);
+            throw new JsonMappingException(jp, "error", e);
         }
 
         return result;
