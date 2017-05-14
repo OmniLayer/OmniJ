@@ -67,23 +67,34 @@ class OmniwalletServerSpec extends Specification {
         // This may be unnecessary if we can assume the property list is ordered by propertyid
         Map<CurrencyID, SmartPropertyListInfo> props = properties.collect{[it.propertyid, it]}.collectEntries()
 
-        then: "we can check OMNI and TOMNI are as expected"
+        then: "OMNI is as expected"
         props[OMNI].propertyid == OMNI
         props[OMNI].propertyid.ecosystem == Ecosystem.OMNI
-        props[OMNI].name == "Omni" // Note: Omni Core returns "MasterCoin" with a capital-C
+        props[OMNI].name == "Omni"
         props[OMNI].category == ""
         props[OMNI].subcategory == ""
         props[OMNI].data == ""
         props[OMNI].url == ""
-        props[OMNI].divisible == null
+        props[OMNI].divisible == true
 
+        and: "MAID is as expected"
+        props[MAID].propertyid == MAID
+        props[MAID].propertyid.ecosystem == Ecosystem.OMNI
+        props[MAID].name == "MaidSafeCoin"
+        props[MAID].category == ""
+        props[MAID].subcategory == ""
+        props[MAID].data == ""
+        props[MAID].url == ""
+        props[MAID].divisible == false
+
+        and: "TOMNI is as expected"
         props[TOMNI].propertyid == TOMNI
         props[TOMNI].propertyid.ecosystem == Ecosystem.TOMNI
-        props[TOMNI].name == "Test Omni" // Note: Omni Core returns "Mastercoin" with a capital-C
+        props[TOMNI].name == "Test Omni"
         props[TOMNI].category == ""
         props[TOMNI].subcategory == ""
         props[TOMNI].data == ""
         props[TOMNI].url == ""
-        props[TOMNI].divisible == null
+        props[TOMNI].divisible == true
     }
 }

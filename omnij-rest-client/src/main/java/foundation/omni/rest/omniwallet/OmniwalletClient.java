@@ -2,6 +2,10 @@ package foundation.omni.rest.omniwallet;
 
 
 import foundation.omni.rest.ConsensusService;
+import foundation.omni.rest.omniwallet.json.AddressVerifyInfo;
+import foundation.omni.rest.omniwallet.json.OmniwalletAddressBalance;
+import foundation.omni.rest.omniwallet.json.PropertyVerifyInfo;
+import foundation.omni.rest.omniwallet.json.RevisionInfo;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import foundation.omni.CurrencyID;
@@ -30,8 +34,10 @@ import retrofit2.http.Query;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -50,22 +56,21 @@ public class OmniwalletClient implements ConsensusService {
     static final int READ_TIMEOUT_MILLIS = 20 * 1000; // 20s
     private Retrofit restAdapter;
     private OmniwalletService service;
-
-
+    private Map<CurrencyID, PropertyType> cachedPropertyTypes = new HashMap<>();
 
     interface OmniwalletService {
         @FormUrlEncoded
         @POST("/v1/address/addr/")
-        Call<Map<String, Object>> balancesForAddress(@Field("addr") String Address);
+        Call<OmniwalletAddressBalance> balancesForAddress(@Field("addr") String Address);
 
         @GET("/v1/system/revision.json")
-        Call<Map<String, Object>> getRevisionInfo();
+        Call<RevisionInfo> getRevisionInfo();
 
         @GET("/v1/mastercoin_verify/properties")
-        Call<List<Map<String, Object>>> verifyProperties();
+        Call<List<PropertyVerifyInfo>> verifyProperties();
 
         @GET("/v1/mastercoin_verify/addresses")
-        Call<List<Map<String, Object>>> verifyAddresses(@Query("currency_id") String currencyId);
+        Call<List<AddressVerifyInfo>> verifyAddresses(@Query("currency_id") String currencyId);
 
     }
 
@@ -108,24 +113,19 @@ public class OmniwalletClient implements ConsensusService {
     // TODO: The returned `value` field of this method doesn't include reserved balance
     private List<BalanceInfo> balanceInfosForAddress(Address address) throws IOException {
         List<BalanceInfo> list = new ArrayList<>();
-        Response<Map<String, Object>> response = service.balancesForAddress(address.toString()).execute();
+        Response<OmniwalletAddressBalance> response = service.balancesForAddress(address.toString()).execute();
         if (!response.isSuccessful()) {
             throw new IOException("Unsuccessful response in balanceInfosForAddress");
         }
-        Map<String, Object> result = response.body();
+        OmniwalletAddressBalance result = response.body();
         if (result == null) {
             return list;
         }
-        List<Map<String, Object>> balances = (List<Map<String, Object>>) result.get("balance");
-        balances.forEach(bal -> {
+        result.getBalance().forEach(bal -> {
             BalanceInfo b = new BalanceInfo();
-            b.id = new CurrencyID(toLong(bal.get("id")));
-            //b.symbol = (String) bal.get("symbol");
-            boolean divisible = (boolean) bal.get("divisible");
-            PropertyType type = divisible ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
-            b.value = toOmniValue(toLong(bal.get("value")), type);
-            //b.pendingneg = toOmniValue(toLong(bal.get("pendingneg")), type);
-            //b.pendingpos = toOmniValue(toLong(bal.get("pendingpos")), type);
+            b.id = new CurrencyID(toLong(bal.getId()));
+            PropertyType type =  bal.isDivisible() ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
+            b.value = toOmniValue(toLong(bal.getValue()), type);
             list.add(b);
         });
 
@@ -173,16 +173,22 @@ public class OmniwalletClient implements ConsensusService {
     }
 
     public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
-        List<Map<String, Object>> balances;
+        List<AddressVerifyInfo> balances;
         try {
             balances = service.verifyAddresses(Long.toString(currencyID.getValue())).execute().body();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Function<Map<String, Object>, AddressBalanceEntry> mapper;
+        PropertyType propertyType = PropertyType.DIVISIBLE;
+        try {
+            propertyType = lookupPropertyType(currencyID);
+        } catch (IOException e) {
+            throw new RuntimeException("Failure trying to fetch propertyType");
+        }
+        Function<AddressVerifyInfo, AddressBalanceEntry> mapper;
         // TODO: We need an accurate way of determining divisible vs indivisible
         // unused balanceMapper tried to use stringToOmniValue() but apparently that didn't work
-        if (currencyID.equals(CurrencyID.MAID) || currencyID.equals(CurrencyID.SEC)) {
+        if (propertyType == PropertyType.INDIVISIBLE) {
             mapper = this::indivBalanceMapper;
         } else {
             mapper = this::divisBalanceMapper;
@@ -198,19 +204,20 @@ public class OmniwalletClient implements ConsensusService {
 
     @Override
     public Integer currentBlockHeight() {
-        Map<String, Object> revisionInfo;
+        RevisionInfo revisionInfo;
         try {
             revisionInfo = service.getRevisionInfo().execute().body();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Integer blockHeight = (Integer) revisionInfo.getOrDefault("last_block", -1);
+        String blockHeightStr = revisionInfo.getLastBlock();
+        Integer blockHeight = Integer.valueOf(blockHeightStr);
         return blockHeight;
     }
 
     @Override
     public List<SmartPropertyListInfo> listProperties() {
-        List<Map<String, Object>> properties;
+        List<PropertyVerifyInfo> properties;
         try {
             properties = service.verifyProperties().execute().body();
         } catch (IOException e) {
@@ -219,25 +226,25 @@ public class OmniwalletClient implements ConsensusService {
         List<SmartPropertyListInfo> result = new ArrayList<>();
         properties.forEach(prop -> {
             SmartPropertyListInfo info = propertyMapper(prop);
-            if (info != null) {
+            if (info != null)  {
                 result.add(info);
             }
         });
         return result;
     }
 
-    private AddressBalanceEntry balanceMapper(Map<String, Object> item) {
+    private AddressBalanceEntry balanceMapper(AddressVerifyInfo item) {
 
         Address address;
         try {
-            address = Address.fromBase58(null, (String) item.get("address"));
+            address = Address.fromBase58(null, item.getAddress());
         } catch (AddressFormatException e) {
             e.printStackTrace();
             return null;
         }
 
-        String balanceStr = (String) item.get("balance");
-        String reservedStr = (String) item.get("reserved_balance");
+        String balanceStr = item.getBalance();
+        String reservedStr = item.getReservedBalance();
         OmniValue balance = stringToOmniValue(balanceStr);
         OmniValue reserved = (reservedStr != null) ?
                                     stringToOmniValue(reservedStr) :
@@ -254,18 +261,18 @@ public class OmniwalletClient implements ConsensusService {
         return balanceEntry;
     }
 
-    private AddressBalanceEntry divisBalanceMapper(Map<String, Object> item) {
+    private AddressBalanceEntry divisBalanceMapper(AddressVerifyInfo item) {
 
         Address address;
         try {
-            address = Address.fromBase58(null, (String) item.get("address"));
+            address = Address.fromBase58(null, item.getAddress());
         } catch (AddressFormatException e) {
             e.printStackTrace();
             return null;
         }
 
-        String balanceStr = (String) item.get("balance");
-        String reservedStr = (String) item.get("reserved_balance");
+        String balanceStr = item.getBalance();
+        String reservedStr = item.getReservedBalance();
         OmniDivisibleValue balance = OmniDivisibleValue.of(new BigDecimal(balanceStr));
         OmniDivisibleValue reserved = (reservedStr != null) ?
                 OmniDivisibleValue.of(new BigDecimal(reservedStr)) :
@@ -275,21 +282,28 @@ public class OmniwalletClient implements ConsensusService {
         return balanceEntry;
     }
 
-    private AddressBalanceEntry indivBalanceMapper(Map<String, Object> item) {
+    private AddressBalanceEntry indivBalanceMapper(AddressVerifyInfo item) {
 
         Address address;
         try {
-            address = Address.fromBase58(null, (String) item.get("address"));
+            address = Address.fromBase58(null, item.getAddress());
         } catch (AddressFormatException e) {
             e.printStackTrace();
             return null;
         }
 
-        String balanceStr = (String) item.get("balance");
-        String reservedStr = (String) item.get("reserved_balance");
-        OmniIndivisibleValue balance = OmniIndivisibleValue.of(Long.parseLong(balanceStr));
+        String balanceStr = item.getBalance();
+        String reservedStr = item.getReservedBalance();
+        BigInteger bigBalance = new BigInteger(balanceStr);
+        // Workaround for Omniwallet bug where it can return balance greater than the maximum allowed for indivisible
+        OmniIndivisibleValue balance;
+        if (bigBalance.compareTo(BigInteger.valueOf(OmniIndivisibleValue.MAX_VALUE)) == 1) {
+            balance = OmniIndivisibleValue.of(OmniIndivisibleValue.MAX_VALUE);
+        } else {
+            balance = OmniIndivisibleValue.of(Long.parseLong(balanceStr));
+        }
         OmniIndivisibleValue reserved = (reservedStr != null) ?
-                OmniIndivisibleValue.of(Long.parseLong(balanceStr)) :
+                OmniIndivisibleValue.of(Long.parseLong(reservedStr)) :
                 OmniIndivisibleValue.of(0);
 
         AddressBalanceEntry balanceEntry = new AddressBalanceEntry(address, balance, reserved);
@@ -306,32 +320,41 @@ public class OmniwalletClient implements ConsensusService {
     }
 
 
-    private SmartPropertyListInfo propertyMapper(Map<String, Object> property) {
-        Number idnum = (Number) property.get("currencyID");
+    private SmartPropertyListInfo propertyMapper(PropertyVerifyInfo property) {
+        final String category = "";
+        final String subCategory = "";
+        final String data = "";
+        final String url = "";
+        long idnum = property.getCurrencyID();
         CurrencyID id;
         try {
-            id = new CurrencyID(idnum.longValue());
+            id = new CurrencyID(idnum);
         } catch (NumberFormatException e) {
             id = null;
         }
-        String protocol = (String) property.get("Protocol");
+        String protocol = property.getProtocol();
         if (id != null && protocol.equals("Omni")) {
-            String name = (String) property.get("name");
-            String category = "";
-            String subCategory = "";
-            String data = "";
-            String url = "";
-            Boolean divisible = null;
             SmartPropertyListInfo prop = new SmartPropertyListInfo(id,
-                    name,
+                    property.getName(),
                     category,
                     subCategory,
                     data,
                     url,
-                    divisible);
+                    property.isDivisible());
             return prop;
         }
         return null;
+    }
+
+    private PropertyType lookupPropertyType(CurrencyID propertyID) throws IOException {
+        if (!cachedPropertyTypes.containsKey(propertyID)) {
+            // If we don't have the info, fetch info for all properties from server and update
+            List<SmartPropertyListInfo> infos = listProperties();
+            infos.forEach(info -> {
+                cachedPropertyTypes.put(info.getPropertyid(), divisibleToPropertyType(info.getDivisible()));
+            });
+        }
+        return cachedPropertyTypes.get(propertyID);
     }
 
 
@@ -347,6 +370,11 @@ public class OmniwalletClient implements ConsensusService {
         return okUrl.uri();
     }
 
+    private PropertyType divisibleToPropertyType(boolean divisible) {
+        PropertyType type =  divisible ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
+        return type;
+    }
+    
     private BigDecimal toBigDecimal(Object obj) {
         return obj instanceof String ? new BigDecimal((String) obj) : new BigDecimal((Integer) obj);
     }

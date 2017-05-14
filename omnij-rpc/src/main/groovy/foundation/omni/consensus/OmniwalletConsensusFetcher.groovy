@@ -61,28 +61,32 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
         List<SmartPropertyListInfo> propList = new ArrayList<SmartPropertyListInfo>()
         for (Map jsonProp : props) {
             // TODO: Should this mapping be done by Jackson?
-            Number idnum = (Number) jsonProp.get("currencyID")
-            CurrencyID id
-            try {
-                id = new CurrencyID(idnum.longValue())
-            } catch (NumberFormatException e) {
-                id = null
-            }
-            if (id != null && id != CurrencyID.BTC) {
-                String name = (String) jsonProp.get("name")
-                String category = ""
-                String subCategory = ""
-                String data = ""
-                String url = ""
-                Boolean divisible = null
-                SmartPropertyListInfo prop = new SmartPropertyListInfo(id,
-                        name,
-                        category,
-                        subCategory,
-                        data,
-                        url,
-                        divisible)
-                propList.add(prop)
+            String protocol = (String) jsonProp.get("Protocol")
+            // Note: Omniwallet also returns currencies with Protocol of "Fiat"
+            if (protocol == "Omni") {
+                Number idnum = (Number) jsonProp.get("currencyID")
+                CurrencyID id
+                try {
+                    id = new CurrencyID(idnum.longValue())
+                } catch (NumberFormatException e) {
+                    id = null
+                }
+                if (id != null && id != CurrencyID.BTC) {
+                    String name = (String) jsonProp.get("name")
+                    String category = ""
+                    String subCategory = ""
+                    String data = ""
+                    String url = ""
+                    Boolean divisible = (Boolean) jsonProp.get("divisible")
+                    SmartPropertyListInfo prop = new SmartPropertyListInfo(id,
+                            name,
+                            category,
+                            subCategory,
+                            data,
+                            url,
+                            divisible)
+                    propList.add(prop)
+                }
             }
         }
 

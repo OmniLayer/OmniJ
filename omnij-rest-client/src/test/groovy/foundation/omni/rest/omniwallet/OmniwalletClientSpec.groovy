@@ -5,6 +5,7 @@ import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -15,8 +16,9 @@ import spock.lang.Specification
 
 
 /**
- *
+ * Functional (Integration) test of OmniwalletClient
  */
+@Ignore("This is really an integration test")
 class OmniwalletClientSpec extends Specification {
     final Address exodusAddress = OmniMainNetParams.get().exodusAddress;
     final Address testAddr = new Address(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
@@ -101,21 +103,21 @@ class OmniwalletClientSpec extends Specification {
         then: "we can check OMNI and TOMNI are as expected"
         props[OMNI].propertyid == OMNI
         props[OMNI].propertyid.ecosystem == Ecosystem.OMNI
-        props[OMNI].name == "Omni" // Note: Omni Core returns "MasterCoin" with a capital-C
+        props[OMNI].name == "Omni"
         props[OMNI].category == ""
         props[OMNI].subcategory == ""
         props[OMNI].data == ""
         props[OMNI].url == ""
-        props[OMNI].divisible == null
+        props[OMNI].divisible == true
 
         props[TOMNI].propertyid == TOMNI
         props[TOMNI].propertyid.ecosystem == Ecosystem.TOMNI
-        props[TOMNI].name == "Test Omni" // Note: Omni Core returns "Mastercoin" with a capital-C
+        props[TOMNI].name == "Test Omni"
         props[TOMNI].category == ""
         props[TOMNI].subcategory == ""
         props[TOMNI].data == ""
         props[TOMNI].url == ""
-        props[TOMNI].divisible == null
+        props[TOMNI].divisible == true
 
         // Assumes MainNet
         props[USDT].propertyid == USDT
@@ -125,27 +127,29 @@ class OmniwalletClientSpec extends Specification {
         props[USDT].subcategory == ""
         props[USDT].data == ""
         props[USDT].url == ""
-        props[USDT].divisible == null
+        props[USDT].divisible == true
     }
 
     @Unroll
-    def "we can get consensus info for currency: #currency"() {
+    def "we can get consensus info for currency: #id"(CurrencyID id, SmartPropertyListInfo info) {
         setup:
-        def propType = ((currency == MAID) || (currency == SEC)) ?
-                        PropertyType.INDIVISIBLE : PropertyType.DIVISIBLE;
+        def propType = info.divisible ? PropertyType.DIVISIBLE: PropertyType.INDIVISIBLE
         when: "we get data"
-        SortedMap<Address, BalanceEntry> balances = client.getConsensusForCurrency(currency)
+        SortedMap<Address, BalanceEntry> balances = client.getConsensusForCurrency(id)
 
         then: "something is there"
-        balances.size() >= 1
+        balances.size() >= 0
 
         and: "all balances of correct property type"
         balances.every {address, entry ->
-            entry.balance.propertyType == propType && entry.reserved.propertyType == propType
+            entry.reserved.propertyType == propType
+        }
+        balances.every {address, entry ->
+            entry.balance.propertyType == propType
         }
 
         where:
-        currency << [OMNI, TOMNI, MAID, USDT, AGRS, EURT, SEC]
+        [id, info] << client.listProperties().collect{[it.propertyid, it]}  // Test for ALL currencies on MainNet
     }
 
     def setup() {
