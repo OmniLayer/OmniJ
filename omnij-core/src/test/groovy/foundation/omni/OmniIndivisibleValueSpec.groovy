@@ -94,15 +94,16 @@ class OmniIndivisibleValueSpec extends Specification {
         1.1G | BigDecimal.class
     }
 
-    def "We can't create an OmniValue with an invalid value"() {
+    def "We can't create an OmniValue with an invalid value"(Long val) {
         when: "we try to create a OmniValue with an invalid value"
+        // Note: No method overloading for OmniIndivisibleValue.of()
+        // so it can only be called with a Long
         OmniValue value = OmniIndivisibleValue.of(val)
-
         then: "exception is thrown"
         ArithmeticException e = thrown()
 
         where:
-        val << [-1, 9223372036854775808L]
+        val << [-1, -2, -9223372036854775808]
     }
 
     def "Converting to float not allowed"() {

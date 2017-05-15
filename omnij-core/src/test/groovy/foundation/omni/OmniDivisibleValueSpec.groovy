@@ -124,15 +124,17 @@ class OmniDivisibleValueSpec extends Specification {
         92233720369                     | ArithmeticException.class
     }
 
-    def "We can't create an OmniValue with an invalid value"() {
+    def "We can't create an OmniValue with an invalid value"(Number val) {
         when: "we try to create a OmniValue with an invalid value"
+        // Note: method overloading and Groovy's dynamic method dispatch
+        // are in operation for OmniDivisibleValue.of()
         OmniValue value = OmniDivisibleValue.of(val)
 
         then: "exception is thrown"
         ArithmeticException e = thrown()
 
         where:
-        val << [-1, 9223372036854775808L]
+        val << [-1, -2, -9223372036854775808L,  -9223372036854775808, 9223372036854775808]
     }
 
     def "Converting to float not allowed"() {
