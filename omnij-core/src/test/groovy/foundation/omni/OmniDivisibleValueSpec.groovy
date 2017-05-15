@@ -223,7 +223,8 @@ class OmniDivisibleValueSpec extends Specification {
     def "Equality works"() {
         expect:
         OmniDivisibleValue.of(1) == OmniDivisibleValue.of(1)
-//        OmniDivisibleValue.of(0.1) == OmniDivisibleValue.of(0.1)    // Broken!!! is this a groovy bug?
+        OmniDivisibleValue.of(0.1) == OmniDivisibleValue.of(0.1)    // GROOVY-7608, Fixed in Groovy 2.5.0-alpha-1
+        OmniDivisibleValue.of(1.1) != OmniDivisibleValue.of(1.0)    // GROOVY-7608,Fixed in Groovy 2.5.0-alpha-1
     }
 
 }
