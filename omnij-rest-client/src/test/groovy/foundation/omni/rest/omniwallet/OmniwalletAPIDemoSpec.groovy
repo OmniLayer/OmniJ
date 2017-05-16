@@ -58,7 +58,7 @@ class OmniwalletAPIDemoSpec extends Specification {
 
         when:
         def result = client.postForm("/v1/address/addr/", [
-                addr: '["19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu"]'
+                addr: [testAddr, "1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P"]
         ])
 
         then: "Something is returned"

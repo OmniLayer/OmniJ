@@ -48,7 +48,7 @@ class SimpleGroovyRestClient {
         def rc = conn.getResponseCode()
         if (rc != HTTP_OK) {
             String responseMessage = conn.getResponseMessage()
-            //println "responseMessage = ${responseMessage}"
+            println "responseMessage = ${responseMessage}"
             throw new RuntimeException("bad response code: ${rc}")
         }
         JsonSlurper slurper = new JsonSlurper()
@@ -86,16 +86,29 @@ class SimpleGroovyRestClient {
      * @return params encoded as a string
      * @throws UnsupportedEncodingException
      */
-    static String formEncode(Map<String, String> params) throws UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder()
+    static String formEncode(Map<String, Object> params) throws UnsupportedEncodingException {
+        StringBuilder sb = new StringBuilder()
         params.eachWithIndex { key, value, index ->
             if (index > 0) {
-                result <<= '&'
+                sb <<= '&'
             }
-            result <<= URLEncoder.encode(key, 'UTF-8')
-            result <<= '='
-            result <<= URLEncoder.encode(value, 'UTF-8')
+            if (value instanceof String) {
+                sb <<= URLEncoder.encode(key, 'UTF-8')
+                sb <<= '='
+                sb <<= URLEncoder.encode(value, 'UTF-8')
+            } else {
+                value.eachWithIndex { String arrayString, inner ->
+                    if (inner > 0) {
+                        sb <<= '&'
+                    }
+                    sb <<= URLEncoder.encode(key, 'UTF-8')
+                    sb <<= '='
+                    sb <<= URLEncoder.encode(arrayString, 'UTF-8')
+                }
+            }
         }
-        return result.toString();
+        String  result = sb.toString()
+        //println "result: ${result}"
+        return result
     }
 }
