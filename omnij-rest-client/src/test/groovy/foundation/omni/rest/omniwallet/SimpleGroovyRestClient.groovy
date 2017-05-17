@@ -82,7 +82,10 @@ class SimpleGroovyRestClient {
 
     /**
      * URL encode parameter map
-     * @param params
+     *
+     * TODO: Use a better multimap implementation (is there one in Groovy core?)
+     *
+     * @param params is a quick-and-dirty multimap
      * @return params encoded as a string
      * @throws UnsupportedEncodingException
      */
