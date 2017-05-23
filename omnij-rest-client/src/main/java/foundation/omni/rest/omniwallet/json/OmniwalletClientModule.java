@@ -19,7 +19,7 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.NetworkParameters;
 
 /**
- *
+ * A module of Jackson converters for OmniwalletClient
  */
 public class OmniwalletClientModule extends SimpleModule {
     public OmniwalletClientModule(NetworkParameters netParams) {
