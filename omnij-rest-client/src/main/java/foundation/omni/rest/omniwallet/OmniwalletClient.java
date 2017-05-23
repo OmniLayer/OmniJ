@@ -60,7 +60,7 @@ public class OmniwalletClient implements ConsensusService {
     public static final HttpUrl stagingBase = HttpUrl.parse("https://staging.omniwallet.org");
     static final int CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
     static final int READ_TIMEOUT_MILLIS = 20 * 1000; // 20s
-    static private final int MAX_ADDRESSES_FOR_BALANCE = 20;
+    static public final int BALANCES_FOR_ADDRESSES_MAX_ADDR = 20;
     private Retrofit restAdapter;
     private OmniwalletService service;
     private Map<CurrencyID, PropertyType> cachedPropertyTypes = new HashMap<>();
@@ -161,7 +161,7 @@ public class OmniwalletClient implements ConsensusService {
 
     @Override
     public OmniJBalances balancesForAddresses(List<Address> addresses) throws IOException {
-        if (addresses.size() > MAX_ADDRESSES_FOR_BALANCE) {
+        if (addresses.size() > BALANCES_FOR_ADDRESSES_MAX_ADDR) {
             throw new IllegalArgumentException("Exceeded number of allowable addresses");
         }
         OmniJBalances balances = new OmniJBalances();
