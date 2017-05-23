@@ -1,16 +1,18 @@
 package foundation.omni.rest.omniwallet
 
+import foundation.omni.net.OmniMainNetParams
 import spock.lang.Ignore
 import spock.lang.Specification
 
 /**
  * Simple Tests/Demo of Omniwallet REST API via SimpleGroovyRestClient
  */
-@Ignore("This is really an integration test")
+//@Ignore("This is really an integration test")
 class OmniwalletAPIDemoSpec extends Specification {
     static final URL liveURL = "https://www.omniwallet.org/".toURL()
     static final URL stageURL = "https://staging.omniwallet.org/".toURL()
     static final String testAddr = '19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu'
+    static final String exodusAddr = OmniMainNetParams.get().exodusAddress.toString()
 
     def "get block height"() {
         given:
@@ -50,6 +52,13 @@ class OmniwalletAPIDemoSpec extends Specification {
 
         then: "Something is returned"
         result != null
+        result[testAddr].balance != null
+
+        result[testAddr].balance[0].value != null
+        result[testAddr].balance[0].divisible == true
+
+        result[testAddr].balance[1].value != null
+        result[testAddr].balance[1].divisible == true
     }
 
     def "get multiple address balance (staging)"() {
@@ -58,10 +67,27 @@ class OmniwalletAPIDemoSpec extends Specification {
 
         when:
         def result = client.postForm("/v1/address/addr/", [
-                addr: [testAddr, "1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P"]
+                addr: [testAddr, exodusAddr]
         ])
 
         then: "Something is returned"
         result != null
+
+        result[testAddr].balance != null
+
+        result[testAddr].balance[0].value != null
+        result[testAddr].balance[0].divisible == true
+
+        result[testAddr].balance[1].value != null
+        result[testAddr].balance[1].divisible == true
+
+        result[exodusAddr].balance != null
+
+        result[exodusAddr].balance[0].value != null
+        result[exodusAddr].balance[0].divisible == true
+
+        result[exodusAddr].balance[1].value != null
+        result[exodusAddr].balance[1].divisible == true
+
     }
 }

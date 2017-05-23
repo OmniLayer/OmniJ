@@ -5,6 +5,7 @@ import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
+import okhttp3.HttpUrl
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Unroll
@@ -18,7 +19,7 @@ import spock.lang.Specification
 /**
  * Functional (Integration) test of OmniwalletClient
  */
-@Ignore("This is really an integration test")
+//@Ignore("This is really an integration test")
 class OmniwalletClientSpec extends Specification {
     final Address exodusAddress = OmniMainNetParams.get().exodusAddress;
     final Address testAddr = new Address(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
@@ -88,6 +89,15 @@ class OmniwalletClientSpec extends Specification {
         balances[exodusAddress][BTC].numberValue() >= 0
     }
 
+    def "load balances of addresses with multiple addresses - in single request"() {
+        when:
+        // Note: This call is a direct test of th private `service` object
+        def balances = client.service.balancesForAddresses([testAddr, exodusAddress]).execute().body()
+
+        then:
+        balances != null
+    }
+
     def "Can get Omniwallet property list"() {
         when: "we get data"
         def properties = client.listProperties()
@@ -131,6 +141,7 @@ class OmniwalletClientSpec extends Specification {
     }
 
     @Unroll
+    @Ignore
     def "we can get consensus info for currency: #id"(CurrencyID id, SmartPropertyListInfo info) {
         setup:
         def propType = info.divisible ? PropertyType.DIVISIBLE: PropertyType.INDIVISIBLE
@@ -153,6 +164,8 @@ class OmniwalletClientSpec extends Specification {
     }
 
     def setup() {
-        client = new OmniwalletClient()
+        HttpUrl baseURL = HttpUrl.parse("https://staging.omniwallet.org")
+        boolean debug = true
+        client = new OmniwalletClient(baseURL, true)
     }
 }
