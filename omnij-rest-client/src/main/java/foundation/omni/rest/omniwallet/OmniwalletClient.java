@@ -2,7 +2,6 @@ package foundation.omni.rest.omniwallet;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import foundation.omni.json.conversion.OmniClientModule;
 import foundation.omni.rest.ConsensusService;
 import foundation.omni.rest.omniwallet.json.AddressVerifyInfo;
 import foundation.omni.rest.omniwallet.json.OmniwalletAddressBalance;
@@ -61,6 +60,7 @@ public class OmniwalletClient implements ConsensusService {
     public static final HttpUrl stagingBase = HttpUrl.parse("https://staging.omniwallet.org");
     static final int CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
     static final int READ_TIMEOUT_MILLIS = 20 * 1000; // 20s
+    static private final int MAX_ADDRESSES_FOR_BALANCE = 20;
     private Retrofit restAdapter;
     private OmniwalletService service;
     private Map<CurrencyID, PropertyType> cachedPropertyTypes = new HashMap<>();
@@ -69,14 +69,14 @@ public class OmniwalletClient implements ConsensusService {
     interface OmniwalletService {
         @FormUrlEncoded
         @POST("/v1/address/addr/")
-        Call<OmniwalletAddressBalance> balancesForAddress(@Field("addr") Address address);
+        Call<OmniwalletAddressBalance> balancesForAddress_v1(@Field("addr") Address address);
 
         @FormUrlEncoded
-        @POST("/v1/address/addr/")
-        Call<Map<Address, OmniwalletAddressBalance>> balancesForAddressM(@Field("addr") Address address);
+        @POST("/v2/address/addr/")
+        Call<Map<Address, OmniwalletAddressBalance>> balancesForAddress(@Field("addr") Address address);
 
         @FormUrlEncoded
-        @POST("/v1/address/addr/")
+        @POST("/v2/address/addr/")
         Call<Map<Address, OmniwalletAddressBalance>> balancesForAddresses(@Field("addr") List<Address> addresses);
 
         @GET("/v1/system/revision.json")
@@ -91,8 +91,7 @@ public class OmniwalletClient implements ConsensusService {
     }
 
     public OmniwalletClient() {
-        // Default to staging for now, since only staging has balancesForAddresses and balancesForAddressM
-        this(stagingBase, false);
+        this(omniwalletBase, false);
     }
 
     public OmniwalletClient(HttpUrl baseURL, boolean debug) {
@@ -136,32 +135,19 @@ public class OmniwalletClient implements ConsensusService {
 
     // TODO: The returned `value` field of this method doesn't include reserved balance
     private List<BalanceInfo> balanceInfosForAddress(@Nonnull Address address) throws IOException {
-        boolean staging = true;  // If true, return format currently returned by staging server
         List<BalanceInfo> list = new ArrayList<>();
         OmniwalletAddressBalance result;
-        if (!staging) {
-            // Expect JSON format returned by current live server
-            Response<OmniwalletAddressBalance> response = service.balancesForAddress(address).execute();
-            if (!response.isSuccessful()) {
-                throw new IOException("Unsuccessful response in balanceInfosForAddress");
-            }
-            result = response.body();
-            if (result == null) {
-                return list;
-            }
-        } else {
-            // Expect JSON format returned by current staging server
-            Response<Map<Address, OmniwalletAddressBalance>> response = service.balancesForAddressM(address).execute();
-            if (!response.isSuccessful()) {
-                throw new IOException("Unsuccessful response in balanceInfosForAddress");
-            }
-            Map<Address, OmniwalletAddressBalance> resultMap = response.body();
-            result = resultMap.get(address);
-            if (result == null) {
-                return list;
-            }
 
+        Response<Map<Address, OmniwalletAddressBalance>> response = service.balancesForAddress(address).execute();
+        if (!response.isSuccessful()) {
+            throw new IOException("Unsuccessful response in balanceInfosForAddress");
         }
+        Map<Address, OmniwalletAddressBalance> resultMap = response.body();
+        result = resultMap.get(address);
+        if (result == null) {
+            return list;
+        }
+
         result.getBalance().forEach(bal -> {
             BalanceInfo b = new BalanceInfo();
             b.id = new CurrencyID(toLong(bal.getId()));
@@ -175,7 +161,9 @@ public class OmniwalletClient implements ConsensusService {
 
     @Override
     public OmniJBalances balancesForAddresses(List<Address> addresses) throws IOException {
-
+        if (addresses.size() > MAX_ADDRESSES_FOR_BALANCE) {
+            throw new IllegalArgumentException("Exceeded number of allowable addresses");
+        }
         OmniJBalances balances = new OmniJBalances();
 
         Map<Address, OmniwalletAddressBalance> owbs = service.balancesForAddresses(addresses).execute().body();

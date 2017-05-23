@@ -7,7 +7,7 @@ import spock.lang.Specification
 /**
  * Simple Tests/Demo of Omniwallet REST API via SimpleGroovyRestClient
  */
-//@Ignore("This is really an integration test")
+@Ignore("This is really an integration test")
 class OmniwalletAPIDemoSpec extends Specification {
     static final URL liveURL = "https://www.omniwallet.org/".toURL()
     static final URL stageURL = "https://staging.omniwallet.org/".toURL()
@@ -16,7 +16,7 @@ class OmniwalletAPIDemoSpec extends Specification {
 
     def "get block height"() {
         given:
-        def client = new SimpleGroovyRestClient(liveURL)
+        def client = new SimpleGroovyRestClient(stageURL)
 
         when:
         def result = client.getJson("/v1/system/revision.json")
@@ -27,7 +27,7 @@ class OmniwalletAPIDemoSpec extends Specification {
 
     def "get single address balance (www)"() {
         given:
-        def client = new SimpleGroovyRestClient(liveURL)
+        def client = new SimpleGroovyRestClient(stageURL)
 
         when:
         def result = client.postForm("/v1/address/addr/", [ addr: testAddr ])
@@ -48,7 +48,7 @@ class OmniwalletAPIDemoSpec extends Specification {
         def client = new SimpleGroovyRestClient(stageURL)
 
         when:
-        def result = client.postForm("/v1/address/addr/", [ addr: testAddr ])
+        def result = client.postForm("/v2/address/addr/", [ addr: testAddr ])
 
         then: "Something is returned"
         result != null
@@ -66,7 +66,7 @@ class OmniwalletAPIDemoSpec extends Specification {
         def client = new SimpleGroovyRestClient(stageURL)
 
         when:
-        def result = client.postForm("/v1/address/addr/", [
+        def result = client.postForm("/v2/address/addr/", [
                 addr: [testAddr, exodusAddr]
         ])
 

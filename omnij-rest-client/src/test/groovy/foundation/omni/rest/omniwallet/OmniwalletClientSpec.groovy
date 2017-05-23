@@ -19,7 +19,7 @@ import spock.lang.Specification
 /**
  * Functional (Integration) test of OmniwalletClient
  */
-//@Ignore("This is really an integration test")
+@Ignore("This is really an integration test")
 class OmniwalletClientSpec extends Specification {
     final Address exodusAddress = OmniMainNetParams.get().exodusAddress;
     final Address testAddr = new Address(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
@@ -141,7 +141,6 @@ class OmniwalletClientSpec extends Specification {
     }
 
     @Unroll
-    @Ignore
     def "we can get consensus info for currency: #id"(CurrencyID id, SmartPropertyListInfo info) {
         setup:
         def propType = info.divisible ? PropertyType.DIVISIBLE: PropertyType.INDIVISIBLE
