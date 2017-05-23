@@ -219,7 +219,6 @@ public abstract class OmniValue extends NumberValue {
         return numberValue().toString();
     }
 
-    @Deprecated
     public  abstract BigDecimal bigDecimalValue();
 
     public OmniValue plus(OmniValue right) {
