@@ -1,6 +1,8 @@
 package foundation.omni.money
 
 import com.msgilligan.bitcoinj.money.BaseXChangeExchangeRateProvider
+import org.knowm.xchange.currency.Currency
+import org.knowm.xchange.dto.meta.CurrencyMetaData
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
@@ -9,7 +11,7 @@ import spock.lang.Specification
 /**
  *  Quick integration test of PoloniexXChangeRateProvide
  */
-@Ignore("this is really an integration test")
+//@Ignore("this is really an integration test")
 class PoloniexXChangeRateProviderSpec extends Specification {
     @Shared BaseXChangeExchangeRateProvider provider
 
@@ -23,10 +25,10 @@ class PoloniexXChangeRateProviderSpec extends Specification {
 
     def "can list currency codes"() {
         when:
-        def markets = provider.exchange.metaData.marketMetaDataMap
+        Map<Currency, CurrencyMetaData> currencies = provider.exchange.getExchangeMetaData().getCurrencies()
 
         then:
-        markets.size() > 0
+        currencies.size() > 0
     }
 
     def setup() {
