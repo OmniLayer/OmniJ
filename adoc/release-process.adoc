@@ -4,7 +4,7 @@
 
 . Update `CHANGELOG.adoc`
 . Set versions
-.. `build.gradle`
+.. `gradle.properties`
 .. omnij-dsl `ExtensionModule`
 .. `README.adoc`
 . Commit version bump and changelog.

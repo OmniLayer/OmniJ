@@ -3,18 +3,37 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
-== v0.5.1-SNAPSHOT
+== v0.5.1
 
-Released: Under development
+Released: 2017.05.23
 
 === Features/Changes
 
-* Assorted code, build, JavaDoc improvements
+==== All modules
+
 * `build.gradle` reads `JDK7_HOME` environment variable to compile Java 7 modules with correct classpath
+* Assorted code, build, JavaDoc improvements
+
+==== Omniwallet REST client (`omnij-rest-client`)
+
+* Implement Omniwallet multi-address balance request
+* Fix issues with accessing Omniwallet via CloudFlare
+* `OmniBalanceService` methods now throw `IOException`
+
+==== Omni RPC client, Omni Core integration tests (`omnij-rpc`)
+
+* Updated for `generate` RPC API changes in Bitcoin Core / bitcoinj-addons
+* Use non-segwit serialization for RPC tests (Dexx)
+* Bump `rpcWaitTimeoutSeconds` in consensus tests to 10 hours.
+* Use `http://omniexplorer.info` instead of `http://omnichest.info` in tests, etc.
+* Deprecated `ConsensusEntry` Groovy class removed
 * Updates for OmniChest -> OmniExplorer
+
+==== Dependency updates
+
 * Update to Gradle 3.5
-* Update to bitcoinj-addons 0.2.2
-* Update to Groovy 2.4.10
+* Update to bitcoinj-addons 0.2.3
+* Update to Groovy 2.4.11
 * Update to Spock 1.1
 * Update to SLF4j 1.7.25
 * `omnij-money`: Update to Moneta 1.1
@@ -24,9 +43,7 @@ Released: Under development
 
 === Potentially Breaking
 
-* `OmniBalanceService` methods now throw `IOException`
 * Some exceptions, such as `ParseException` are no longer declared, you may need to remove some catch statements.
-* Deprecated `ConsensusEntry` Groovy class removed
 
 == v0.5.0
 
