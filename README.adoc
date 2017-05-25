@@ -188,9 +188,11 @@ These sample Spock "feature tests" are from the file https://github.com/OmniLaye
 ----
     def "A managed property can be created with transaction type 54"() {
         when:
-        creationTxid = createManagedProperty(actorAddress, Ecosystem.MSC,
-                          PropertyType.INDIVISIBLE, "Test Category",
-                          "Test Subcategory", "ManagedTokens",
+        creationTxid = omniSendIssuanceManaged(actorAddress, Ecosystem.MSC,
+                          PropertyType.INDIVISIBLE,
+                          new CurrencyID(0),
+                          "Test Category", "Test Subcategory",
+                          "Managed Token Name",
                           "http://www.omnilayer.org",
                           "This is a test for managed properties")
         generate()
