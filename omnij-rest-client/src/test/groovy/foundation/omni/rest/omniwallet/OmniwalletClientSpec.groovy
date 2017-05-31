@@ -33,39 +33,7 @@ class OmniwalletClientSpec extends Specification {
         then: "height is a reasonable MainNet block height"
         height > 400000
     }
-
-    def "load testAddr balance"() {
-        when:
-        def balances = client.balanceInfosForAddress(testAddr)
-
-        then:
-        balances != null
-        //balances[0].symbol == "SP31"
-        balances[0].id == USDT
-        balances[0].value.numberValue() >= 0
-        //balances[1].symbol == "BTC"
-        balances[1].id == BTC
-        balances[1].value.numberValue() >= 0
-    }
-
-    def "load exodusAddress balance"() {
-        when:
-        List<BalanceInfo> balances = client.balanceInfosForAddress(exodusAddress)
-        balances.sort{a, b -> a.id <=> b.id }
-
-        then:
-        balances != null
-        //balances[0].symbol == "BTC"
-        balances[0].id == BTC
-        balances[0].value.numberValue() >= 0
-        //balances[1].symbol == "OMNI"
-        balances[1].id == OMNI
-        balances[1].value.numberValue() >= 0
-        //balances[2].symbol == "T-OMNI"
-        balances[2].id == TOMNI
-        balances[2].value.numberValue() >= 0
-    }
-
+    
     def "load balances of addresses with single address"() {
         when:
         def balances = client.balancesForAddresses([testAddr])

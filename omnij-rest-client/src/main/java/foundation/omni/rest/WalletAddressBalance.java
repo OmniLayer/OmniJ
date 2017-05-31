@@ -8,5 +8,7 @@ import java.util.HashMap;
 /**
  *
  */
+// TODO: Balance should include separate reserved balance
+
 public class WalletAddressBalance extends HashMap<CurrencyID, OmniValue> {
 }

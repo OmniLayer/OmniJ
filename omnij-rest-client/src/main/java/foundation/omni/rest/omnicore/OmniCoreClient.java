@@ -7,7 +7,6 @@ import foundation.omni.consensus.OmniCoreConsensusFetcher;
 import foundation.omni.rest.ConsensusService;
 import foundation.omni.rest.OmniJBalances;
 import foundation.omni.rest.WalletAddressBalance;
-import foundation.omni.rest.omniwallet.BalanceInfo;
 import foundation.omni.rpc.BalanceEntry;
 import foundation.omni.rpc.OmniClient;
 import org.bitcoinj.core.Address;

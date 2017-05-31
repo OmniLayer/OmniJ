@@ -24,7 +24,6 @@ import foundation.omni.rpc.ConsensusSnapshot;
 import foundation.omni.rpc.SmartPropertyListInfo;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.bitcoinj.core.Address;
-import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.MainNetParams;
 import retrofit2.Call;
@@ -37,7 +36,6 @@ import retrofit2.http.POST;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.http.Query;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -49,7 +47,6 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -127,36 +124,13 @@ public class OmniwalletClient implements ConsensusService {
 
     @Override
     public WalletAddressBalance balancesForAddress(Address address) throws IOException {
-        List<BalanceInfo> infos = balanceInfosForAddress(address);
-        WalletAddressBalance result = new WalletAddressBalance();
-        infos.forEach(info -> result.put(info.id, info.value));
-        return result;
-    }
-
-    // TODO: The returned `value` field of this method doesn't include reserved balance
-    private List<BalanceInfo> balanceInfosForAddress(@Nonnull Address address) throws IOException {
-        List<BalanceInfo> list = new ArrayList<>();
-        OmniwalletAddressBalance result;
-
         Response<Map<Address, OmniwalletAddressBalance>> response = service.balancesForAddress(address).execute();
         if (!response.isSuccessful()) {
             throw new IOException("Unsuccessful response in balanceInfosForAddress");
         }
         Map<Address, OmniwalletAddressBalance> resultMap = response.body();
-        result = resultMap.get(address);
-        if (result == null) {
-            return list;
-        }
-
-        result.getBalance().forEach(bal -> {
-            BalanceInfo b = new BalanceInfo();
-            b.id = new CurrencyID(toLong(bal.getId()));
-            PropertyType type =  bal.isDivisible() ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
-            b.value = toOmniValue(toLong(bal.getValue()), type);
-            list.add(b);
-        });
-
-        return list;
+        OmniwalletAddressBalance result = resultMap.get(address);
+        return balanceEntryMapper(result);
     }
 
     @Override
@@ -167,10 +141,10 @@ public class OmniwalletClient implements ConsensusService {
         OmniJBalances balances = new OmniJBalances();
 
         Map<Address, OmniwalletAddressBalance> owbs = service.balancesForAddresses(addresses).execute().body();
-        for (Map.Entry<Address, OmniwalletAddressBalance> entry : owbs.entrySet()) {
-            //Address address = Address.fromBase58(netParams, entry.getKey());
-            balances.put(entry.getKey(), balanceEntryMapper(entry.getValue()));
+        if (owbs == null) {
+            throw new IOException("Invalid response");
         }
+        owbs.forEach((address, owb) -> balances.put(address, balanceEntryMapper(owb)));
         return balances;
     }
 
@@ -225,22 +199,15 @@ public class OmniwalletClient implements ConsensusService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        PropertyType propertyType = PropertyType.DIVISIBLE;
+        // TODO: We need an accurate, efficient way of determining divisible vs indivisible
+        PropertyType propertyType;
         try {
             propertyType = lookupPropertyType(currencyID);
         } catch (IOException e) {
             throw new RuntimeException("Failure trying to fetch propertyType");
         }
-        Function<AddressVerifyInfo, AddressBalanceEntry> mapper;
-        // TODO: We need an accurate way of determining divisible vs indivisible
-        // unused balanceMapper tried to use stringToOmniValue() but apparently that didn't work
-        if (propertyType == PropertyType.INDIVISIBLE) {
-            mapper = this::indivBalanceMapper;
-        } else {
-            mapper = this::divisBalanceMapper;
-        }
         Map<Address, BalanceEntry> unsorted = balances.stream()
-                .map(mapper)
+                .map(propertyType.equals(PropertyType.INDIVISIBLE) ? this::indivBalanceMapper : this::divisBalanceMapper)
                 .collect(Collectors.toMap(
                         AddressBalanceEntry::getAddress, address -> new BalanceEntry(address.getBalance(), address.getReserved())
                 ));
@@ -279,81 +246,44 @@ public class OmniwalletClient implements ConsensusService {
         return result;
     }
 
-    private AddressBalanceEntry balanceMapper(AddressVerifyInfo item) {
+    private AddressBalanceEntry balanceMapper(AddressVerifyInfo item, PropertyType propertyType) {
 
-        Address address;
-        try {
-            address = Address.fromBase58(netParams, item.getAddress());
-        } catch (AddressFormatException e) {
-            e.printStackTrace();
-            return null;
-        }
-
+        Address address = item.getAddress();
         String balanceStr = item.getBalance();
         String reservedStr = item.getReservedBalance();
-        OmniValue balance = stringToOmniValue(balanceStr);
-        OmniValue reserved = (reservedStr != null) ?
-                                    stringToOmniValue(reservedStr) :
-                                    OmniValue.of(0, balance.getPropertyType());
-        // Workaround for reserved balances
 
-        if ((balance.getPropertyType() == PropertyType.DIVISIBLE) &&
-                (reserved.getPropertyType() == PropertyType.INDIVISIBLE) &&
-                (reserved.getWillets() == 0)) {
-            reserved = OmniDivisibleValue.of(0);
+        AddressBalanceEntry balanceEntry;
+        if (propertyType.equals(PropertyType.DIVISIBLE)) {
+            OmniDivisibleValue balance = OmniDivisibleValue.of(new BigDecimal(balanceStr));
+            OmniDivisibleValue reserved = (reservedStr != null) ?
+                    OmniDivisibleValue.of(new BigDecimal(reservedStr)) :
+                    OmniDivisibleValue.of(0);
+
+            balanceEntry = new AddressBalanceEntry(address, balance, reserved);
+        } else {
+            BigInteger bigBalance = new BigInteger(balanceStr);
+            // Workaround for Omniwallet bug where it can return balance greater than the maximum allowed for indivisible
+            OmniIndivisibleValue balance;
+            if (bigBalance.compareTo(BigInteger.valueOf(OmniIndivisibleValue.MAX_VALUE)) == 1) {
+                balance = OmniIndivisibleValue.of(OmniIndivisibleValue.MAX_VALUE);
+            } else {
+                balance = OmniIndivisibleValue.of(Long.parseLong(balanceStr));
+            }
+            OmniIndivisibleValue reserved = (reservedStr != null) ?
+                    OmniIndivisibleValue.of(Long.parseLong(reservedStr)) :
+                    OmniIndivisibleValue.of(0);
+
+            balanceEntry = new AddressBalanceEntry(address, balance, reserved);
         }
-
-        AddressBalanceEntry balanceEntry = new AddressBalanceEntry(address, balance, reserved);
         return balanceEntry;
     }
 
     private AddressBalanceEntry divisBalanceMapper(AddressVerifyInfo item) {
-
-        Address address;
-        try {
-            address = Address.fromBase58(netParams, item.getAddress());
-        } catch (AddressFormatException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        String balanceStr = item.getBalance();
-        String reservedStr = item.getReservedBalance();
-        OmniDivisibleValue balance = OmniDivisibleValue.of(new BigDecimal(balanceStr));
-        OmniDivisibleValue reserved = (reservedStr != null) ?
-                OmniDivisibleValue.of(new BigDecimal(reservedStr)) :
-                OmniDivisibleValue.of(0);
-
-        AddressBalanceEntry balanceEntry = new AddressBalanceEntry(address, balance, reserved);
-        return balanceEntry;
+        return balanceMapper(item, PropertyType.DIVISIBLE);
     }
 
     private AddressBalanceEntry indivBalanceMapper(AddressVerifyInfo item) {
-
-        Address address;
-        try {
-            address = Address.fromBase58(netParams, item.getAddress());
-        } catch (AddressFormatException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        String balanceStr = item.getBalance();
-        String reservedStr = item.getReservedBalance();
-        BigInteger bigBalance = new BigInteger(balanceStr);
-        // Workaround for Omniwallet bug where it can return balance greater than the maximum allowed for indivisible
-        OmniIndivisibleValue balance;
-        if (bigBalance.compareTo(BigInteger.valueOf(OmniIndivisibleValue.MAX_VALUE)) == 1) {
-            balance = OmniIndivisibleValue.of(OmniIndivisibleValue.MAX_VALUE);
-        } else {
-            balance = OmniIndivisibleValue.of(Long.parseLong(balanceStr));
-        }
-        OmniIndivisibleValue reserved = (reservedStr != null) ?
-                OmniIndivisibleValue.of(Long.parseLong(reservedStr)) :
-                OmniIndivisibleValue.of(0);
-
-        AddressBalanceEntry balanceEntry = new AddressBalanceEntry(address, balance, reserved);
-        return balanceEntry;
+        return balanceMapper(item, PropertyType.INDIVISIBLE);
     }
 
     private static OmniValue stringToOmniValue(String valueString) {
@@ -364,7 +294,6 @@ public class OmniwalletClient implements ConsensusService {
             return OmniValue.of(Long.parseLong(valueString), PropertyType.INDIVISIBLE);
         }
     }
-
 
     private SmartPropertyListInfo propertyMapper(PropertyVerifyInfo property) {
         final String category = "";
@@ -421,22 +350,8 @@ public class OmniwalletClient implements ConsensusService {
         return type;
     }
     
-    private BigDecimal toBigDecimal(Object obj) {
-        return obj instanceof String ? new BigDecimal((String) obj) : new BigDecimal((Integer) obj);
-    }
-
     private OmniValue toOmniValue(long amount, PropertyType type) {
         return type.equals(PropertyType.DIVISIBLE) ?
                 OmniDivisibleValue.ofWillets(amount) : OmniIndivisibleValue.ofWillets(amount);
-    }
-
-    private Address toAddress(String addressString) {
-        Address a;
-        try {
-            a = Address.fromBase58(netParams, addressString);
-        } catch (AddressFormatException e) {
-            a = null;
-        }
-        return a;
     }
 }

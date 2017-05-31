@@ -1,6 +1,7 @@
 package foundation.omni.rest.omniwallet.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.bitcoinj.core.Address;
 
 /**
  * Jackson POJO wrapper for raw Omniwallet response
@@ -8,11 +9,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AddressVerifyInfo {
     private final String balance;
     private final String reservedBalance;
-    private final String address;
+    private final Address address;
 
     public AddressVerifyInfo(@JsonProperty("balance") String balance,
                              @JsonProperty("reserved_balance") String reservedBalance,
-                             @JsonProperty("address") String address) {
+                             @JsonProperty("address") Address address) {
         this.balance = balance;
         this.reservedBalance = reservedBalance;
         this.address = address;
@@ -26,7 +27,7 @@ public class AddressVerifyInfo {
         return reservedBalance;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 }
