@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Omni Core "REST" client that implements same interfaces as Omniwallet REST client
@@ -29,6 +30,11 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
     }
 
     @Override
+    public CompletableFuture<Integer> currentBlockHeightAsync() {
+        return CompletableFuture.supplyAsync(this::currentBlockHeight);
+    }
+
+    @Override
     public OmniJBalances balancesForAddresses(List<Address> addresses) {
         OmniJBalances balances = new OmniJBalances();
         addresses.forEach(address -> {
@@ -36,6 +42,11 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
             balances.put(address, bal);
         });
         return balances;
+    }
+
+    @Override
+    public CompletableFuture<OmniJBalances> balancesForAddressesAsync(List<Address> addresses) {
+        return CompletableFuture.supplyAsync(() -> balancesForAddresses(addresses));
     }
 
     /**

@@ -33,7 +33,17 @@ class OmniwalletClientSpec extends Specification {
         then: "height is a reasonable MainNet block height"
         height > 400000
     }
-    
+
+
+    def "get block height asynchronously" () {
+        when:
+        def future = client.currentBlockHeightAsync()
+        def height = future.get()
+
+        then: "height is a reasonable MainNet block height"
+        height > 400000
+    }
+
     def "load balances of addresses with single address"() {
         when:
         def balances = client.balancesForAddresses([testAddr])
@@ -57,10 +67,24 @@ class OmniwalletClientSpec extends Specification {
         balances[exodusAddress][BTC].numberValue() >= 0
     }
 
+    def "load balances of addresses with multiple addresses asynchronously"() {
+        when:
+        def future = client.balancesForAddressesAsync([testAddr, exodusAddress])
+        def balances = future.get()
+
+        then:
+        balances != null
+        balances[testAddr][USDT].numberValue() >= 0
+        balances[testAddr][BTC].numberValue() >= 0
+        balances[exodusAddress][OMNI].numberValue() >= 0
+        balances[exodusAddress][TOMNI].numberValue() >= 0
+        balances[exodusAddress][BTC].numberValue() >= 0
+    }
+
     def "load balances of addresses with multiple addresses - in single request"() {
         when:
         // Note: This call is a direct test of th private `service` object
-        def balances = client.service.balancesForAddresses([testAddr, exodusAddress]).execute().body()
+        def balances = client.service.balancesForAddresses([testAddr, exodusAddress]).get().body()
 
         then:
         balances != null

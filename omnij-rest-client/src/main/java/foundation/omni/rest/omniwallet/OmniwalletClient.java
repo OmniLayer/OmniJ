@@ -29,6 +29,7 @@ import org.bitcoinj.params.MainNetParams;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.java8.Java8CallAdapterFactory;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -46,6 +47,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -66,24 +69,24 @@ public class OmniwalletClient implements ConsensusService {
     interface OmniwalletService {
         @FormUrlEncoded
         @POST("/v1/address/addr/")
-        Call<OmniwalletAddressBalance> balancesForAddress_v1(@Field("addr") Address address);
+        CompletableFuture<Response<OmniwalletAddressBalance>> balancesForAddress_v1(@Field("addr") Address address);
 
         @FormUrlEncoded
         @POST("/v2/address/addr/")
-        Call<Map<Address, OmniwalletAddressBalance>> balancesForAddress(@Field("addr") Address address);
+        CompletableFuture<Response<Map<Address, OmniwalletAddressBalance>>> balancesForAddress(@Field("addr") Address address);
 
         @FormUrlEncoded
         @POST("/v2/address/addr/")
-        Call<Map<Address, OmniwalletAddressBalance>> balancesForAddresses(@Field("addr") List<Address> addresses);
+        CompletableFuture<Response<Map<Address, OmniwalletAddressBalance>>> balancesForAddresses(@Field("addr") List<Address> addresses);
 
         @GET("/v1/system/revision.json")
-        Call<RevisionInfo> getRevisionInfo();
+        CompletableFuture<Response<RevisionInfo>> getRevisionInfo();
 
         @GET("/v1/mastercoin_verify/properties")
-        Call<List<PropertyVerifyInfo>> verifyProperties();
+        CompletableFuture<Response<List<PropertyVerifyInfo>>> verifyProperties();
 
         @GET("/v1/mastercoin_verify/addresses")
-        Call<List<AddressVerifyInfo>> verifyAddresses(@Query("currency_id") String currencyId);
+        CompletableFuture<Response<List<AddressVerifyInfo>>> verifyAddresses(@Query("currency_id") String currencyId);
 
     }
 
@@ -102,6 +105,7 @@ public class OmniwalletClient implements ConsensusService {
                 .client(client)
                 .baseUrl(baseURL)
                 .addConverterFactory(JacksonConverterFactory.create(mapper))
+                .addCallAdapterFactory(Java8CallAdapterFactory.create())
                 .build();
 
         service = restAdapter.create(OmniwalletService.class);
@@ -124,7 +128,12 @@ public class OmniwalletClient implements ConsensusService {
 
     @Override
     public WalletAddressBalance balancesForAddress(Address address) throws IOException {
-        Response<Map<Address, OmniwalletAddressBalance>> response = service.balancesForAddress(address).execute();
+        Response<Map<Address, OmniwalletAddressBalance>> response;
+        try {
+            response = service.balancesForAddress(address).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
         if (!response.isSuccessful()) {
             throw new IOException("Unsuccessful response in balanceInfosForAddress");
         }
@@ -135,17 +144,24 @@ public class OmniwalletClient implements ConsensusService {
 
     @Override
     public OmniJBalances balancesForAddresses(List<Address> addresses) throws IOException {
+        try {
+            return balancesForAddressesAsync(addresses).get();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Override
+    public CompletableFuture<OmniJBalances> balancesForAddressesAsync(List<Address> addresses) {
         if (addresses.size() > BALANCES_FOR_ADDRESSES_MAX_ADDR) {
             throw new IllegalArgumentException("Exceeded number of allowable addresses");
         }
-        OmniJBalances balances = new OmniJBalances();
-
-        Map<Address, OmniwalletAddressBalance> owbs = service.balancesForAddresses(addresses).execute().body();
-        if (owbs == null) {
-            throw new IOException("Invalid response");
-        }
-        owbs.forEach((address, owb) -> balances.put(address, balanceEntryMapper(owb)));
-        return balances;
+        return service.balancesForAddresses(addresses).thenApply(response -> {
+            OmniJBalances balances = new OmniJBalances();
+            response.body().forEach((address, owb) -> balances.put(address, balanceEntryMapper(owb)));
+            return balances;
+        });
     }
 
 
@@ -195,8 +211,8 @@ public class OmniwalletClient implements ConsensusService {
     public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
         List<AddressVerifyInfo> balances;
         try {
-            balances = service.verifyAddresses(Long.toString(currencyID.getValue())).execute().body();
-        } catch (IOException e) {
+            balances = service.verifyAddresses(Long.toString(currencyID.getValue())).get().body();
+        } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
         // TODO: We need an accurate, efficient way of determining divisible vs indivisible
@@ -216,24 +232,29 @@ public class OmniwalletClient implements ConsensusService {
     }
 
     @Override
-    public Integer currentBlockHeight() {
+    public Integer currentBlockHeight()  {
         RevisionInfo revisionInfo;
         try {
-            revisionInfo = service.getRevisionInfo().execute().body();
-        } catch (IOException e) {
+            revisionInfo = service.getRevisionInfo().get().body();
+        } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
-        String blockHeightStr = revisionInfo.getLastBlock();
-        Integer blockHeight = Integer.valueOf(blockHeightStr);
+        Integer blockHeight = revisionInfo.getLastBlock();
         return blockHeight;
+    }
+
+    @Override
+    public CompletableFuture<Integer> currentBlockHeightAsync() {
+        return service.getRevisionInfo()
+                .thenApply(response -> response.body().getLastBlock());
     }
 
     @Override
     public List<SmartPropertyListInfo> listProperties() {
         List<PropertyVerifyInfo> properties;
         try {
-            properties = service.verifyProperties().execute().body();
-        } catch (IOException e) {
+            properties = service.verifyProperties().get().body();
+        } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
         List<SmartPropertyListInfo> result = new ArrayList<>();
