@@ -23,7 +23,7 @@ public class OmniJBalances extends HashMap<Address, WalletAddressBalance> {
         return entrySet().stream()
                 .flatMap(entry -> entry.getValue().entrySet().stream())
                 .filter(entry -> entry.getKey().equals(propertyID))
-                .map(Map.Entry::getValue)
+                .map(e -> e.getValue().getBalance())
                 .reduce(OmniValue::plus)
                 .orElse(zero);
     }

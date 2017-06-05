@@ -26,7 +26,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.MainNetParams;
-import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.java8.Java8CallAdapterFactory;
@@ -172,7 +171,7 @@ public class OmniwalletClient implements ConsensusService {
             CurrencyID id = new CurrencyID(toLong(pb.getId()));
             PropertyType type =  pb.isDivisible() ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
             OmniValue value = toOmniValue(toLong(pb.getValue()), type);
-            wab.put(id, value);
+            wab.put(id, new BalanceEntry(value, OmniValue.ofWillets(0, type)));
         }
         return wab;
     }

@@ -85,9 +85,7 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
         }
 
         WalletAddressBalance result = new WalletAddressBalance();
-        entries.forEach((id, be) -> {
-            result.put(id, be.getBalance().plus(be.getReserved()));
-        });
+        entries.forEach(result::put);
         return result;
     }
 }

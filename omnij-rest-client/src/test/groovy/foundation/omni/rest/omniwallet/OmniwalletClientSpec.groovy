@@ -50,8 +50,8 @@ class OmniwalletClientSpec extends Specification {
 
         then:
         balances != null
-        balances[testAddr][USDT].numberValue() >= 0
-        balances[testAddr][BTC].numberValue() >= 0
+        balances[testAddr][USDT].balance.numberValue() >= 0
+        balances[testAddr][BTC].balance.numberValue() >= 0
     }
 
     def "load balances of addresses with multiple addresses"() {
@@ -60,11 +60,11 @@ class OmniwalletClientSpec extends Specification {
 
         then:
         balances != null
-        balances[testAddr][USDT].numberValue() >= 0
-        balances[testAddr][BTC].numberValue() >= 0
-        balances[exodusAddress][OMNI].numberValue() >= 0
-        balances[exodusAddress][TOMNI].numberValue() >= 0
-        balances[exodusAddress][BTC].numberValue() >= 0
+        balances[testAddr][USDT].balance.numberValue() >= 0
+        balances[testAddr][BTC].balance.numberValue() >= 0
+        balances[exodusAddress][OMNI].balance.numberValue() >= 0
+        balances[exodusAddress][TOMNI].balance.numberValue() >= 0
+        balances[exodusAddress][BTC].balance.numberValue() >= 0
     }
 
     def "load balances of addresses with multiple addresses asynchronously"() {
@@ -74,11 +74,11 @@ class OmniwalletClientSpec extends Specification {
 
         then:
         balances != null
-        balances[testAddr][USDT].numberValue() >= 0
-        balances[testAddr][BTC].numberValue() >= 0
-        balances[exodusAddress][OMNI].numberValue() >= 0
-        balances[exodusAddress][TOMNI].numberValue() >= 0
-        balances[exodusAddress][BTC].numberValue() >= 0
+        balances[testAddr][USDT].balance.numberValue() >= 0
+        balances[testAddr][BTC].balance.numberValue() >= 0
+        balances[exodusAddress][OMNI].balance.numberValue() >= 0
+        balances[exodusAddress][TOMNI].balance.numberValue() >= 0
+        balances[exodusAddress][BTC].balance.numberValue() >= 0
     }
 
     def "load balances of addresses with multiple addresses - in single request"() {
