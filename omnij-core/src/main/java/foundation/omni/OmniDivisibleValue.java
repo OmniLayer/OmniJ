@@ -138,7 +138,6 @@ public final class OmniDivisibleValue extends OmniValue {
         return doubleValueExact();
     }
 
-    @Deprecated
     public BigDecimal bigDecimalValue() {
         return numberValue();
     }

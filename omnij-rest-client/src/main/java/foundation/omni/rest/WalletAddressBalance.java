@@ -1,12 +1,14 @@
 package foundation.omni.rest;
 
 import foundation.omni.CurrencyID;
-import foundation.omni.OmniValue;
+import foundation.omni.rpc.BalanceEntry;
 
 import java.util.HashMap;
 
 /**
  *
  */
-public class WalletAddressBalance extends HashMap<CurrencyID, OmniValue> {
+// TODO: Balance should include separate reserved balance
+
+public class WalletAddressBalance extends HashMap<CurrencyID, BalanceEntry> {
 }

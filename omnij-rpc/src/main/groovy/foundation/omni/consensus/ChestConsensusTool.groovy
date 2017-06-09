@@ -15,8 +15,7 @@ import org.bitcoinj.core.Address
  */
 @Slf4j
 class ChestConsensusTool implements ConsensusTool {
-    // omniexplorer.info doesn't have https:// support (yet?)
-    static URI ChestHost_Live = new URI("http://omniexplorer.info");
+    static URI ChestHost_Live = new URI("https://omniexplorer.info");
     private final String proto
     private final String host
     private final int port

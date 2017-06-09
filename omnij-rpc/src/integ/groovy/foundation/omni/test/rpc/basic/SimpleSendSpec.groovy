@@ -18,7 +18,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
     final static faucetOmni = 1000.divisible
 
     @Unroll
-    def "Can simple send #amount MSC from one address to another"() {
+    def "Can simple send #amount OMNI from one address to another"() {
         setup:
         def faucetAddress = createFundedAddress(faucetBTC, faucetOmni)
         def startBalance = omniGetBalance(faucetAddress, OMNI).balance

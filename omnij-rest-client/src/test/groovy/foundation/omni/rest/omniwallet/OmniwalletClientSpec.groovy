@@ -5,6 +5,7 @@ import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
+import okhttp3.HttpUrl
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Unroll
@@ -33,36 +34,14 @@ class OmniwalletClientSpec extends Specification {
         height > 400000
     }
 
-    def "load testAddr balance"() {
+
+    def "get block height asynchronously" () {
         when:
-        def balances = client.balanceInfosForAddress(testAddr)
+        def future = client.currentBlockHeightAsync()
+        def height = future.get()
 
-        then:
-        balances != null
-        //balances[0].symbol == "SP31"
-        balances[0].id == USDT
-        balances[0].value.numberValue() >= 0
-        //balances[1].symbol == "BTC"
-        balances[1].id == BTC
-        balances[1].value.numberValue() >= 0
-    }
-
-    def "load exodusAddress balance"() {
-        when:
-        List<BalanceInfo> balances = client.balanceInfosForAddress(exodusAddress)
-        balances.sort{a, b -> a.id <=> b.id }
-
-        then:
-        balances != null
-        //balances[0].symbol == "BTC"
-        balances[0].id == BTC
-        balances[0].value.numberValue() >= 0
-        //balances[1].symbol == "OMNI"
-        balances[1].id == OMNI
-        balances[1].value.numberValue() >= 0
-        //balances[2].symbol == "T-OMNI"
-        balances[2].id == TOMNI
-        balances[2].value.numberValue() >= 0
+        then: "height is a reasonable MainNet block height"
+        height > 400000
     }
 
     def "load balances of addresses with single address"() {
@@ -71,8 +50,8 @@ class OmniwalletClientSpec extends Specification {
 
         then:
         balances != null
-        balances[testAddr][USDT].numberValue() >= 0
-        balances[testAddr][BTC].numberValue() >= 0
+        balances[testAddr][USDT].balance.numberValue() >= 0
+        balances[testAddr][BTC].balance.numberValue() >= 0
     }
 
     def "load balances of addresses with multiple addresses"() {
@@ -81,11 +60,34 @@ class OmniwalletClientSpec extends Specification {
 
         then:
         balances != null
-        balances[testAddr][USDT].numberValue() >= 0
-        balances[testAddr][BTC].numberValue() >= 0
-        balances[exodusAddress][OMNI].numberValue() >= 0
-        balances[exodusAddress][TOMNI].numberValue() >= 0
-        balances[exodusAddress][BTC].numberValue() >= 0
+        balances[testAddr][USDT].balance.numberValue() >= 0
+        balances[testAddr][BTC].balance.numberValue() >= 0
+        balances[exodusAddress][OMNI].balance.numberValue() >= 0
+        balances[exodusAddress][TOMNI].balance.numberValue() >= 0
+        balances[exodusAddress][BTC].balance.numberValue() >= 0
+    }
+
+    def "load balances of addresses with multiple addresses asynchronously"() {
+        when:
+        def future = client.balancesForAddressesAsync([testAddr, exodusAddress])
+        def balances = future.get()
+
+        then:
+        balances != null
+        balances[testAddr][USDT].balance.numberValue() >= 0
+        balances[testAddr][BTC].balance.numberValue() >= 0
+        balances[exodusAddress][OMNI].balance.numberValue() >= 0
+        balances[exodusAddress][TOMNI].balance.numberValue() >= 0
+        balances[exodusAddress][BTC].balance.numberValue() >= 0
+    }
+
+    def "load balances of addresses with multiple addresses - in single request"() {
+        when:
+        // Note: This call is a direct test of th private `service` object
+        def balances = client.service.balancesForAddresses([testAddr, exodusAddress]).get().body()
+
+        then:
+        balances != null
     }
 
     def "Can get Omniwallet property list"() {
@@ -153,6 +155,8 @@ class OmniwalletClientSpec extends Specification {
     }
 
     def setup() {
-        client = new OmniwalletClient()
+        HttpUrl baseURL = HttpUrl.parse("https://staging.omniwallet.org")
+        boolean debug = true
+        client = new OmniwalletClient(baseURL, true)
     }
 }

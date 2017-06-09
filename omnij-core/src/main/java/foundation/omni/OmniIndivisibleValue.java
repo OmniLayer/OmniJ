@@ -50,7 +50,6 @@ public final class OmniIndivisibleValue extends OmniValue {
         return willets;
     }
 
-    @Deprecated
     public BigDecimal bigDecimalValue() {
         return asBigDecimal();
     }

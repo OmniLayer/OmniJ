@@ -6,6 +6,7 @@ import foundation.omni.OmniValue;
 /**
  *
  */
+@Deprecated
 public class BalanceInfo {
     public CurrencyID id;
     public OmniValue value;

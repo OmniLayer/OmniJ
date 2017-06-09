@@ -4,12 +4,12 @@
 
 . Update `CHANGELOG.adoc`
 . Set versions
-.. `build.gradle`
+.. `gradle.properties`
 .. omnij-dsl `ExtensionModule`
 .. `README.adoc`
 . Commit version bump and changelog.
 . Full build, test
-.. `./gradlew clean jenkinsBuild regTest`
+.. `./gradlew clean buildCI regTest`
 . Tag: `git tag -a v0.x.y -m "Release 0.x.y"`
 . Push: `git push --tags origin master`
 . Publish to Bintray:

@@ -3,16 +3,14 @@ package foundation.omni.rpc;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import foundation.omni.OmniValue;
-import org.bitcoinj.core.Address;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Balance data for a specific Omni CurrencyID in a single Bitcoin address
+ * TODO: Move to omnij-core, remove Jackson annotations, write Serializer/Deserializer?
+ * (move along with AddressBalanceEntry, PropertyBalanceEntry)
  */
 public class BalanceEntry implements Iterable<OmniValue>  {
     protected final OmniValue balance;

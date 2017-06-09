@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Jackson POJO wrapper for raw Omniwallet address balance
+ * Contains a list of balances for all properties owned by this address
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OmniwalletAddressBalance {

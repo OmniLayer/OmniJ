@@ -23,7 +23,7 @@ class NumberCategorySpec extends Specification {
         1.indivisible == OmniIndivisibleValue.of(1)
     }
 
-    def "convert 0.1 to indivisble should throw ArithmeticException"() {
+    def "convert 0.1 to indivisible should throw ArithmeticException"() {
         given:
         def bd = new BigDecimal("0.1")
 

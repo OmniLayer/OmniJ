@@ -1,5 +1,5 @@
 dependencies {
-    compile 'javax.money:money-api-bp:1.0'
+    compile 'javax.money:money-api-bp:1.0.1'
 
     testCompile "com.msgilligan:bitcoinj-dsl:${bitcoinjAddonsVersion}"
 }

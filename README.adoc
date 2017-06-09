@@ -1,8 +1,8 @@
 = OmniJ Project
 Sean Gilligan <https://github.com/msgilligan>
-v0.5.0
+v0.5.1
 :description: OmniJ README document.
-:omnij-version: 0.5.0
+:omnij-version: 0.5.1
 
 [WARNING]
 This software is EXPERIMENTAL software for **REGTEST and TESTNET TRANSACTIONS** only. *USE ON MAINNET AT YOUR OWN RISK.*
@@ -188,9 +188,11 @@ These sample Spock "feature tests" are from the file https://github.com/OmniLaye
 ----
     def "A managed property can be created with transaction type 54"() {
         when:
-        creationTxid = createManagedProperty(actorAddress, Ecosystem.MSC,
-                          PropertyType.INDIVISIBLE, "Test Category",
-                          "Test Subcategory", "ManagedTokens",
+        creationTxid = omniSendIssuanceManaged(actorAddress, Ecosystem.MSC,
+                          PropertyType.INDIVISIBLE,
+                          new CurrencyID(0),
+                          "Test Category", "Test Subcategory",
+                          "Managed Token Name",
                           "http://www.omnilayer.org",
                           "This is a test for managed properties")
         generate()

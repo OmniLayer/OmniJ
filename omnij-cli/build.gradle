@@ -1,26 +1,20 @@
-// Work-in-progress support for building CLI tools with ShadowJar and RoboVM
+// Work-in-progress support for building CLI tools with ShadowJar
+// and a possible standalone executable with future AOT compilers
 plugins {
     id 'application'
     id 'com.github.johnrengelman.shadow' version '1.2.4'
-}
-
-configurations {
-    robovm
 }
 
 dependencies {
     compile project(':omnij-rpc')
 
     compile "com.msgilligan:bitcoinj-cli:${bitcoinjAddonsVersion}"
-
-    robovm  "org.codehaus.groovy:groovy:${groovyVersion}:grooid"
 }
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 mainClassName = "foundation.omni.cli.ConsensusCLI"
-def roboExeName = "btcstatus"
 
 jar {
     manifest {
@@ -70,32 +64,6 @@ task regTest(type: Test) {
                         "omni.test.rpcTestPassword": rpcTestPassword,
     ])
     include 'foundation/omni/cli/**'
-}
-
-
-def homePath = System.properties['user.home']
-def roboVMHome = "${homePath}/robovm-1.0.0-beta-04"
-def roboLibPath = "robolib"
-
-task copyToRoboLib(type: Copy) {
-    into roboLibPath
-    from configurations.runtime
-}
-
-task roboCompile(type:Exec, dependsOn: [classes, copyToRoboLib]) {
-    executable "${roboVMHome}/bin/robovm"
-    args '-verbose', '-debug',
-            '-cp', "build/classes/main:${roboLibPath}/commons-cli-1.2.jar:${roboLibPath}/jackson-core-2.3.3.jar:${roboLibPath}/jackson-databind-2.3.3.jar:${roboLibPath}/jackson-annotations-2.3.0.jar",
-            '-d', 'build',
-            '-forcelinkclasses', 'com.android.okhttp.HttpHandler:com.android.org.conscrypt.OpenSSLSocketFactoryImpl',
-
-            '-o', "${roboExeName}",
-            "${mainClassName}"
-}
-
-task roboRun(type:Exec, dependsOn: roboCompile) {
-    executable "build/${roboExeName}"
-    args '-rvm:log=debug'
 }
 
 def currencyID = 1

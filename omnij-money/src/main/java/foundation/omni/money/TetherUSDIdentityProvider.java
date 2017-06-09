@@ -2,6 +2,7 @@ package foundation.omni.money;
 
 
 import java.math.BigDecimal;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
@@ -39,6 +40,16 @@ public class TetherUSDIdentityProvider extends AbstractRateProvider implements O
      */
     public TetherUSDIdentityProvider() {
         super(CONTEXT);
+    }
+
+    /**
+     * Even though we use no threads, we need same constructor as other
+     * ObservableExchangeRateProviders
+     * 
+     * @param dummy Constructor to match other ObservableExchangeRateProvider
+     */
+    public TetherUSDIdentityProvider(ScheduledExecutorService dummy) {
+        this();
     }
 
     /**

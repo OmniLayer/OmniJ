@@ -7,7 +7,6 @@ import foundation.omni.consensus.OmniCoreConsensusFetcher;
 import foundation.omni.rest.ConsensusService;
 import foundation.omni.rest.OmniJBalances;
 import foundation.omni.rest.WalletAddressBalance;
-import foundation.omni.rest.omniwallet.BalanceInfo;
 import foundation.omni.rpc.BalanceEntry;
 import foundation.omni.rpc.OmniClient;
 import org.bitcoinj.core.Address;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Omni Core "REST" client that implements same interfaces as Omniwallet REST client
@@ -30,6 +30,11 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
     }
 
     @Override
+    public CompletableFuture<Integer> currentBlockHeightAsync() {
+        return CompletableFuture.supplyAsync(this::currentBlockHeight);
+    }
+
+    @Override
     public OmniJBalances balancesForAddresses(List<Address> addresses) {
         OmniJBalances balances = new OmniJBalances();
         addresses.forEach(address -> {
@@ -37,6 +42,11 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
             balances.put(address, bal);
         });
         return balances;
+    }
+
+    @Override
+    public CompletableFuture<OmniJBalances> balancesForAddressesAsync(List<Address> addresses) {
+        return CompletableFuture.supplyAsync(() -> balancesForAddresses(addresses));
     }
 
     /**
@@ -75,9 +85,7 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
         }
 
         WalletAddressBalance result = new WalletAddressBalance();
-        entries.forEach((id, be) -> {
-            result.put(id, be.getBalance().plus(be.getReserved()));
-        });
+        entries.forEach(result::put);
         return result;
     }
 }
