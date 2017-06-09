@@ -8,7 +8,8 @@ import spock.lang.Specification
  * See https://issues.apache.org/jira/browse/GROOVY-7608
  */
 class GroovyNumberIssue extends Specification {
-    // Worked in Groovy 2.4.x
+    
+    // Works in Groovy 2.4.x and Groovy 2.5
     def "Equality works for integer values"() {
         expect:
         OmniDivisibleValue.of(1) == OmniDivisibleValue.of(1)
