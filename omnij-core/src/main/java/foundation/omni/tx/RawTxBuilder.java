@@ -7,7 +7,6 @@ import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
 import org.bitcoinj.core.Coin;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -271,10 +270,17 @@ public class RawTxBuilder {
      * Convert a hexadecimal string representation of binary data
      * to byte array.
      *
-     * @param hexString Hexadecimal string
+     * @param hex Hexadecimal string
      * @return binary data
      */
-    static byte[] hexToBinary(String hexString) {
-        return DatatypeConverter.parseHexBinary(hexString);
+    static byte[] hexToBinary(String hex) {
+        int length = hex.length();
+        byte[] bin = new byte[length / 2];
+        for (int i = 0; i < length; i += 2) {
+            int hi = Character.digit(hex.charAt(i), 16);
+            int lo = Character.digit(hex.charAt(i+1), 16);
+            bin[i / 2] = (byte) (( hi << 4) + lo);
+        }
+        return bin;
     }
 }
