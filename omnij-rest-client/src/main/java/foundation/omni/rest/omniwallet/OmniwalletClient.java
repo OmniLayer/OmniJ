@@ -230,6 +230,10 @@ public class OmniwalletClient implements ConsensusService {
         return sorted;
     }
 
+    public CompletableFuture<RevisionInfo> revisionInfoAsync() {
+        return service.getRevisionInfo().thenApply(Response::body);
+    }
+
     @Override
     public Integer currentBlockHeight()  {
         RevisionInfo revisionInfo;
