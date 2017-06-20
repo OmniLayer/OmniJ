@@ -3,6 +3,41 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.5.2-SNAPSHOT
+
+Released: Not-yet
+
+==== All modules
+
+* Gradle build cleanup (remove RoboVM support, etc)
+* Minor documentation improvements
+
+==== OmniJ Core  (`omnij-core`)
+
+* Remove dependency on `java.xml.bind.DatatypeConverter` (for Android support)
+
+=== Omniwallet REST client (`omnij-rest-client`)
+
+* Add support for Omni protocol "reserved" balances (`OmniCoreClient` only for now)
+* Add asynchronous interfaces to `OmniwalletClient` and `OmniCoreClient` (using `CompleteableFuture`)
+* Code cleanup/simplification
+
+=== Omni RPC client, Omni Core integration tests (`omnij-rpc`)
+
+* Use https to communicate with Omni Explorer
+
+=== Omni Java Money support (`omnij-money`)
+
+* `BaseXChangeExchangeRateProvider` implementations can take `ScheduledExecutorService` in constructor
+* Add Kraken exhange (USDT/USD pair disabled till XChange 4.2.1 released)
+
+=== Dependency updates
+
+* Update to `bitcoinj-addons` 0.2.4-SNAPSHOT
+* Update to Groovy 2.5.0-beta-1 (Groovy 2.5 fixes https://github.com/OmniLayer/OmniJ/issues/109[Issue #109])
+* Gradle Bintray plugin 1.7.3
+* JavaMoney `money-api-bp` 1.0.1
+
 == v0.5.1
 
 Released: 2017.05.23
