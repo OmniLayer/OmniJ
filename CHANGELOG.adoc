@@ -34,7 +34,6 @@ Released: 2017.06.28
 
 === Dependency updates
 
-* Update to `bitcoinj-addons` 0.2.4-SNAPSHOT
 * Update to Groovy 2.5.0-beta-1 (Groovy 2.5 fixes https://github.com/OmniLayer/OmniJ/issues/109[Issue #109])
 * Gradle Bintray plugin 1.7.3
 * JavaMoney `money-api-bp` 1.0.1
