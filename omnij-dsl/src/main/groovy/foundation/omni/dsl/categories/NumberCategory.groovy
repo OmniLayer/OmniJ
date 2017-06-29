@@ -32,7 +32,7 @@ class NumberCategory {
         return OmniIndivisibleValue.of(asIndivisible(this))
     }
 
-    private static BigDecimal asDivisible(Number self) {
+    static BigDecimal asDivisible(Number self) {
         switch(self) {
             case BigDecimal:    return self
             case BigInteger:    return new BigDecimal((BigInteger)self)
@@ -40,7 +40,7 @@ class NumberCategory {
         }
     }
 
-    private static long asIndivisible(Number self) {
+    static long asIndivisible(Number self) {
         switch(self) {
             case BigDecimal:    return ((BigDecimal) self).longValueExact()
             case BigInteger:    return ((BigInteger) self).longValue()
