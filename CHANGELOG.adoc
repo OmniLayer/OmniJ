@@ -3,9 +3,9 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
-== v0.5.2-SNAPSHOT
+== v0.5.2
 
-Released: Not-yet
+Released: 2017.06.28
 
 ==== All modules
 
@@ -18,8 +18,9 @@ Released: Not-yet
 
 === Omniwallet REST client (`omnij-rest-client`)
 
-* Add support for Omni protocol "reserved" balances (`OmniCoreClient` only for now)
 * Add asynchronous interfaces to `OmniwalletClient` and `OmniCoreClient` (using `CompleteableFuture`)
+* Add handling of upstream rate-limit in BTC results in OW multi-address-balance requests
+* Add support for Omni protocol "reserved" balances (`OmniCoreClient` only for now)
 * Code cleanup/simplification
 
 === Omni RPC client, Omni Core integration tests (`omnij-rpc`)
