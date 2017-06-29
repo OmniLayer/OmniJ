@@ -74,6 +74,10 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
         throw new IllegalArgumentException("unknown currency ticker string");
     }
 
+    public static CurrencyID of(long idValue) {
+        return new CurrencyID(idValue);
+    }
+
     public CurrencyID(long value) {
         if (value < MIN_VALUE) {
             throw new IllegalArgumentException("below min");

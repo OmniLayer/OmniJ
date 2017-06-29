@@ -14,6 +14,16 @@ public class PropertyType {
     public static final PropertyType INDIVISIBLE = new PropertyType(INDIVISIBLE_VALUE);
     public static final PropertyType DIVISIBLE = new PropertyType(DIVISIBLE_VALUE);
 
+    /**
+     * PropertyType from `isDivisible` boolean
+     *
+     * @param isDivisible true if divisible, false if indivisible
+     * @return corresponding PropertyType
+     */
+    public static PropertyType of(boolean isDivisible) {
+        return isDivisible ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
+    }
+
     private PropertyType(int value) {
         if (!(value == INDIVISIBLE_VALUE ||
               value == DIVISIBLE_VALUE)) {
