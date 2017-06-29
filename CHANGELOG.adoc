@@ -3,6 +3,10 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.5.3-SNAPSHOT
+
+Released: not yet -- work-in-progress on `master` branch
+
 == v0.5.2
 
 Released: 2017.06.28
