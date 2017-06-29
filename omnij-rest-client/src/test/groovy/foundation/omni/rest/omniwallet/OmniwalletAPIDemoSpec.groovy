@@ -6,6 +6,7 @@ import spock.lang.Specification
 
 /**
  * Simple Tests/Demo of Omniwallet REST API via SimpleGroovyRestClient
+ * TODO: Verify that BTC balance objects include an `error` boolean
  */
 @Ignore("This is really an integration test")
 class OmniwalletAPIDemoSpec extends Specification {

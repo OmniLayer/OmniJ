@@ -158,7 +158,8 @@ public class OmniwalletClient implements ConsensusService {
         }
         return service.balancesForAddresses(addresses).thenApply(response -> {
             OmniJBalances balances = new OmniJBalances();
-            response.body().forEach((address, owb) -> balances.put(address, balanceEntryMapper(owb)));
+            response.body().forEach((address, owb) ->
+                    balances.put(address, balanceEntryMapper(owb)));
             return balances;
         });
     }
@@ -168,10 +169,12 @@ public class OmniwalletClient implements ConsensusService {
         WalletAddressBalance wab = new WalletAddressBalance();
         
         for (OmniwalletAddressPropertyBalance pb : owb.getBalance()) {
-            CurrencyID id = new CurrencyID(toLong(pb.getId()));
+            CurrencyID id = pb.getId();
             PropertyType type =  pb.isDivisible() ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
-            OmniValue value = toOmniValue(toLong(pb.getValue()), type);
-            wab.put(id, new BalanceEntry(value, OmniValue.ofWillets(0, type)));
+            OmniValue value = pb.getValue();
+            if (!pb.isError()) {
+                wab.put(id, new BalanceEntry(value, OmniValue.ofWillets(0, type)));
+            }
         }
         return wab;
     }
@@ -355,12 +358,7 @@ public class OmniwalletClient implements ConsensusService {
         }
         return cachedPropertyTypes.get(propertyID);
     }
-
-
-    private long toLong(Object obj) {
-        return obj instanceof String ? Long.parseLong((String) obj) : (Integer) obj;
-    }
-
+    
     private URI consensusURI(CurrencyID currencyID) {
         HttpUrl okUrl = restAdapter
                 .baseUrl()
@@ -372,10 +370,5 @@ public class OmniwalletClient implements ConsensusService {
     private PropertyType divisibleToPropertyType(boolean divisible) {
         PropertyType type =  divisible ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
         return type;
-    }
-    
-    private OmniValue toOmniValue(long amount, PropertyType type) {
-        return type.equals(PropertyType.DIVISIBLE) ?
-                OmniDivisibleValue.ofWillets(amount) : OmniIndivisibleValue.ofWillets(amount);
     }
 }

@@ -132,6 +132,7 @@ class OmniwalletClientSpec extends Specification {
         props[USDT].divisible == true
     }
 
+    @Ignore
     @Unroll
     def "we can get consensus info for currency: #id"(CurrencyID id, SmartPropertyListInfo info) {
         setup:
