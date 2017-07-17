@@ -3,9 +3,14 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
-== v0.5.3-SNAPSHOT
+== v0.5.3
 
-Released: not yet -- work-in-progress on `master` branch
+Released: 2017.07.16
+
+==== All modules
+
+* Upgrade to *bitcoinj-addons* 0.2.4
+* Use `invokedynamic` ("indy") version of Groovy
 
 == v0.5.2
 
