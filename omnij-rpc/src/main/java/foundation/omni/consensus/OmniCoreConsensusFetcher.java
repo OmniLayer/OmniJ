@@ -1,6 +1,6 @@
 package foundation.omni.consensus;
 
-import com.msgilligan.bitcoinj.rpc.JsonRPCException;
+import com.msgilligan.jsonrpc.JsonRPCException;
 import com.msgilligan.bitcoinj.rpc.RPCURI;
 import foundation.omni.CurrencyID;
 import foundation.omni.rpc.BalanceEntry;

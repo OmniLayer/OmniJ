@@ -1,7 +1,7 @@
 package foundation.omni.rest.omnicore;
 
 import com.msgilligan.bitcoinj.json.pojo.AddressGroupingItem;
-import com.msgilligan.bitcoinj.rpc.JsonRPCException;
+import com.msgilligan.jsonrpc.JsonRPCException;
 import foundation.omni.CurrencyID;
 import foundation.omni.consensus.OmniCoreConsensusFetcher;
 import foundation.omni.rest.ConsensusService;

@@ -2,7 +2,7 @@ package foundation.omni.cli
 
 import com.msgilligan.bitcoinj.cli.CliCommand
 import com.msgilligan.bitcoinj.cli.CliOptions
-import com.msgilligan.bitcoinj.rpc.JsonRPCException
+import com.msgilligan.jsonrpc.JsonRPCException
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.ChestConsensusTool
 import foundation.omni.rpc.ConsensusSnapshot

@@ -1,6 +1,6 @@
 package foundation.omni.rpc.test;
 
-import com.msgilligan.bitcoinj.rpc.JsonRPCException;
+import com.msgilligan.jsonrpc.JsonRPCException;
 import com.msgilligan.bitcoinj.rpc.RPCConfig;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
