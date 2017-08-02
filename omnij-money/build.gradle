@@ -1,5 +1,4 @@
-//def xChangeVersion = '4.2.1-SNAPSHOT'
-def xChangeVersion = '4.2.0'
+def xChangeVersion = '4.2.1'
 
 //repositories {
 //    // For snapshot versions of XChange

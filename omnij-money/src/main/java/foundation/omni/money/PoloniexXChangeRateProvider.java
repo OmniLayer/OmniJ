@@ -10,13 +10,14 @@ import java.util.concurrent.ScheduledExecutorService;
  * Poloniex wrapper
  */
 public class PoloniexXChangeRateProvider extends BaseXChangeExchangeRateProvider {
+    static private final String[] pairs = {"OMNI/BTC", "MAID/BTC", "AMP/BTC", "BTC/USDT"};
+
     public PoloniexXChangeRateProvider(ScheduledExecutorService scheduledExecutorService) {
-        this(); // Until we upgrade to XChange 4.2.1, call no-arg constructor
-        //super(PoloniexExchange.class, scheduledExecutorService,"OMNI/BTC", "MAID/BTC", "AMP/BTC", "BTC/USDT");
+        super(PoloniexExchange.class, scheduledExecutorService,pairs);
     }
 
     public PoloniexXChangeRateProvider() {
-        super(PoloniexExchange.class, "OMNI/BTC", "MAID/BTC", "AMP/BTC", "BTC/USDT");
+        super(PoloniexExchange.class, pairs);
     }
 
 }

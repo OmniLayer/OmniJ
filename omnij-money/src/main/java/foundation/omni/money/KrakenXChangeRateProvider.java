@@ -9,12 +9,13 @@ import java.util.concurrent.ScheduledExecutorService;
  * Kraken wrapper
  */
 public class KrakenXChangeRateProvider extends BaseXChangeExchangeRateProvider {
+    static private final String[] pairs = {"BTC/USD", "USDT/USD"};
+
     public KrakenXChangeRateProvider(ScheduledExecutorService scheduledExecutorService) {
-        this(); // Until we upgrade to XChange 4.2.1, call no-arg constructor
-        //super(KrakenExchange.class, scheduledExecutorService, "BTC/USD" /*, "USDT/USD" */);
+        super(KrakenExchange.class, scheduledExecutorService, pairs);
     }
 
     public KrakenXChangeRateProvider() {
-        super(KrakenExchange.class, "BTC/USD" /*, "USDT/USD" */);
+        super(KrakenExchange.class, pairs);
     }
 }
