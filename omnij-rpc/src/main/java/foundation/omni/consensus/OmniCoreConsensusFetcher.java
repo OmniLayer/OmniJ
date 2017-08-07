@@ -1,7 +1,6 @@
 package foundation.omni.consensus;
 
 import com.msgilligan.jsonrpc.JsonRPCException;
-import com.msgilligan.bitcoinj.rpc.RPCURI;
 import foundation.omni.CurrencyID;
 import foundation.omni.rpc.BalanceEntry;
 import foundation.omni.rpc.ConsensusFetcher;
@@ -14,7 +13,6 @@ import org.bitcoinj.core.NetworkParameters;
 
 import java.io.IOException;
 import java.net.URI;
-import java.text.ParseException;
 import java.util.List;
 import java.util.SortedMap;
 
