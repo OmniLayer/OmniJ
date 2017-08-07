@@ -22,7 +22,7 @@ public class OmniCurrencyProvider implements CurrencyProviderSpi {
     final static int divisibleFractionDigits = 8;
     final static int indivisibleFractionDigits = 0;
 
-    final private static Set<OmniCurrencyCode> codes = new HashSet<>(Arrays.asList(OMNI, MAID, USDT, AMP, SEC, AGRS, PDC));
+    final private static Set<OmniCurrencyCode> codes = new HashSet<>(Arrays.asList(OMNI, MAID, USDT, AMP, SAFEX, AGRS, PDC));
 
     private static final CurrencyContext CONTEXT = CurrencyContextBuilder.of("OmniCurrencyContextProvider")
             .build();
@@ -103,7 +103,7 @@ public class OmniCurrencyProvider implements CurrencyProviderSpi {
 
     private static CurrencyUnit build(String code) {
         int digits = divisibleFractionDigits;
-        if (code.equals(MAID.name()) || code.equals(SEC.name())) {
+        if (code.equals(MAID.name()) || code.equals(SAFEX.name())) {
             digits = indivisibleFractionDigits;
         }
         return CurrencyUnitBuilder.of(code, CONTEXT)

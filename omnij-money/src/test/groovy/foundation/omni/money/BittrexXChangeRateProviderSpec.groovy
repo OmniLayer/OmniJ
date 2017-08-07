@@ -30,6 +30,13 @@ class BittrexXChangeRateProviderSpec extends Specification {
         currencies.size() > 0
     }
 
+    def "can get a SAFEX exchange rate via currency strings"() {
+        when:
+        def rate = provider.getExchangeRate("SAFEX", "BTC")
+
+        then:
+        rate.factor.numberValue(BigDecimal.class) > 0
+    }
 
     def "can get a PDC exchange rate via currency strings"() {
         when:
