@@ -71,7 +71,8 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
             case "EURT":
                 return EURT;
             case "SEC":
-                return SEC;
+            case "SAFEX":
+                return SAFEX;
             case "AGRS":
                 return AGRS;
         }
