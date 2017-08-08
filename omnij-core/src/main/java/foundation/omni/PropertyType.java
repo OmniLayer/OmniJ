@@ -36,6 +36,10 @@ public class PropertyType {
         return value;
     }
 
+    public boolean isDivisible() {
+        return value == DIVISIBLE_VALUE;
+    }
+
     @Override
     public int hashCode() {
         return Integer.valueOf(value).hashCode();

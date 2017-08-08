@@ -15,6 +15,9 @@ import java.math.RoundingMode;
 public final class OmniDivisibleValue extends OmniValue {
     public static final BigDecimal   MIN_VALUE = BigDecimal.ZERO; // Minimum value of 1 in transactions?
     public static final BigDecimal   MAX_VALUE = new BigDecimal("92233720368.54775807");
+    public static final OmniDivisibleValue MIN = OmniDivisibleValue.of(MIN_VALUE);
+    public static final OmniDivisibleValue MAX = OmniDivisibleValue.of(MAX_VALUE);
+
     public static final MathContext DEFAULT_CONTEXT = new MathContext(0, RoundingMode.UNNECESSARY);
     public static final int DEFAULT_SCALE = Coin.SMALLEST_UNIT_EXPONENT;
     private static final BigDecimal willetsPerDivisibleBigDecimal = new BigDecimal(willetsPerDivisible);

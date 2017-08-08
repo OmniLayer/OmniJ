@@ -1,6 +1,7 @@
 package foundation.omni;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 
 /**
@@ -11,6 +12,16 @@ import java.math.MathContext;
 public final class OmniIndivisibleValue extends OmniValue {
     public static final long   MIN_VALUE = 0; // Minimum value of 1 in transactions?
     public static final long   MAX_VALUE = 9223372036854775807L;
+    public static final BigInteger MIN_BIGINT = BigInteger.valueOf(MIN_VALUE);
+    public static final BigInteger MAX_BIGINT = BigInteger.valueOf(MAX_VALUE);
+    public static final OmniIndivisibleValue MIN = OmniIndivisibleValue.of(MIN_VALUE);
+    public static final OmniIndivisibleValue MAX = OmniIndivisibleValue.of(MAX_VALUE);
+
+
+    public static OmniIndivisibleValue of(BigInteger amount) {
+        checkValue(amount);
+        return new OmniIndivisibleValue(amount.intValue());
+    }
 
     /**
      * Create OmniDivisibleValue of the specified amount

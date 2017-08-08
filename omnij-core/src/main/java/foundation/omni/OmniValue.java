@@ -73,10 +73,10 @@ public abstract class OmniValue extends NumberValue {
      * @throws ArithmeticException if less than minimum or greater than maximum allowed value
      */
     public static void checkValue(BigInteger willets) throws ArithmeticException {
-        if (willets.compareTo(BigInteger.valueOf(MIN_VALUE)) == -1) {
+        if (willets.compareTo(BigInteger.valueOf(MIN_VALUE)) < 0) {
             throw new ArithmeticException();
         }
-        if (willets.compareTo(BigInteger.valueOf(MAX_VALUE)) == 1) {
+        if (willets.compareTo(BigInteger.valueOf(MAX_VALUE)) > 0) {
             throw new ArithmeticException();
         }
     }
