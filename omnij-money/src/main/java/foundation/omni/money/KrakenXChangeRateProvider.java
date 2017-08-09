@@ -1,7 +1,6 @@
 package foundation.omni.money;
 
 import com.msgilligan.bitcoinj.money.BaseXChangeExchangeRateProvider;
-import org.knowm.xchange.kraken.KrakenExchange;
 
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -10,12 +9,13 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class KrakenXChangeRateProvider extends BaseXChangeExchangeRateProvider {
     static private final String[] pairs = {"BTC/USD", "USDT/USD"};
+    static private final String xchangeClassName = "org.knowm.xchange.kraken.KrakenExchange";
 
     public KrakenXChangeRateProvider(ScheduledExecutorService scheduledExecutorService) {
-        super(KrakenExchange.class, scheduledExecutorService, pairs);
+        super(xchangeClassName, scheduledExecutorService, pairsConvert(pairs));
     }
 
     public KrakenXChangeRateProvider() {
-        super(KrakenExchange.class, pairs);
+        super(xchangeClassName, null,pairsConvert(pairs));
     }
 }

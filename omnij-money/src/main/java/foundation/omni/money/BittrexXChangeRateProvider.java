@@ -1,7 +1,6 @@
 package foundation.omni.money;
 
 import com.msgilligan.bitcoinj.money.BaseXChangeExchangeRateProvider;
-import org.knowm.xchange.bittrex.v1.BittrexExchange;
 
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -10,12 +9,13 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class BittrexXChangeRateProvider extends BaseXChangeExchangeRateProvider {
     static private final String[] pairs = {"OMNI/BTC", "MAID/BTC", "AMP/BTC", "AGRS/BTC", "SAFEX/BTC", "PDC/BTC", "BTC/USDT"};
+    static private final String xchangeClassName = "org.knowm.xchange.bittrex.v1.BittrexExchange";
 
     public BittrexXChangeRateProvider(ScheduledExecutorService scheduledExecutorService) {
-        super(BittrexExchange.class, scheduledExecutorService, pairs);
+        super(xchangeClassName, scheduledExecutorService, pairsConvert(pairs));
     }
 
     public BittrexXChangeRateProvider() {
-        super(BittrexExchange.class, pairs);
+        super(xchangeClassName, null,pairsConvert(pairs));
     }
 }

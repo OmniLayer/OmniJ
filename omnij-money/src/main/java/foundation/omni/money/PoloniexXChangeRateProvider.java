@@ -1,7 +1,5 @@
 package foundation.omni.money;
 
-import org.knowm.xchange.poloniex.PoloniexExchange;
-
 import com.msgilligan.bitcoinj.money.BaseXChangeExchangeRateProvider;
 
 import java.util.concurrent.ScheduledExecutorService;
@@ -11,13 +9,13 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class PoloniexXChangeRateProvider extends BaseXChangeExchangeRateProvider {
     static private final String[] pairs = {"OMNI/BTC", "MAID/BTC", "AMP/BTC", "BTC/USDT"};
+    static private final String xchangeClassName = "org.knowm.xchange.poloniex.PoloniexExchange";
 
     public PoloniexXChangeRateProvider(ScheduledExecutorService scheduledExecutorService) {
-        super(PoloniexExchange.class, scheduledExecutorService,pairs);
+        super(xchangeClassName, scheduledExecutorService, pairsConvert(pairs));
     }
 
     public PoloniexXChangeRateProvider() {
-        super(PoloniexExchange.class, pairs);
+        super(xchangeClassName, null, pairsConvert(pairs));
     }
-
 }

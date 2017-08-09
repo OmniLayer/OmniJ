@@ -1,9 +1,8 @@
 def xChangeVersion = '4.2.1'
 
-//repositories {
-//    // For snapshot versions of XChange
-//    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-//}
+repositories {
+//    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' } // For snapshot versions of XChange
+}
 
 dependencies {
     compile project(':omnij-core')
@@ -11,9 +10,10 @@ dependencies {
     compile "com.msgilligan:bitcoinj-money:${bitcoinjAddonsVersion}"
 
     compile 'org.javamoney:moneta-bp:1.1'
-    compile "org.knowm.xchange:xchange-poloniex:${xChangeVersion}"
-    compile "org.knowm.xchange:xchange-bittrex:${xChangeVersion}"
-    compile "org.knowm.xchange:xchange-kraken:${xChangeVersion}"
+    
+    testCompile "org.knowm.xchange:xchange-poloniex:${xChangeVersion}"
+    testCompile "org.knowm.xchange:xchange-bittrex:${xChangeVersion}"
+    testCompile "org.knowm.xchange:xchange-kraken:${xChangeVersion}"
 }
 
 sourceCompatibility = 1.7
