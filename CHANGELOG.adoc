@@ -3,11 +3,37 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.5.4-SNAPSHOT
+
+Released: SNAPSHOT
+
+=== All modules
+
+* Upgrade to *bitcoinj-addons* 0.2.5
+
+=== OmniJ Core  (`omnij-core`)
+
+* Add methods/constants for OmniValue value validation/conversion
+* SEC -> SAFEX ticker symbol rename
+
+=== Omniwallet REST client (`omnij-rest-client`)
+
+* Improved exception and error handling
+* Most remote methods now throw InterruptedException, IOException
+* Add optional `strictMode` flag to OmniwalletClient
+
+=== Omni Java Money support (`omnij-money`)
+
+* Update to XChange 4.2.1
+* Use dynamic classloading to load XChange ExchangeRateProviders
+* Enable Kraken USDT/USD pair
+* SEC -> SAFEX ticker symbol rename
+
 == v0.5.3
 
 Released: 2017.07.16
 
-==== All modules
+=== All modules
 
 * Upgrade to *bitcoinj-addons* 0.2.4
 * Use `invokedynamic` ("indy") version of Groovy
@@ -16,12 +42,12 @@ Released: 2017.07.16
 
 Released: 2017.06.28
 
-==== All modules
+=== All modules
 
 * Gradle build cleanup (remove RoboVM support, etc)
 * Minor documentation improvements
 
-==== OmniJ Core  (`omnij-core`)
+=== OmniJ Core  (`omnij-core`)
 
 * Remove dependency on `java.xml.bind.DatatypeConverter` (for Android support)
 
