@@ -8,7 +8,6 @@ import foundation.omni.rpc.ConsensusSnapshot;
 import foundation.omni.rpc.OmniClient;
 import foundation.omni.rpc.SmartPropertyListInfo;
 import org.bitcoinj.core.Address;
-import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.NetworkParameters;
 
 import java.io.IOException;
@@ -57,47 +56,24 @@ public class OmniCoreConsensusFetcher implements ConsensusFetcher {
         return client;
     }
 
-    public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
-        SortedMap<Address, BalanceEntry> balances = null;
-        try {
-            balances = client.omniGetAllBalancesForId(currencyID);
-        } catch (JsonRPCException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (AddressFormatException e) {
-            throw new RuntimeException(e);
-        }
+    public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) throws JsonRPCException, IOException {
+        SortedMap<Address, BalanceEntry> balances = client.omniGetAllBalancesForId(currencyID);
         // TODO: Filter out empty address strings or 0 balances?
         return balances;
     }
 
     @Override
-    public Integer currentBlockHeight() {
-        try {
-            return client.getBlockCount();
-        } catch (JsonRPCException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public Integer currentBlockHeight() throws IOException {
+        return client.getBlockCount();
     }
 
     @Override
-    public List<SmartPropertyListInfo> listProperties() {
-        List<SmartPropertyListInfo> props = null;
-        try {
-            props = client.omniListProperties();
-        } catch (JsonRPCException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return props;
+    public List<SmartPropertyListInfo> listProperties() throws IOException {
+        return client.omniListProperties();
     }
 
     @Override
-    public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) {
+    public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) throws IOException {
         /* Since omni_getallbalancesforid doesn't return the blockHeight, we have to check
          * blockHeight before and after the call to make sure it didn't change.
          */

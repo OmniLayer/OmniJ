@@ -2,6 +2,7 @@ package foundation.omni.rest.omniwallet
 
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
+import foundation.omni.OmniIndivisibleValue
 import foundation.omni.PropertyType
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
@@ -153,6 +154,24 @@ class OmniwalletClientSpec extends Specification {
 
         where:
         [id, info] << client.listProperties().collect{[it.propertyid, it]}  // Test for ALL currencies on MainNet
+    }
+
+    def "we can get consensus info for SAFEX"() {
+        setup:
+        def propType = PropertyType.INDIVISIBLE
+        when: "we get data"
+        SortedMap<Address, BalanceEntry> balances = client.getConsensusForCurrency(SAFEX)
+
+        then: "something is there"
+        balances.size() >= 0
+
+        and: "all balances of correct property type"
+        balances.every {address, entry ->
+            entry.balance.propertyType == propType && OmniIndivisibleValue.checkValue(entry.reserved.willets)
+        }
+        balances.every {address, entry ->
+            entry.reserved.propertyType == propType && OmniIndivisibleValue.checkValue(entry.reserved.willets)
+        }
     }
 
     def setup() {
