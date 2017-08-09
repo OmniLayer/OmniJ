@@ -1,6 +1,5 @@
 package foundation.omni
 
-import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -157,7 +156,7 @@ class OmniDivisibleValueSpec extends Specification {
 
     def "Exception is thrown when converting to int would throw exception"() {
         when:
-        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_VALUE)
+        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_WILLETS)
         def v = value.intValue()
 
         then:
@@ -166,7 +165,7 @@ class OmniDivisibleValueSpec extends Specification {
 
     def "Exception is thrown when converting to int (via Groovy 'as') would throw exception"() {
         when:
-        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_VALUE)
+        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_WILLETS)
         def v = value as Integer
 
         then:

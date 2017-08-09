@@ -3,6 +3,7 @@ package foundation.omni;
 import org.bitcoinj.core.Coin;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
@@ -17,8 +18,10 @@ public final class OmniDivisibleValue extends OmniValue {
     public static final int DEFAULT_SCALE = Coin.SMALLEST_UNIT_EXPONENT;
     public static final BigDecimal   MIN_VALUE = BigDecimal.ZERO;
     public static final BigDecimal   MAX_VALUE = new BigDecimal("92233720368.54775807");
-    public static  OmniDivisibleValue MIN = OmniDivisibleValue.ofWillets(OmniValue.MIN_VALUE);
-    public static  OmniDivisibleValue MAX = OmniDivisibleValue.ofWillets(OmniValue.MAX_VALUE);
+    public static final long         MIN_INT_VALUE = 0L;
+    public static final long         MAX_INT_VALUE = 92233720368L;
+    public static  OmniDivisibleValue MIN = OmniDivisibleValue.ofWillets(OmniValue.MIN_WILLETS);
+    public static  OmniDivisibleValue MAX = OmniDivisibleValue.ofWillets(OmniValue.MAX_WILLETS);
 
     private static final BigDecimal willetsPerDivisibleBigDecimal = new BigDecimal(willetsPerDivisible);
 
@@ -50,6 +53,35 @@ public final class OmniDivisibleValue extends OmniValue {
         return new OmniDivisibleValue(willets);
     }
 
+    /**
+     * <p>Make sure a BigDecimal value is a valid value for OmniDivisibleValue</p>
+     *
+     * @param candidate value to check
+     * @throws ArithmeticException if less than minimum or greater than maximum allowed value
+     */
+    public static void checkValue(BigDecimal candidate) throws ArithmeticException {
+        if (candidate.compareTo(MIN_VALUE) < 0) {
+            throw new ArithmeticException();
+        }
+        if (candidate.compareTo(MAX_VALUE) > 0) {
+            throw new ArithmeticException();
+        }
+    }
+
+    /**
+     * <p>Make sure a long value is a valid value for OmniDivisibleValue</p>
+     *
+     * @param candidate value to check.
+     * @throws ArithmeticException if less than minimum or greater than maximum allowed value
+     */
+    public static void checkValue(long candidate) throws ArithmeticException {
+        if (candidate < MIN_INT_VALUE) {
+            throw new ArithmeticException();
+        }
+        if (candidate > MAX_INT_VALUE) {
+            throw new ArithmeticException();
+        }
+    }
 
     private OmniDivisibleValue(long value) {
         super(value);

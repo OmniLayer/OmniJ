@@ -126,7 +126,7 @@ class OmniIndivisibleValueSpec extends Specification {
 
     def "Exception is thrown when converting to int would throw exception"() {
         when:
-        OmniValue value = OmniIndivisibleValue.of(OmniValue.MAX_VALUE)
+        OmniValue value = OmniIndivisibleValue.of(OmniValue.MAX_WILLETS)
         def v = value.intValue()
 
         then:
@@ -135,7 +135,7 @@ class OmniIndivisibleValueSpec extends Specification {
 
     def "Exception is thrown when converting to int (via Groovy 'as') would throw exception"() {
         when:
-        OmniValue value = OmniIndivisibleValue.of(OmniValue.MAX_VALUE)
+        OmniValue value = OmniIndivisibleValue.of(OmniValue.MAX_WILLETS)
         def v = value as Integer
 
         then:

@@ -19,7 +19,7 @@ public final class OmniIndivisibleValue extends OmniValue {
 
 
     public static OmniIndivisibleValue of(BigInteger amount) {
-        checkValue(amount);
+        checkWilletValue(amount);
         return new OmniIndivisibleValue(amount.intValue());
     }
 
@@ -40,6 +40,29 @@ public final class OmniIndivisibleValue extends OmniValue {
      */
     public static OmniIndivisibleValue ofWillets(long willets) {
         return OmniIndivisibleValue.of(willets);
+    }
+
+    /**
+     * <p>Make sure a BigInteger value is a valid value for OmniIndivisibleValue</p>
+     *
+     * @param candidate value to check
+     * @throws ArithmeticException if less than minimum or greater than maximum allowed value
+     */
+    public static void checkValue(BigInteger candidate) throws ArithmeticException {
+        OmniValue.checkWilletValue(candidate);
+    }
+
+    /**
+     * <p>Make sure a BigInteger value is a valid value for OmniIndivisibleValue</p>
+     *
+     * <p>Note: Since any positive long is valid, we just need to check that
+     * it's not less than MIN_VALUE</p>
+     *
+     * @param candidate value to check.
+     * @throws ArithmeticException if less than minimum allowed value
+     */
+    public static void checkValue(long candidate) throws ArithmeticException {
+        OmniValue.checkWilletValue(candidate);
     }
 
     private OmniIndivisibleValue(long willets) {
