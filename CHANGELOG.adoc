@@ -3,9 +3,9 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
-== v0.5.4-SNAPSHOT
+== v0.5.4
 
-Released: SNAPSHOT
+Released: 2017.08.17
 
 === All modules
 

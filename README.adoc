@@ -2,7 +2,7 @@
 Sean Gilligan <https://github.com/msgilligan>
 v0.5.3
 :description: OmniJ README document.
-:omnij-version: 0.5.3
+:omnij-version: 0.5.4
 
 [WARNING]
 This software is EXPERIMENTAL software for **REGTEST and TESTNET TRANSACTIONS** only. *USE ON MAINNET AT YOUR OWN RISK.*
