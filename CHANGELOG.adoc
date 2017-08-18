@@ -10,6 +10,7 @@ Released: SNAPSHOT
 === All modules
 
 * Upgrade to *bitcoinj-addons* 0.2.5
+* Upgrade to Gradle 4.1
 
 === OmniJ Core  (`omnij-core`)
 
