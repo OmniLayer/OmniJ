@@ -1,4 +1,4 @@
-def xChangeVersion = '4.2.1'
+def xChangeVersion = '4.2.2'
 
 repositories {
 //    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' } // For snapshot versions of XChange

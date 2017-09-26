@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class BittrexXChangeRateProvider extends BaseXChangeExchangeRateProvider {
     static private final String[] pairs = {"OMNI/BTC", "MAID/BTC", "AMP/BTC", "AGRS/BTC", "SAFEX/BTC", "PDC/BTC", "BTC/USDT"};
-    static private final String xchangeClassName = "org.knowm.xchange.bittrex.v1.BittrexExchange";
+    static private final String xchangeClassName = "org.knowm.xchange.bittrex.BittrexExchange";
 
     public BittrexXChangeRateProvider(ScheduledExecutorService scheduledExecutorService) {
         super(xchangeClassName, scheduledExecutorService, pairsConvert(pairs));
