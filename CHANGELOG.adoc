@@ -10,6 +10,7 @@ Released: Under development
 === All modules
 
 * Upgrade to *bitcoinj* 0.14.5
+* Upgrade to Groovy 2.5.0-beta-2
 
 == v0.5.4
 
