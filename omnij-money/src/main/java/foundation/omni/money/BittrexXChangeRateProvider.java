@@ -6,7 +6,10 @@ import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Bittrex wrapper
+ *
+ * @deprecated Use BaseXChangeExchangeRateProvider (or equivalent) directly
  */
+@Deprecated
 public class BittrexXChangeRateProvider extends BaseXChangeExchangeRateProvider {
     static private final String[] pairs = {"OMNI/BTC", "MAID/BTC", "AMP/BTC", "AGRS/BTC", "SAFEX/BTC", "PDC/BTC", "BTC/USDT"};
     static private final String xchangeClassName = "org.knowm.xchange.bittrex.BittrexExchange";
