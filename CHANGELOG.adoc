@@ -10,11 +10,12 @@ Released: Under development
 === All modules
 
 * Upgrade to *bitcoinj* 0.14.5
-* Upgrade to Groovy 2.5.0-beta-2
+* Upgrade to *bitcoinj-addons* 0.2.6
+* Upgrade to *Groovy* 2.5.0-beta-2
 
 === Omni Java Money support (`omnij-money`)
 
-* Upgrade to XChange 4.2.3
+* Upgrade to *XChange* 4.2.3
 
 == v0.5.4
 
