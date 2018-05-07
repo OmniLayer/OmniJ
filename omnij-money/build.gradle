@@ -7,7 +7,7 @@ repositories {
 dependencies {
     compile project(':omnij-core')
 
-    compile "com.msgilligan:bitcoinj-money:${bitcoinjAddonsVersion}"
+    compile "com.msgilligan:bitcoinj-money:${consensusjVersion}"
 
     compile 'org.javamoney:moneta-bp:1.1'
     
@@ -15,6 +15,3 @@ dependencies {
     testCompile "org.knowm.xchange:xchange-bittrex:${xChangeVersion}"
     testCompile "org.knowm.xchange:xchange-kraken:${xChangeVersion}"
 }
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7

@@ -33,7 +33,7 @@ There are currently six subprojects of OmniJ. Each of which builds a JAR artifac
 
 | omnij-money
 | JavaMoney support for Omni currency codes and exchanges
-| JDK 7+, Java-only, tests in Groovy/Spock
+| JDK 8+, Java-only, tests in Groovy/Spock
 
 | omnij-rest-client
 | JavaMoney support for Omni currency codes and exchanges
@@ -45,10 +45,10 @@ There are currently six subprojects of OmniJ. Each of which builds a JAR artifac
 
 | omnij-cli
 | Builds the command-line Omni consensus-checking tool.
-| JDK 7+ Java & Groovy
+| JDK 8+ Java & Groovy
 |===
 
-A Bitcoin JSON-RPC client and command-line tool support that was previously part of OmniJ has moved to the https://github.com/msgilligan/bitcoinj-addons[bitcoinj-addons] project which is used by OmniJ.
+A Bitcoin JSON-RPC client (base class), and other components used by OmniJ are in the https://github.com/ConsensusJ/consensusj[ConsensusJ] project.
 
 === OmniLayer Documentation
 
@@ -125,7 +125,7 @@ Test Bitcoin and Omni Core RPC calls against an instance of `omnicored` running 
 Omni Consensus Tests::
 Use the `getallbalancesforid_MP` RPC to get balances for multiple Omni Protocol currencies and compare them against balance information from several well-known public Omni Protocol servers with consensus-checking Web APIs.
 
-=== Moved to bitcoinj-addons
+=== In ConsensusJ
 
 Bitcoin RegTest Tests::
 Test Bitcoin RPC calls against an instance of `bitcoind` running in RegTest mode.
@@ -171,7 +171,7 @@ Runs Omni Core RPC regtest test against a built executable of `omnicored` in `co
 test-omni-consensus-mainnet.sh::
 Runs consensus tests against a built executable of `omnicored` in `copied-artifacts/src` directory.
 
-=== Moved to bitcoinj-addons project
+=== In ConsensusJ project
 
 bitcoinj-rpcclient/run-bitcoind-regtest.sh::
 Runs BTC RPC RegTest tests against a built executable of `bitcoind` in `copied-artifacts/src` directory.
@@ -188,7 +188,7 @@ These sample Spock "feature tests" are from the file https://github.com/OmniLaye
 ----
     def "A managed property can be created with transaction type 54"() {
         when:
-        creationTxid = omniSendIssuanceManaged(actorAddress, Ecosystem.MSC,
+        creationTxid = omniSendIssuanceManaged(actorAddress, Ecosystem.OMNI,
                           PropertyType.INDIVISIBLE,
                           new CurrencyID(0),
                           "Test Category", "Test Subcategory",

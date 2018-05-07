@@ -53,6 +53,9 @@ allprojects {
 }
 
 subprojects {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
     dependencies {
         compile "org.bitcoinj:bitcoinj-core:${bitcoinjVersion}"
         compile "org.slf4j:slf4j-api:${slf4jVersion}"

@@ -8,9 +8,6 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 idea {
     module {
         jdkName = '1.8'

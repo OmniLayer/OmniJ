@@ -8,7 +8,7 @@ targetCompatibility = 1.7
 dependencies {
     compile project(':omnij-core')
 
-    compile "com.msgilligan:bitcoinj-rpcclient:${bitcoinjAddonsVersion}"
+    compile "com.msgilligan:bitcoinj-rpcclient:${consensusjVersion}"
 
     // We need to factor out an omnij-test module and move all the Groovy
     // code and the below compile dependencies into that module.
@@ -23,7 +23,7 @@ dependencies {
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
 
     testCompile project(':omnij-dsl')
-    testCompile "com.msgilligan:bitcoinj-dsl:${bitcoinjAddonsVersion}"
+    testCompile "com.msgilligan:bitcoinj-dsl:${consensusjVersion}"
     testCompile 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests
 }
 
