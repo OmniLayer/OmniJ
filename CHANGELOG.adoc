@@ -7,7 +7,12 @@ A high-level view of the changes in each OmniJ binary release.
 
 === omnij-cli
 
+* Update to JavaMoney API 1.0.3
+
+=== omnij-cli
+
 * BREAKING: Upgrade to Java 8
+* Update to JavaMoney RI Backport 1.2
 
 === omnij-money
 
