@@ -33,7 +33,11 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
             // And what about TestNet, etc?
             unionAddresses.remove(OmniMainNetParams.get().exodusAddress)
         }
-        return new PairIterator(unionAddresses.iterator())
+        /* Use temp variable to workaround GROOVY-8590
+         * https://issues.apache.org/jira/browse/GROOVY-8590
+         */
+        def temp = new PairIterator(unionAddresses.iterator())
+        return temp;
     }
 
     /**
