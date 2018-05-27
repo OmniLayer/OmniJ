@@ -21,7 +21,7 @@ A high-level view of the changes in each OmniJ binary release.
 === All modules
 
 * Upgrade to *bitcoinj* 0.14.7
-* Upgrade to *Groovy* 2.5.0-rc-2
+* Upgrade to *Groovy* 2.5.0-rc-3
 * Upgrade to *Gradle* 4.6
 
 == v0.5.5
