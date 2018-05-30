@@ -4,9 +4,10 @@ language: java
 
 env:
   global:
-  - OMNICORE_HOST=https://s3.amazonaws.com/ci.omnicore.private/builds
-  - OMNICORE_FILE=omnicored-43a7014c57-untrusted.tar.gz
-  - OMNICORE_HASH=76f801b3c697bd860747c2b1421b7c85aed59d165eaebc34d2a71899b30a2971
+  - OMNICORE_HOST=https://bintray.com/artifact/download/omni/OmniBinaries
+  - OMNICORE_RELEASE=omnicore-0.0.11.2-rel
+  - OMNICORE_FILE=$OMNICORE_RELEASE-linux64.tar.gz
+  - OMNICORE_HASH=787e5fef50118f59d76128d3a8435efc355b3a18962c3e209a79556e47a48ec4
 
 cache:
   directories:
@@ -16,7 +17,8 @@ install:
   - wget "$OMNICORE_HOST/$OMNICORE_FILE"
   - echo "$OMNICORE_HASH  $OMNICORE_FILE" | shasum --algorithm 256 --check
   - mkdir -p copied-artifacts/src/
-  - tar zxvf $OMNICORE_FILE -C copied-artifacts/src/
+  - tar zxvf $OMNICORE_FILE -C /tmp
+  - mv /tmp/$OMNICORE_RELEASE/bin/omnicored copied-artifacts/src/
 
 script:
   - ./test-omni-integ-regtest.sh

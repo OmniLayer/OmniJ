@@ -29,6 +29,8 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
     static final protected Short metaDExFeatureId = 2
     static final protected Short unallocatedFeatureId = 3
     static final protected Short overOffersFeatureId = 5
+    static final protected Short allPairDExFeatureId = 8
+    static final protected Short metaDExFeesFeatureId = 9
 
     // Default values
     static protected Integer minClientVersion = 0
@@ -46,7 +48,7 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
             throw new AssumptionViolatedException('The client has no "omni_getactivations" command')
         }
 
-        generateBlock()
+        generate()
         def currentBlockCount = getBlockCount()
         initialBlock = getBlockHash(currentBlockCount)
     }
@@ -56,11 +58,11 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
             return
         }
         for (int i = 0; i < 50; ++i) {
-            generateBlock()
+            generate()
         }
         invalidateBlock(initialBlock)
         clearMemPool()
-        generateBlock()
+        generate()
     }
 
     def skipIfActivated(def featureId) {
@@ -70,6 +72,14 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
         }
         if (activations.completedactivations.any( { it.featureid == featureId } )) {
             throw new AssumptionViolatedException("Feature $featureId is already live")
+        }
+    }
+
+    def skipIfVersionOlderThan(def minClientVersion) {
+        def clientInfo = omniGetInfo()
+        def clientVersion = clientInfo.omnicoreversion_int
+        if (clientVersion < minClientVersion) {
+            throw new AssumptionViolatedException("Requires at least version $minClientVersion, but is $clientVersion")
         }
     }
 }

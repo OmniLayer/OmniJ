@@ -14,15 +14,15 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         def pristineAddress = newAddress
 
         Coin balanceBTC = getBitcoinBalance(pristineAddress, 0, 9999999)
-        def balanceMSC = omniGetBalance(pristineAddress, CurrencyID.MSC)
-        def balanceTMSC = omniGetBalance(pristineAddress, CurrencyID.TMSC)
+        def balanceMSC = omniGetBalance(pristineAddress, CurrencyID.OMNI)
+        def balanceTMSC = omniGetBalance(pristineAddress, CurrencyID.TOMNI)
 
         expect: "zero balances"
         balanceBTC == Coin.ZERO
-        balanceMSC.balance == 0.0
-        balanceMSC.reserved == 0.0
-        balanceTMSC.balance == 0.0
-        balanceTMSC.reserved == 0.0
+        balanceMSC.balance == 0.0.divisible
+        balanceMSC.reserved.numberValue() == 0.0.divisible
+        balanceTMSC.balance.numberValue() == 0.0.divisible
+        balanceTMSC.reserved.numberValue() == 0.0.divisible
     }
 
     @Unroll
@@ -39,7 +39,7 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         balanceAfterRequest == balanceAtStart + requestedBTC
 
         when:
-        generateBlock()
+        generate()
 
         then:
         def fundingTx = getTransaction(txid)
@@ -60,13 +60,13 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         def senderAddress = newAddress
         def receiverAddress = newAddress
         requestBitcoin(senderAddress, startBTC)
-        generateBlock()
+        generate()
 
         when: "sending a transaction which consumes the whole balance except fee"
-        def outputs = new HashMap<Address, BigDecimal>()
+        def outputs = new HashMap<Address, Coin>()
         outputs[receiverAddress] = sendBTC
         def txid = sendBitcoin(senderAddress, outputs)
-        generateBlock()
+        generate()
 
         then: "sender ends up with zero and receiver with the transferred amount, implying the rest was spent for fees"
         def sendTx = getTransaction(txid)
@@ -103,14 +103,14 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         def senderAddress = newAddress
         def receiverAddress = newAddress
         requestBitcoin(senderAddress, startBTC)
-        generateBlock()
+        generate()
 
         def outputs = new HashMap<Address, Coin>()
         outputs[receiverAddress] = dustAmount.satoshi
 
         when: "sending a transaction with a dust output"
         def txid = sendBitcoin(senderAddress, outputs)
-        generateBlock()
+        generate()
 
         then: "it is valid and not rejected"
         def sendTx = getTransaction(txid)
@@ -126,7 +126,7 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
     @Ignore
     @Unroll
     def "The client generates a \"simple send\" transaction with 2x #payToPubKeyDust + 1x #payloadDust BTC outputs"() {
-        def startMSC = 1.0
+        def startMSC = 1.0.divisible
         def startBTC = (2 * payToPubKeyDust + payloadDust + stdTxFee.value).satoshi
 
         def senderAddress = newAddress
@@ -135,17 +135,17 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         when:
         requestBitcoin(senderAddress, startBTC)
         requestMSC(senderAddress, startMSC)
-        generateBlock()
+        generate()
 
         then:
         getBitcoinBalance(receiverAddress) == 0.btc
         getBitcoinBalance(senderAddress) == startBTC
-        omniGetBalance(receiverAddress, CurrencyID.MSC).balance == 0.0
-        omniGetBalance(senderAddress, CurrencyID.MSC).balance == startMSC
+        omniGetBalance(receiverAddress, CurrencyID.OMNI).balance == 0.0.divisible
+        omniGetBalance(senderAddress, CurrencyID.OMNI).balance == startMSC
 
         when:
-        def txid = omniSend(senderAddress, receiverAddress, CurrencyID.MSC, startMSC)
-        generateBlock()
+        def txid = omniSend(senderAddress, receiverAddress, CurrencyID.OMNI, startMSC)
+        generate()
 
         then:
         getBitcoinBalance(receiverAddress) == payToPubKeyDust.satoshi
@@ -155,8 +155,8 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
         def sendTx = omniGetTransaction(txid)
         sendTx.confirmations == 1
         sendTx.valid == true
-        omniGetBalance(receiverAddress, CurrencyID.MSC).balance == startMSC
-        omniGetBalance(senderAddress, CurrencyID.MSC).balance == 0.0
+        omniGetBalance(receiverAddress, CurrencyID.OMNI).balance == startMSC
+        omniGetBalance(senderAddress, CurrencyID.OMNI).balance == 0.0.divisible
 
         where:
         relayTxFee = stdRelayTxFee
@@ -168,19 +168,19 @@ class ClientConfigurationAndFundingSpec extends BaseRegTestSpec {
     def "Requesting #requestedAmount MSC adds exactly that amount to the receivers MSC balance"() {
         given:
         def fundedAddress = newAddress
-        def balanceAtStart = omniGetBalance(fundedAddress, CurrencyID.MSC)
+        def balanceAtStart = omniGetBalance(fundedAddress, CurrencyID.OMNI)
 
         when:
         def requestedOmni = OmniDivisibleValue.of(requestedAmount)
         def txid = requestMSC(fundedAddress, requestedOmni)
-        generateBlock()
+        generate()
 
         then:
         def fundingTx = getTransaction(txid)
-        def balanceConfirmed = omniGetBalance(fundedAddress, CurrencyID.MSC)
+        def balanceConfirmed = omniGetBalance(fundedAddress, CurrencyID.OMNI)
 
         fundingTx.confirmations > 0
-        balanceConfirmed.balance == balanceAtStart.balance + requestedOmni.bigDecimalValue()
+        balanceConfirmed.balance == balanceAtStart.balance + requestedOmni.numberValue()
         balanceConfirmed.reserved == balanceAtStart.reserved
 
         where:

@@ -1,9 +1,8 @@
 package foundation.omni.test.rpc.sto
 
-import com.msgilligan.bitcoinj.rpc.JsonRPCStatusException
+import com.msgilligan.jsonrpc.JsonRPCStatusException
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
-import foundation.omni.OmniDivisibleValue
 import foundation.omni.consensus.ConsensusTool
 import foundation.omni.consensus.OmniCoreConsensusTool
 import spock.lang.Shared
@@ -30,7 +29,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
         def startingMSC = 1000.divisible
         def amountSent = 100.divisible
         def fundedAddress = createFundedAddress(startingBTC, startingMSC)
-        def currencyID = TMSC
+        def currencyID = TOMNI
         def expectedBalance = 0.0
 
         when: "We Send to Owners"
@@ -40,7 +39,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
         omniSendSTO(fundedAddress, currencyID, amountSent)
 
         and: "We generate a block"
-        generateBlock()
+        generate()
 
         // The fee for each receiver is #stoFeePerAddress
         if (numberOfHolders > 1) {
@@ -61,7 +60,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
     def "STO fails when amount sent is zero"() {
         setup:
         def fundedAddress = createFundedAddress(10.0, 100.0)
-        def currencyID = TMSC
+        def currencyID = TOMNI
         def startBalances = consensusTool.getConsensusSnapshot(currencyID)
 
         when: "We Send to Owners with amount equal zero"
@@ -72,11 +71,17 @@ class SendToOwnersSpec extends BaseRegTestSpec {
         e.message == "Invalid amount"
         e.responseJson.error.code == -3
 
-        when: "we check balances"
+        when: "we make a block"
+        generate()
+
+        and: "we check balances"
         def endBalances = consensusTool.getConsensusSnapshot(currencyID)
 
         then: "balances unchanged"
-        startBalances == endBalances
+        endBalances.blockHeight == startBalances.blockHeight + 1
+        endBalances.currencyID == startBalances.currencyID
+        endBalances.sourceType == startBalances.sourceType
+        endBalances.entries == startBalances.entries
     }
 
     def "The generated hex-encoded transaction matches a valid reference transaction"() {

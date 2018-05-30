@@ -15,7 +15,7 @@ class NumberCategorySpec extends Specification {
     def "basic test of .divisible convenience method"() {
         expect:
         1.divisible == OmniDivisibleValue.of(1)
-//        0.1G.divisible == OmniDivisibleValue.of(0.1)  // Broken!!! is this a groovy bug?
+        0.1G.divisible == OmniDivisibleValue.of(0.1)  // GROOVY-7608, Fixed in Groovy 2.5.0-alpha-1
     }
 
     def "basic test of .indivisible convenience method"() {
@@ -23,7 +23,7 @@ class NumberCategorySpec extends Specification {
         1.indivisible == OmniIndivisibleValue.of(1)
     }
 
-    def "convert 0.1 to indivisble should throw ArithmeticException"() {
+    def "convert 0.1 to indivisible should throw ArithmeticException"() {
         given:
         def bd = new BigDecimal("0.1")
 

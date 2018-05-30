@@ -5,16 +5,16 @@ import org.bitcoinj.core.Coin;
 import javax.money.NumberValue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.util.PropertyPermission;
 
 /**
  * <p>Numeric value for a quantity of Omni tokens - base class for OmniDivisible and OmniIndivisible subclasses.
  * Known as "Number of Coins" in the Omni Protocol Specification.</p>
  *
  * <p>The internal representation is a <code>long</code> which corresponds to what we call a
- * "willet" in honour of J.R. Willet in the same fashion as the smallest Bitcoin unit is called a "satoshi".</p>
+ * "willet" in honour of J.R. Willett in the same fashion as the smallest Bitcoin unit is called a "satoshi".</p>
+ *
+ * <p>Note: J.R. Willett spells his name with two t's. OmniJ is currently using a single t misspelling.
+ * This should probably be fixed. See https://github.com/OmniLayer/OmniJ/issues/142</p>
  *
  * <p>The constructors are <code>protected</code> and instances should be created with the <code>of()</code>
  * static methods which can take either <code>BigDecimal</code> or <code>long</code> values as parameters.</p>
@@ -30,34 +30,26 @@ import java.util.PropertyPermission;
  * <p>TODO: Should we allow negative values?</p>
  */
 public abstract class OmniValue extends NumberValue {
-    // TODO: Make public and rename to 'willets'?
-    // (unless, of course, we want to OmniIndivisibleValue to also represent Bitcoins
-    // in which case we might want to give it a name other than 'willets'. I don't like
-    // using 'value' because of the tension between the divisible/indivisible distinction
-    // and the fact that we're extending NumberValue and need to interoperate with standard
-    // Number types where OmniDivisible needs to behave more like BigDecimal.)
-    // Is there a word that could mean either willets or satoshi? e.g. 'bits', 'internal', 'nanocoins', etc?
-    protected final long value; // internal value format, in willets
+    public static final long willetsPerDivisible = Coin.COIN.value; // 10^8 (Omni equivalent of satoshi unit
+    protected final long willets; // internal value format, in willets
 
     // Willet max/min values, same as max/min for indivisible, but different than for divisible
-    public static final long   MIN_VALUE = 0; // Minimum value of 1 in transactions?
-    public static final long   MAX_VALUE = Long.MAX_VALUE; // = 2^63 - 1 = 9223372036854775807L;
+    public static final long MIN_WILLETS = 0; // Minimum value of 1 in transactions?
+    public static final long MAX_WILLETS = Long.MAX_VALUE; // = 2^63 - 1 = 9223372036854775807L;
+    @Deprecated
+    public static final long MIN_VALUE = MIN_WILLETS;   // Use MIN_WILLETS
+    @Deprecated
+    public static final long MAX_VALUE = MAX_WILLETS;   // USE MAX_WILLETS
 
     /**
      * Default Constructor
      * Used only by subclasses using internal (willets) format
      *
-     * @param value Willets (internal/wire format)
+     * @param willets Willets (internal/wire format)
      */
-    protected OmniValue(long value) {
-        checkValue(value);
-        this.value = value;
-    }
-
-    @Deprecated
-    protected OmniValue(BigInteger value) {
-        checkValue(value);
-        this.value = value.longValue();
+    protected OmniValue(long willets) {
+        checkWilletValue(willets);
+        this.willets = willets;
     }
 
     public static OmniValue of(BigDecimal amount, PropertyType type) {
@@ -70,23 +62,28 @@ public abstract class OmniValue extends NumberValue {
                 OmniDivisibleValue.of(amount) : OmniIndivisibleValue.of(amount);
     }
 
+    public static OmniValue ofWillets(long amount, PropertyType type) {
+        return type.equals(PropertyType.DIVISIBLE) ?
+                OmniDivisibleValue.ofWillets(amount) : OmniIndivisibleValue.ofWillets(amount);
+    }
+
     public long getWillets() {
-        return value;
+        return willets;
     }
 
     abstract public PropertyType getPropertyType();
 
     /**
-     * <p>Make sure a BigInteger value is a valid Omni "number of coins" value</p>
+     * <p>Make sure a BigInteger value is a valid Omni "number of coins" (willets) value</p>
      *
-     * @param value
-     * @throws ArithmeticException
+     * @param willets "number of coins" (willets) value to check
+     * @throws ArithmeticException if less than minimum or greater than maximum allowed value
      */
-    public static void checkValue(BigInteger value) throws ArithmeticException {
-        if (value.compareTo(BigInteger.valueOf(MIN_VALUE)) == -1) {
+    public static void checkWilletValue(BigInteger willets) throws ArithmeticException {
+        if (willets.compareTo(BigInteger.valueOf(MIN_WILLETS)) < 0) {
             throw new ArithmeticException();
         }
-        if (value.compareTo(BigInteger.valueOf(MAX_VALUE)) == 1) {
+        if (willets.compareTo(BigInteger.valueOf(MAX_WILLETS)) > 0) {
             throw new ArithmeticException();
         }
     }
@@ -97,11 +94,11 @@ public abstract class OmniValue extends NumberValue {
      * <p>Note: Since any positive long is valid, we just need to check that
      * it's not less than MIN_VALUE</p>
      *
-     * @param value value to check.
-     * @throws ArithmeticException
+     * @param willets value to check.
+     * @throws ArithmeticException if less than minimum allowed value
      */
-    public static void checkValue(long value) throws ArithmeticException {
-        if (value < MIN_VALUE) {
+    public static void checkWilletValue(long willets) throws ArithmeticException {
+        if (willets < MIN_WILLETS) {
             throw new ArithmeticException();
         }
     }
@@ -127,15 +124,15 @@ public abstract class OmniValue extends NumberValue {
 
     @Override
     public int intValueExact() {
-        if (value > Integer.MAX_VALUE) {
+        if (willets > Integer.MAX_VALUE) {
             throw new ArithmeticException("Value too big to be converted to integer");
         }
-        return (int) value;
+        return (int) willets;
     }
 
     @Override
     public long longValueExact() {
-        return value;
+        return willets;
     }
 
     @Override
@@ -165,18 +162,18 @@ public abstract class OmniValue extends NumberValue {
 
     @Override
     public byte byteValue() {
-        if (value > Byte.MAX_VALUE) {
+        if (willets > Byte.MAX_VALUE) {
             throw new ArithmeticException("Value too big to be converted to byte");
         }
-        return (byte) value;
+        return (byte) willets;
     }
 
     @Override
     public short shortValue() {
-        if (value > Short.MAX_VALUE) {
+        if (willets > Short.MAX_VALUE) {
             throw new ArithmeticException("Value too big to be converted to short");
         }
-        return (short) value;
+        return (short) willets;
     }
 
     @Override
@@ -201,7 +198,7 @@ public abstract class OmniValue extends NumberValue {
 
     @Override
     public int hashCode() {
-        return Long.valueOf(value).hashCode();
+        return Long.valueOf(willets).hashCode();
     }
 
     @Override
@@ -212,15 +209,15 @@ public abstract class OmniValue extends NumberValue {
         if (obj == this) {
             return true;
         }
-        return this.value == ((OmniValue)obj).value;
+        return this.willets == ((OmniValue)obj).willets;
     }
 
     @Override
     public int compareTo(NumberValue o) {
         if (o instanceof OmniValue) {
-            return Long.compare(this.value, ((OmniValue) o).value);
+            return Long.compare(this.willets, ((OmniValue) o).willets);
         } else {
-            return Long.compare(this.value, o.longValueExact());
+            return Long.compare(this.willets, o.longValueExact());
         }
     }
 
@@ -229,26 +226,35 @@ public abstract class OmniValue extends NumberValue {
         return numberValue().toString();
     }
 
-    @Deprecated
     public  abstract BigDecimal bigDecimalValue();
 
     public OmniValue plus(OmniValue right) {
         if (this instanceof OmniDivisibleValue && right instanceof OmniDivisibleValue) {
-            return OmniDivisibleValue.of(this.value + right.value);
+            return OmniDivisibleValue.ofWillets(this.willets + right.willets);
         } else if (this instanceof OmniIndivisibleValue && right instanceof OmniIndivisibleValue) {
-            return OmniIndivisibleValue.of(this.value + right.value);
+            return OmniIndivisibleValue.ofWillets(this.willets + right.willets);
         } else {
-            throw new ArithmeticException("Can't use plus with mixed OmniDivisible and OmniIndvisible operands");
+            throw new ArithmeticException("Can't use plus with mixed OmniDivisible and OmniIndivisible operands");
         }
     }
 
     public OmniValue minus(OmniValue right) {
         if (this instanceof OmniDivisibleValue && right instanceof OmniDivisibleValue) {
-            return OmniDivisibleValue.of(this.value - right.value);
+            return OmniDivisibleValue.of(this.willets - right.willets);
         } else if (this instanceof OmniIndivisibleValue && right instanceof OmniIndivisibleValue) {
-            return OmniIndivisibleValue.of(this.value - right.value);
+            return OmniIndivisibleValue.of(this.willets - right.willets);
         } else {
-            throw new ArithmeticException("Can't use minus with mixed OmniDivisible and OmniIndvisible operands");
+            throw new ArithmeticException("Can't use minus with mixed OmniDivisible and OmniIndivisible operands");
+        }
+    }
+
+    public OmniValue multiply(long right) {
+        if (this instanceof OmniDivisibleValue) {
+            return OmniDivisibleValue.of(this.willets * right);
+        } else if (this instanceof OmniIndivisibleValue) {
+            return OmniIndivisibleValue.of(this.willets * right);
+        } else {
+            throw new ArithmeticException("Can't use multiply with class other than OmniDivisible or OmniIndivisible");
         }
     }
 

@@ -12,7 +12,7 @@ class OmniAmountSpec extends Specification {
         OmniValue value = OmniDivisibleValue.of(1.0)
 
         when: "we create an OmniAmount"
-        OmniAmount amount = new OmniAmount(value, CurrencyID.MSC)
+        OmniAmount amount = new OmniAmount(value, CurrencyID.OMNI)
 
         then:
         amount.number == value

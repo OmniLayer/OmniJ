@@ -14,11 +14,11 @@ class RPCSmokeTestSpec extends BaseMainNetSpec {
         client != null
 
         when: "we request info"
-        def info = getInfo()
+        def info = getNetworkInfo()
 
         then: "we get back some version information, too"
         info != null
-        info.version >= 90000
+        info.version >= 100400
     }
 
     def "Can get Omni Core consensus data"() {
@@ -26,10 +26,10 @@ class RPCSmokeTestSpec extends BaseMainNetSpec {
         def mscFetcher = new OmniCoreConsensusTool(client)
 
         when: "we get data"
-        def mscSnapshot = mscFetcher.getConsensusSnapshot(MSC)
+        def mscSnapshot = mscFetcher.getConsensusSnapshot(OMNI)
 
         then: "it is there"
-        mscSnapshot.currencyID == MSC
+        mscSnapshot.currencyID == OMNI
         mscSnapshot.entries.size() >= 1
     }
 

@@ -2,21 +2,28 @@ plugins {
     id 'maven'
 }
 
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 dependencies {
     compile project(':omnij-core')
 
-    compile "com.msgilligan:bitcoinj-rpcclient:${bitcoinjAddonsVersion}"
+    compile "com.msgilligan:bitcoinj-rpcclient:${consensusjVersion}"
 
     // We need to factor out an omnij-test module and move all the Groovy
     // code and the below compile dependencies into that module.
-    compile "org.codehaus.groovy:groovy:${groovyVersion}"
-    compile "org.codehaus.groovy:groovy-json:${groovyVersion}"
+    compile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+    compile ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+        transitive = false
+    }
 
-    compile "org.codehaus.groovy:groovy-sql:${groovyVersion}"
+    compile ("org.codehaus.groovy:groovy-sql:${groovyVersion}:indy") {
+        transitive = false
+    }
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
 
     testCompile project(':omnij-dsl')
-    testCompile "com.msgilligan:bitcoinj-groovy:${bitcoinjAddonsVersion}"
+    testCompile "com.msgilligan:bitcoinj-dsl:${consensusjVersion}"
     testCompile 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests
 }
 
@@ -41,7 +48,7 @@ sourceSets {
  */
 class IntegrationTest extends Test {
     public IntegrationTest() {
-        testClassesDir = project.sourceSets.integrationTest.output.classesDir
+        testClassesDirs = project.sourceSets.integrationTest.output.classesDirs
         classpath = project.sourceSets.integrationTest.runtimeClasspath
         outputs.upToDateWhen { false }
         testLogging {
@@ -65,6 +72,7 @@ class IntegrationTest extends Test {
 class RegTest extends IntegrationTest {
     public RegTest() {
         systemProperty 'regtest', true
+        systemProperty 'java.util.logging.config.file', "${project.projectDir}/src/integ/logging.properties"
         systemProperties ([ 'omni.test.rpcTestUser': project.rpcTestUser,
                             'omni.test.rpcTestPassword': project.rpcTestPassword,
         ])

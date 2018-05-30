@@ -13,7 +13,7 @@ public class SmartPropertyListInfo {
     private final String      subcategory;
     private final String      data;
     private final String      url;
-    private final Boolean     divisible;        // When loaded from Omniwallet or OmniChest will be null
+    private final Boolean     divisible;
 
     public SmartPropertyListInfo(@JsonProperty("propertyid")    CurrencyID propertyid,
                                  @JsonProperty("name")          String name,
@@ -32,6 +32,7 @@ public class SmartPropertyListInfo {
     }
 
     /**
+     * @return currency id
      * @deprecated Use getPropertyid()
      */
     @Deprecated
@@ -52,6 +53,7 @@ public class SmartPropertyListInfo {
     }
 
     /**
+     * @return subcategory
      * @deprecated Use getSubcategory()
      */
     public String getSubCategory() {

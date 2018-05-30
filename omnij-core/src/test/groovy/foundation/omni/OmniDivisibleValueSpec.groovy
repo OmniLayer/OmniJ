@@ -1,6 +1,5 @@
 package foundation.omni
 
-import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -16,7 +15,7 @@ class OmniDivisibleValueSpec extends Specification {
         OmniValue value = OmniDivisibleValue.ofWillets(willets)
 
         then: "it is created correctly"
-        value.bigDecimalValue() == expectedValue
+        value.numberValue() == expectedValue
 
         where:
         willets                 | expectedValue
@@ -91,7 +90,7 @@ class OmniDivisibleValueSpec extends Specification {
         OmniDivisibleValue value = OmniDivisibleValue.of(val)
 
         then: "it is created correctly"
-        value.bigDecimalValue() == val
+        value.numberValue() == val
 
         where:
         val << [0,
@@ -124,15 +123,17 @@ class OmniDivisibleValueSpec extends Specification {
         92233720369                     | ArithmeticException.class
     }
 
-    def "We can't create an OmniValue with an invalid value"() {
+    def "We can't create an OmniValue with an invalid value"(Number val) {
         when: "we try to create a OmniValue with an invalid value"
+        // Note: method overloading and Groovy's dynamic method dispatch
+        // are in operation for OmniDivisibleValue.of()
         OmniValue value = OmniDivisibleValue.of(val)
 
         then: "exception is thrown"
         ArithmeticException e = thrown()
 
         where:
-        val << [-1, 9223372036854775808L]
+        val << [-1, -2, -9223372036854775808L,  -9223372036854775808, 9223372036854775808]
     }
 
     def "Converting to float not allowed"() {
@@ -155,7 +156,7 @@ class OmniDivisibleValueSpec extends Specification {
 
     def "Exception is thrown when converting to int would throw exception"() {
         when:
-        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_VALUE)
+        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_WILLETS)
         def v = value.intValue()
 
         then:
@@ -164,7 +165,7 @@ class OmniDivisibleValueSpec extends Specification {
 
     def "Exception is thrown when converting to int (via Groovy 'as') would throw exception"() {
         when:
-        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_VALUE)
+        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_WILLETS)
         def v = value as Integer
 
         then:
@@ -172,7 +173,7 @@ class OmniDivisibleValueSpec extends Specification {
     }
 
     @Unroll
-    def "Addition works: #a + #b == #c"(Number a, Number b, Number c) {
+    def "Addition works: #a + #b == #c"(BigDecimal a, BigDecimal b, BigDecimal c) {
         when:
         def A = OmniDivisibleValue.of(a)
         def B = OmniDivisibleValue.of(b)
@@ -188,7 +189,7 @@ class OmniDivisibleValueSpec extends Specification {
     }
 
     @Unroll
-    def "Multiplication works: #a * #b == #c"(Number a, Number b, Number c) {
+    def "Multiplication works: #a * #b == #c"(BigDecimal a, long b, BigDecimal c) {
         when:
         def A = OmniDivisibleValue.of(a)
         def C = OmniDivisibleValue.of(c)
@@ -204,7 +205,7 @@ class OmniDivisibleValueSpec extends Specification {
 
 
     @Unroll
-    def "Division works: #a / #b == #c"(Number a, Number b, Number c) {
+    def "Division works: #a / #b == #c"(BigDecimal a, long b, BigDecimal c) {
         when:
         def A = OmniDivisibleValue.of(a)
         def C = OmniDivisibleValue.of(c)
@@ -221,7 +222,8 @@ class OmniDivisibleValueSpec extends Specification {
     def "Equality works"() {
         expect:
         OmniDivisibleValue.of(1) == OmniDivisibleValue.of(1)
-//        OmniDivisibleValue.of(0.1) == OmniDivisibleValue.of(0.1)    // Broken!!! is this a groovy bug?
+        OmniDivisibleValue.of(0.1) == OmniDivisibleValue.of(0.1)    // GROOVY-7608, Fixed in Groovy 2.5.0-alpha-1
+        OmniDivisibleValue.of(1.1) != OmniDivisibleValue.of(1.0)    // GROOVY-7608,Fixed in Groovy 2.5.0-alpha-1
     }
 
 }

@@ -21,7 +21,7 @@ class SendRawTransactionSpec extends BaseRegTestSpec {
 
     def setup() {
         activeAddress = createFundedAddress(startBTC, startMSC)
-        passiveAddress = getnewaddress()
+        passiveAddress = getNewAddress()
     }
 
     def "Create raw transaction with reference address"() {
@@ -29,7 +29,7 @@ class SendRawTransactionSpec extends BaseRegTestSpec {
         def txid = client.omniSendRawTx(activeAddress, rawTxHex, passiveAddress)
 
         and: "a new block is mined"
-        client.generateBlock()
+        client.generate()
 
         then: "the transaction confirms"
         def transaction = client.omniGetTransaction(txid)
@@ -46,7 +46,7 @@ class SendRawTransactionSpec extends BaseRegTestSpec {
 
         where:
         rawTxHex << ["00000000000000010000000000000001", // Simple Send: transfer  0.00000001 MSC
-                     "000000000000000200000000cafebabe"] // Simple Send: transfer 34.05691582 TMSC
+                     "000000000000000200000000cafebabe"] // Simple Send: transfer 34.05691582 TOMNI
     }
 
     def "Create raw transaction without reference address"() {
@@ -54,7 +54,7 @@ class SendRawTransactionSpec extends BaseRegTestSpec {
         def txid = client.omniSendRawTx(activeAddress, rawTxHex)
 
         and: "a new block is mined"
-        client.generateBlock()
+        client.generate()
 
         then: "the transaction confirmed"
         def transaction = client.omniGetTransaction(txid)

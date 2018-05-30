@@ -2,7 +2,6 @@ package foundation.omni.test.rpc.activation
 
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.PropertyType
 import org.bitcoinj.core.Address
 import spock.lang.Ignore
 import spock.lang.Shared
@@ -32,8 +31,8 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
     def setupSpec() {
         actorAddress = createFundedAddress(startBTC, startMSC)
-        mainID = fundNewProperty(actorAddress, 10.divisible, Ecosystem.MSC)
-        testID = fundNewProperty(actorAddress, 15.divisible, Ecosystem.TMSC)
+        mainID = fundNewProperty(actorAddress, 10.divisible, Ecosystem.OMNI)
+        testID = fundNewProperty(actorAddress, 15.divisible, Ecosystem.TOMNI)
     }
 
     def "Creating trades involving test ecosystem tokens before the activation is valid"() {
@@ -43,8 +42,8 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         def balanceAtStart = omniGetBalance(actorAddress, testID)
 
         when:
-        def tradeTxid = omniSendTrade(actorAddress, testID, amountForSale, CurrencyID.TMSC, amountDesired)
-        generateBlock()
+        def tradeTxid = omniSendTrade(actorAddress, testID, amountForSale, CurrencyID.TOMNI, amountDesired)
+        generate()
 
         then:
         omniGetTransaction(tradeTxid).valid
@@ -56,7 +55,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         omniGetTrade(tradeTxid).amountforsale as BigDecimal == amountForSale.numberValue()
         omniGetTrade(tradeTxid).amountdesired as BigDecimal == amountDesired.numberValue()
         omniGetTrade(tradeTxid).propertyidforsale == testID.getValue()
-        omniGetTrade(tradeTxid).propertyiddesired == CurrencyID.TMSC.getValue()
+        omniGetTrade(tradeTxid).propertyiddesired == CurrencyID.TOMNI.getValue()
         omniGetTrade(tradeTxid).propertyidforsaleisdivisible
         omniGetTrade(tradeTxid).propertyiddesiredisdivisible
         omniGetTrade(tradeTxid).unitprice == "1.66666666666666666666666666666666666666666666666667"
@@ -66,8 +65,8 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         omniGetBalance(actorAddress, testID).reserved == balanceAtStart.reserved + amountForSale.numberValue()
 
         when:
-        def cancelTxid = omniSendCancelAllTrades(actorAddress, Ecosystem.TMSC)
-        generateBlock()
+        def cancelTxid = omniSendCancelAllTrades(actorAddress, Ecosystem.TOMNI)
+        generate()
 
         then:
         omniGetTrade(cancelTxid).valid
@@ -78,7 +77,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         omniGetTrade(tradeTxid).amountforsale as BigDecimal == amountForSale.numberValue()
         omniGetTrade(tradeTxid).amountdesired as BigDecimal == amountDesired.numberValue()
         omniGetTrade(tradeTxid).propertyidforsale == testID.getValue()
-        omniGetTrade(tradeTxid).propertyiddesired == CurrencyID.TMSC.getValue()
+        omniGetTrade(tradeTxid).propertyiddesired == CurrencyID.TOMNI.getValue()
 
         and:
         omniGetBalance(actorAddress, testID) == balanceAtStart
@@ -86,15 +85,15 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
     def "Creating trades involving main ecosystem tokens before the activation is invalid"() {
         when:
-        def txid = omniSendTrade(actorAddress, mainID, 5.divisible, CurrencyID.MSC, 2.divisible)
-        generateBlock()
+        def txid = omniSendTrade(actorAddress, mainID, 5.divisible, CurrencyID.OMNI, 2.divisible)
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false
 
         and:
         omniGetBalance(actorAddress, mainID) == old(omniGetBalance(actorAddress, mainID))
-        omniGetBalance(actorAddress, CurrencyID.MSC) == old(omniGetBalance(actorAddress, CurrencyID.MSC))
+        omniGetBalance(actorAddress, CurrencyID.OMNI) == old(omniGetBalance(actorAddress, CurrencyID.OMNI))
     }
 
     def "Feature identifier 2 can be used to schedule the activation of the distributed token exchange"() {
@@ -103,7 +102,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
         when:
         def txid = omniSendActivation(actorAddress, metaDExFeatureId, activationBlock, minClientVersion)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txid).valid
@@ -128,21 +127,21 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
     def "Creating trades involving main ecosystem tokens during the grace period is still invalid"() {
         when:
-        def txid = omniSendTrade(actorAddress, CurrencyID.MSC, startMSC, mainID, 25.divisible)
-        generateBlock()
+        def txid = omniSendTrade(actorAddress, CurrencyID.OMNI, startMSC, mainID, 25.divisible)
+        generate()
 
         then:
         omniGetTransaction(txid).valid == false
 
         and:
         omniGetBalance(actorAddress, mainID) == old(omniGetBalance(actorAddress, mainID))
-        omniGetBalance(actorAddress, CurrencyID.MSC) == old(omniGetBalance(actorAddress, CurrencyID.MSC))
+        omniGetBalance(actorAddress, CurrencyID.OMNI) == old(omniGetBalance(actorAddress, CurrencyID.OMNI))
     }
 
     def "After the successful activation of the feature, the feature activation completed"() {
         setup:
         while (getBlockCount() < activationBlock) {
-            generateBlock()
+            generate()
         }
 
         when:
@@ -168,11 +167,11 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         setup:
         def amountForSale = startMSC
         def amountDesired = 25.divisible
-        def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.MSC)
+        def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.OMNI)
 
         when:
-        def tradeTxid = omniSendTrade(actorAddress, CurrencyID.MSC, amountForSale, mainID, amountDesired)
-        generateBlock()
+        def tradeTxid = omniSendTrade(actorAddress, CurrencyID.OMNI, amountForSale, mainID, amountDesired)
+        generate()
 
         then:
         omniGetTransaction(tradeTxid).valid
@@ -183,19 +182,19 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         omniGetTrade(tradeTxid).amounttofill as BigDecimal == amountDesired.numberValue()
         omniGetTrade(tradeTxid).amountforsale as BigDecimal == amountForSale.numberValue()
         omniGetTrade(tradeTxid).amountdesired as BigDecimal == amountDesired.numberValue()
-        omniGetTrade(tradeTxid).propertyidforsale == CurrencyID.MSC.getValue()
+        omniGetTrade(tradeTxid).propertyidforsale == CurrencyID.OMNI.getValue()
         omniGetTrade(tradeTxid).propertyiddesired == mainID.getValue()
         omniGetTrade(tradeTxid).propertyidforsaleisdivisible
         omniGetTrade(tradeTxid).propertyiddesiredisdivisible
         omniGetTrade(tradeTxid).unitprice == "0.00400000000000000000000000000000000000000000000000"
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == balanceAtStart.balance - amountForSale
-        omniGetBalance(actorAddress, CurrencyID.MSC).reserved == balanceAtStart.reserved + amountForSale
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance == balanceAtStart.balance - amountForSale
+        omniGetBalance(actorAddress, CurrencyID.OMNI).reserved == balanceAtStart.reserved + amountForSale
 
         when:
-        def cancelTxid = omniSendCancelTradesByPrice(actorAddress, CurrencyID.MSC, amountForSale, mainID, amountDesired)
-        generateBlock()
+        def cancelTxid = omniSendCancelTradesByPrice(actorAddress, CurrencyID.OMNI, amountForSale, mainID, amountDesired)
+        generate()
 
         then:
         omniGetTransaction(cancelTxid).valid
@@ -204,7 +203,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         omniGetTrade(tradeTxid).status == "cancelled"
 
         and:
-        omniGetTrade(cancelTxid).propertyidforsale == CurrencyID.MSC.getValue()
+        omniGetTrade(cancelTxid).propertyidforsale == CurrencyID.OMNI.getValue()
         omniGetTrade(cancelTxid).propertyidforsaleisdivisible
         omniGetTrade(cancelTxid).amountforsale as BigDecimal == amountForSale.numberValue()
         omniGetTrade(cancelTxid).propertyiddesired == mainID.getValue()
@@ -213,7 +212,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         omniGetTrade(cancelTxid).unitprice == "0.00400000000000000000000000000000000000000000000000"
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.MSC) == balanceAtStart
+        omniGetBalance(actorAddress, CurrencyID.OMNI) == balanceAtStart
     }
 
 }

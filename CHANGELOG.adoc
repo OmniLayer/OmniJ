@@ -3,6 +3,255 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.5.6-SNAPSHOT
+
+=== omnij-cli
+
+* Update to JavaMoney API 1.0.3
+
+=== omnij-cli
+
+* BREAKING: Upgrade to Java 8
+* Update to JavaMoney RI Backport 1.2
+
+=== omnij-money
+
+* BREAKING: Upgrade to Java 8
+
+=== All modules
+
+* Upgrade to *bitcoinj* 0.14.7
+* Upgrade to *Groovy* 2.5.0-rc-3
+* Upgrade to *Gradle* 4.6
+
+== v0.5.5
+
+Released: 2017.10.16
+
+=== All modules
+
+* Upgrade to *bitcoinj* 0.14.5
+* Upgrade to *bitcoinj-addons* 0.2.6
+* Upgrade to *Groovy* 2.5.0-beta-2
+
+=== Omni Java Money support (`omnij-money`)
+
+* Upgrade to *XChange* 4.2.3
+
+== v0.5.4
+
+Released: 2017.08.17
+
+=== All modules
+
+* Upgrade to *bitcoinj-addons* 0.2.5
+* Upgrade to Gradle 4.1
+
+=== OmniJ Core  (`omnij-core`)
+
+* Add methods/constants for OmniValue value validation/conversion
+* SEC -> SAFEX ticker symbol rename
+
+=== Omniwallet REST client (`omnij-rest-client`)
+
+* Improved exception and error handling
+* Most remote methods now throw InterruptedException, IOException
+* Add optional `strictMode` flag to OmniwalletClient
+
+=== Omni Java Money support (`omnij-money`)
+
+* Update to XChange 4.2.1
+* Use dynamic classloading to load XChange ExchangeRateProviders
+* Enable Kraken USDT/USD pair
+* SEC -> SAFEX ticker symbol rename
+
+== v0.5.3
+
+Released: 2017.07.16
+
+=== All modules
+
+* Upgrade to *bitcoinj-addons* 0.2.4
+* Use `invokedynamic` ("indy") version of Groovy
+
+== v0.5.2
+
+Released: 2017.06.28
+
+=== All modules
+
+* Gradle build cleanup (remove RoboVM support, etc)
+* Minor documentation improvements
+
+=== OmniJ Core  (`omnij-core`)
+
+* Remove dependency on `java.xml.bind.DatatypeConverter` (for Android support)
+
+=== Omniwallet REST client (`omnij-rest-client`)
+
+* Add asynchronous interfaces to `OmniwalletClient` and `OmniCoreClient` (using `CompleteableFuture`)
+* Add handling of upstream rate-limit in BTC results in OW multi-address-balance requests
+* Add support for Omni protocol "reserved" balances (`OmniCoreClient` only for now)
+* Code cleanup/simplification
+
+=== Omni RPC client, Omni Core integration tests (`omnij-rpc`)
+
+* Use https to communicate with Omni Explorer
+
+=== Omni Java Money support (`omnij-money`)
+
+* `BaseXChangeExchangeRateProvider` implementations can take `ScheduledExecutorService` in constructor
+* Add Kraken exhange (USDT/USD pair disabled till XChange 4.2.1 released)
+
+=== Dependency updates
+
+* Update to Groovy 2.5.0-beta-1 (Groovy 2.5 fixes https://github.com/OmniLayer/OmniJ/issues/109[Issue #109])
+* Gradle Bintray plugin 1.7.3
+* JavaMoney `money-api-bp` 1.0.1
+
+== v0.5.1
+
+Released: 2017.05.23
+
+=== Features/Changes
+
+==== All modules
+
+* `build.gradle` reads `JDK7_HOME` environment variable to compile Java 7 modules with correct classpath
+* Assorted code, build, JavaDoc improvements
+
+==== Omniwallet REST client (`omnij-rest-client`)
+
+* Implement Omniwallet multi-address balance request
+* Fix issues with accessing Omniwallet via CloudFlare
+* `OmniBalanceService` methods now throw `IOException`
+
+==== Omni RPC client, Omni Core integration tests (`omnij-rpc`)
+
+* Updated for `generate` RPC API changes in Bitcoin Core / bitcoinj-addons
+* Use non-segwit serialization for RPC tests (Dexx)
+* Bump `rpcWaitTimeoutSeconds` in consensus tests to 10 hours.
+* Use `http://omniexplorer.info` instead of `http://omnichest.info` in tests, etc.
+* Deprecated `ConsensusEntry` Groovy class removed
+* Updates for OmniChest -> OmniExplorer
+
+==== Dependency updates
+
+* Update to Gradle 3.5
+* Update to bitcoinj-addons 0.2.3
+* Update to Groovy 2.4.11
+* Update to Spock 1.1
+* Update to SLF4j 1.7.25
+* `omnij-money`: Update to Moneta 1.1
+* `omnij-money`: Update to XChange 4.2.0
+* `omnij-rest-client`: Update to Retrofit 2.3.0
+* `omnij-rest-client`: Update to OkHttp 3.8.0
+
+=== Potentially Breaking
+
+* Some exceptions, such as `ParseException` are no longer declared, you may need to remove some catch statements.
+
+== v0.5.0
+
+Released: 2016.11.16
+
+=== Potentially Breaking
+
+* The 0.5.x branch requires Omni Core 0.0.11.1 or later
+* https://github.com/OmniLayer/OmniJ/commit/d067b26550a1628321451730be6738f28322c9d3[d067b26] - Send `omni_`* RPC method names rather than *`_MP`
+* https://github.com/OmniLayer/OmniJ/pull/135[PR #135] -`OmniExtendedClient` is deprecated (use methods/RPCs in `OmniClient` instead)
+
+=== Features/Changes
+
+* Tweaks to integration tests for Omni Core Bitcoin 0.13 rebase
+* Update to bitcoinj-addons 0.2.1
+
+=== Internal
+
+* https://github.com/OmniLayer/OmniJ/commit/03e447ecd6366eac12afc30f650e7a6fa2df5b76[03e447e] - The `value` protected member of `OmniValue` is now called `willets`
+
+== v0.4.0
+
+Released: 2016.09.28
+
+=== Features/Changes
+
+* The 0.4.x branch will be the last to support Omni Core releases 0.0.10 and earlier
+* Add RPCs for fee distribution system
+* Pluggable fee calculator interface for `OmniTxBuilder`
+* Add `OmniScriptingClient` with dynamic method support for all RPC methods
+* Add PDC currency ticker symbol
+* Proof-of-concept address converters for Omni "Safe" addresses
+* Additional tests for fee distribution and feature activation
+* Further improvements in `omnij-rest-client` module to support *OmniPortfolio*
+* Bug fix for Omni transaction generation on TestNet
+* All modules except `omnij-rest-client` should now be Java 7 compatible JARs
+* Fix https://github.com/OmniLayer/OmniJ/issues/127[Issue #127]: Test log spammed since update to bitcoinj 0.14.1
+* Update to Groovy 2.4.7
+* Update to bitcoinj-addons 0.1.3
+* Update to bitcoinj 0.14.3
+* Other library updates
+
+
+== v0.3.7
+
+Released: 2016.05.25
+
+=== Features/Changes
+
+* Token rename `MSC` -> `OMNI` and `TMSC` -> `TOMNI` (old names are still present, but deprecated)
+* 2-way conversion between ISO-style currency codes (e.g. "OMNI", "USDT") and `CurrencyID`
+* Code cleanup in `OmniTxBuilder` in preparation for improved fee calculation
+* All-pair trading integration tests added
+* Upgrade to bitcoinj-addons 0.1.0
+* Upgrade to bitcoinj 0.14.1
+
+== v0.3.6
+
+Released: 2016.05.04
+
+=== Features/Changes
+
+* New omnij-money module (Java Money implementation for OMNI and all Omni smart properties)
+* New omnij-rest-client module (common interface for OmniCore and Omniwallet REST API)
+* Add CurrencyID constants for USDT, EURT, MAID, AMP, SEC, AGRS
+* Upgrade to bitcoinj-addons 0.0.13
+* Upgrade to Groovy 2.4.6, bitcoinj 0.13.6, and Gradle 2.12
+
+== v0.3.5
+
+Released: 2015.12.01
+
+=== Potentially Breaking
+
+* BigDecimal had been replaced by OmniValue in many places (same as v0.3.4 which wasn't published)
+
+=== Features/Changes
+
+* Omni Chest consensus tool can now distinguish between divisible/indivisible OmniValues by '.'
+* Fix numeric type issues in OverOfferDeactivationSpec.groovy
+
+== v0.3.4
+
+Tagged: 2015.11.24 (no JARs were published)
+
+=== Potentially Breaking
+
+* BigDecimal had been replaced by OmniValue in many places
+* Omni Chest consensus tool has hardcoded divisible/indivisible OmniValue selection that needs work
+
+=== Features/Changes
+
+* Explicitly set transaction and relay fees for regtests
+* OmniClient createProperty() method with full parameters.
+* Omni Chest and Omniwallet consensus tools update
+* Update to bitcoinj 0.13.3, bitcoinj-addons 0.0.11
+* Replace BigDecimal with OmniValue in many more places
+** rename MPBalanceEntry to BalanceEntry
+** BalanceEntry replaces ConsensusEntry
+** BalanceEntry using OmniValue rather than BigDecimal
+* Use Jackson JSON mapping more effectively
+
 == v0.3.3
 
 Released: 2015.10.06

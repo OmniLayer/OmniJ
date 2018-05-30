@@ -2,6 +2,7 @@ package foundation.omni.consensus
 
 import foundation.omni.CurrencyID
 import foundation.omni.rpc.BalanceEntry
+import foundation.omni.rpc.ConsensusSnapshot
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.ECKey
 import org.bitcoinj.params.MainNetParams
@@ -37,7 +38,7 @@ class SnapshotData {
     }
 
     static ConsensusSnapshot createSnapshot(String name, SortedMap<Address, BalanceEntry> entries) {
-        def snap = new ConsensusSnapshot(CurrencyID.MSC, -1, TestDataConsensusSource, testDataURI(name), entries)
+        def snap = new ConsensusSnapshot(CurrencyID.OMNI, -1, TestDataConsensusSource, testDataURI(name), entries)
         return snap
     }
 

@@ -8,29 +8,39 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.ScriptException;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.crypto.TransactionSignature;
+import org.bitcoinj.script.Script;
+import org.bitcoinj.script.ScriptBuilder;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Builds Omni transactions in bitcoinj Transaction objects
- *
  */
 public class OmniTxBuilder {
     private final NetworkParameters netParams;
     private final OmniNetworkParameters omniParams;
     private final RawTxBuilder builder = new RawTxBuilder();
     private final EncodeMultisig transactionEncoder;
+    private final FeeCalculator feeCalculator;
 
     /**
      * @param netParams The Bitcoin network to construct transactions for
      */
     public OmniTxBuilder(NetworkParameters netParams) {
+        this(netParams, new DefaultFixedFeeCalculator());
+    }
+
+    public OmniTxBuilder(NetworkParameters netParams, FeeCalculator feeCalculator) {
         this.netParams = netParams;
         this.omniParams = OmniNetworkParameters.fromBitcoinParms(netParams);
         this.transactionEncoder = new EncodeMultisig(netParams);
+        this.feeCalculator = feeCalculator;
     }
 
     /**
@@ -58,100 +68,119 @@ public class OmniTxBuilder {
     }
 
     /**
-     * <p>Create a signed Omni transaction in a bitcoinj Transaction object</p>
-     *
+     * Create a signed Omni transaction in a bitcoinj Transaction object
      *
      * @param fromKey Private key/address to send from and receive change to
-     * @param unspentOutputs A list of unspent outputs for funding the transaction
+     * @param unspentOutputs A collection of unspent outputs for funding the transaction
      * @param refAddress The Omni reference address (for the reference output)
      * @param payload Omni transaction payload as a raw byte array
+     * @throws InsufficientMoneyException Not enough bitcoin for fees
      * @return Signed and ready-to-send Transaction
      */
-    public Transaction createSignedOmniTransaction(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload) throws InsufficientMoneyException {
+    public Transaction createSignedOmniTransaction(ECKey fromKey, Collection<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload)
+            throws InsufficientMoneyException {
         Address fromAddress = fromKey.toAddress(netParams);
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 
-        makeChangeOutput(tx, fromAddress, unspentOutputs);  // Return change to the fromAddress
-
-        // Add all UTXOs for fromAddress as signed inputs
+        // Add all UTXOs for fromAddress as unsigned inputs, so fee calculator can use length
         for (TransactionOutput output : unspentOutputs) {
-            tx.addSignedInput(output, fromKey);
+            tx.addInput(output);
         }
 
+        makeChangeOutput(tx, fromAddress, sum(unspentOutputs));  // Calculate fees/change and, if any, return to the fromAddress
+
+        // Sign the transaction inputs
+        for (int i = 0; i < tx.getInputs().size(); i++) {
+            TransactionInput input = tx.getInput(i);
+            Script scriptPubKey = input.getConnectedOutput().getScriptPubKey();
+            TransactionSignature signature = tx.calculateSignature(i, fromKey, scriptPubKey, Transaction.SigHash.ALL, false);
+            if (scriptPubKey.isSentToRawPubKey())
+                input.setScriptSig(ScriptBuilder.createInputScript(signature));
+            else if (scriptPubKey.isSentToAddress())
+                input.setScriptSig(ScriptBuilder.createInputScript(signature, fromKey));
+            else
+                throw new ScriptException("Don't know how to sign for this kind of scriptPubKey: " + scriptPubKey);
+
+        }
         return tx;
     }
 
-    public Transaction createUnsignedOmniTransaction(ECKey fromKey, List<TransactionInput> inputs, Address refAddress, byte[] payload) throws InsufficientMoneyException {
+    /**
+     * Create an unsigned Omni transaction, with unsigned inputs in a bitcoinj Transaction object
+     *
+     * @param fromKey Private key/address to send from and receive change to
+     * @param inputs - a collection of inputs to add to the transaction
+     * @param refAddress The Omni reference address (for the reference output)
+     * @param payload Omni transaction payload as a raw byte array
+     * @return Unsigned OmniTransaction Transaction
+     * @throws InsufficientMoneyException Not enough bitcoin for fees
+     */
+    public Transaction createUnsignedOmniTransaction(ECKey fromKey, Collection<TransactionInput> inputs, Address refAddress, byte[] payload)
+            throws InsufficientMoneyException {
         Address fromAddress = fromKey.toAddress(netParams);
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 
-        makeChangeOutputFromInputs(tx, fromAddress, inputs);
-
-        for (TransactionInput input : inputs)
+        for (TransactionInput input : inputs) {
             tx.addInput(input);
+        }
+
+        makeChangeOutput(tx, fromAddress, sumInputs(inputs));   // Calculate change and, if any, return to the fromAddress
 
         return tx;
     }
-
 
     /**
      * Create a signed simple send Transaction
      *
      * @param fromKey Private key/address to send from
-     * @param unspentOutputs A list of unspent outputs for funding the transaction
+     * @param unspentOutputs A collection of unspent outputs for funding the transaction
      * @param toAddress The Omni reference address (for the reference output, destination address in this case)
      * @param currencyID The Omni currency ID
      * @param amount The currency amount in willets
+     * @throws InsufficientMoneyException Not enough bitcoin for fees
      * @return Signed and ready-to-send Transaction
      */
-    public Transaction createSignedSimpleSend(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address toAddress, CurrencyID currencyID, OmniValue amount) throws InsufficientMoneyException {
+    public Transaction createSignedSimpleSend(ECKey fromKey, Collection<TransactionOutput> unspentOutputs, Address toAddress, CurrencyID currencyID, OmniValue amount)
+            throws InsufficientMoneyException {
         String txHex = builder.createSimpleSendHex(currencyID, amount);
         byte[] payload = RawTxBuilder.hexToBinary(txHex);
         return createSignedOmniTransaction(fromKey, unspentOutputs, toAddress, payload);
     }
 
-    public Transaction createUnsignedSimpleSend(ECKey fromKey, List<TransactionInput> inputs, Address toAddress, CurrencyID currencyID, OmniValue amount) throws InsufficientMoneyException {
+    /**
+     * Create a signed simple send Transaction
+     *
+     * @param fromKey Private key/address to send from
+     * @param inputs unsigned inputs to use for the transaction
+     * @param toAddress The Omni reference address (for the reference output, destination address in this case)
+     * @param currencyID The Omni currency ID
+     * @param amount The currency amount in willets
+     * @return unsigned transaction
+     * @throws InsufficientMoneyException Not enough bitcoin for fees
+     */
+    public Transaction createUnsignedSimpleSend(ECKey fromKey, Collection<TransactionInput> inputs, Address toAddress, CurrencyID currencyID, OmniValue amount)
+            throws InsufficientMoneyException {
         String txHex = builder.createSimpleSendHex(currencyID, amount);
         byte[] payload = RawTxBuilder.hexToBinary(txHex);
         return createUnsignedOmniTransaction(fromKey, inputs, toAddress, payload);
     }
 
-
     /**
-     * <p>Calculate change and create a change output</p>
-     *
+     * Calculate change amount and add a change output to transaction
      * <p>TODO: Calculate fee dynamically.</p>
      *
-     * @param tx Transaction with all non-change outputs attached
-     * @param changeAddress Address to receive the change
-     * @param unspentOutputs Unspent outputs for use in calculating change
-     * @return The modified transaction, still needs signed inputs
+     * @param tx transaction to add output to
+     * @param changeAddress address for output
+     * @param totalInputAmount total of inputs (in satoshis)
+     * @return The modified transaction
+     * @throws InsufficientMoneyException Not enough bitcoin for fees
      */
-    Transaction makeChangeOutput(Transaction tx, Address changeAddress, List<TransactionOutput> unspentOutputs) throws InsufficientMoneyException {
-        // Calculate change
-        long amountIn     = sum(unspentOutputs);    // Sum of available UTXOs
+    private Transaction makeChangeOutput(Transaction tx, Address changeAddress, long totalInputAmount) throws InsufficientMoneyException {
         long amountOut    = sum(tx.getOutputs());   // Sum of outputs, this transaction
-        long amountChange = amountIn - amountOut - Transaction.REFERENCE_DEFAULT_MIN_TX_FEE.value;
-        // If change is negative, transaction is invalid
-        if (amountChange < 0) {
-            Coin missing = Coin.valueOf(-amountChange);
-            throw new InsufficientMoneyException(missing, "Insufficient Bitcoin to build Omni Transaction");
-        }
-        // If change is positive, return it all to the sending address
-        if (amountChange > 0) {
-            // Add a change output
-            tx.addOutput(Coin.valueOf(amountChange), changeAddress);
-        }
-        return tx;
-    }
-
-    Transaction makeChangeOutputFromInputs(Transaction tx, Address changeAddress, List<TransactionInput> inputs) throws InsufficientMoneyException {
-        // Calculate change
-        long amountIn     = sumInputs(inputs);    // Sum of inputs
-        long amountOut    = sum(tx.getOutputs());   // Sum of outputs, this transaction
-        long amountChange = amountIn - amountOut - Transaction.REFERENCE_DEFAULT_MIN_TX_FEE.value;
+        long fee = feeCalculator.calculateFee(tx).getValue();
+        long amountChange = totalInputAmount - amountOut - fee;
 
         // If change is negative, transaction is invalid
         if (amountChange < 0) {
@@ -165,15 +194,14 @@ public class OmniTxBuilder {
         }
         return tx;
     }
-
 
     /**
-     * Calculate the total value of a list of transaction outputs.
+     * Calculate the total value of a collection of transaction outputs.
      *
      * @param outputs list of transaction outputs to total
      * @return total value in satoshis
      */
-    long sum(List <TransactionOutput> outputs) {
+    private long sum(Collection<TransactionOutput> outputs) {
         long sum = 0;
         for (TransactionOutput output : outputs) {
             sum += output.getValue().value;
@@ -181,10 +209,17 @@ public class OmniTxBuilder {
         return sum;
     }
 
-    long sumInputs(List<TransactionInput> inputs) {
+    /**
+     * Calculate the total value of a collection of transaction inputs.
+     *
+     * @param inputs list of transaction outputs to total
+     * @return total value in satoshis
+     */
+    private long sumInputs(Collection<TransactionInput> inputs) {
         long sum = 0;
-        for (TransactionInput input : inputs)
-            sum += input.getValue().longValue();
+        for (TransactionInput input : inputs) {
+            sum += input.getValue().value;
+        }
         return sum;
     }
 }

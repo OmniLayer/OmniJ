@@ -13,7 +13,7 @@ class OmniSpec extends BaseRegTestSpec {
     def "Implement omni_getbalance"() {
         when: "we call omni_getbalance on a newly generated address"
         def destAddr = getNewAddress()                   // Create new Bitcoin address
-        def entry = omniGetBalance(destAddr, MSC)
+        def entry = omniGetBalance(destAddr, OMNI)
 
         then: "it should return a balance of zero"
         entry.balance == 0

@@ -36,11 +36,11 @@ public class PropertyBalanceEntriesDeserializer extends StdDeserializer<Property
                     entry = (PropertyBalanceEntry) entryDeserializer.deserialize(jp, ctxt);
                     result.put(entry.getPropertyid(), new BalanceEntry(entry.getBalance(), entry.getReserved()));
                 } else {
-                    throw new JsonMappingException("unexpected token");
+                    throw new JsonMappingException(jp, "unexpected token");
                 }
             }
         } catch (Exception e) {
-            throw new JsonMappingException("error", e);
+            throw new JsonMappingException(jp, "error", e);
         }
 
         return result;

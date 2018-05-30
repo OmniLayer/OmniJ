@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.reorgs
 
-import com.msgilligan.bitcoinj.rpc.JsonRPCException
+import com.msgilligan.jsonrpc.JsonRPCException
 import foundation.omni.BaseRegTestSpec
 import org.bitcoinj.core.Sha256Hash
 import org.junit.internal.AssumptionViolatedException
@@ -20,7 +20,7 @@ abstract class BaseReorgSpec extends BaseRegTestSpec {
 
     Sha256Hash generateAndGetBlockHash() throws AssumptionViolatedException
     {
-        List<Sha256Hash> result = generateBlock()
+        List<Sha256Hash> result = generate()
         if (result == null) {
             throw new AssumptionViolatedException('The client is not based on Bitcoin Core 0.10')
         }

@@ -1,6 +1,5 @@
 package foundation.omni;
 
-import javax.money.NumberValue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
@@ -13,11 +12,21 @@ import java.math.MathContext;
 public final class OmniIndivisibleValue extends OmniValue {
     public static final long   MIN_VALUE = 0; // Minimum value of 1 in transactions?
     public static final long   MAX_VALUE = 9223372036854775807L;
+    public static final BigInteger MIN_BIGINT = BigInteger.valueOf(MIN_VALUE);
+    public static final BigInteger MAX_BIGINT = BigInteger.valueOf(MAX_VALUE);
+    public static final OmniIndivisibleValue MIN = OmniIndivisibleValue.of(MIN_VALUE);
+    public static final OmniIndivisibleValue MAX = OmniIndivisibleValue.of(MAX_VALUE);
+
+
+    public static OmniIndivisibleValue of(BigInteger amount) {
+        checkWilletValue(amount);
+        return new OmniIndivisibleValue(amount.intValue());
+    }
 
     /**
      * Create OmniDivisibleValue of the specified amount
      * @param amount Number of Omni tokens
-     * @return
+     * @return OmniDivisibleValue representing amount tokens
      */
     public static OmniIndivisibleValue of(long amount) {
         return new OmniIndivisibleValue(amount);
@@ -33,8 +42,31 @@ public final class OmniIndivisibleValue extends OmniValue {
         return OmniIndivisibleValue.of(willets);
     }
 
-    private OmniIndivisibleValue(long value) {
-        super(value);
+    /**
+     * <p>Make sure a BigInteger value is a valid value for OmniIndivisibleValue</p>
+     *
+     * @param candidate value to check
+     * @throws ArithmeticException if less than minimum or greater than maximum allowed value
+     */
+    public static void checkValue(BigInteger candidate) throws ArithmeticException {
+        OmniValue.checkWilletValue(candidate);
+    }
+
+    /**
+     * <p>Make sure a BigInteger value is a valid value for OmniIndivisibleValue</p>
+     *
+     * <p>Note: Since any positive long is valid, we just need to check that
+     * it's not less than MIN_VALUE</p>
+     *
+     * @param candidate value to check.
+     * @throws ArithmeticException if less than minimum allowed value
+     */
+    public static void checkValue(long candidate) throws ArithmeticException {
+        OmniValue.checkWilletValue(candidate);
+    }
+
+    private OmniIndivisibleValue(long willets) {
+        super(willets);
     }
 
     @Override
@@ -49,16 +81,15 @@ public final class OmniIndivisibleValue extends OmniValue {
 
     @Override
     public Long numberValue() {
-        return value;
+        return willets;
     }
 
-    @Deprecated
     public BigDecimal bigDecimalValue() {
         return asBigDecimal();
     }
 
     private BigDecimal asBigDecimal() {
-        return new BigDecimal(value);
+        return new BigDecimal(willets);
     }
 
     @Override
@@ -67,11 +98,11 @@ public final class OmniIndivisibleValue extends OmniValue {
     }
 
     public OmniIndivisibleValue plus(OmniIndivisibleValue right) {
-        return OmniIndivisibleValue.of(this.value + right.value);
+        return OmniIndivisibleValue.of(this.willets + right.willets);
     }
 
     public OmniIndivisibleValue minus(OmniIndivisibleValue right) {
-        return OmniIndivisibleValue.of(this.value - right.value);
+        return OmniIndivisibleValue.of(this.willets - right.willets);
     }
 
 }

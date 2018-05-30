@@ -3,6 +3,7 @@ package foundation.omni.tx;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Sha256Hash;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 /**
@@ -19,10 +20,10 @@ public class Obfuscation {
     }
 
     /**
-     *
-     * @param input
-     * @param seed
-     * @return
+     * Obfuscate an message (Omni Transaction)
+     * @param input message to obfuscate
+     * @param seed (Is this always a Bitcoin address?)
+     * @return obfuscated message
      */
     public static byte[] obfuscate(final byte[] input, final String seed) {
         int nFullChunks = input.length / EncodingClassB.chunkSize;                    // number of full chunks
@@ -57,14 +58,14 @@ public class Obfuscation {
     }
 
     private static String upperSha256(String string) {
-        return Sha256Hash.of(string.getBytes()).toString().toUpperCase();
+        return Sha256Hash.of(string.getBytes(StandardCharsets.UTF_8)).toString().toUpperCase();
     }
 
     /**
-     *
-     * @param string
-     * @param bytes
-     * @return
+     * XOR hash
+     * @param string Hex string
+     * @param bytes binary to xor
+     * @return xor'ed result
      */
     private static byte[] xorHashMix(String string, byte[] bytes) {
         byte[] strBytes = RawTxBuilder.hexToBinary(string);

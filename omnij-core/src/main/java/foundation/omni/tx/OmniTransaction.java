@@ -14,9 +14,9 @@ import java.util.List;
  *
  */
 public class OmniTransaction extends Transaction {
-    Address fromAddress;
-    Address refAddress;
-    byte[] omniPayload;
+    //Address fromAddress;
+    //Address refAddress;
+    //byte[] omniPayload;
 
 
     /* Create from Bitcoin transaction */

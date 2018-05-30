@@ -2,7 +2,7 @@ package foundation.omni.test.consensus
 
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.consensus.OmniwalletConsensusTool
+import foundation.omni.consensus.OmniwalletConsensusFetcher
 import foundation.omni.rpc.SmartPropertyListInfo
 
 import static foundation.omni.CurrencyID.*
@@ -13,9 +13,22 @@ import spock.lang.Specification
  */
 class OmniwalletServerSpec extends Specification {
 
+   static final owExtraHeaders = ['User-Agent': 'OmniJ Test Script']
+
+    def "Groovy handles Omniwallet TLS (CloudFlare) correctly"() {
+        setup:
+        def url = new URL("https://www.omniwallet.org:/v1/system/revision.json")
+
+        when:
+        def text =  url.getText([requestProperties: owExtraHeaders])
+
+        then:
+        text.startsWith('{')
+    }
+
     def "Can get Omniwallet block height"() {
         setup:
-        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_Live)
+        OmniwalletConsensusFetcher omniFetcher = new OmniwalletConsensusFetcher()
 
         when: "we get a block height"
         /* Private method, but we can still call it with Groovy for a test */
@@ -28,20 +41,20 @@ class OmniwalletServerSpec extends Specification {
 
     def "Can get Omniwallet consensus data"() {
         setup:
-        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_Live)
+        OmniwalletConsensusFetcher omniFetcher = new OmniwalletConsensusFetcher()
 
         when: "we get data"
-        def omniSnapshot = omniFetcher.getConsensusSnapshot(MSC)
+        def omniSnapshot = omniFetcher.getConsensusSnapshot(OMNI)
 
         then: "something is there"
-        omniSnapshot.currencyID == MSC
+        omniSnapshot.currencyID == OMNI
         omniSnapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
         omniSnapshot.entries.size() >= 1
     }
 
     def "Can get Omniwallet property list"() {
         setup:
-        OmniwalletConsensusTool omniFetcher = new OmniwalletConsensusTool(OmniwalletConsensusTool.OmniHost_Live)
+        OmniwalletConsensusFetcher omniFetcher = new OmniwalletConsensusFetcher()
 
         when: "we get data"
         def properties = omniFetcher.listProperties()
@@ -54,23 +67,34 @@ class OmniwalletServerSpec extends Specification {
         // This may be unnecessary if we can assume the property list is ordered by propertyid
         Map<CurrencyID, SmartPropertyListInfo> props = properties.collect{[it.propertyid, it]}.collectEntries()
 
-        then: "we can check MSC and TMSC are as expected"
-        props[MSC].propertyid == MSC
-        props[MSC].propertyid.ecosystem == Ecosystem.MSC
-        props[MSC].name == "Mastercoin" // Note: Omni Core returns "MasterCoin" with a capital-C
-        props[MSC].category == ""
-        props[MSC].subcategory == ""
-        props[MSC].data == ""
-        props[MSC].url == ""
-        props[MSC].divisible == null
+        then: "OMNI is as expected"
+        props[OMNI].propertyid == OMNI
+        props[OMNI].propertyid.ecosystem == Ecosystem.OMNI
+        props[OMNI].name == "Omni"
+        props[OMNI].category == ""
+        props[OMNI].subcategory == ""
+        props[OMNI].data == ""
+        props[OMNI].url == ""
+        props[OMNI].divisible == true
 
-        props[TMSC].propertyid == TMSC
-        props[TMSC].propertyid.ecosystem == Ecosystem.TMSC
-        props[TMSC].name == "Test Mastercoin" // Note: Omni Core returns "Mastercoin" with a capital-C
-        props[TMSC].category == ""
-        props[TMSC].subcategory == ""
-        props[TMSC].data == ""
-        props[TMSC].url == ""
-        props[TMSC].divisible == null
+        and: "MAID is as expected"
+        props[MAID].propertyid == MAID
+        props[MAID].propertyid.ecosystem == Ecosystem.OMNI
+        props[MAID].name == "MaidSafeCoin"
+        props[MAID].category == ""
+        props[MAID].subcategory == ""
+        props[MAID].data == ""
+        props[MAID].url == ""
+        props[MAID].divisible == false
+
+        and: "TOMNI is as expected"
+        props[TOMNI].propertyid == TOMNI
+        props[TOMNI].propertyid.ecosystem == Ecosystem.TOMNI
+        props[TOMNI].name == "Test Omni"
+        props[TOMNI].category == ""
+        props[TOMNI].subcategory == ""
+        props[TOMNI].data == ""
+        props[TOMNI].url == ""
+        props[TOMNI].divisible == true
     }
 }

@@ -19,7 +19,7 @@ public class OmniMainNetParams extends OmniNetworkParameters {
         super();
         params = MainNetParams.get();
         try {
-            exodusAddress = new Address(params, ExodusAddress);
+            exodusAddress = Address.fromBase58(params, ExodusAddress);
         } catch (AddressFormatException e) {
             exodusAddress = null;
         }

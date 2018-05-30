@@ -1,9 +1,9 @@
 package foundation.omni.rpc
 
 /**
- * Groovy trait for adding a OmniCLIClient delegate to any class
+ * Groovy trait for adding a OmniClient delegate to any class
  */
 trait OmniClientDelegate {
     @Delegate
-    OmniCLIClient client
+    OmniClient client
 }

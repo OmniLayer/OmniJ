@@ -1,14 +1,15 @@
 package foundation.omni.test.consensus
 
 import foundation.omni.CurrencyID
+import foundation.omni.Ecosystem
 import foundation.omni.consensus.ChestConsensusTool
-import foundation.omni.consensus.OmniwalletConsensusTool
 import foundation.omni.rpc.SmartPropertyListInfo
 import spock.lang.Specification
 
-import static foundation.omni.CurrencyID.MSC
-import static foundation.omni.CurrencyID.MaidSafeCoin
-import static foundation.omni.CurrencyID.TMSC
+import static foundation.omni.CurrencyID.OMNI
+import static foundation.omni.CurrencyID.TOMNI
+import static foundation.omni.CurrencyID.MAID
+import static foundation.omni.CurrencyID.USDT
 
 /**
  * Basic functional test for getting consensus data from Chest API
@@ -31,10 +32,10 @@ class ChestServerSpec extends Specification {
         ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
 
         when: "we get data"
-        def snapshot = fetcher.getConsensusSnapshot(MSC)
+        def snapshot = fetcher.getConsensusSnapshot(OMNI)
 
         then: "something is there"
-        snapshot.currencyID == MSC
+        snapshot.currencyID == OMNI
         snapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
         snapshot.entries.size() >= 1
     }
@@ -44,10 +45,10 @@ class ChestServerSpec extends Specification {
         ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
 
         when: "we get data"
-        def snapshot = fetcher.getConsensusSnapshot(MaidSafeCoin)
+        def snapshot = fetcher.getConsensusSnapshot(MAID)
 
         then: "something is there"
-        snapshot.currencyID == MaidSafeCoin
+        snapshot.currencyID == MAID
         snapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
         snapshot.entries.size() >= 1
     }
@@ -67,9 +68,29 @@ class ChestServerSpec extends Specification {
         // This may be unnecessary if we can assume the property list is ordered by propertyid
         Map<CurrencyID, SmartPropertyListInfo> props = properties.collect { [it.propertyid, it] }.collectEntries()
 
-        then: "MSC and TMSC are not returned in Chest property list"
-        props[MSC] == null
-        props[TMSC] == null
+        then: "OMNI and TOMNI are not returned in Chest property list"
+        props[OMNI] == null
+        props[TOMNI] == null
+
+        and: "MAID is as expected"
+        props[MAID].propertyid == MAID
+        props[MAID].propertyid.ecosystem == Ecosystem.OMNI
+        props[MAID].name == "MaidSafeCoin"
+        props[MAID].category == ""
+        props[MAID].subcategory == ""
+        props[MAID].data == ""
+        props[MAID].url == ""
+        props[MAID].divisible == false
+
+        and: "USDT is as expected"
+        props[USDT].propertyid == USDT
+        props[USDT].propertyid.ecosystem == Ecosystem.OMNI
+        props[USDT].name == "TetherUS"
+        props[USDT].category == ""
+        props[USDT].subcategory == ""
+        props[USDT].data == ""
+        props[USDT].url == ""
+        props[USDT].divisible == true
 
     }
 }

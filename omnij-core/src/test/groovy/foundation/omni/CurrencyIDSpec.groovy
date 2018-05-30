@@ -7,30 +7,43 @@ import spock.lang.Unroll
  * Specification for CurrencyID class
  */
 class CurrencyIDSpec extends Specification {
+    def "BTC has value 0"() {
+        when: "we create BTC"
+        CurrencyID currency = new CurrencyID(0)
+
+        then: "the value is 0"
+        currency == CurrencyID.BTC
+        currency.getValue() == CurrencyID.BTC_VALUE
+        currency.getValue() == 0L
+
+        and: "it is in the right ecosystem"
+        currency.ecosystem == Ecosystem.OMNI     // Is this right???
+    }
+
     def "MSC has value 1"() {
-        when: "we create MSC"
+        when: "we create OMNI"
         CurrencyID currency = new CurrencyID(1)
 
         then: "the value is 1"
-        currency == CurrencyID.MSC
-        currency.getValue() == CurrencyID.MSC_VALUE
+        currency == CurrencyID.OMNI
+        currency.getValue() == CurrencyID.OMNI_VALUE
         currency.getValue() == 1L
 
         and: "it is in the right ecosystem"
-        currency.ecosystem == Ecosystem.MSC
+        currency.ecosystem == Ecosystem.OMNI
     }
 
     def "TMSC has value 2"() {
-        when: "we create TMSC"
+        when: "we create TOMNI"
         CurrencyID currency = new CurrencyID(2)
 
         then: "the value is 2"
-        currency == CurrencyID.TMSC
-        currency.getValue() == CurrencyID.TMSC_VALUE
+        currency == CurrencyID.TOMNI
+        currency.getValue() == CurrencyID.TOMNI_VALUE
         currency.getValue() == 2L
 
         and: "it is in the right ecosystem"
-        currency.ecosystem == Ecosystem.TMSC
+        currency.ecosystem == Ecosystem.TOMNI
     }
 
     @Unroll
@@ -43,12 +56,12 @@ class CurrencyIDSpec extends Specification {
 
         where:
         id | ecosystem
-        1 | Ecosystem.MSC
-        2 | Ecosystem.TMSC
-        3 | Ecosystem.MSC
-        2147483647 | Ecosystem.MSC
-        2147483647L + 1 | Ecosystem.TMSC
-        4294967295 | Ecosystem.TMSC
+        1 | Ecosystem.OMNI
+        2 | Ecosystem.TOMNI
+        3 | Ecosystem.OMNI
+        2147483647 | Ecosystem.OMNI
+        2147483647L + 1 | Ecosystem.TOMNI
+        4294967295 | Ecosystem.TOMNI
     }
 
     @Unroll
@@ -127,7 +140,7 @@ class CurrencyIDSpec extends Specification {
         CurrencyID currencyID = new CurrencyID(id)
 
         then: "exception is thrown"
-        NumberFormatException e = thrown()
+        IllegalArgumentException e = thrown()
 
         where:
         id << [-1, 4294967296]
@@ -158,9 +171,9 @@ class CurrencyIDSpec extends Specification {
         where:
         str            | value
         "BTC"          | CurrencyID.BTC_VALUE
-        "MSC"          | CurrencyID.MSC_VALUE
-        "TMSC"         | CurrencyID.TMSC_VALUE
-        "MaidSafeCoin" | CurrencyID.MaidSafeCoin_VALUE
-        "TetherUS"     | CurrencyID.TetherUS_VALUE
+        "OMNI"          | CurrencyID.OMNI_VALUE
+        "TOMNI"         | CurrencyID.TOMNI_VALUE
+        "MAID"         | CurrencyID.MAID_VALUE
+        "USDT"         | CurrencyID.USDT_VALUE
     }
 }

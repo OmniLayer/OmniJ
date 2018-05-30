@@ -2,14 +2,12 @@ package foundation.omni.test.rpc.crowdsale
 
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
-import foundation.omni.OmniDivisibleValue
-import org.bitcoinj.core.Coin
 import spock.lang.Unroll
 
 class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
     final static startBTC = 0.01.btc
-    final static startMSC = 0.divisible
+    final static startOmni = 0.divisible
 
     @Unroll
     def "Investing #amountToInvest MSC in a crowdsale with 0.00000001 MDiv per unit yields #expectedBalance MDiv"() {
@@ -32,13 +30,13 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
             }
         */
         def rawTx = "000000330100020000000000004d44697600000000000001000000000000000100000001ccd403f00000"
-        def issuerAddress = createFundedAddress(startBTC, startMSC, false)
+        def issuerAddress = createFundedAddress(startBTC, startOmni, false)
         def investorAddress = createFundedAddress(startBTC, amountToInvest, false)
-        def currencyMSC = CurrencyID.MSC
+        def currencyMSC = CurrencyID.OMNI
 
         when: "creating a new crowdsale with 0.00000001 MDiv per unit invested"
         def crowdsaleTxid = omniSendRawTx(issuerAddress, rawTx)
-        generateBlock()
+        generate()
 
         then: "the crowdsale is valid"
         def crowdsaleTx = omniGetTransaction(crowdsaleTxid)
@@ -49,15 +47,15 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         def propertyId = new CurrencyID(crowdsaleTx.propertyid as Long)
         omniGetCrowdsale(propertyId).active
 
-        when: "participant invests #amountToInvest MSC"
+        when: "participant invests #amountToInvest OMNI"
         def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest)
-        generateBlock()
+        generate()
 
         then: "the investor should get #expectedBalance MDiv"
         omniGetBalance(investorAddress, propertyId).balance.equals(expectedBalance)
 
         and: "the issuer receives the invested amount"
-        omniGetBalance(issuerAddress, currencyMSC).balance.equals(startMSC + amountToInvest)
+        omniGetBalance(issuerAddress, currencyMSC).balance.equals(startOmni + amountToInvest)
 
         when: "retrieving the transaction"
         def sendTx = omniGetTransaction(sendTxid)
@@ -97,7 +95,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
         when:
         def txidClose = closeCrowdsale(issuerAddress, propertyId) // bypass RPC layer
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txidClose).valid
@@ -130,13 +128,13 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
             }
         */
         def rawTx = "000000330100020000000000004d446976000000000000017fffffffffffffff00000001ccd403f00000"
-        def issuerAddress = createFundedAddress(startBTC, startMSC, false)
+        def issuerAddress = createFundedAddress(startBTC, startOmni, false)
         def investorAddress = createFundedAddress(startBTC, amountToInvest, false)
-        def currencyMSC = CurrencyID.MSC
+        def currencyMSC = CurrencyID.OMNI
 
         when: "creating a new crowdsale with 0.00000001 MDiv per unit invested"
         def crowdsaleTxid = omniSendRawTx(issuerAddress, rawTx)
-        generateBlock()
+        generate()
 
         then: "the crowdsale is valid"
         def crowdsaleTx = omniGetTransaction(crowdsaleTxid)
@@ -147,15 +145,15 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         def propertyId = new CurrencyID(crowdsaleTx.propertyid as Long)
         omniGetCrowdsale(propertyId).active
 
-        when: "participant invests #amountToInvest MSC"
+        when: "participant invests #amountToInvest OMNI"
         def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest)
-        generateBlock()
+        generate()
 
         then: "the investor should get #expectedBalance MDiv"
         omniGetBalance(investorAddress, propertyId).balance.equals(expectedBalance)
 
         and: "the issuer receives the invested amount"
-        omniGetBalance(issuerAddress, currencyMSC).balance.equals(startMSC + amountToInvest)
+        omniGetBalance(issuerAddress, currencyMSC).balance.equals(startOmni + amountToInvest)
 
         when: "retrieving the transaction"
         def sendTx = omniGetTransaction(sendTxid)
@@ -199,7 +197,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
         when:
         def txidClose = closeCrowdsale(issuerAddress, propertyId) // bypass RPC layer
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txidClose).valid == !crowdsaleMaxed
@@ -232,13 +230,13 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
             }
         */
         def rawTx = "0000003302000100000000000054496e646976000000000000020000000000000d4800000001ccd403f00000"
-        def issuerAddress = createFundedAddress(startBTC, startMSC, false)
+        def issuerAddress = createFundedAddress(startBTC, startOmni, false)
         def investorAddress = createFundedAddress(startBTC, amountToInvest, false)
-        def currencyMSC = CurrencyID.TMSC
+        def currencyMSC = CurrencyID.TOMNI
 
         when: "creating a new crowdsale with 3400 TIndiv per unit invested"
         def crowdsaleTxid = omniSendRawTx(issuerAddress, rawTx)
-        generateBlock()
+        generate()
 
         then: "the crowdsale is valid"
         def crowdsaleTx = omniGetTransaction(crowdsaleTxid)
@@ -249,15 +247,15 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         def propertyId = new CurrencyID(crowdsaleTx.propertyid as Long)
         omniGetCrowdsale(propertyId).active
 
-        when: "participant invests #amountToInvest TMSC"
+        when: "participant invests #amountToInvest TOMNI"
         def sendTxid = omniSend(investorAddress, issuerAddress, currencyMSC, amountToInvest)
-        generateBlock()
+        generate()
 
         then: "the investor should get #expectedBalance TIndiv"
         omniGetBalance(investorAddress, propertyId).balance.longValue() == expectedBalance.longValue()
 
         and: "the issuer receives the invested amount"
-        omniGetBalance(issuerAddress, currencyMSC).balance == startMSC + amountToInvest.numberValue()
+        omniGetBalance(issuerAddress, currencyMSC).balance.numberValue() == startOmni.numberValue() + amountToInvest.numberValue()
 
         when: "retrieving the transaction"
         def sendTx = omniGetTransaction(sendTxid)
@@ -271,7 +269,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         sendTx.type == "Crowdsale Purchase"
         sendTx.propertyid == currencyMSC.getValue()
         sendTx.divisible
-        sendTx.amount as BigDecimal == amountToInvest.bigDecimalValue()
+        sendTx.amount as BigDecimal == amountToInvest.numberValue()
         sendTx.purchasedpropertyid == propertyId.getValue()
         sendTx.purchasedpropertyname == "TIndiv"
         !sendTx.purchasedpropertydivisible
@@ -297,7 +295,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
 
         when:
         def txidClose = closeCrowdsale(issuerAddress, propertyId) // bypass RPC layer
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(txidClose).valid

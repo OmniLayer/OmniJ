@@ -217,6 +217,25 @@ public class OmniAmount implements MonetaryAmount {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof OmniAmount)) {
+            return false;
+        }
+        return this.value.equals(((OmniAmount)obj).value) &&
+                this.currencyID.equals(((OmniAmount) obj).currencyID);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = value.hashCode();
+        result = 31 * result + currencyID.hashCode();
+        return result;
+    }
+
+    @Override
     public CurrencyUnit getCurrency() {
         return null;
     }

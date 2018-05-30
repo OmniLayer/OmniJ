@@ -1,6 +1,6 @@
 package foundation.omni.rpc;
 
-import com.msgilligan.bitcoinj.rpc.JsonRPCException;
+import com.msgilligan.jsonrpc.JsonRPCException;
 import com.msgilligan.bitcoinj.rpc.RPCConfig;
 import com.msgilligan.bitcoinj.json.conversion.BitcoinMath;
 import foundation.omni.CurrencyID;
@@ -21,9 +21,10 @@ import java.net.URI;
  * OmniClient that adds "extended" methods for Omni transactions that lack
  * RPCs in Omni Core 0.9.0
  *
- * <p>Raw transactions are created and sent via {@code "sendrawtx_MP"}.
+ * <p>Raw transactions are created and sent via {@code "omniSendRawTx"}.
  *
  */
+@Deprecated
 public class OmniExtendedClient extends OmniClient {
     RawTxBuilder builder = new RawTxBuilder();
 
@@ -38,10 +39,15 @@ public class OmniExtendedClient extends OmniClient {
     /**
      * Creates and broadcasts a "send to owners" transaction.
      *
+     * @param address     address
      * @param currencyId  The identifier of the currency
      * @param amount      The number of tokens to distribute (assumed in willets)
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
+     * @deprecated Use {@link OmniClient#omniSendSTO} instead
      */
+    @Deprecated
     public Sha256Hash sendToOwners(Address address, CurrencyID currencyId, OmniValue amount) throws JsonRPCException, IOException {
         //  ... but it doesn't matter since  createSendToOwnersHex just converts back to willets.
         String rawTxHex = builder.createSendToOwnersHex(currencyId, amount);
@@ -60,7 +66,11 @@ public class OmniExtendedClient extends OmniClient {
      * @param commitmentFee  The minimum transaction fee required to be paid as commitment when accepting this offer
      * @param action         The action applied to the offer (1 = new, 2 = update, 3 = cancel)
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
+     * @deprecated Use {@link OmniClient#omniSendDExSell} instead
      */
+    @Deprecated
     public Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, OmniDivisibleValue amountForSale,
                                   Coin amountDesired, Byte paymentWindow, Coin commitmentFee,
                                   Byte action) throws JsonRPCException, IOException {
@@ -78,7 +88,11 @@ public class OmniExtendedClient extends OmniClient {
      * @param amount       The amount of tokens to purchase
      * @param toAddress    The address of the offer
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
+     * @deprecated Use {@link OmniClient#omniSendDExAccept} instead
      */
+    @Deprecated
     public Sha256Hash acceptDexOffer(Address fromAddress, CurrencyID currencyId, OmniDivisibleValue amount, Address toAddress)
             throws JsonRPCException, IOException {
         String rawTxHex = builder.createAcceptDexOfferHex(currencyId, amount);
@@ -99,7 +113,11 @@ public class OmniExtendedClient extends OmniClient {
      * @param amountDesired     The amount of desired Currency (divisible token, decimal format)
      * @param action            The action applied to the offer (1 = new, 2 = update, 3 = cancel)
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
+     * @deprecated Use {@link OmniClient#omniSendTrade} instead
      */
+    @Deprecated
     public Sha256Hash createMetaDexSellOffer(Address address, CurrencyID currencyForSale, OmniDivisibleValue amountForSale,
                                       CurrencyID currencyDesired, OmniDivisibleValue amountDesired,
                                       Byte action) throws JsonRPCException, IOException {
@@ -121,7 +139,11 @@ public class OmniExtendedClient extends OmniClient {
      * @param earlyBirdBonus   The bonus percentage per week
      * @param issuerBonus      The bonus for the issuer
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
+     * @deprecated Use {@link OmniClient#omniSendIssuanceCrowdsale} instead
      */
+    @Deprecated
     public Sha256Hash createCrowdsale(Address address, Ecosystem ecosystem, PropertyType propertyType,
                                       CurrencyID propertyDesired, Long tokensPerUnit, Long deadline,
                                       Byte earlyBirdBonus, Byte issuerBonus)
@@ -139,7 +161,11 @@ public class OmniExtendedClient extends OmniClient {
      * @param ecosystem  The ecosystem to create the property in
      * @param value      Amount (and property type)
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
+     * @deprecated Use {@link OmniClient#omniSendIssuanceFixed} instead
      */
+    @Deprecated
     public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value)
             throws JsonRPCException, IOException {
         return createProperty(address, ecosystem, value, "SP");
@@ -153,7 +179,11 @@ public class OmniExtendedClient extends OmniClient {
      * @param value      Amount (and property type)
      * @param label      The label or title of the property
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
+     * @deprecated Use {@link OmniClient#omniSendIssuanceFixed} instead
      */
+    @Deprecated
     public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value, String label)
             throws JsonRPCException, IOException {
         String rawTxHex = builder.createPropertyHex(ecosystem, value.getPropertyType(), 0L, "", "", label, "", "", value);
@@ -163,19 +193,21 @@ public class OmniExtendedClient extends OmniClient {
 
     /**
      *
-     * @param address
-     * @param ecosystem
-     * @param value
-     * @param previousPropertyId
-     * @param category
-     * @param subCategory
-     * @param label
-     * @param website
-     * @param info
-     * @return
-     * @throws JsonRPCException
-     * @throws IOException
+     * @param address deprecated
+     * @param ecosystem deprecated
+     * @param value deprecated
+     * @param previousPropertyId deprecated
+     * @param category  deprecated
+     * @param subCategory deprecated
+     * @param label deprecated
+     * @param website  deprecated
+     * @param info deprecated
+     * @return deprecated
+     * @throws JsonRPCException deprecated
+     * @throws IOException deprecated
+     * @deprecated Use {@link OmniClient#omniSendIssuanceFixed} instead
      */
+    @Deprecated
     public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value,
                                       Long previousPropertyId,
                                       String category,
@@ -198,7 +230,11 @@ public class OmniExtendedClient extends OmniClient {
      * @param address     The issuance address
      * @param currencyID  The identifier of the crowdsale
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
+     * @deprecated Use {@link OmniClient#omniSendCloseCrowdsale} instead
      */
+    @Deprecated
     public Sha256Hash closeCrowdsale(Address address, CurrencyID currencyID) throws JsonRPCException, IOException {
         String rawTxHex = builder.createCloseCrowdsaleHex(currencyID);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
@@ -206,7 +242,7 @@ public class OmniExtendedClient extends OmniClient {
     }
 
     /**
-     * Creates a manged property.
+     * Creates a managed property.
      *
      * @param address      The issuance address
      * @param ecosystem    The ecosystem to create the property in
@@ -217,7 +253,11 @@ public class OmniExtendedClient extends OmniClient {
      * @param website      The website website
      * @param info         Additional information
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
+     * @deprecated Use {@link OmniClient#omniSendIssuanceManaged} instead
      */
+    @Deprecated
     public Sha256Hash createManagedProperty(Address address, Ecosystem ecosystem, PropertyType type, String category,
                                             String subCategory, String label, String website, String info)
             throws JsonRPCException, IOException {
@@ -234,7 +274,11 @@ public class OmniExtendedClient extends OmniClient {
      * @param currencyID  The identifier of the property
      * @param amount      The number of tokens to grant
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
+     * @deprecated Use {@link OmniClient#omniSendGrant} instead
      */
+    @Deprecated
     public Sha256Hash grantTokens(Address address, CurrencyID currencyID, OmniValue amount)
             throws JsonRPCException, IOException {
         String rawTxHex = builder.createGrantTokensHex(currencyID, amount, "");
@@ -249,7 +293,11 @@ public class OmniExtendedClient extends OmniClient {
      * @param currencyID  The identifier of the property
      * @param amount      The number of tokens to revoke
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
+     * @deprecated Use {@link OmniClient#omniSendRevoke} instead
      */
+    @Deprecated
     public Sha256Hash revokeTokens(Address address, CurrencyID currencyID, OmniValue amount)
             throws JsonRPCException, IOException {
         String rawTxHex = builder.createRevokeTokensHex(currencyID, amount, "");
@@ -264,7 +312,11 @@ public class OmniExtendedClient extends OmniClient {
      * @param currencyID   The identifier of the property
      * @param toAddress    The new issuer on record
      * @return The transaction hash
+     * @throws JsonRPCException JSON RPC error
+     * @throws IOException network error
+     * @deprecated Use {@link OmniClient#omniSendChangeIssuer} instead
      */
+    @Deprecated
     public Sha256Hash changeIssuer(Address fromAddress, CurrencyID currencyID, Address toAddress)
             throws JsonRPCException, IOException {
         String rawTxHex = builder.createChangePropertyManagerHex(currencyID);

@@ -4,17 +4,18 @@
 
 . Update `CHANGELOG.adoc`
 . Set versions
-.. `build.gradle`
+.. `gradle.properties`
 .. omnij-dsl `ExtensionModule`
 .. `README.adoc`
 . Commit version bump and changelog.
+. Full build, test
+.. `./gradlew clean buildCI regTest`
 . Tag: `git tag -a v0.x.y -m "Release 0.x.y"`
 . Push: `git push --tags origin master`
-. Full build, test
-.. `./gradlew clean jenkinsBuild regTest`
-. Publish to Bintray: 
+. Publish to Bintray:
 .. `./gradlew bintrayUpload`
 .. Confirm publish of artifacts in Bintray Web UI.
+. Update Github https://github.com/OmniLayer/OmniJ/releases[OmniJ Releases] page.
 . TBD: Update github-pages site (not set up yet)
 
 == Announcements

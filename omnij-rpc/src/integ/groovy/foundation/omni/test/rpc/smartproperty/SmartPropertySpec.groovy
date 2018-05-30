@@ -2,12 +2,10 @@ package foundation.omni.test.rpc.smartproperty
 
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniIndivisibleValue
-import foundation.omni.OmniValue
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.PropertyType
 import spock.lang.Shared
 
 /*
@@ -30,10 +28,10 @@ class SmartPropertySpec extends BaseRegTestSpec {
 
     def "Create smart property with divisible units"() {
         when: "we transmit a property creation transaction in main ecosystem"
-        def txid = createProperty(fundedAddress, Ecosystem.MSC, OmniDivisibleValue.ofWillets(314159265L))
+        def txid = createProperty(fundedAddress, Ecosystem.OMNI, OmniDivisibleValue.ofWillets(314159265L))
 
         and: "a new block is mined"
-        client.generateBlock()
+        client.generate()
 
         then: "the transaction confirms"
         def transaction = client.omniGetTransaction(txid)
@@ -44,7 +42,7 @@ class SmartPropertySpec extends BaseRegTestSpec {
 
         and: "is in the main ecosystem"
         def propertyId = new CurrencyID(transaction.propertyid)
-        propertyId.ecosystem == Ecosystem.MSC
+        propertyId.ecosystem == Ecosystem.OMNI
 
         and: "has 3.14159265 divisible units"
         transaction.divisible == true
@@ -57,10 +55,10 @@ class SmartPropertySpec extends BaseRegTestSpec {
 
     def "Create test property with indivisible units"() {
         when: "we transmit a property creation transaction in test ecosystem"
-        def txid = createProperty(fundedAddress, Ecosystem.TMSC, OmniIndivisibleValue.of(4815162342L))
+        def txid = createProperty(fundedAddress, Ecosystem.TOMNI, OmniIndivisibleValue.of(4815162342L))
 
         and: "a new block is mined"
-        client.generateBlock()
+        client.generate()
 
         then: "the transaction confirms"
         def transaction = client.omniGetTransaction(txid)
@@ -71,7 +69,7 @@ class SmartPropertySpec extends BaseRegTestSpec {
 
         and: "is in the test ecosystem"
         def propertyId = new CurrencyID(transaction.propertyid)
-        propertyId.ecosystem == Ecosystem.TMSC
+        propertyId.ecosystem == Ecosystem.TOMNI
 
         and: "has 4815162342 indivisible units"
         transaction.divisible == false

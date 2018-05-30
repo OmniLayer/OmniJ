@@ -3,7 +3,6 @@ package foundation.omni.test.rpc.sendall
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.PropertyType
 import org.junit.internal.AssumptionViolatedException
 import spock.lang.Unroll
 
@@ -20,14 +19,14 @@ class SendAllSpec extends BaseRegTestSpec {
         def otherAddress = newAddress
 
         then:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC.numberValue()
-        omniGetBalance(actorAddress, CurrencyID.TMSC).balance == startMSC.numberValue()
-        omniGetBalance(otherAddress, CurrencyID.MSC).balance == zeroAmount
-        omniGetBalance(otherAddress, CurrencyID.TMSC).balance == zeroAmount
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance == startMSC.numberValue()
+        omniGetBalance(actorAddress, CurrencyID.TOMNI).balance == startMSC.numberValue()
+        omniGetBalance(otherAddress, CurrencyID.OMNI).balance == zeroAmount
+        omniGetBalance(otherAddress, CurrencyID.TOMNI).balance == zeroAmount
 
         when:
         def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
-        generateBlock()
+        generate()
         def sendTx = omniGetTransaction(sendTxid)
 
         then: "the transaction is valid"
@@ -49,20 +48,20 @@ class SendAllSpec extends BaseRegTestSpec {
         subSends[0].amount as BigDecimal == startMSC.numberValue()
 
         and:
-        if (ecosystem == Ecosystem.MSC) {
-            assert omniGetBalance(actorAddress, CurrencyID.MSC).balance == zeroAmount
-            assert omniGetBalance(actorAddress, CurrencyID.TMSC).balance == startMSC.numberValue()
-            assert omniGetBalance(otherAddress, CurrencyID.MSC).balance == startMSC.numberValue()
-            assert omniGetBalance(otherAddress, CurrencyID.TMSC).balance == zeroAmount
+        if (ecosystem == Ecosystem.OMNI) {
+            assert omniGetBalance(actorAddress, CurrencyID.OMNI).balance == zeroAmount
+            assert omniGetBalance(actorAddress, CurrencyID.TOMNI).balance == startMSC.numberValue()
+            assert omniGetBalance(otherAddress, CurrencyID.OMNI).balance == startMSC.numberValue()
+            assert omniGetBalance(otherAddress, CurrencyID.TOMNI).balance == zeroAmount
         } else {
-            assert omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC.numberValue()
-            assert omniGetBalance(actorAddress, CurrencyID.TMSC).balance == zeroAmount
-            assert omniGetBalance(otherAddress, CurrencyID.MSC).balance == zeroAmount
-            assert omniGetBalance(otherAddress, CurrencyID.TMSC).balance == startMSC.numberValue()
+            assert omniGetBalance(actorAddress, CurrencyID.OMNI).balance == startMSC.numberValue()
+            assert omniGetBalance(actorAddress, CurrencyID.TOMNI).balance == zeroAmount
+            assert omniGetBalance(otherAddress, CurrencyID.OMNI).balance == zeroAmount
+            assert omniGetBalance(otherAddress, CurrencyID.TOMNI).balance == startMSC.numberValue()
         }
 
         where:
-        ecosystem << [Ecosystem.MSC, Ecosystem.TMSC]
+        ecosystem << [Ecosystem.OMNI, Ecosystem.TOMNI]
     }
 
     @Unroll
@@ -70,31 +69,31 @@ class SendAllSpec extends BaseRegTestSpec {
         when:
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def otherAddress = newAddress
-        omniSend(actorAddress, otherAddress, CurrencyID.MSC, startMSC)
-        omniSend(actorAddress, otherAddress, CurrencyID.TMSC, startMSC)
-        generateBlock()
+        omniSend(actorAddress, otherAddress, CurrencyID.OMNI, startMSC)
+        omniSend(actorAddress, otherAddress, CurrencyID.TOMNI, startMSC)
+        generate()
 
         then:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == zeroAmount
-        omniGetBalance(actorAddress, CurrencyID.TMSC).balance == zeroAmount
-        omniGetBalance(otherAddress, CurrencyID.MSC).balance == startMSC.numberValue()
-        omniGetBalance(otherAddress, CurrencyID.TMSC).balance == startMSC.numberValue()
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance == zeroAmount
+        omniGetBalance(actorAddress, CurrencyID.TOMNI).balance == zeroAmount
+        omniGetBalance(otherAddress, CurrencyID.OMNI).balance == startMSC.numberValue()
+        omniGetBalance(otherAddress, CurrencyID.TOMNI).balance == startMSC.numberValue()
 
         when:
         def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
-        generateBlock()
+        generate()
 
         then:
         omniGetTransaction(sendTxid).valid == false
 
         and:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == zeroAmount
-        omniGetBalance(actorAddress, CurrencyID.TMSC).balance == zeroAmount
-        omniGetBalance(otherAddress, CurrencyID.MSC).balance == startMSC.numberValue()
-        omniGetBalance(otherAddress, CurrencyID.TMSC).balance == startMSC.numberValue()
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance == zeroAmount
+        omniGetBalance(actorAddress, CurrencyID.TOMNI).balance == zeroAmount
+        omniGetBalance(otherAddress, CurrencyID.OMNI).balance == startMSC.numberValue()
+        omniGetBalance(otherAddress, CurrencyID.TOMNI).balance == startMSC.numberValue()
 
         where:
-        ecosystem << [Ecosystem.MSC, Ecosystem.TMSC]
+        ecosystem << [Ecosystem.OMNI, Ecosystem.TOMNI]
     }
 
     @Unroll
@@ -111,7 +110,7 @@ class SendAllSpec extends BaseRegTestSpec {
 
         when:
         def tradeTxid = omniSendTrade(actorAddress, nonManagedID, 4.divisible, tradeCurrency, 4.divisible)
-        generateBlock()
+        generate()
         def tradeTx = omniGetTransaction(tradeTxid)
 
         then:
@@ -121,7 +120,7 @@ class SendAllSpec extends BaseRegTestSpec {
 
         when:
         def sendTxid = omniSendAll(actorAddress, otherAddress, ecosystem)
-        generateBlock()
+        generate()
         def sendTx = omniGetTransaction(sendTxid)
 
         then:
@@ -131,11 +130,11 @@ class SendAllSpec extends BaseRegTestSpec {
         omniGetBalance(otherAddress, nonManagedID).balance == 6.0
 
         where:
-        ecosystem << [Ecosystem.MSC, Ecosystem.TMSC]
+        ecosystem << [Ecosystem.OMNI, Ecosystem.TOMNI]
     }
 
     def ecosystemToString(Ecosystem ecosystem) {
-        if (ecosystem == Ecosystem.MSC) {
+        if (ecosystem == Ecosystem.OMNI) {
             return "main"
         } else {
             return "test"

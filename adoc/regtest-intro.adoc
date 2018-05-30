@@ -4,11 +4,11 @@ Bitcoin 0.9 and later include support for Regression Test Mode (aka RegTest mode
 
 For example the following command will generate 101 blocks
 
-    ./bitcoin-cli -regtest setgenerate true 101
+    ./bitcoin-cli -regtest generate 101
 
 And yes, you get the newly mined coins. They can't be spent anywhere, but they're great for testing.
 
-The best documentation of RegTest mode that I've seen so far is https://bitcoinj.github.io/testing[How to test applications] on the new https://bitcoinj.github.io[Bitcoinj website].
+The best documentation of RegTest mode that I've seen so far is https://bitcoinj.github.io/testing[How to test applications] on the new https://bitcoinj.github.io[bitcoinj website].
 
 
 Other Links::

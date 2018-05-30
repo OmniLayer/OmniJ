@@ -4,6 +4,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.OmniValue
 import foundation.omni.PropertyType
+import org.bitcoinj.core.Coin
 
 class SendToOwnersReorgSpec extends BaseReorgSpec {
 
@@ -15,7 +16,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         def dummyOwnerAddress = createFundedAddress(startBTC, startMSC)
 
         when: "broadcasting and confirming a send to owners transaction"
-        def txid = omniSendSTO(senderAddress, CurrencyID.TMSC, sendAmount)
+        def txid = omniSendSTO(senderAddress, CurrencyID.TOMNI, sendAmount)
         def blockHashOfSend = generateAndGetBlockHash()
 
         then: "the transaction is valid"
@@ -24,7 +25,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         when: "invalidating the block and send to owners transaction"
         invalidateBlock(blockHashOfSend)
         clearMemPool()
-        generateBlock()
+        generate()
 
         then: "the send transaction is no longer valid"
         !checkTransactionValidity(txid)
@@ -38,11 +39,11 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         def dummyOwnerB = newAddress
         def dummyOwnerC = newAddress
 
-        def ecosystem = Ecosystem.MSC
+        def ecosystem = Ecosystem.OMNI
         def amountToCreate = OmniValue.of(153, PropertyType.INDIVISIBLE)
 
         def txidCreation = createProperty(senderAddress, ecosystem, amountToCreate)
-        generateBlock()
+        generate()
         def txCreation = omniGetTransaction(txidCreation)
         def currencyID = new CurrencyID(txCreation.propertyid as long)
 
@@ -78,7 +79,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         when: "invalidating the block and send to owners transaction"
         invalidateBlock(blockHashOfSend)
         clearMemPool()
-        generateBlock()
+        generate()
 
         then: "the send to owners transaction is no longer valid"
         !checkTransactionValidity(txidSTO)
@@ -94,7 +95,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         when: "rolling back until before the funding of the owners"
         invalidateBlock(blockHashOfOwnerFunding)
         clearMemPool()
-        generateBlock()
+        generate()
 
         then: "the owners have no tokens"
         omniGetBalance(dummyOwnerA, currencyID).balance == 0.0
@@ -108,22 +109,22 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
     def "Historical STO transactions are not affected by reorganizations"() {
         when:
         def actorAddress = createFundedAddress(startBTC, startMSC)
-        def tokenID = fundNewProperty(actorAddress, 100.divisible, Ecosystem.MSC)
+        def tokenID = fundNewProperty(actorAddress, 100.divisible, Ecosystem.OMNI)
         def ownerA = newAddress
         def ownerB = newAddress
         omniSend(actorAddress, ownerA, tokenID, 10.divisible)
         omniSend(actorAddress, ownerB, tokenID, 10.divisible)
-        generateBlock()
+        generate()
 
         then:
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance == startMSC
         omniGetBalance(actorAddress, tokenID).balance == 100.0 - 20.0
         omniGetBalance(ownerA, tokenID).balance == 10.0
         omniGetBalance(ownerB, tokenID).balance == 10.0
 
         when: "sending the first STO transaction"
         def firstTxid = omniSendSTO(actorAddress, tokenID, 30.divisible)
-        generateBlock()
+        generate()
         def firstTx = omniGetSTO(firstTxid)
 
         then: "the transaction is valid"
@@ -147,7 +148,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
 
         and: "the actor was charged"
         omniGetBalance(actorAddress, tokenID).balance == 100.0 - 20.0 - 30.0
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC - (2 * 0.00000001)
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance == startMSC - (2 * 0.00000001)
 
         when: "sending a second STO transaction"
         def secondTxid = omniSendSTO(actorAddress, tokenID, 30.divisible)
@@ -156,7 +157,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         and: "invalidating the block with the second STO transaction"
         invalidateBlock(blockHashOfSecond)
         clearMemPool()
-        generateBlock()
+        generate()
         def secondOrphanedTx = omniGetTransaction(secondTxid)
 
         then: "the transaction is not valid"
@@ -164,8 +165,9 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         // secondOrphanedTx.confirmations == -1 TODO: activate after Omni Core adjustment
 
         when: "creating a third STO transaction"
+        requestBitcoin(actorAddress, Coin.CENT)  // maybe use startBTC instead
         def thirdTxid = omniSendSTO(actorAddress, tokenID, 50.divisible)
-        generateBlock()
+        generate()
         def thirdTx = omniGetSTO(thirdTxid)
 
         then: "the third STO transaction is valid"
@@ -193,6 +195,6 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         omniGetBalance(actorAddress, tokenID).balance == 100.0 - 20.0 - 30.0 - 50.0
         omniGetBalance(ownerA, tokenID).balance == 10.0 + 15.0 + 25.0 // initial + first STO + third STO
         omniGetBalance(ownerB, tokenID).balance == 10.0 + 15.0 + 25.0
-        omniGetBalance(actorAddress, CurrencyID.MSC).balance == startMSC - (4 * 0.00000001) // fee for each owner
+        omniGetBalance(actorAddress, CurrencyID.OMNI).balance == startMSC - (4 * 0.00000001) // fee for each owner
     }
 }

@@ -29,7 +29,9 @@ public class OmniValueDeserializer extends JsonDeserializer<OmniValue> {
                     return OmniValue.of(p.getValueAsLong(), PropertyType.INDIVISIBLE);
                 }
             default:
-                throw ctxt.mappingException(Sha256Hash.class, token);
+                ctxt.handleUnexpectedToken(Sha256Hash.class, p);
+                return null;
+
         }
     }
 }

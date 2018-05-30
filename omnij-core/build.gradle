@@ -1,6 +1,9 @@
-dependencies {
-    compile 'javax.money:money-api-bp:1.0'
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
-    testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
-    testCompile "com.msgilligan:bitcoinj-groovy:${bitcoinjAddonsVersion}"
+dependencies {
+    compile 'javax.money:money-api-bp:1.0.3'
+
+    testCompile "com.msgilligan:bitcoinj-dsl:${consensusjVersion}"
 }
+

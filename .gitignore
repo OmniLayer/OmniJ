@@ -8,5 +8,7 @@ robolib/
 bitcoin-datadir/
 logs/
 copied-artifacts/
-
+.resourceCache/
+omnij-*/out/
+out/
 

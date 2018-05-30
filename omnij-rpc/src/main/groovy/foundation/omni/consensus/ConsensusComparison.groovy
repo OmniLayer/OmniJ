@@ -1,7 +1,7 @@
 package foundation.omni.consensus
 
+import foundation.omni.rpc.ConsensusSnapshot
 import groovy.transform.CompileStatic
-import groovy.transform.Immutable
 import foundation.omni.net.OmniMainNetParams
 import org.bitcoinj.core.Address
 
@@ -18,7 +18,7 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
         this.c1 = c1
         this.c2 = c2
     }
-/**
+    /**
      * Return an iterator that will iterate through the union of addresses
      * from the two ConsensusSnapshot objects, sorted by address
      * @return the iterator
@@ -33,7 +33,11 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
             // And what about TestNet, etc?
             unionAddresses.remove(OmniMainNetParams.get().exodusAddress)
         }
-        return new PairIterator(unionAddresses.iterator())
+        /* Use temp variable to workaround GROOVY-8590
+         * https://issues.apache.org/jira/browse/GROOVY-8590
+         */
+        def temp = new PairIterator(unionAddresses.iterator())
+        return temp;
     }
 
     /**

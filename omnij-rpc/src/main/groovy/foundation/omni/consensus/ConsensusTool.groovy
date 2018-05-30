@@ -2,6 +2,8 @@ package foundation.omni.consensus
 
 import foundation.omni.CurrencyID
 import foundation.omni.rpc.BalanceEntry
+import foundation.omni.rpc.ConsensusFetcher
+import foundation.omni.rpc.ConsensusSnapshot
 import groovy.transform.TypeChecked
 import org.bitcoinj.core.Address
 
@@ -9,11 +11,10 @@ import org.bitcoinj.core.Address
  * Base class for fetching Omni Protocol consensus data
  */
 @TypeChecked
-abstract class ConsensusTool implements ConsensusFetcher {
-    abstract URI getServerURI();
+trait ConsensusTool implements ConsensusFetcher {
 
     void run(List<String> args) {
-        Long currencyIDNum =  args[0] ? Long.parseLong(args[0], 10) : CurrencyID.MSC_VALUE
+        Long currencyIDNum =  args[0] ? Long.parseLong(args[0], 10) : CurrencyID.OMNI_VALUE
         CurrencyID currencyID = new CurrencyID(currencyIDNum)
 
         String fileName = args[1]

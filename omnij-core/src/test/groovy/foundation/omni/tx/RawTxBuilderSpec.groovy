@@ -5,7 +5,6 @@ import foundation.omni.Ecosystem
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniIndivisibleValue
 import foundation.omni.PropertyType
-import org.bitcoinj.core.Coin
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -25,8 +24,8 @@ class RawTxBuilderSpec extends Specification {
     def "The hex-encoded raw transaction matches valid reference: simple send [type 0, version 0]"() {
         when:
         def txHex = builder.createSimpleSendHex(
-                CurrencyID.MSC,   // property
-                ONE_OMNI)         // amount to transfer: 1.0 MSC (in willets)
+                CurrencyID.OMNI,   // property
+                ONE_OMNI)         // amount to transfer: 1.0 OMNI (in willets)
 
         then:
         txHex == "00000000000000010000000005f5e100"
@@ -35,8 +34,8 @@ class RawTxBuilderSpec extends Specification {
     def "The hex-encoded raw transaction matches valid reference: send to owners [type 3, version 0]"() {
         when:
         def txHex = builder.createSendToOwnersHex(
-                CurrencyID.MSC,   // property
-                ONE_OMNI)         // amount to distribute: 1.0 MSC (in willets)
+                CurrencyID.OMNI,   // property
+                ONE_OMNI)         // amount to distribute: 1.0 OMNI (in willets)
 
         then:
         txHex == "00000003000000010000000005f5e100"
@@ -45,8 +44,8 @@ class RawTxBuilderSpec extends Specification {
     def "The hex-encoded raw transaction matches valid reference: sell tokens for bitcoins [type 20, version 1]"() {
         when:
         def txHex = builder.createDexSellOfferHex(
-                CurrencyID.MSC,   // property
-                ONE_OMNI,         // amount for sale: 1.0 MSC (in willets)
+                CurrencyID.OMNI,   // property
+                ONE_OMNI,         // amount for sale: 1.0 OMNI (in willets)
                 0.2.btc,         // amount desired: 0.2 BTC (in satoshis)
                 (Byte) 10,        // payment window in blocks
                 0.0001.btc,       // commitment fee in satoshis
@@ -59,9 +58,9 @@ class RawTxBuilderSpec extends Specification {
     def "The hex-encoded raw transaction matches valid reference: trade tokens for tokens [type 21, version 0]"() {
         when:
         def txHex = builder.createMetaDexSellOfferHex(
-                CurrencyID.MSC,       // property
-                OmniDivisibleValue.of(2.5),            // amount for sale: 2.5 MSC
-                CurrencyID.TetherUS,  // property desired
+                CurrencyID.OMNI,       // property
+                OmniDivisibleValue.of(2.5),            // amount for sale: 2.5 OMNI
+                CurrencyID.USDT,  // property desired
                 OmniDivisibleValue.of(50),          // amount desired: 50.0 TetherUS
                 (Byte) 1)             // sub-action: new offer
 
@@ -72,8 +71,8 @@ class RawTxBuilderSpec extends Specification {
     def "The hex-encoded raw transaction matches valid reference: purchase tokens with bitcoins [type 22, version 0]"() {
         when:
         def txHex = builder.createAcceptDexOfferHex(
-                CurrencyID.MSC,  // property
-                OmniDivisibleValue.of(1.3))       // amount to purchase: 1.3 MSC
+                CurrencyID.OMNI,  // property
+                OmniDivisibleValue.of(1.3))       // amount to purchase: 1.3 OMNI
 
         then:
         txHex == "00000016000000010000000007bfa480"
@@ -82,7 +81,7 @@ class RawTxBuilderSpec extends Specification {
     def "The hex-encoded raw transaction matches valid reference: create property [type 50, version 0]"() {
         when:
         def txHex = builder.createPropertyHex(
-                Ecosystem.MSC,             // ecosystem: main
+                Ecosystem.OMNI,             // ecosystem: main
                 PropertyType.INDIVISIBLE,  // property type: indivisible tokens
                 0,                         // previous property: none
                 "Companies",               // category
@@ -100,7 +99,7 @@ class RawTxBuilderSpec extends Specification {
     def "The hex-encoded raw transaction matches valid reference: create crowdsale [type 51, version 0]"() {
         when:
         def txHex = builder.createCrowdsaleHex(
-                Ecosystem.MSC,             // ecosystem: main
+                Ecosystem.OMNI,             // ecosystem: main
                 PropertyType.INDIVISIBLE,  // property type: indivisible tokens
                 0,                         // previous property: none
                 "Companies",               // category
@@ -108,7 +107,7 @@ class RawTxBuilderSpec extends Specification {
                 "Quantum Miner",           // label
                 "builder.bitwatch.co",     // website
                 "",                        // additional information
-                CurrencyID.MSC,            // property desired
+                CurrencyID.OMNI,            // property desired
                 100,                       // tokens per unit vested
                 7731414000L,               // deadline: 31 Dec 2214 23:00:00 UTC
                 (Byte) 10,                 // early bird bonus: 10 % per week
@@ -131,7 +130,7 @@ class RawTxBuilderSpec extends Specification {
     def "The hex-encoded raw transaction matches valid reference: create managed property [type 54, version 0]"() {
         when:
         def txHex = builder.createManagedPropertyHex(
-                Ecosystem.MSC,             // ecosystem: main
+                Ecosystem.OMNI,             // ecosystem: main
                 PropertyType.INDIVISIBLE,  // property type: indivisible tokens
                 0,                         // previous property: none
                 "Companies",               // category

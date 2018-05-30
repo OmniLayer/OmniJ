@@ -3,50 +3,78 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
-        classpath 'com.github.jruby-gradle:jruby-gradle-plugin:0.4.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.3.1'
+        classpath 'org.asciidoctor:asciidoctorj-diagram:1.5.0'
     }
 }
 
-ext.groovyVersion = '2.4.5'
-ext.bitcoinjAddonsVersion = '0.0.11'
+plugins {
+    id 'org.asciidoctor.convert'        version '1.5.3'
+    id 'com.jfrog.bintray'              version '1.7.3'
+}
+
+// See gradle.properties for some dependency version settings
 
 allprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
+    //apply plugin: 'findbugs'
+    //apply plugin: 'pmd'
 
-    sourceCompatibility = 1.7
-
-    version = '0.3.4-SNAPSHOT'
+    version = omnijVersion
     group = 'foundation.omni'
 
     repositories {
         jcenter()
-//        mavenLocal()   // Uncomment to work with local snapshots
+        //mavenLocal()   // Uncomment to work with local snapshots
         maven { url 'https://dl.bintray.com/msgilligan/maven' } // bitcoinj-addons (RPC client)
+    }
+
+    tasks.withType(FindBugs) {
+        reports {
+            xml.enabled false
+            html.enabled true
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        doFirst {
+            if (sourceCompatibility == '1.7' && System.env.JDK7_HOME != null) {
+                options.bootClasspath = "$System.env.JDK7_HOME/jre/lib/rt.jar"
+                //options.bootClasspath += "$File.pathSeparator$System.env.JDK7_HOME/jre/lib/jce.jar"
+                // use the line above as an example to add jce.jar
+                // and other specific JDK jars
+            }
+        }
+    }
+
+    tasks.withType(GroovyCompile) {
+        groovyOptions.optimizationOptions.indy = true
     }
 }
 
 subprojects {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
     dependencies {
-        compile 'org.bitcoinj:bitcoinj-core:0.13.3'
-        compile 'org.slf4j:slf4j-api:1.7.7'
-
-        runtime 'org.slf4j:slf4j-jdk14:1.7.7'               // Runtime implementation of slf4j
-
-        testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
+        compile "org.bitcoinj:bitcoinj-core:${bitcoinjVersion}"
+        compile "org.slf4j:slf4j-api:${slf4jVersion}"
+        
+        testCompile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+        testCompile("org.spockframework:spock-core:${spockVersion}") {
             exclude module: "groovy-all"
         }
+        testRuntime "org.slf4j:slf4j-jdk14:${slf4jVersion}"     // Runtime implementation of slf4j for tests
     }
 
     compileJava {
-        options.compilerArgs << '-Xlint:unchecked'
+        options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
     }
 
     test {
         testLogging.showStandardStreams = true
     }
+
 }
 
 apply from: 'gradle/idea.gradle'
@@ -60,5 +88,6 @@ task testReport(type: TestReport) {
     reportOn subprojects*.test
 }
 
-task jenkinsBuild(dependsOn: [build, testReport, groovydocAll, asciidoctor])
+task buildCI(dependsOn: [build, testReport, groovydocAll, asciidoctor])
+task jenkinsBuild(dependsOn: buildCI)
 

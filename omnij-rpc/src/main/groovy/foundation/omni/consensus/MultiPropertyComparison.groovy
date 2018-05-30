@@ -1,8 +1,8 @@
 package foundation.omni.consensus
 
 import foundation.omni.CurrencyID
-import foundation.omni.Ecosystem
-import foundation.omni.rpc.SmartPropertyListInfo
+import foundation.omni.rpc.ConsensusFetcher
+import foundation.omni.rpc.ConsensusSnapshot
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
