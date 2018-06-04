@@ -235,7 +235,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param fromAddress The address to spent from
      * @param toAddress   The address to send to
      * @param currency    The identifier of the token to transfer
-     * @param amount      The amount to transfer
+     * @param amount      The amount to transfer (Divisible/Indivisible type should match currency ID)
      * @return The hash of the transaction
      * @throws JsonRPCException JSON RPC error
      * @throws IOException network error
