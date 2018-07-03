@@ -25,11 +25,11 @@ There are currently six subprojects of OmniJ. Each of which builds a JAR artifac
 
 | omnij-core
 | Core Omni functionality
-| JDK 7+ Java-only, Android-compatible
+| JDK 8+ Java-only, Android-compatible
 
 | omnij-dsl
 | Domain Specific Language (DSL) support for Omni
-| JDK 7+, Groovy language
+| JDK 8+, Groovy language
 
 | omnij-money
 | JavaMoney support for Omni currency codes and exchanges
@@ -41,7 +41,7 @@ There are currently six subprojects of OmniJ. Each of which builds a JAR artifac
 
 | omnij-rpc
 | Omni Core RPC library, command-line API/tools, integration tests
-| JDK 7+ Java & Groovy
+| JDK 8+ Java & Groovy
 
 | omnij-cli
 | Builds the command-line Omni consensus-checking tool.
@@ -69,7 +69,7 @@ WARNING: These binaries have not been audited. Use only on TestNet or RegTest.
 
 === Building OmniJ
 
-The only prerequisite for building OmniJ is having Java JDK 7 or later installed. All other prerequisites are downloaded automatically by the http://gradle.org/docs/current/userguide/gradle_wrapper.html[Gradle Wrapper] script.
+The only prerequisite for building OmniJ is having Java JDK 8 or later installed. All other prerequisites are downloaded automatically by the http://gradle.org/docs/current/userguide/gradle_wrapper.html[Gradle Wrapper] script.
 
 . Check out this project using Git
 
@@ -132,7 +132,7 @@ Test Bitcoin RPC calls against an instance of `bitcoind` running in RegTest mode
 
 == Installing pre-requisites
 
-The only prerequisite for running these tests is an installed Java Runtime Environment. Either an Oracle or OpenJDK VM will work. Java 7 or later is required.
+The only prerequisite for running these tests is an installed Java Runtime Environment. Either an Oracle or OpenJDK VM will work. Java 8 or later is required.
 
 All other dependencies are automatically downloaded and cached by the test startup script.
 

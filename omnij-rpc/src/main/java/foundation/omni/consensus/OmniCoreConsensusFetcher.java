@@ -1,6 +1,6 @@
 package foundation.omni.consensus;
 
-import com.msgilligan.jsonrpc.JsonRPCException;
+import org.consensusj.jsonrpc.JsonRPCException;
 import foundation.omni.CurrencyID;
 import foundation.omni.rpc.BalanceEntry;
 import foundation.omni.rpc.ConsensusFetcher;

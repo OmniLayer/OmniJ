@@ -5,21 +5,18 @@ A high-level view of the changes in each OmniJ binary release.
 
 == v0.5.6-SNAPSHOT
 
-=== omnij-cli
+=== omnij-core
 
 * Update to JavaMoney API 1.0.3
 
-=== omnij-cli
-
-* BREAKING: Upgrade to Java 8
-* Update to JavaMoney RI Backport 1.2
-
 === omnij-money
 
-* BREAKING: Upgrade to Java 8
+* Update to JavaMoney RI 1.2.1
 
 === All modules
 
+* BREAKING: Upgrade to Java 8
+* Upgrade to *consensusj* 0.2.7
 * Upgrade to *bitcoinj* 0.14.7
 * Upgrade to *Groovy* 2.5.0
 * Upgrade to *Gradle* 4.6

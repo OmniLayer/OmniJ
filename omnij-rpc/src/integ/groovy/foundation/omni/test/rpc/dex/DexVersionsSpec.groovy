@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.dex
 
-import com.msgilligan.jsonrpc.JsonRPCStatusException
+import org.consensusj.jsonrpc.JsonRPCStatusException
 import foundation.omni.BaseRegTestSpec
 
 /**

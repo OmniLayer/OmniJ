@@ -7,10 +7,10 @@ def groovydocSpec = {
 
     overviewText = project.resources.text.fromFile(rootProject.file('src/main/java/overview.html'))
     includePrivate = false
-    link 'http://docs.oracle.com/javase/7/docs/api/', 'java.', 'org.xml.', ' javax.xml.', 'javax.sql.', 'javax.net.', 'org.w3c.'
-    link 'http://commons.apache.org/proper/commons-cli/javadocs/api-release/', 'org.apache.commons.cli.'
-    link 'https://bitcoinj.github.io/javadoc/0.13.2/', 'org.bitcoin.', 'org.bitcoinj.'
-    link 'https://msgilligan.github.io/bitcoinj-addons/apidoc/', 'com.msgilligan.bitcoinj.'
+    link 'https://docs.oracle.com/javase/8/docs/api/', 'java.', 'org.xml.', ' javax.xml.', 'javax.sql.', 'javax.net.', 'org.w3c.'
+    link 'https://commons.apache.org/proper/commons-cli/javadocs/api-release/', 'org.apache.commons.cli.'
+    link 'https://bitcoinj.github.io/javadoc/0.14.7/', 'org.bitcoin.', 'org.bitcoinj.'
+    link 'https://consensusj.github.io/consensusj/apidoc/', 'com.msgilligan.bitcoinj.', 'org.consensusj.'
 
 }
 

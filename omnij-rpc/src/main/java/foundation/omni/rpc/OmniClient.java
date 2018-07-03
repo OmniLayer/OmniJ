@@ -2,7 +2,7 @@ package foundation.omni.rpc;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.msgilligan.bitcoinj.rpc.BitcoinExtendedClient;
-import com.msgilligan.jsonrpc.JsonRPCException;
+import org.consensusj.jsonrpc.JsonRPCException;
 import com.msgilligan.bitcoinj.rpc.RPCConfig;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;

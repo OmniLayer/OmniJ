@@ -1,4 +1,4 @@
-def xChangeVersion = '4.2.3'
+def xChangeVersion = '4.3.8'
 
 repositories {
 //    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' } // For snapshot versions of XChange
@@ -9,8 +9,8 @@ dependencies {
 
     compile "com.msgilligan:bitcoinj-money:${consensusjVersion}"
 
-    compile 'org.javamoney:moneta-bp:1.2'
-    
+    compile 'org.javamoney:moneta:1.2.1'
+
     testCompile "org.knowm.xchange:xchange-poloniex:${xChangeVersion}"
     testCompile "org.knowm.xchange:xchange-bittrex:${xChangeVersion}"
     testCompile "org.knowm.xchange:xchange-kraken:${xChangeVersion}"

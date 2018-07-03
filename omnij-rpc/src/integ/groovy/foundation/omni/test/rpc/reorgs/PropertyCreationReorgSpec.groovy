@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.reorgs
 
-import com.msgilligan.jsonrpc.JsonRPCStatusException
+import org.consensusj.jsonrpc.JsonRPCStatusException
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.rpc.SmartPropertyListInfo

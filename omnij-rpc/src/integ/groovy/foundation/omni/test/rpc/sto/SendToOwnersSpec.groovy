@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.sto
 
-import com.msgilligan.jsonrpc.JsonRPCStatusException
+import org.consensusj.jsonrpc.JsonRPCStatusException
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.ConsensusTool
