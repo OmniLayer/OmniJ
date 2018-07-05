@@ -2,7 +2,7 @@ package foundation.omni.rest.omniwallet
 
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.OmniIndivisibleValue
+import foundation.omni.OmniValue
 import foundation.omni.PropertyType
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
@@ -145,16 +145,31 @@ class OmniwalletClientSpec extends Specification {
         balances.size() >= 0
 
         and: "all balances of correct property type"
-        balances.every {address, entry ->
-            entry.reserved.propertyType == propType
-        }
-        balances.every {address, entry ->
-            entry.balance.propertyType == propType
-        }
+        allPropTypesValid(balances, propType)
+
+        and: "all balances are in valid range"
+        allBalancesValid(balances)
 
         where:
         [id, info] << client.listProperties().collect{[it.propertyid, it]}  // Test for ALL currencies on MainNet
     }
+
+    def "we can get consensus info for USDT"() {
+        setup:
+        def propType = PropertyType.DIVISIBLE
+        when: "we get data"
+        SortedMap<Address, BalanceEntry> balances = client.getConsensusForCurrency(USDT)
+
+        then: "something is there"
+        balances.size() >= 0
+
+        and: "all balances of correct property type"
+        allPropTypesValid(balances, propType)
+
+        and: "all balances are in valid range"
+        allBalancesValid(balances)
+    }
+
 
     def "we can get consensus info for SAFEX"() {
         setup:
@@ -166,17 +181,32 @@ class OmniwalletClientSpec extends Specification {
         balances.size() >= 0
 
         and: "all balances of correct property type"
+        allPropTypesValid(balances, propType)
+
+        and: "all balances are in valid range"
+        allBalancesValid(balances)
+    }
+
+    boolean allPropTypesValid(Map<Address, BalanceEntry> balances, PropertyType expectedPropType) {
         balances.every {address, entry ->
-            entry.balance.propertyType == propType && OmniIndivisibleValue.checkValue(entry.reserved.willets)
-        }
-        balances.every {address, entry ->
-            entry.reserved.propertyType == propType && OmniIndivisibleValue.checkValue(entry.reserved.willets)
+            entry.balance.propertyType == expectedPropType && entry.reserved.propertyType == expectedPropType
         }
     }
 
-    def setup() {
-        HttpUrl baseURL = HttpUrl.parse("https://staging.omniwallet.org")
+    boolean allBalancesValid(Map<Address, BalanceEntry> balances) {
+        balances.every { address, entry ->
+                boolean valid = (entry.balance.willets >= 0) && (entry.balance.willets <= OmniValue.MAX_WILLETS) &&
+                        (entry.reserved.willets >= 0) && (entry.reserved.willets <= OmniValue.MAX_WILLETS)
+                if (!valid) {
+                    println("Invalid entry ${entry}")
+                }
+                return valid;
+            }
+    }
+
+        def setup() {
+        HttpUrl baseURL = OmniwalletClient.omniwalletBase
         boolean debug = true
-        client = new OmniwalletClient(baseURL, true)
+        client = new OmniwalletClient(baseURL, debug)
     }
 }

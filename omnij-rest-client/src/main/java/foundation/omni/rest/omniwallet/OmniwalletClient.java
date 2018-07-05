@@ -59,7 +59,7 @@ public class OmniwalletClient implements ConsensusService {
     public static final HttpUrl omniwalletBase = HttpUrl.parse("https://www.omniwallet.org");
     public static final HttpUrl stagingBase = HttpUrl.parse("https://staging.omniwallet.org");
     static final int CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
-    static final int READ_TIMEOUT_MILLIS = 20 * 1000; // 20s
+    static final int READ_TIMEOUT_MILLIS = 120 * 1000; // 120s (long enough to load USDT rich list)
     static public final int BALANCES_FOR_ADDRESSES_MAX_ADDR = 20;
     private boolean strictMode;
     private Retrofit restAdapter;
@@ -230,7 +230,19 @@ public class OmniwalletClient implements ConsensusService {
     public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) throws InterruptedException, IOException {
         List<AddressVerifyInfo> balances;
         try {
-            balances = service.verifyAddresses(Long.toString(currencyID.getValue())).get().body();
+            //balances = service.verifyAddresses(Long.toString(currencyID.getValue())).get().body();
+            CompletableFuture<Response<List<AddressVerifyInfo>>> future = service.verifyAddresses(Long.toString(currencyID.getValue()));
+            Response<List<AddressVerifyInfo>> response = future.get();
+            if (response.isSuccessful()) {
+                balances = response.body();
+            } else {
+                String message = response.message();
+                if (message == null) {
+                    message = "Retrofit returned null response message";
+                }
+                throw new IOException(message);
+            }
+            balances = response.body();
         } catch (ExecutionException e) {
             throw new IOException(e);
         }
