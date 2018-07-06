@@ -303,7 +303,8 @@ public class OmniwalletClient implements ConsensusService {
 
         OmniValue balance = toOmniValue(balanceStr, propertyType);
         OmniValue reserved = toOmniValue(reservedStr, propertyType);
-        return new AddressBalanceEntry(address, balance, reserved);
+        OmniValue frozen = OmniValue.of(0, propertyType);   // Placeholder
+        return new AddressBalanceEntry(address, balance, reserved, frozen);
     }
     
     private static OmniValue stringToOmniValue(String valueString) {
