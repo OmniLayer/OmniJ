@@ -1,0 +1,17 @@
+plugins {
+    id 'maven'
+}
+
+dependencies {
+    compile project(':omnij-core')
+    compile "com.msgilligan:cjbtc-jsonrpc:${consensusjVersion}"
+
+    testCompile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+    testCompile ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+        transitive = false
+    }
+    
+    testCompile project(':omnij-dsl')
+    testCompile "com.msgilligan:bitcoinj-dsl:${consensusjVersion}"
+}
+
