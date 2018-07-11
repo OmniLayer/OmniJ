@@ -2,7 +2,7 @@
 // and a possible standalone executable with future AOT compilers
 plugins {
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '1.2.4'
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
 }
 
 dependencies {
