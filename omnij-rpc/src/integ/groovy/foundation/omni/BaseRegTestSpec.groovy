@@ -1,7 +1,7 @@
 package foundation.omni
 
 import com.msgilligan.bitcoinj.json.pojo.NetworkInfo
-import org.consensusj.jsonrpc.Loggable
+import org.consensusj.jsonrpc.groovy.Loggable
 import com.msgilligan.bitcoinj.rpc.RPCURI
 import com.msgilligan.bitcoinj.test.RegTestFundingSource
 import foundation.omni.rpc.OmniCLIClient
