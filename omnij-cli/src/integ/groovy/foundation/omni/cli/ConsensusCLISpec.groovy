@@ -2,6 +2,7 @@ package foundation.omni.cli
 
 import com.msgilligan.bitcoinj.cli.test.CLICommandResult
 import com.msgilligan.bitcoinj.cli.test.CLITestSupport
+import foundation.omni.rpc.test.TestServers
 import spock.lang.Ignore
 import spock.lang.Specification
 
@@ -12,6 +13,8 @@ import spock.lang.Specification
  */
 class ConsensusCLISpec extends Specification implements CLITestSupport {
 
+    static final rpcUser = TestServers.instance.rpcTestUser
+    static final rpcPassword = TestServers.instance.rpcTestPassword
 
     def "help option"() {
         when:
