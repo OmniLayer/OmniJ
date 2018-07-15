@@ -24,8 +24,10 @@ allprojects {
     }
 
     dependencies {
-        jansi 'org.fusesource.jansi:jansi:1.11'         // Transitive dependency of GroovyDoc
+        jansi 'org.fusesource.jansi:jansi:1.16'         // Transitive dependency of GroovyDoc
         jansi "org.codehaus.groovy:groovy-ant:${groovyVersion}"    // used in Groovy doc
+        jansi "org.codehaus.groovy:groovy-templates:${groovyVersion}"    // used in Groovy doc 
+        jansi "org.codehaus.groovy:groovy-dateutil:${groovyVersion}"    // used in Groovy doc
     }
 
     groovydoc groovydocSpec
