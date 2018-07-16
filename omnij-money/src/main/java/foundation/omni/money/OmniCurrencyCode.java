@@ -20,7 +20,8 @@ public enum OmniCurrencyCode {
     MAID(CurrencyID.MAID, INDIVISIBLE),
     USDT(CurrencyID.USDT, DIVISIBLE),
     AMP(CurrencyID.AMP, DIVISIBLE),
-    SEC(CurrencyID.SEC, INDIVISIBLE),
+    //SEC(CurrencyID.SEC, INDIVISIBLE),
+    SAFEX(CurrencyID.SAFEX, INDIVISIBLE),
     AGRS(CurrencyID.AGRS, DIVISIBLE),
     PDC(CurrencyID.PDC, INDIVISIBLE);
 

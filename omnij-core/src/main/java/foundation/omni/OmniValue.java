@@ -11,7 +11,10 @@ import java.math.BigInteger;
  * Known as "Number of Coins" in the Omni Protocol Specification.</p>
  *
  * <p>The internal representation is a <code>long</code> which corresponds to what we call a
- * "willet" in honour of J.R. Willet in the same fashion as the smallest Bitcoin unit is called a "satoshi".</p>
+ * "willet" in honour of J.R. Willett in the same fashion as the smallest Bitcoin unit is called a "satoshi".</p>
+ *
+ * <p>Note: J.R. Willett spells his name with two t's. OmniJ is currently using a single t misspelling.
+ * This should probably be fixed. See https://github.com/OmniLayer/OmniJ/issues/142</p>
  *
  * <p>The constructors are <code>protected</code> and instances should be created with the <code>of()</code>
  * static methods which can take either <code>BigDecimal</code> or <code>long</code> values as parameters.</p>
@@ -31,8 +34,12 @@ public abstract class OmniValue extends NumberValue {
     protected final long willets; // internal value format, in willets
 
     // Willet max/min values, same as max/min for indivisible, but different than for divisible
-    public static final long   MIN_VALUE = 0; // Minimum value of 1 in transactions?
-    public static final long   MAX_VALUE = Long.MAX_VALUE; // = 2^63 - 1 = 9223372036854775807L;
+    public static final long MIN_WILLETS = 0; // Minimum value of 1 in transactions?
+    public static final long MAX_WILLETS = Long.MAX_VALUE; // = 2^63 - 1 = 9223372036854775807L;
+    @Deprecated
+    public static final long MIN_VALUE = MIN_WILLETS;   // Use MIN_WILLETS
+    @Deprecated
+    public static final long MAX_VALUE = MAX_WILLETS;   // USE MAX_WILLETS
 
     /**
      * Default Constructor
@@ -41,7 +48,7 @@ public abstract class OmniValue extends NumberValue {
      * @param willets Willets (internal/wire format)
      */
     protected OmniValue(long willets) {
-        checkValue(willets);
+        checkWilletValue(willets);
         this.willets = willets;
     }
 
@@ -72,11 +79,11 @@ public abstract class OmniValue extends NumberValue {
      * @param willets "number of coins" (willets) value to check
      * @throws ArithmeticException if less than minimum or greater than maximum allowed value
      */
-    public static void checkValue(BigInteger willets) throws ArithmeticException {
-        if (willets.compareTo(BigInteger.valueOf(MIN_VALUE)) == -1) {
+    public static void checkWilletValue(BigInteger willets) throws ArithmeticException {
+        if (willets.compareTo(BigInteger.valueOf(MIN_WILLETS)) < 0) {
             throw new ArithmeticException();
         }
-        if (willets.compareTo(BigInteger.valueOf(MAX_VALUE)) == 1) {
+        if (willets.compareTo(BigInteger.valueOf(MAX_WILLETS)) > 0) {
             throw new ArithmeticException();
         }
     }
@@ -90,8 +97,8 @@ public abstract class OmniValue extends NumberValue {
      * @param willets value to check.
      * @throws ArithmeticException if less than minimum allowed value
      */
-    public static void checkValue(long willets) throws ArithmeticException {
-        if (willets < MIN_VALUE) {
+    public static void checkWilletValue(long willets) throws ArithmeticException {
+        if (willets < MIN_WILLETS) {
             throw new ArithmeticException();
         }
     }

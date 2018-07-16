@@ -2,6 +2,7 @@ package foundation.omni.rpc;
 
 import foundation.omni.CurrencyID;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -16,14 +17,14 @@ public interface ConsensusFetcher {
      * @param currencyID The currency to get consensus data for
      * @return Consensus data for all addresses owning currencyID
      */
-    ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID);
+    ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) throws InterruptedException, IOException;
 
     /**
      * Fetch the current block height
      *
      * @return The current blockheight of the remote consensus server
      */
-    Integer currentBlockHeight();
+    Integer currentBlockHeight() throws InterruptedException, IOException;
 
     /**
      * Get a list of properties
@@ -32,5 +33,5 @@ public interface ConsensusFetcher {
      *
      * @return A list of property objects
      */
-    List<SmartPropertyListInfo> listProperties();
+    List<SmartPropertyListInfo> listProperties() throws InterruptedException, IOException;
 }

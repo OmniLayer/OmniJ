@@ -3,6 +3,117 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.5.6-SNAPSHOT
+
+=== omnij-core
+
+* Update to JavaMoney API 1.0.3
+
+=== omnij-money
+
+* Update to JavaMoney RI 1.2.1
+
+=== omnij-rest-client
+
+* Increase Timeout in OmniwalletClient to 2 minutes
+* Better handle timeout errors in OmniwalletClient.getConsensusForCurrency()
+* Improvements to OmniwalletClientSpec
+* Upgrade to Retrofit 2.4.0
+* Upgrade to OkHttp3 logging-interceptor 3.10.0
+
+=== All modules
+
+* BREAKING: Upgrade all modules to Java 8
+* Upgrade to *consensusj* (formerly bitcoinj-addons) 0.2.8
+* Upgrade to *bitcoinj* 0.14.7
+* Upgrade to *Groovy* 2.5.0
+* Upgrade to *Gradle* 4.6
+
+== v0.5.5
+
+Released: 2017.10.16
+
+=== All modules
+
+* Upgrade to *bitcoinj* 0.14.5
+* Upgrade to *bitcoinj-addons* 0.2.6
+* Upgrade to *Groovy* 2.5.0-beta-2
+
+=== Omni Java Money support (`omnij-money`)
+
+* Upgrade to *XChange* 4.2.3
+
+== v0.5.4
+
+Released: 2017.08.17
+
+=== All modules
+
+* Upgrade to *bitcoinj-addons* 0.2.5
+* Upgrade to Gradle 4.1
+
+=== OmniJ Core  (`omnij-core`)
+
+* Add methods/constants for OmniValue value validation/conversion
+* SEC -> SAFEX ticker symbol rename
+
+=== Omniwallet REST client (`omnij-rest-client`)
+
+* Improved exception and error handling
+* Most remote methods now throw InterruptedException, IOException
+* Add optional `strictMode` flag to OmniwalletClient
+
+=== Omni Java Money support (`omnij-money`)
+
+* Update to XChange 4.2.1
+* Use dynamic classloading to load XChange ExchangeRateProviders
+* Enable Kraken USDT/USD pair
+* SEC -> SAFEX ticker symbol rename
+
+== v0.5.3
+
+Released: 2017.07.16
+
+=== All modules
+
+* Upgrade to *bitcoinj-addons* 0.2.4
+* Use `invokedynamic` ("indy") version of Groovy
+
+== v0.5.2
+
+Released: 2017.06.28
+
+=== All modules
+
+* Gradle build cleanup (remove RoboVM support, etc)
+* Minor documentation improvements
+
+=== OmniJ Core  (`omnij-core`)
+
+* Remove dependency on `java.xml.bind.DatatypeConverter` (for Android support)
+
+=== Omniwallet REST client (`omnij-rest-client`)
+
+* Add asynchronous interfaces to `OmniwalletClient` and `OmniCoreClient` (using `CompleteableFuture`)
+* Add handling of upstream rate-limit in BTC results in OW multi-address-balance requests
+* Add support for Omni protocol "reserved" balances (`OmniCoreClient` only for now)
+* Code cleanup/simplification
+
+=== Omni RPC client, Omni Core integration tests (`omnij-rpc`)
+
+* Use https to communicate with Omni Explorer
+
+=== Omni Java Money support (`omnij-money`)
+
+* `BaseXChangeExchangeRateProvider` implementations can take `ScheduledExecutorService` in constructor
+* Add Kraken exhange (USDT/USD pair disabled till XChange 4.2.1 released)
+
+=== Dependency updates
+
+* Update to Groovy 2.5.0-beta-1 (Groovy 2.5 fixes https://github.com/OmniLayer/OmniJ/issues/109[Issue #109])
+* Gradle Bintray plugin 1.7.3
+* JavaMoney `money-api-bp` 1.0.1
+
 == v0.5.1
 
 Released: 2017.05.23

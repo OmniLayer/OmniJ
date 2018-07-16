@@ -1,11 +1,13 @@
 package foundation.omni.rest.omniwallet
 
+import foundation.omni.OmniDivisibleValue
 import foundation.omni.net.OmniMainNetParams
 import spock.lang.Ignore
 import spock.lang.Specification
 
 /**
  * Simple Tests/Demo of Omniwallet REST API via SimpleGroovyRestClient
+ * TODO: Verify that BTC balance objects include an `error` boolean
  */
 @Ignore("This is really an integration test")
 class OmniwalletAPIDemoSpec extends Specification {
@@ -37,9 +39,11 @@ class OmniwalletAPIDemoSpec extends Specification {
         result.balance != null
 
         result.balance[0].value != null
+        OmniDivisibleValue.checkValue(result.balance[0].value as BigDecimal)
         result.balance[0].divisible == true
 
         result.balance[1].value != null
+        OmniDivisibleValue.checkValue(result.balance[1].value as BigDecimal)
         result.balance[1].divisible == true
     }
 

@@ -2,17 +2,14 @@
 // and a possible standalone executable with future AOT compilers
 plugins {
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '1.2.4'
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
 }
 
 dependencies {
     compile project(':omnij-rpc')
 
-    compile "com.msgilligan:bitcoinj-cli:${bitcoinjAddonsVersion}"
+    compile "com.msgilligan:bitcoinj-cli:${consensusjVersion}"
 }
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
 
 mainClassName = "foundation.omni.cli.ConsensusCLI"
 
@@ -45,7 +42,7 @@ sourceSets {
 }
 
 task regTest(type: Test) {
-    testClassesDir = sourceSets.integrationTest.output.classesDir
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
     outputs.upToDateWhen { false }
     testLogging.showStandardStreams = true

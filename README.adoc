@@ -1,8 +1,8 @@
 = OmniJ Project
 Sean Gilligan <https://github.com/msgilligan>
-v0.5.1
+v0.5.5
 :description: OmniJ README document.
-:omnij-version: 0.5.1
+:omnij-version: 0.5.5
 
 [WARNING]
 This software is EXPERIMENTAL software for **REGTEST and TESTNET TRANSACTIONS** only. *USE ON MAINNET AT YOUR OWN RISK.*
@@ -25,15 +25,15 @@ There are currently six subprojects of OmniJ. Each of which builds a JAR artifac
 
 | omnij-core
 | Core Omni functionality
-| JDK 7+ Java-only, Android-compatible
+| JDK 8+ Java-only, Android-compatible
 
 | omnij-dsl
 | Domain Specific Language (DSL) support for Omni
-| JDK 7+, Groovy language
+| JDK 8+, Groovy language
 
 | omnij-money
 | JavaMoney support for Omni currency codes and exchanges
-| JDK 7+, Java-only, tests in Groovy/Spock
+| JDK 8+, Java-only, tests in Groovy/Spock
 
 | omnij-rest-client
 | JavaMoney support for Omni currency codes and exchanges
@@ -41,14 +41,14 @@ There are currently six subprojects of OmniJ. Each of which builds a JAR artifac
 
 | omnij-rpc
 | Omni Core RPC library, command-line API/tools, integration tests
-| JDK 7+ Java & Groovy
+| JDK 8+ Java & Groovy
 
 | omnij-cli
 | Builds the command-line Omni consensus-checking tool.
-| JDK 7+ Java & Groovy
+| JDK 8+ Java & Groovy
 |===
 
-A Bitcoin JSON-RPC client and command-line tool support that was previously part of OmniJ has moved to the https://github.com/msgilligan/bitcoinj-addons[bitcoinj-addons] project which is used by OmniJ.
+A Bitcoin JSON-RPC client (base class), and other components used by OmniJ are in the https://github.com/ConsensusJ/consensusj[ConsensusJ] project.
 
 === OmniLayer Documentation
 
@@ -69,7 +69,7 @@ WARNING: These binaries have not been audited. Use only on TestNet or RegTest.
 
 === Building OmniJ
 
-The only prerequisite for building OmniJ is having Java JDK 7 or later installed. All other prerequisites are downloaded automatically by the http://gradle.org/docs/current/userguide/gradle_wrapper.html[Gradle Wrapper] script.
+The only prerequisite for building OmniJ is having Java JDK 8 or later installed. All other prerequisites are downloaded automatically by the http://gradle.org/docs/current/userguide/gradle_wrapper.html[Gradle Wrapper] script.
 
 . Check out this project using Git
 
@@ -125,14 +125,14 @@ Test Bitcoin and Omni Core RPC calls against an instance of `omnicored` running 
 Omni Consensus Tests::
 Use the `getallbalancesforid_MP` RPC to get balances for multiple Omni Protocol currencies and compare them against balance information from several well-known public Omni Protocol servers with consensus-checking Web APIs.
 
-=== Moved to bitcoinj-addons
+=== In ConsensusJ
 
 Bitcoin RegTest Tests::
 Test Bitcoin RPC calls against an instance of `bitcoind` running in RegTest mode.
 
 == Installing pre-requisites
 
-The only prerequisite for running these tests is an installed Java Runtime Environment. Either an Oracle or OpenJDK VM will work. Java 7 or later is required.
+The only prerequisite for running these tests is an installed Java Runtime Environment. Either an Oracle or OpenJDK VM will work. Java 8 or later is required.
 
 All other dependencies are automatically downloaded and cached by the test startup script.
 
@@ -171,7 +171,7 @@ Runs Omni Core RPC regtest test against a built executable of `omnicored` in `co
 test-omni-consensus-mainnet.sh::
 Runs consensus tests against a built executable of `omnicored` in `copied-artifacts/src` directory.
 
-=== Moved to bitcoinj-addons project
+=== In ConsensusJ project
 
 bitcoinj-rpcclient/run-bitcoind-regtest.sh::
 Runs BTC RPC RegTest tests against a built executable of `bitcoind` in `copied-artifacts/src` directory.
@@ -188,7 +188,7 @@ These sample Spock "feature tests" are from the file https://github.com/OmniLaye
 ----
     def "A managed property can be created with transaction type 54"() {
         when:
-        creationTxid = omniSendIssuanceManaged(actorAddress, Ecosystem.MSC,
+        creationTxid = omniSendIssuanceManaged(actorAddress, Ecosystem.OMNI,
                           PropertyType.INDIVISIBLE,
                           new CurrencyID(0),
                           "Test Category", "Test Subcategory",

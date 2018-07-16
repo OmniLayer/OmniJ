@@ -1,4 +1,4 @@
-package foundation.omni.test;
+package foundation.omni.net;
 
 import foundation.omni.OmniDivisibleValue;
 import org.bitcoinj.core.Coin;

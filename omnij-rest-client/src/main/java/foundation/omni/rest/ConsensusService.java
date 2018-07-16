@@ -5,6 +5,7 @@ import foundation.omni.rpc.BalanceEntry;
 import foundation.omni.rpc.ConsensusFetcher;
 import org.bitcoinj.core.Address;
 
+import java.io.IOException;
 import java.util.SortedMap;
 import java.util.concurrent.CompletableFuture;
 
@@ -13,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
  * OmniPortfolio, for example.
  */
 public interface ConsensusService extends OmniBalanceService, ConsensusFetcher {
-    SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID);
+    SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) throws InterruptedException, IOException;
 
     // First (currently experimental) Async method
     CompletableFuture<Integer> currentBlockHeightAsync();

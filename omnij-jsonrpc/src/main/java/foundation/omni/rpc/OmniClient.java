@@ -2,7 +2,7 @@ package foundation.omni.rpc;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.msgilligan.bitcoinj.rpc.BitcoinExtendedClient;
-import com.msgilligan.bitcoinj.rpc.JsonRPCException;
+import org.consensusj.jsonrpc.JsonRPCException;
 import com.msgilligan.bitcoinj.rpc.RPCConfig;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
@@ -11,7 +11,6 @@ import foundation.omni.PropertyType;
 import foundation.omni.json.conversion.OmniClientModule;
 import foundation.omni.net.OmniNetworkParameters;
 import org.bitcoinj.core.Address;
-import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
@@ -21,7 +20,6 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -237,7 +235,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param fromAddress The address to spent from
      * @param toAddress   The address to send to
      * @param currency    The identifier of the token to transfer
-     * @param amount      The amount to transfer
+     * @param amount      The amount to transfer (Divisible/Indivisible type should match currency ID)
      * @return The hash of the transaction
      * @throws JsonRPCException JSON RPC error
      * @throws IOException network error

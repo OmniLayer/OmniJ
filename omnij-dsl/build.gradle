@@ -2,9 +2,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 
 dependencies {
-    compile "org.codehaus.groovy:groovy:${groovyVersion}"
+    compile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
     compile project(':omnij-core')
 }
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7

@@ -1,15 +1,20 @@
 dependencies {
     compile project(':omnij-core')
-    compile project(':omnij-rpc')
+    compile project(':omnij-jsonrpc')
 
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-jackson:2.3.0'
-    compile 'com.squareup.retrofit2:adapter-java8:2.3.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    compile 'com.squareup.retrofit2:retrofit:2.4.0'
+    compile 'com.squareup.retrofit2:converter-jackson:2.4.0'
+    compile 'com.squareup.retrofit2:adapter-java8:2.4.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+
+    testCompile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+    testCompile ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+        transitive = false
+    }
+
+    testCompile project(':omnij-dsl')
+    testCompile "com.msgilligan:bitcoinj-dsl:${consensusjVersion}"
 }
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 idea {
     module {

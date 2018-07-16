@@ -40,7 +40,7 @@ class ConsensusComparison implements Iterable<ConsensusEntryPair>  {
      * Iterates a ConsensusComparison pair-by-pair
      */
     class PairIterator implements Iterator<ConsensusEntryPair> {
-        Iterator<Address> keyIterator
+        private Iterator<Address> keyIterator
 
         PairIterator(Iterator<Address> keyIterator) {
             this.keyIterator = keyIterator

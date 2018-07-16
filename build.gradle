@@ -26,7 +26,7 @@ allprojects {
     repositories {
         jcenter()
         //mavenLocal()   // Uncomment to work with local snapshots
-        maven { url 'https://dl.bintray.com/msgilligan/maven' } // bitcoinj-addons (RPC client)
+        maven { url 'https://dl.bintray.com/msgilligan/maven' } // ConsensusJ (RPC client)
     }
 
     tasks.withType(FindBugs) {
@@ -35,26 +35,21 @@ allprojects {
             html.enabled true
         }
     }
-
-    tasks.withType(JavaCompile) {
-        doFirst {
-            if (sourceCompatibility == '1.7' && System.env.JDK7_HOME != null) {
-                options.bootClasspath = "$System.env.JDK7_HOME/jre/lib/rt.jar"
-                //options.bootClasspath += "$File.pathSeparator$System.env.JDK7_HOME/jre/lib/jce.jar"
-                // use the line above as an example to add jce.jar
-                // and other specific JDK jars
-            }
-        }
+    
+    tasks.withType(GroovyCompile) {
+        groovyOptions.optimizationOptions.indy = true
     }
-
 }
 
 subprojects {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
     dependencies {
         compile "org.bitcoinj:bitcoinj-core:${bitcoinjVersion}"
         compile "org.slf4j:slf4j-api:${slf4jVersion}"
         
-        testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
+        testCompile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
         testCompile("org.spockframework:spock-core:${spockVersion}") {
             exclude module: "groovy-all"
         }

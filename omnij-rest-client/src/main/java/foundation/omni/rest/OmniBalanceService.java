@@ -10,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
  *
  */
 public interface OmniBalanceService {
-    OmniJBalances balancesForAddresses(List<Address> addresses) throws IOException;
+    OmniJBalances balancesForAddresses(List<Address> addresses) throws InterruptedException, IOException;
     CompletableFuture<OmniJBalances> balancesForAddressesAsync(List<Address> addresses);
-    WalletAddressBalance balancesForAddress(Address address) throws IOException;
+    WalletAddressBalance balancesForAddress(Address address) throws InterruptedException, IOException;
 }

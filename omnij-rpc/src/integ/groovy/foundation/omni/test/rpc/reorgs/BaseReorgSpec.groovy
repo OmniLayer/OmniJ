@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.reorgs
 
-import com.msgilligan.bitcoinj.rpc.JsonRPCException
+import org.consensusj.jsonrpc.JsonRPCException
 import foundation.omni.BaseRegTestSpec
 import org.bitcoinj.core.Sha256Hash
 import org.junit.internal.AssumptionViolatedException

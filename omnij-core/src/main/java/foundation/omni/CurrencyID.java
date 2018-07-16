@@ -27,7 +27,9 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     public static final long    USDT_VALUE = 31;
     public static final long    AMP_VALUE = 39; // Synerio
     public static final long    EURT_VALUE = 41;
+    /** @deprecated */
     public static final long    SEC_VALUE = 56; // SafeExchangeCoin
+    public static final long    SAFEX_VALUE = 56; // SafeExchangeCoin
     public static final long    AGRS_VALUE = 58; // Agoras
     public static final long    PDC_VALUE = 59; // Project Decorum Coin
 
@@ -46,7 +48,9 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     public static final CurrencyID  USDT = new CurrencyID(USDT_VALUE);
     public static final CurrencyID  AMP = new CurrencyID(AMP_VALUE);
     public static final CurrencyID  EURT = new CurrencyID(EURT_VALUE);
+    /** @deprecated */
     public static final CurrencyID  SEC = new CurrencyID(SEC_VALUE);
+    public static final CurrencyID  SAFEX = new CurrencyID(SAFEX_VALUE);
     public static final CurrencyID  AGRS = new CurrencyID(AGRS_VALUE);
     public static final CurrencyID  PDC = new CurrencyID(PDC_VALUE);
 
@@ -67,11 +71,16 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
             case "EURT":
                 return EURT;
             case "SEC":
-                return SEC;
+            case "SAFEX":
+                return SAFEX;
             case "AGRS":
                 return AGRS;
         }
         throw new IllegalArgumentException("unknown currency ticker string");
+    }
+
+    public static CurrencyID of(long idValue) {
+        return new CurrencyID(idValue);
     }
 
     public CurrencyID(long value) {

@@ -11,12 +11,15 @@ import java.math.BigDecimal;
  */
 public class AddressBalanceEntry extends BalanceEntry {
     private final Address address;
+    private final OmniValue frozen;
 
     public AddressBalanceEntry(@JsonProperty("address") Address address,
                                @JsonProperty("balance") OmniValue balance,
-                               @JsonProperty("reserved") OmniValue reserved) {
+                               @JsonProperty("reserved") OmniValue reserved,
+                               @JsonProperty("frozen") OmniValue frozen) {
         super(balance,reserved);
         this.address = address;
+        this.frozen = frozen;
     }
 
     public Address getAddress() {

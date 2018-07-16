@@ -1,7 +1,7 @@
 package foundation.omni.test.rpc.exodus
 
 import foundation.omni.OmniDivisibleValue
-import foundation.omni.test.MoneyMan
+import foundation.omni.net.MoneyMan
 import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.rpc.OmniClient
