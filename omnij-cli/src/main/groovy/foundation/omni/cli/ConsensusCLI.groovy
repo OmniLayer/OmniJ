@@ -1,8 +1,8 @@
 package foundation.omni.cli
 
-import com.msgilligan.bitcoinj.cli.CliCommand
-import com.msgilligan.bitcoinj.cli.CliOptions
-import org.consensusj.jsonrpc.JsonRPCException
+import org.consensusj.bitcoin.cli.CliCommand
+import org.consensusj.bitcoin.cli.CliOptions
+import org.consensusj.jsonrpc.JsonRpcException
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.ChestConsensusTool
 import foundation.omni.rpc.ConsensusSnapshot
@@ -34,7 +34,7 @@ class ConsensusCLI extends CliCommand {
     }
 
     @Override
-    public Integer checkArgs() {
+    public int checkArgs() {
         Integer status = super.checkArgs()
         if (status != 0) {
             return status
@@ -55,7 +55,7 @@ class ConsensusCLI extends CliCommand {
     }
 
     @Override
-    public Integer runImpl() throws IOException, JsonRPCException {
+    public Integer runImpl() throws IOException, JsonRpcException {
         String property = line.getOptionValue("property")
         Long currencyIDNum =  property ? Long.parseLong(property, 10) : 1
         CurrencyID currencyID = new CurrencyID(currencyIDNum)
@@ -64,7 +64,7 @@ class ConsensusCLI extends CliCommand {
 
         ConsensusTool tool1, tool2
         if (line.hasOption("omnicore-url")) {
-            tool1 = new OmniCoreConsensusTool(getRPCConfig().netParams, line.getOptionValue("omnicore-url").toURI())
+            tool1 = new OmniCoreConsensusTool(getRpcConfig().netParams, line.getOptionValue("omnicore-url").toURI())
         } else if (line.hasOption("omniwallet-url")) {
             tool1 = new OmniwalletConsensusTool(line.getOptionValue("omniwallet-url").toURI())
         } else if (line.hasOption("omnichest-url")) {
@@ -96,7 +96,7 @@ class ConsensusCLI extends CliCommand {
     public OmniClient getClient() {
         if (super.client == null) {
             try {
-                super.client = new OmniClient(getRPCConfig())
+                super.client = new OmniClient(getRpcConfig())
             } catch (IOException e) {
                 e.printStackTrace()
             }

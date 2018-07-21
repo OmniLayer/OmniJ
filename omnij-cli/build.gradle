@@ -8,7 +8,7 @@ plugins {
 dependencies {
     compile project(':omnij-rpc')
 
-    compile "com.msgilligan:bitcoinj-cli:${consensusjVersion}"
+    compile "com.msgilligan:cj-btc-cli:${consensusjVersion}"
 }
 
 mainClassName = "foundation.omni.cli.ConsensusCLI"

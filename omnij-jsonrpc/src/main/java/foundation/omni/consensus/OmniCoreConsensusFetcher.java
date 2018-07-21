@@ -1,6 +1,6 @@
 package foundation.omni.consensus;
 
-import org.consensusj.jsonrpc.JsonRPCException;
+import org.consensusj.jsonrpc.JsonRpcException;
 import foundation.omni.CurrencyID;
 import foundation.omni.rpc.BalanceEntry;
 import foundation.omni.rpc.ConsensusFetcher;
@@ -56,7 +56,7 @@ public class OmniCoreConsensusFetcher implements ConsensusFetcher {
         return client;
     }
 
-    public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) throws JsonRPCException, IOException {
+    public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) throws JsonRpcException, IOException {
         SortedMap<Address, BalanceEntry> balances = client.omniGetAllBalancesForId(currencyID);
         // TODO: Filter out empty address strings or 0 balances?
         return balances;

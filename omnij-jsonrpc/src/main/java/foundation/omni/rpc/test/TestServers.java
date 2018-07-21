@@ -1,6 +1,6 @@
 package foundation.omni.rpc.test;
 
-import com.msgilligan.bitcoinj.rpc.RPCURI;
+import com.msgilligan.bitcoinj.rpc.RpcURI;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,7 +33,7 @@ public class TestServers extends com.msgilligan.bitcoinj.rpc.test.TestServers {
 
     public URI getStablePublicMainNetURI() {
         try {
-            return new URI(RPCURI.rpcssl, null, stableOmniRpcHost, RPCURI.RPCPORT_MAINNET, RPCURI.rpcfile, null, null);
+            return new URI(RpcURI.rpcssl, null, stableOmniRpcHost, RpcURI.RPCPORT_MAINNET, RpcURI.rpcfile, null, null);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return null;

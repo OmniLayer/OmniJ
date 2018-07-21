@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.basic
 
-import org.consensusj.jsonrpc.JsonRPCStatusException
+import org.consensusj.jsonrpc.JsonRpcStatusException
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import spock.lang.Ignore
@@ -53,7 +53,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         omniSend(fundedAddress, toAddress, OMNI, 0.divisible)
 
         then: "exception is thrown"
-        JsonRPCStatusException e = thrown()
+        JsonRpcStatusException e = thrown()
         e.message == "Invalid amount"
         e.responseJson.error.code == -3
         // TODO: Verify that blockchain state didn't change
@@ -72,7 +72,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         send("send_MP", toAddress.toString(), OMNI.value, -1.0)
 
         then: "exception is thrown"
-        JsonRPCStatusException e = thrown()
+        JsonRpcStatusException e = thrown()
         e.message.startsWith("omni_send \"fromaddress\" \"toaddress\" propertyid \"amount\" ( \"redeemaddress\" \"referenceamount\" )")
         e.responseJson.error.code == -1
         // TODO: Verify that blockchain state didn't change
@@ -90,7 +90,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         def txid = client.omniSend(emptyAddress, toAddress, OMNI, 1.divisible)
 
         then: "exception is thrown"
-        JsonRPCStatusException e = thrown()
+        JsonRpcStatusException e = thrown()
     }
 
     def "When the amount to transfer exceeds the number owned and available by the sending address are rejected by the RPC"() {
@@ -105,7 +105,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         omniSend(fundedAddress, toAddress, OMNI, 1.00000001.divisible)
 
         then: "exception is thrown"
-        JsonRPCStatusException e = thrown()
+        JsonRpcStatusException e = thrown()
     }
 
     def "When the specified currency identifier is non-existent are rejected by the RPC"() {
@@ -120,7 +120,7 @@ class SimpleSendSpec extends BaseRegTestSpec {
         omniSend(richAddress, toAddress, nonExistentCurrencyID, 1.divisible)
 
         then: "exception is thrown"
-        JsonRPCStatusException e = thrown()
+        JsonRpcStatusException e = thrown()
         e.message == "Property identifier does not exist"
         e.responseJson.error.code == -8
     }

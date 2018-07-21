@@ -6,7 +6,7 @@ dependencies {
     compile project(':omnij-core')
     compile project(':omnij-jsonrpc')
 
-    compile "com.msgilligan:cjbtc-jsonrpc-gvy:${consensusjVersion}"
+    compile "com.msgilligan:cj-btc-jsonrpc-gvy:${consensusjVersion}"
 
     compile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
     compile ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {

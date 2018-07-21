@@ -1,6 +1,6 @@
 package foundation.omni.rest.omnicore
 
-import com.msgilligan.bitcoinj.rpc.RPCURI;
+import com.msgilligan.bitcoinj.rpc.RpcURI;
 import org.bitcoinj.params.MainNetParams
 import spock.lang.Ignore;
 import spock.lang.Shared
@@ -40,7 +40,7 @@ public class OmniCoreClientSpec extends Specification {
 
     def setup() {
         client = new OmniCoreClient(MainNetParams.get(),
-                RPCURI.getDefaultMainNetURI(),
+                RpcURI.getDefaultMainNetURI(),
                 "bitcoinrpc",
                 "pass")
     }

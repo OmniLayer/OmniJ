@@ -2,8 +2,8 @@ package foundation.omni.rpc;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.msgilligan.bitcoinj.rpc.BitcoinExtendedClient;
-import org.consensusj.jsonrpc.JsonRPCException;
-import com.msgilligan.bitcoinj.rpc.RPCConfig;
+import org.consensusj.jsonrpc.JsonRpcException;
+import com.msgilligan.bitcoinj.rpc.RpcConfig;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
 import foundation.omni.OmniValue;
@@ -41,7 +41,7 @@ public class OmniClient extends BitcoinExtendedClient {
     public static Sha256Hash zeroHash = Sha256Hash.wrap("0000000000000000000000000000000000000000000000000000000000000000");
     private DecimalFormat jsonDecimalFormat;
 
-    public OmniClient(RPCConfig config) throws IOException {
+    public OmniClient(RpcConfig config) throws IOException {
         this(config.getNetParams(), config.getURI(), config.getUsername(), config.getPassword());
     }
 
@@ -65,10 +65,10 @@ public class OmniClient extends BitcoinExtendedClient {
      * Returns various state information of Omni Core and the Omni Layer protocol.
      *
      * @return An object with state information
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Map<String, Object> omniGetInfo() throws JsonRPCException, IOException {
+    public Map<String, Object> omniGetInfo() throws JsonRpcException, IOException {
         Map<String, Object> result = send("omni_getinfo");
         return result;
     }
@@ -77,10 +77,10 @@ public class OmniClient extends BitcoinExtendedClient {
      * Lists all currencies, smart properties and tokens.
      *
      * @return A list with short information
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public List<SmartPropertyListInfo> omniListProperties() throws JsonRPCException, IOException {
+    public List<SmartPropertyListInfo> omniListProperties() throws JsonRpcException, IOException {
         JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, SmartPropertyListInfo.class);
         return send("omni_listproperties", resultType);
     }
@@ -90,10 +90,10 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param currency The identifier to look up
      * @return An object with detailed information
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Map<String, Object> omniGetProperty(CurrencyID currency) throws JsonRPCException, IOException {
+    public Map<String, Object> omniGetProperty(CurrencyID currency) throws JsonRpcException, IOException {
         Map<String, Object> result = send("omni_getproperty", currency);
         return result;
     }
@@ -103,10 +103,10 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param currency The identifier of the crowdsale
      * @return An object with detailed information
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Map<String, Object> omniGetCrowdsale(CurrencyID currency) throws JsonRPCException, IOException {
+    public Map<String, Object> omniGetCrowdsale(CurrencyID currency) throws JsonRpcException, IOException {
         Map<String, Object> result = send("omni_getcrowdsale", currency);
         return result;
     }
@@ -115,10 +115,10 @@ public class OmniClient extends BitcoinExtendedClient {
      * Lists currently active crowdsales.
      *
      * @return A list with information about active crowdsales
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public List<Map<String, Object>> omniGetActiveCrowdsales() throws JsonRPCException, IOException {
+    public List<Map<String, Object>> omniGetActiveCrowdsales() throws JsonRpcException, IOException {
         List<Map<String, Object>> result = send("omni_getactivecrowdsales");
         return result;
     }
@@ -127,10 +127,10 @@ public class OmniClient extends BitcoinExtendedClient {
      * Lists currently active offers on the distributed BTC/OMNI exchange.
      *
      * @return A list with information about the active offers
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public List<Map<String, Object>> omniGetActiveDExSells() throws JsonRPCException, IOException {
+    public List<Map<String, Object>> omniGetActiveDExSells() throws JsonRpcException, IOException {
         List<Map<String, Object>> result = send("omni_getactivedexsells");
         return result;
     }
@@ -141,11 +141,11 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param address  The address to look up
      * @param currency The identifier of the token to look up
      * @return The available and reserved balance
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
     public BalanceEntry omniGetBalance(Address address, CurrencyID currency)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_getbalance", BalanceEntry.class, address, currency.getValue());
     }
 
@@ -154,11 +154,11 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param currency The identifier of the token to look up
      * @return A Sorted Map indexed by addresses to available and reserved balances
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
     public SortedMap<Address, BalanceEntry> omniGetAllBalancesForId(CurrencyID currency)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_getallbalancesforid", AddressBalanceEntries.class, currency);
     }
 
@@ -167,11 +167,11 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param address The address to look up
      * @return A Sorted Map indexed by currency/propertyid to available and reserved balances
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
     public SortedMap<CurrencyID, BalanceEntry> omniGetAllBalancesForAddress(Address address)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_getallbalancesforaddress", PropertyBalanceEntries.class, address);
     }
 
@@ -180,10 +180,10 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param txid The hash of the transaction to look up
      * @return Information about the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Map<String, Object> omniGetTransaction(Sha256Hash txid) throws JsonRPCException, IOException {
+    public Map<String, Object> omniGetTransaction(Sha256Hash txid) throws JsonRpcException, IOException {
         Map<String, Object> transaction = send("omni_gettransaction", txid);
         return transaction;
     }
@@ -193,10 +193,10 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param blockIndex The block height or block index
      * @return A list of transaction hashes
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public List<Sha256Hash> omniListBlockTransactions(Integer blockIndex) throws JsonRPCException, IOException {
+    public List<Sha256Hash> omniListBlockTransactions(Integer blockIndex) throws JsonRpcException, IOException {
         JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, Sha256Hash.class);
         return send("omni_listblocktransactions", resultType, blockIndex);
     }
@@ -207,10 +207,10 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param fromAddress The address to send from
      * @param rawTxHex    The hex-encoded raw transaction
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash omniSendRawTx(Address fromAddress, String rawTxHex) throws JsonRPCException, IOException {
+    public Sha256Hash omniSendRawTx(Address fromAddress, String rawTxHex) throws JsonRpcException, IOException {
         return omniSendRawTx(fromAddress, rawTxHex, null);
     }
 
@@ -221,11 +221,11 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param rawTxHex         The hex-encoded raw transaction
      * @param referenceAddress The reference address
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
     public Sha256Hash omniSendRawTx(Address fromAddress, String rawTxHex, Address referenceAddress)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendrawtx", Sha256Hash.class, fromAddress, rawTxHex, referenceAddress);
     }
 
@@ -237,11 +237,11 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param currency    The identifier of the token to transfer
      * @param amount      The amount to transfer (Divisible/Indivisible type should match currency ID)
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
     public Sha256Hash omniSend(Address fromAddress, Address toAddress, CurrencyID currency, OmniValue amount)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_send", Sha256Hash.class, fromAddress, toAddress, currency, amount);
     }
 
@@ -252,11 +252,11 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param currency    The identifier of the token to distribute
      * @param amount      The amount to distribute
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
     public Sha256Hash omniSendSTO(Address fromAddress, CurrencyID currency, OmniValue amount)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendsto", Sha256Hash.class, fromAddress, currency, amount);
     }
 
@@ -267,12 +267,12 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param toAddress   The address to send to
      * @param ecosystem   The ecosystem of the tokens to send
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendAll(Address fromAddress, Address toAddress, Ecosystem ecosystem)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendall", Sha256Hash.class, fromAddress, toAddress, ecosystem);
     }
 
@@ -287,14 +287,14 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param commitmentFee The minimum transaction fee required to be paid as commitment when accepting this offer
      * @param action        The action applied to the offer (1 = new, 2 = update, 3 = cancel)
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendDExSell(Address fromAddress, CurrencyID currencyId, OmniValue amountForSale,
                                       Coin amountDesired, Byte paymentWindow, Coin commitmentFee,
                                       Byte action)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_senddexsell", Sha256Hash.class,
                 fromAddress, currencyId,
                 amountForSale,
@@ -313,13 +313,13 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param amount      The amount to accept
      * @param override    Override minimum accept fee and payment window checks (use with caution!)
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendDExAccept(Address fromAddress, Address toAddress, CurrencyID currencyId,
                                         OmniValue amount, Boolean override)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_senddexaccept", Sha256Hash.class, fromAddress, toAddress, currencyId, amount, override);
     }
 
@@ -332,13 +332,13 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param propertyDesired The identifier of the tokens desired in exchange
      * @param amountDesired   The amount of tokens desired in exchange
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendTrade(Address fromAddress, CurrencyID propertyForSale, OmniValue amountForSale,
                                     CurrencyID propertyDesired, OmniValue amountDesired)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendtrade", Sha256Hash.class, fromAddress, propertyForSale, amountForSale,
                                                                         propertyDesired, amountDesired);
     }
@@ -352,14 +352,14 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param propertyDesired The identifier of the tokens desired in exchange
      * @param amountDesired   The amount of tokens desired in exchange
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendCancelTradesByPrice(Address fromAddress, CurrencyID propertyForSale,
                                                   OmniValue amountForSale, CurrencyID propertyDesired,
                                                   OmniValue amountDesired)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendcanceltradesbyprice", Sha256Hash.class, fromAddress, propertyForSale, amountForSale,
                                                                                     propertyDesired, amountDesired);
     }
@@ -371,13 +371,13 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param propertyForSale The identifier of the tokens listed for sale
      * @param propertyDesired The identifier of the tokens desired in exchange
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendCancelTradesByPair(Address fromAddress, CurrencyID propertyForSale,
                                                  CurrencyID propertyDesired)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendcanceltradesbypair", Sha256Hash.class, fromAddress, propertyForSale, propertyDesired);
     }
 
@@ -387,12 +387,12 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param fromAddress The address to trade with
      * @param ecosystem   The ecosystem of the offers to cancel: (1) main, (2) test
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendCancelAllTrades(Address fromAddress, Ecosystem ecosystem)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendcancelalltrades", Sha256Hash.class, fromAddress, ecosystem);
     }
 
@@ -410,14 +410,14 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param data         A description for the new tokens (can be "")
      * @param amount       The number of tokens to create
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendIssuanceFixed(Address fromAddress, Ecosystem ecosystem, PropertyType propertyType,
                                             CurrencyID previousId, String category, String subCategory, String name,
                                             String url, String data, OmniValue amount)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendissuancefixed", Sha256Hash.class, fromAddress, ecosystem,  propertyType, previousId,
                                                         category, subCategory, name, url, data, amount);
     }
@@ -440,7 +440,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param earlyBirdBonus  an early bird bonus for participants in percent per week
      * @param issuerBonus     a percentage of tokens that will be granted to the issuer
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
@@ -449,7 +449,7 @@ public class OmniClient extends BitcoinExtendedClient {
                                                 String url, String data, CurrencyID propertyDesired,
                                                 BigDecimal tokensPerUnit, Long deadline, Byte earlyBirdBonus,
                                                 Byte issuerBonus)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendissuancecrowdsale", Sha256Hash.class, fromAddress, ecosystem, propertyType, previousId,
                 category, subCategory, name, url, data,
                 propertyDesired, tokensPerUnit.toPlainString(), deadline, earlyBirdBonus, issuerBonus);
@@ -461,12 +461,12 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param fromAddress The address associated with the crowdsale to close
      * @param propertyId  The identifier of the crowdsale to close
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendCloseCrowdsale(Address fromAddress, CurrencyID propertyId)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendclosecrowdsale", Sha256Hash.class, fromAddress, propertyId);
     }
 
@@ -483,14 +483,14 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param url          An URL for further information about the new tokens (can be "")
      * @param data         A description for the new tokens (can be "")
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendIssuanceManaged(Address fromAddress, Ecosystem ecosystem, PropertyType propertyType,
                                               CurrencyID previousId, String category, String subCategory, String name,
                                               String url, String data)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendissuancemanaged", Sha256Hash.class, fromAddress, ecosystem, propertyType, previousId,
                                                         category, subCategory, name, url, data);
     }
@@ -503,12 +503,12 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param propertyId  The identifier of the tokens to grant
      * @param amount      The amount of tokens to create
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendGrant(Address fromAddress, Address toAddress, CurrencyID propertyId, OmniValue amount)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendgrant", Sha256Hash.class, fromAddress, toAddress, propertyId, amount);
     }
 
@@ -519,12 +519,12 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param propertyId  The identifier of the tokens to revoke
      * @param amount      The amount of tokens to revoke
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendRevoke(Address fromAddress, CurrencyID propertyId, OmniValue amount)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendrevoke", Sha256Hash.class, fromAddress, propertyId, amount);
     }
 
@@ -535,12 +535,12 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param toAddress   The address to transfer administrative control to
      * @param propertyId  The identifier of the tokens
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendChangeIssuer(Address fromAddress, Address toAddress, CurrencyID propertyId)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendchangeissuer", Sha256Hash.class, fromAddress, toAddress, propertyId);
     }
 
@@ -552,12 +552,12 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param block        The activation block
      * @param minVersion   The minimum supported client version
      * @return The hash of the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public Sha256Hash omniSendActivation(Address fromAddress, Short featureId, Integer block, Integer minVersion)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         return send("omni_sendactivation", Sha256Hash.class, fromAddress, featureId, block, minVersion);
     }
 
@@ -566,10 +566,10 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param txid  The hash of the transaction to lookup
      * @return Information about the transaction
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Map<String, Object> omniGetSTO(Sha256Hash txid) throws JsonRPCException, IOException {
+    public Map<String, Object> omniGetSTO(Sha256Hash txid) throws JsonRpcException, IOException {
         String filter = "*"; // no filter at all
         Map<String, Object> stoInfo = send("omni_getsto", txid, filter);
         return stoInfo;
@@ -580,11 +580,11 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param txid The transaction hash of the order to look up
      * @return Information about the order, trade, and order matches
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
-    public Map<String, Object> omniGetTrade(Sha256Hash txid) throws JsonRPCException, IOException {
+    public Map<String, Object> omniGetTrade(Sha256Hash txid) throws JsonRpcException, IOException {
         Map<String, Object> trade = send("omni_gettrade", txid);
         return trade;
     }
@@ -594,11 +594,11 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param propertyForSale The identifier of the token for sale, used as filter
      * @return A list of orders
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
-    public List<Map<String, Object>> omniGetOrderbook(CurrencyID propertyForSale) throws JsonRPCException, IOException {
+    public List<Map<String, Object>> omniGetOrderbook(CurrencyID propertyForSale) throws JsonRpcException, IOException {
         List<Map<String, Object>> orders = send("omni_getorderbook", propertyForSale);
         return orders;
     }
@@ -609,12 +609,12 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param propertyForSale The identifier of the token for sale, used as filter
      * @param propertyDesired The identifier of the token desired, used as filter
      * @return A list of orders
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
     public List<Map<String, Object>> omniGetOrderbook(CurrencyID propertyForSale, CurrencyID propertyDesired)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         List<Map<String, Object>> orders = send("omni_getorderbook", propertyForSale, propertyDesired);
         return orders;
     }
@@ -624,10 +624,10 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param propertyid The identifier of the managed tokens to lookup
      * @return A list of grants and revokes
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public List<Map<String, Object>> omniGetGrants(CurrencyID propertyid) throws JsonRPCException, IOException {
+    public List<Map<String, Object>> omniGetGrants(CurrencyID propertyid) throws JsonRpcException, IOException {
         List<Map<String, Object>> orders = send("omni_getgrants", propertyid);
         return orders;
     }
@@ -636,11 +636,11 @@ public class OmniClient extends BitcoinExtendedClient {
      * Returns pending and completed feature activations.
      *
      * @return Pending and complete feature activations
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
-    public Map<String, List<Map<String, Object>>> omniGetActivations() throws JsonRPCException, IOException {
+    public Map<String, List<Map<String, Object>>> omniGetActivations() throws JsonRpcException, IOException {
         Map<String, List<Map<String, Object>>> activations = send("omni_getactivations");
         return activations;
     }
@@ -653,12 +653,12 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param propertyid the identifier of the property to filter results on
      * @return A list of amounts of fees cached
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.11
      */
     public List<Map<String, Object>> omniGetFeeCache(CurrencyID propertyid)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         List<Map<String, Object>> cache = send("omni_getfeecache", propertyid);
         return cache;
     }
@@ -671,12 +671,12 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param propertyId the identifier of the property to filter results on
      * @return A list of amounts of fees required to trigger distribution
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.11
      */
     public List<Map<String, Object>> omniGetFeeTrigger(CurrencyID propertyId)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         List<Map<String, Object>> triggers = send("omni_getfeetrigger", propertyId);
         return triggers;
     }
@@ -693,12 +693,12 @@ public class OmniClient extends BitcoinExtendedClient {
      * @param address   the address to filter results on
      * @param ecosystem the ecosystem to obtain the current percentage fee share
      * @return A list of percentages of fees the address(es) will receive based on the current state
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.11
      */
     public List<Map<String, Object>> omniGetFeeShare(Address address, Ecosystem ecosystem)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         List<Map<String, Object>> shares;
         if (address == null) {
             shares = send("omni_getfeeshare", "", ecosystem);
@@ -715,12 +715,12 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param distributionId the identifier of the distribution to obtain data for
      * @return Information about a fee distribution
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.11
      */
     public Map<String, Object> omniGetFeeDistribution(Integer distributionId)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         Map<String, Object> info = send("omni_getfeedistribution", distributionId);
         return info;
     }
@@ -732,12 +732,12 @@ public class OmniClient extends BitcoinExtendedClient {
      *
      * @param propertyId the identifier of the property to retrieve past distributions for
      * @return A list of fee distributions
-     * @throws JsonRPCException JSON RPC error
+     * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      * @since Omni Core 0.0.11
      */
     public List<Map<String, Object>> omniGetFeeDistributions(CurrencyID propertyId)
-            throws JsonRPCException, IOException {
+            throws JsonRpcException, IOException {
         List<Map<String, Object>> infos = send("omni_getfeedistributions", propertyId);
         return infos;
     }

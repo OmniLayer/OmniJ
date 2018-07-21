@@ -1,9 +1,9 @@
 package foundation.omni
 
 import com.msgilligan.bitcoinj.rpc.BlockchainDotInfoSyncing
-import org.consensusj.jsonrpc.JsonRPCStatusException
+import org.consensusj.jsonrpc.JsonRpcStatusException
 import org.consensusj.jsonrpc.groovy.Loggable
-import com.msgilligan.bitcoinj.rpc.RPCURI
+import com.msgilligan.bitcoinj.rpc.RpcURI
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
 import foundation.omni.rpc.test.TestServers
@@ -25,7 +25,7 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
     static final protected String rpcTestUser = testServers.rpcTestUser
     static final protected String rpcTestPassword = testServers.rpcTestPassword;
     {
-        client = new OmniCLIClient(MainNetParams.get(), RPCURI.defaultMainNetURI, rpcTestUser, rpcTestPassword)
+        client = new OmniCLIClient(MainNetParams.get(), RpcURI.defaultMainNetURI, rpcTestUser, rpcTestPassword)
     }
     static final Integer rpcWaitTimeoutSeconds = 10*60*60  // Wait up to 10 (!) hours for RPC response
 
@@ -50,7 +50,7 @@ abstract class BaseMainNetSpec extends Specification implements OmniClientDelega
         def infoMP
         try {
             infoMP = client.omniGetInfo()
-        } catch (JsonRPCStatusException e) {
+        } catch (JsonRpcStatusException e) {
             log.error "Exception calling omniGetInfo()"
         }
         if (infoMP?.mastercoreversion) {

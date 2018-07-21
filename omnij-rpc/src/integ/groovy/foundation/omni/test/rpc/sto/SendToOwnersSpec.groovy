@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.sto
 
-import org.consensusj.jsonrpc.JsonRPCStatusException
+import org.consensusj.jsonrpc.JsonRpcStatusException
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.ConsensusTool
@@ -67,7 +67,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
         omniSendSTO(fundedAddress, currencyID, 0.divisible)
 
         then: "exception is thrown"
-        JsonRPCStatusException e = thrown()
+        JsonRpcStatusException e = thrown()
         e.message == "Invalid amount"
         e.responseJson.error.code == -3
 

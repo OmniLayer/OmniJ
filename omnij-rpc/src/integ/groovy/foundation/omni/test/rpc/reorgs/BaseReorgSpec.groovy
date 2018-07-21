@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.reorgs
 
-import org.consensusj.jsonrpc.JsonRPCException
+import org.consensusj.jsonrpc.JsonRpcException
 import foundation.omni.BaseRegTestSpec
 import org.bitcoinj.core.Sha256Hash
 import org.junit.internal.AssumptionViolatedException
@@ -13,7 +13,7 @@ abstract class BaseReorgSpec extends BaseRegTestSpec {
     def setupSpec() {
         try {
             clearMemPool()
-        } catch(JsonRPCException ignored) {
+        } catch(JsonRpcException ignored) {
             throw new AssumptionViolatedException('The client has no "clearmempool" command')
         }
     }

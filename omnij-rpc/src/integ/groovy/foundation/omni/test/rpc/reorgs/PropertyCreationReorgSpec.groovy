@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.reorgs
 
-import org.consensusj.jsonrpc.JsonRPCStatusException
+import org.consensusj.jsonrpc.JsonRpcStatusException
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.rpc.SmartPropertyListInfo
@@ -103,13 +103,13 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         omniGetProperty(currencyID)
 
         then: "no information about the property is available"
-        thrown(JsonRPCStatusException)
+        thrown(JsonRpcStatusException)
 
         when:
         omniGetBalance(actorAddress, currencyID)
 
         then: "no balance information for the property"
-        thrown(JsonRPCStatusException)
+        thrown(JsonRpcStatusException)
 
         where:
         ecosystem       | value           | extraBlocks | expectedCurrencyID

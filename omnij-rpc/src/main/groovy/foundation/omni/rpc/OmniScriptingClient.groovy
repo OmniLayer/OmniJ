@@ -1,6 +1,6 @@
 package foundation.omni.rpc;
 
-import org.consensusj.jsonrpc.groovy.DynamicRPCFallback;
+import org.consensusj.jsonrpc.groovy.DynamicRpcMethodFallback;
 import com.msgilligan.bitcoinj.rpc.bitcoind.BitcoinConfFile;
 
 import java.io.IOException;
@@ -10,9 +10,9 @@ import java.io.IOException;
  * No args constructor reads bitcoin.conf
  * Allows dynamic methods to access new RPCs
  */
-public class OmniScriptingClient extends OmniClient implements DynamicRPCFallback {
+public class OmniScriptingClient extends OmniClient implements DynamicRpcMethodFallback {
 
     public OmniScriptingClient() {
-        super(BitcoinConfFile.readDefaultConfig().getRPCConfig());
+        super(BitcoinConfFile.readDefaultConfig().getRpcConfig());
     }
 }

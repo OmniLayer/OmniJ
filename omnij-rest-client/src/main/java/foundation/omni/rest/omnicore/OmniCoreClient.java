@@ -1,8 +1,8 @@
 package foundation.omni.rest.omnicore;
 
 import com.msgilligan.bitcoinj.json.pojo.AddressGroupingItem;
-import org.consensusj.jsonrpc.JsonRPCException;
-import org.consensusj.jsonrpc.JsonRPCStatusException;
+import org.consensusj.jsonrpc.JsonRpcException;
+import org.consensusj.jsonrpc.JsonRpcStatusException;
 import foundation.omni.CurrencyID;
 import foundation.omni.consensus.OmniCoreConsensusFetcher;
 import foundation.omni.rest.ConsensusService;
@@ -71,7 +71,7 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
         SortedMap<CurrencyID, BalanceEntry> entries = new TreeMap<>();
         try {
             entries = client.omniGetAllBalancesForAddress(address);
-        } catch (JsonRPCException e) {
+        } catch (JsonRpcException e) {
             if (!e.getMessage().equals("Address not found")) {
                 throw e;
             }
@@ -99,10 +99,10 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
      * Get all addresses in a wallet
      * Requires wallet support to be active
      * @return A list of addresses
-     * @throws JsonRPCStatusException JSON HTTP status was not 200
+     * @throws JsonRpcStatusException JSON HTTP status was not 200
      * @throws IOException Exception at lower-level
      */
-    public List<Address> getWalletAddresses() throws JsonRPCStatusException, IOException {
+    public List<Address> getWalletAddresses() throws JsonRpcStatusException, IOException {
         // Get a list of every address
         List<Address> addresses = new ArrayList<>();
         List<List<AddressGroupingItem>> addressItems = client.listAddressGroupings();

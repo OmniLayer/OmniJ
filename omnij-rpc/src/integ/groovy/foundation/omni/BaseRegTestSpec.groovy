@@ -2,7 +2,7 @@ package foundation.omni
 
 import com.msgilligan.bitcoinj.json.pojo.NetworkInfo
 import org.consensusj.jsonrpc.groovy.Loggable
-import com.msgilligan.bitcoinj.rpc.RPCURI
+import com.msgilligan.bitcoinj.rpc.RpcURI
 import com.msgilligan.bitcoinj.test.RegTestFundingSource
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
@@ -25,7 +25,7 @@ abstract class BaseRegTestSpec extends Specification implements OmniTestClientDe
     static final protected String rpcTestPassword = testServers.rpcTestPassword;
 
     {
-        client = new OmniTestClient(RegTestParams.get(), RPCURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
+        client = new OmniTestClient(RegTestParams.get(), RpcURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
         fundingSource = new RegTestFundingSource(client)
     }
 

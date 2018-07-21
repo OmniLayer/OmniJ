@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.dex
 
-import org.consensusj.jsonrpc.JsonRPCStatusException
+import org.consensusj.jsonrpc.JsonRpcStatusException
 import foundation.omni.BaseRegTestSpec
 
 /**
@@ -90,7 +90,7 @@ class DexVersionsSpec extends BaseRegTestSpec {
         omniGetTransaction(txid)
 
         then:
-        thrown(JsonRPCStatusException) // No Omni transaction
+        thrown(JsonRpcStatusException) // No Omni transaction
     }
 
     def "DEx transactions with versions greater than 1 are currently not valid"() {

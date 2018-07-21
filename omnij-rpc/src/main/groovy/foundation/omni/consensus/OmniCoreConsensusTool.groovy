@@ -1,6 +1,6 @@
 package foundation.omni.consensus
 
-import com.msgilligan.bitcoinj.rpc.RPCURI
+import com.msgilligan.bitcoinj.rpc.RpcURI
 import foundation.omni.CurrencyID
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.ConsensusSnapshot
@@ -42,7 +42,7 @@ class OmniCoreConsensusTool extends OmniCoreConsensusFetcher implements Consensu
     }
 
     public static void main(String[] args) {
-        OmniClient client = new OmniClient(MainNetParams.get(), RPCURI.defaultMainNetURI, TestServers.instance.rpcTestUser, TestServers.instance.rpcTestPassword)
+        OmniClient client = new OmniClient(MainNetParams.get(), RpcURI.defaultMainNetURI, TestServers.instance.rpcTestUser, TestServers.instance.rpcTestPassword)
         OmniCoreConsensusTool tool = new OmniCoreConsensusTool(client)
         tool.run(args.toList())
     }
