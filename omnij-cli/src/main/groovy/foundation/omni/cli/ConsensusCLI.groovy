@@ -64,7 +64,7 @@ class ConsensusCLI extends CliCommand {
 
         ConsensusTool tool1, tool2
         if (line.hasOption("omnicore-url")) {
-            tool1 = new OmniCoreConsensusTool(getRpcConfig().netParams, line.getOptionValue("omnicore-url").toURI())
+            tool1 = new OmniCoreConsensusTool(getRPCConfig().netParams, line.getOptionValue("omnicore-url").toURI())
         } else if (line.hasOption("omniwallet-url")) {
             tool1 = new OmniwalletConsensusTool(line.getOptionValue("omniwallet-url").toURI())
         } else if (line.hasOption("omnichest-url")) {
@@ -96,7 +96,7 @@ class ConsensusCLI extends CliCommand {
     public OmniClient getClient() {
         if (super.client == null) {
             try {
-                super.client = new OmniClient(getRpcConfig())
+                super.client = new OmniClient(getRPCConfig())
             } catch (IOException e) {
                 e.printStackTrace()
             }
