@@ -1,5 +1,6 @@
 package foundation.omni.cli
 
+import groovy.transform.CompileStatic
 import org.consensusj.bitcoin.cli.CliCommand
 import org.consensusj.bitcoin.cli.CliOptions
 import org.consensusj.jsonrpc.JsonRpcException
@@ -19,6 +20,7 @@ import org.bitcoinj.core.Address
 /**
  * Tool to fetch Omni consensus from Omni Core or one of several other Omni APIs.
  */
+@CompileStatic
 class ConsensusCLI extends CliCommand {
     public final static String commandName = "omni-consensus"
     public final static String commandUsage = "${commandName} [options] -property <id>"
@@ -75,7 +77,7 @@ class ConsensusCLI extends CliCommand {
 
         if (line.hasOption("compare")) {
             tool2 = new OmniCoreConsensusTool(this.getClient())
-            pwerr.println "Comparing ${tool2.serverURI} with ${tool1.serverURI}"
+            //pwerr.println "Comparing ${tool2.serverURI} with ${tool1.serverURI}"
             MultiPropertyComparison multiComparison = new MultiPropertyComparison(tool2, tool1);
             multiComparison.compareAllProperties()
         } else {
