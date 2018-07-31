@@ -20,7 +20,7 @@ import org.bitcoinj.core.Address
 /**
  * Tool to fetch Omni consensus from Omni Core or one of several other Omni APIs.
  */
-@CompileStatic
+//@CompileStatic
 class ConsensusCLI extends CliCommand {
     public final static String commandName = "omni-consensus"
     public final static String commandUsage = "${commandName} [options] -property <id>"
