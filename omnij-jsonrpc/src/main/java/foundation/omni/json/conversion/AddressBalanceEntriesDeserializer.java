@@ -39,7 +39,9 @@ public class AddressBalanceEntriesDeserializer extends StdDeserializer<AddressBa
                     entry = (AddressBalanceEntry) entryDeserializer.deserialize(jp, ctxt);
                     if (isNonZeroEntry(entry)) {
                         // Only add entries with balance or reserved greater than zero.
-                        result.put(entry.getAddress(), new BalanceEntry(entry.getBalance(), entry.getReserved()));
+                        result.put(entry.getAddress(), new BalanceEntry(entry.getBalance(),
+                                                                        entry.getReserved(),
+                                                                        entry.getFrozen()));
                     }
                 } else {
                     throw new JsonMappingException(jp, "unexpected token");

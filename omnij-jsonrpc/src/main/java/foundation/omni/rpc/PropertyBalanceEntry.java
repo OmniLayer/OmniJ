@@ -15,8 +15,9 @@ public class PropertyBalanceEntry extends BalanceEntry {
 
     public PropertyBalanceEntry(@JsonProperty("propertyid") CurrencyID propertyid,
                                @JsonProperty("balance") OmniValue balance,
-                               @JsonProperty("reserved") OmniValue reserved) {
-        super(balance,reserved);
+                               @JsonProperty("reserved") OmniValue reserved,
+                                @JsonProperty("frozen") OmniValue frozen) {
+        super(balance,reserved, frozen);
         this.propertyid = propertyid;
     }
 

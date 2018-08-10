@@ -19,11 +19,11 @@ class SnapshotData {
     static Address c = new ECKey().toAddress(MainNetParams.get())
 
     static TreeMap<Address, BalanceEntry> empty = new TreeMap([:])
-    static TreeMap<Address, BalanceEntry> small1 = new TreeMap([(a): new BalanceEntry(0.divisible, 0.divisible),
-                                                      (b): new BalanceEntry(1.5.divisible,  1.5.divisible),
-                                                      (c): new BalanceEntry(1.divisible,  0.divisible)])
-    static TreeMap<Address, BalanceEntry> small2 = new TreeMap([(a): new BalanceEntry(0.divisible,  0.divisible),
-                                                      (b): new BalanceEntry(1.5.divisible,  0.5.divisible)])
+    static TreeMap<Address, BalanceEntry> small1 = new TreeMap([(a): new BalanceEntry(0.divisible, 0.divisible, 0.divisible),
+                                                      (b): new BalanceEntry(1.5.divisible,  1.5.divisible,  0.divisible),
+                                                      (c): new BalanceEntry(1.divisible,  0.divisible,  0.divisible)])
+    static TreeMap<Address, BalanceEntry> small2 = new TreeMap([(a): new BalanceEntry(0.divisible,  0.divisible,  0.divisible),
+                                                      (b): new BalanceEntry(1.5.divisible,  0.5.divisible,  0.divisible)])
 
     static ConsensusSnapshot empty() {
         return createSnapshot("empty", empty)

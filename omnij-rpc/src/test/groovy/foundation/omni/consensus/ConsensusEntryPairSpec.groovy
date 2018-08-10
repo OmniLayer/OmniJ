@@ -15,10 +15,12 @@ class ConsensusEntryPairSpec extends Specification {
 
     def "is immutable"() {
         setup:
-        def pair = new ConsensusEntryPair(testAddress, new BalanceEntry(0.divisible,0.divisible), new BalanceEntry(0.divisible,0.divisible))
+        def pair = new ConsensusEntryPair(testAddress,
+                new BalanceEntry(0.divisible,0.divisible,0.divisible),
+                new BalanceEntry(0.divisible,0.divisible,0.divisible))
 
         when: "we try to change it"
-        pair.entry1 = new BalanceEntry(1.divisible,1.divisible)
+        pair.entry1 = new BalanceEntry(1.divisible,0.divisible,0.divisible)
 
         then: "an exception is thrown and value isn't changed"
         ReadOnlyPropertyException e = thrown()
@@ -26,7 +28,9 @@ class ConsensusEntryPairSpec extends Specification {
 
     def "is iterable"() {
         setup:
-        def pair = new ConsensusEntryPair(testAddress, new BalanceEntry(0.divisible,0.divisible), new BalanceEntry(1.divisible,1.divisible))
+        def pair = new ConsensusEntryPair(testAddress,
+                new BalanceEntry(0.divisible,0.divisible,0.divisible),
+                new BalanceEntry(1.divisible,1.divisible,0.divisible))
 
         when: "we iterate it"
         def objs = []
@@ -37,8 +41,8 @@ class ConsensusEntryPairSpec extends Specification {
         then: "it worked"
         objs.size() == 3
         objs[0] == testAddress
-        objs[1] == new BalanceEntry(0.divisible,0.divisible)
-        objs[2] == new BalanceEntry(1.divisible,1.divisible)
+        objs[1] == new BalanceEntry(0.divisible,0.divisible,0.divisible)
+        objs[2] == new BalanceEntry(1.divisible,1.divisible,0.divisible)
     }
 
 }

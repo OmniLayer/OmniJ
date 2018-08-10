@@ -15,12 +15,15 @@ import java.util.Iterator;
 public class BalanceEntry implements Iterable<OmniValue>  {
     protected final OmniValue balance;
     protected final OmniValue reserved;
+    protected final OmniValue frozen;
 
     @JsonCreator
     public BalanceEntry(@JsonProperty("balance") OmniValue balance,
-                        @JsonProperty("reserved") OmniValue reserved) {
+                        @JsonProperty("reserved") OmniValue reserved,
+                        @JsonProperty("frozen") OmniValue frozen) {
         this.balance = balance;
         this.reserved = reserved;
+        this.frozen = frozen;
     }
 
     @Override
@@ -49,6 +52,10 @@ public class BalanceEntry implements Iterable<OmniValue>  {
 
     public OmniValue getReserved() {
         return reserved;
+    }
+
+    public OmniValue getFrozen() {
+        return frozen;
     }
 
     /**

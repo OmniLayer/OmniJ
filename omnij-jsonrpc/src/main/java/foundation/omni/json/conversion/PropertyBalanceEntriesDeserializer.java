@@ -20,7 +20,7 @@ import java.io.IOException;
  */
 public class PropertyBalanceEntriesDeserializer extends StdDeserializer<PropertyBalanceEntries> {
 
-    public PropertyBalanceEntriesDeserializer() { super(AddressBalanceEntries.class); }
+    public PropertyBalanceEntriesDeserializer() { super(PropertyBalanceEntries.class); }
 
     @Override
     public PropertyBalanceEntries deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
@@ -34,7 +34,9 @@ public class PropertyBalanceEntriesDeserializer extends StdDeserializer<Property
 
                 if (t == JsonToken.START_OBJECT) {
                     entry = (PropertyBalanceEntry) entryDeserializer.deserialize(jp, ctxt);
-                    result.put(entry.getPropertyid(), new BalanceEntry(entry.getBalance(), entry.getReserved()));
+                    result.put(entry.getPropertyid(), new BalanceEntry( entry.getBalance(),
+                                                                        entry.getReserved(),
+                                                                        entry.getFrozen()));
                 } else {
                     throw new JsonMappingException(jp, "unexpected token");
                 }

@@ -189,8 +189,9 @@ public class OmniwalletClient implements ConsensusService {
             CurrencyID id = pb.getId();
             PropertyType type =  pb.isDivisible() ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
             OmniValue value = pb.getValue();
+            OmniValue zero = OmniValue.ofWillets(0, type);
             if (!pb.isError()) {
-                wab.put(id, new BalanceEntry(value, OmniValue.ofWillets(0, type)));
+                wab.put(id, new BalanceEntry(value, zero, zero));
             }
         }
         return wab;
@@ -251,7 +252,10 @@ public class OmniwalletClient implements ConsensusService {
         Map<Address, BalanceEntry> unsorted = balances.stream()
                 .map(bal -> balanceMapper(bal, propertyType))
                 .collect(Collectors.toMap(
-                        AddressBalanceEntry::getAddress, address -> new BalanceEntry(address.getBalance(), address.getReserved())
+                        AddressBalanceEntry::getAddress,
+                        address -> new BalanceEntry(address.getBalance(),
+                                                    address.getReserved(),
+                                                    address.getFrozen())
                 ));
         return new TreeMap<>(unsorted);
     }
