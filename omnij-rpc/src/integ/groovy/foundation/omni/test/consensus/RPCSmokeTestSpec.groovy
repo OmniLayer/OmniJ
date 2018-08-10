@@ -2,6 +2,7 @@ package foundation.omni.test.consensus
 
 import foundation.omni.BaseMainNetSpec
 import foundation.omni.consensus.OmniCoreConsensusTool
+import foundation.omni.net.OmniMainNetParams
 
 import static foundation.omni.CurrencyID.*
 
@@ -31,6 +32,15 @@ class RPCSmokeTestSpec extends BaseMainNetSpec {
         then: "it is there"
         mscSnapshot.currencyID == OMNI
         mscSnapshot.entries.size() >= 1
+    }
+
+    def "omniGetAllBalancesForAddress(exodusAddress) is working"() {
+        when:
+        def balances = omniGetAllBalancesForAddress(OmniMainNetParams.get().exodusAddress)
+
+        then:
+        balances[OMNI].balance >= 0.divisible
+        balances[OMNI].reserved >= 0.divisible
     }
 
 }

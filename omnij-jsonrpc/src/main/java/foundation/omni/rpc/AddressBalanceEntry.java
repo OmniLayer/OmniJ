@@ -1,10 +1,8 @@
 package foundation.omni.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import foundation.omni.OmniValue;
 import org.bitcoinj.core.Address;
-
-import java.math.BigDecimal;
+import foundation.omni.OmniValue;
 
 /**
  *  Balance entry for an Address
@@ -16,7 +14,7 @@ public class AddressBalanceEntry extends BalanceEntry {
                                @JsonProperty("balance") OmniValue balance,
                                @JsonProperty("reserved") OmniValue reserved,
                                @JsonProperty("frozen") OmniValue frozen) {
-        super(balance,reserved, frozen);
+        super(balance, reserved, frozen);
         this.address = address;
     }
 

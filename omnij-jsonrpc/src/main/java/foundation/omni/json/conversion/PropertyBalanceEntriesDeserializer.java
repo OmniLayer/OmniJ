@@ -7,8 +7,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import foundation.omni.rpc.AddressBalanceEntries;
-import foundation.omni.rpc.AddressBalanceEntry;
 import foundation.omni.rpc.BalanceEntry;
 import foundation.omni.rpc.PropertyBalanceEntries;
 import foundation.omni.rpc.PropertyBalanceEntry;

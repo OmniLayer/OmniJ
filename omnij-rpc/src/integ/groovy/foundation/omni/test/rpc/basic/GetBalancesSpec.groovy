@@ -1,6 +1,8 @@
 package foundation.omni.test.rpc.basic
 
 import foundation.omni.BaseRegTestSpec
+import foundation.omni.CurrencyID
+import foundation.omni.rpc.BalanceEntry
 import org.bitcoinj.core.Address
 import spock.lang.Shared
 
@@ -13,13 +15,13 @@ import static foundation.omni.CurrencyID.TOMNI
  */
 class GetBalancesSpec extends BaseRegTestSpec {
     final static faucetBTC = 10.btc
-    final static faucetMSC = 1000.divisible
+    final static faucetOMNI = 1000.divisible
 
     @Shared
     Address fundedAddress
 
     def setupSpec() {
-        fundedAddress = createFundedAddress(faucetBTC, faucetMSC)
+        fundedAddress = createFundedAddress(faucetBTC, faucetOMNI)
     }
 
     def "omniGetBalance returns correct balances"() {
@@ -28,32 +30,32 @@ class GetBalancesSpec extends BaseRegTestSpec {
         def tmscBalance = omniGetBalance(fundedAddress, TOMNI)
 
         then:
-        mscBalance.balance.equals(faucetMSC)
+        mscBalance.balance.equals(faucetOMNI)
         mscBalance.reserved.equals(0.divisible)
-        tmscBalance.balance.equals(faucetMSC)
+        tmscBalance.balance.equals(faucetOMNI)
         tmscBalance.reserved.equals(0.divisible)
     }
 
     def "omniGetAllBalancesForId returns correct balances"() {
         when:
-        def mscBalances = omniGetAllBalancesForId(OMNI)
-        def tmscBalances = omniGetAllBalancesForId(TOMNI)
+        SortedMap<Address, BalanceEntry> mscBalances = omniGetAllBalancesForId(OMNI)
+        SortedMap<Address, BalanceEntry> tmscBalances = omniGetAllBalancesForId(TOMNI)
 
         then:
-        mscBalances[fundedAddress].balance.equals(faucetMSC)
+        mscBalances[fundedAddress].balance.equals(faucetOMNI)
         mscBalances[fundedAddress].reserved.equals(0.divisible)
-        tmscBalances[fundedAddress].balance.equals(faucetMSC)
+        tmscBalances[fundedAddress].balance.equals(faucetOMNI)
         tmscBalances[fundedAddress].reserved.equals(0.divisible)
     }
 
     def "omniGetAllBalancesForAddress returns correct balances"() {
         when:
-        def balances = omniGetAllBalancesForAddress(fundedAddress)
+        SortedMap<CurrencyID, BalanceEntry> balances = omniGetAllBalancesForAddress(fundedAddress)
 
         then:
-        balances[OMNI].balance.equals(faucetMSC)
+        balances[OMNI].balance.equals(faucetOMNI)
         balances[OMNI].reserved.equals(0.divisible)
-        balances[TOMNI].balance.equals(faucetMSC)
+        balances[TOMNI].balance.equals(faucetOMNI)
         balances[TOMNI].reserved.equals(0.divisible)
     }
 }
