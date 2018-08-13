@@ -1,6 +1,7 @@
 package foundation.omni.rpc;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import foundation.omni.OmniValue;
 
@@ -12,6 +13,7 @@ import java.util.Iterator;
  * TODO: Move to omnij-core, remove Jackson annotations, write Serializer/Deserializer?
  * (move along with AddressBalanceEntry, PropertyBalanceEntry)
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BalanceEntry implements Iterable<OmniValue>  {
     protected final OmniValue balance;
     protected final OmniValue reserved;

@@ -1,5 +1,6 @@
 package foundation.omni.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
@@ -7,6 +8,7 @@ import foundation.omni.OmniValue;
 /**
  * Balance entry for an property/currency
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PropertyBalanceEntry extends BalanceEntry {
     private final CurrencyID propertyid;
 
