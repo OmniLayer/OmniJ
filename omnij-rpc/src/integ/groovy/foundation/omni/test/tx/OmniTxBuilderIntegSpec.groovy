@@ -6,7 +6,6 @@ import foundation.omni.tx.OmniTxBuilder
 import foundation.omni.tx.SimpleVariableFeeCalculator
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.TransactionOutput
-import spock.lang.Shared
 
 import static foundation.omni.CurrencyID.OMNI
 
@@ -15,13 +14,13 @@ import static foundation.omni.CurrencyID.OMNI
  */
 class OmniTxBuilderIntegSpec extends BaseRegTestSpec {
     static final Coin startBTC = 10.btc
-    static final OmniDivisibleValue startMSC = 1000.divisible
+    static final OmniDivisibleValue startOMNI = 1000.divisible
 
 
-    def "Can simple send amount MSC from one address to another using OmniTxBuilder and sendraw RPC"() {
+    def "Can simple send amount OMNI from one address to another using OmniTxBuilder and sendraw RPC"() {
         given: "a fundedAddress with BTC/OMNI and a newly created toAddress"
         def omniTxBuilder = new OmniTxBuilder(netParams)
-        def fundedAddress = createFundedAddress(startBTC, startMSC)
+        def fundedAddress = createFundedAddress(startBTC, startOMNI)
         def startBalance = omniGetBalance(fundedAddress, OMNI).balance
         def fundedKey = dumpPrivKey(fundedAddress)
         def toAddress = getNewAddress()
@@ -44,10 +43,10 @@ class OmniTxBuilderIntegSpec extends BaseRegTestSpec {
         endBalance == startBalance - amount.numberValue()
     }
 
-    def "Can simple send amount MSC from one address to another using OmniTxBuilder and sendraw RPC with per KB fee"() {
+    def "Can simple send amount OMNI from one address to another using OmniTxBuilder and sendraw RPC with per KB fee"() {
         given: "a fundedAddress with BTC/OMNI and a newly created toAddress"
         def omniTxBuilder = new OmniTxBuilder(netParams, new SimpleVariableFeeCalculator())
-        def fundedAddress = createFundedAddress(startBTC, startMSC)
+        def fundedAddress = createFundedAddress(startBTC, startOMNI)
         def startBalance = omniGetBalance(fundedAddress, OMNI).balance
         def fundedKey = dumpPrivKey(fundedAddress)
         def toAddress = getNewAddress()
