@@ -23,12 +23,12 @@ A high-level view of the changes in each OmniJ binary release.
 
 === All modules
 
-* BREAKING: Upgrade all modules to Java 8
-* Upgrade to *consensusj* (formerly bitcoinj-addons) 0.2.8
+* BREAKING: Upgrade all modules to require Java 8 or later
+* Upgrade to *consensusj* (formerly bitcoinj-addons) 0.3.0
 * Upgrade to *bitcoinj* 0.14.7
 * Upgrade to *Groovy* 2.5.2
 * Upgrade to *Spock* 1.2
-* Upgrade to *Gradle* 4.6
+* Upgrade to *Gradle* 4.10.2
 
 == v0.5.5
 
