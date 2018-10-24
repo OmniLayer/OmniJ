@@ -9,7 +9,7 @@ buildscript {
 
 plugins {
     id 'org.asciidoctor.convert'        version '1.5.3'
-    id 'com.jfrog.bintray'              version '1.7.3'
+    id 'com.jfrog.bintray'              version '1.8.4' apply false
 }
 
 // See gradle.properties for some dependency version settings
