@@ -27,6 +27,7 @@
 . Set versions back to -SNAPSHOT
 .. `build.gradle`
 .. omnij-dsl `ExtensionModule`
+.. `CHANGELOG.adoc`
 .. *Not* `README.adoc` -- it should match release version
 . Commit and push to master
 
