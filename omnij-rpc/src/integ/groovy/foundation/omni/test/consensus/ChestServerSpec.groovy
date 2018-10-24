@@ -4,6 +4,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.consensus.ChestConsensusTool
 import foundation.omni.rpc.SmartPropertyListInfo
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import static foundation.omni.CurrencyID.OMNI
@@ -14,6 +15,7 @@ import static foundation.omni.CurrencyID.USDT
 /**
  * Basic functional test for getting consensus data from Chest API
  */
+@Ignore("Needs update for new API?")
 class ChestServerSpec extends Specification {
 
     def "Can get block height"() {

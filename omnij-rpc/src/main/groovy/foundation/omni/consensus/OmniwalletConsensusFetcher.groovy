@@ -141,10 +141,11 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
     protected BalanceEntry itemToEntry(PropertyType propertyType, Object item) {
         BigDecimal balance = jsonToBigDecimal(item.balance)
         BigDecimal reserved = jsonToBigDecimal(item.reserved_balance)
+        // TODO: Add `frozen` to the test
         if (propertyType == PropertyType.DIVISIBLE) {
-            return new BalanceEntry(balance.divisible, reserved.divisible)
+            return new BalanceEntry(balance.divisible, reserved.divisible, 0.divisible)
         } else {
-            return new BalanceEntry(balance.indivisible, reserved.indivisible)
+            return new BalanceEntry(balance.indivisible, reserved.indivisible, 0.indivisible)
         }
     }
 
