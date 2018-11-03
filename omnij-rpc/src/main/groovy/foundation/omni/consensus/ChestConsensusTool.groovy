@@ -15,13 +15,16 @@ import org.bitcoinj.core.Address
  */
 @Slf4j
 class ChestConsensusTool implements ConsensusTool {
-    static URI ChestHost_Live = new URI("https://omniexplorer.info");
+    static URI ChestHost_Live = new URI("https://api.omniexplorer.info");
     private final String proto
     private final String host
     private final int port
     static String file = "/ask.aspx?api=getpropertybalances"
-    static String listFile = "/ask.aspx?api=getproperties"
-    static String blockHeightFile = "/ask.aspx?api=customapireq_lastblockprocessed"
+    static String listFile = "/v1/properties/list"
+    static String revisionFile = "/v1/system/revision.json"
+
+    static final Map apiExtraHeaders = ['User-Agent': 'OmniJ/ChestConsensusTool']
+    static final Map apiParameters = [requestProperties: apiExtraHeaders]
 
     ChestConsensusTool(URI chestURI) {
         proto = chestURI.scheme
@@ -35,7 +38,7 @@ class ChestConsensusTool implements ConsensusTool {
     }
 
     private SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) {
-        def balances = new JsonSlurper().parse(consensusURL(currencyID))
+        def balances = new JsonSlurper().parse(consensusURL(currencyID), apiParameters)
 
         TreeMap<Address, BalanceEntry> map = [:]
         balances.each { item ->
@@ -72,9 +75,10 @@ class ChestConsensusTool implements ConsensusTool {
 
     @Override
     Integer currentBlockHeight() {
-        def blockHeightURL = new URL(proto, host, port, blockHeightFile)
-        String blockHeight = blockHeightURL.text
-        return blockHeight.toInteger()
+        def revisionURL = new URL(proto, host, port, revisionFile)
+        def revision = new JsonSlurper().parseText(revisionURL.getText(apiParameters))
+        def blockHeight = revision.last_block
+        return blockHeight
     }
 
     @Override
@@ -82,11 +86,12 @@ class ChestConsensusTool implements ConsensusTool {
     List<SmartPropertyListInfo> listProperties() {
         def listPropUrl = new URL(proto, host, port, listFile)
         def slurper = new JsonSlurper()
-        List<Map<String, Object>> props = (List<Map<String, Object>>) slurper.parse(listPropUrl)
+        Map json = (Map) slurper.parse(listPropUrl, apiParameters)
+        List<Map<String, Object>> props = (List<Map<String, Object>>) json.get("properties")
         List<SmartPropertyListInfo> propList = new ArrayList<SmartPropertyListInfo>()
-        for (Map jsonProp : props) {
+        for (Map<String, Object> jsonProp : props) {
             // TODO: Should this mapping be done by Jackson?
-            Number idnum = (Number) jsonProp.get("currencyID")
+            Number idnum = (Number) jsonProp.get("propertyid")
             CurrencyID id
             try {
                 id = new CurrencyID(idnum.longValue())
@@ -95,15 +100,15 @@ class ChestConsensusTool implements ConsensusTool {
             }
             if (id != null) {
                 String name = (String) jsonProp.get("name")
-                String category = ""
-                String subCategory = ""
-                String data = ""
-                String url = ""
+                String category = (String) jsonProp.get("category")
+                String subcategory = (String) jsonProp.get("subcategory")
+                String data = (String) jsonProp.get("data")
+                String url = (String) jsonProp.get("url")
                 Boolean divisible = (Boolean) jsonProp.get("divisible")
                 SmartPropertyListInfo prop = new SmartPropertyListInfo(id,
                         name,
                         category,
-                        subCategory,
+                        subcategory,
                         data,
                         url,
                         divisible)

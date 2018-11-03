@@ -15,7 +15,6 @@ import static foundation.omni.CurrencyID.USDT
 /**
  * Basic functional test for getting consensus data from Chest API
  */
-@Ignore("Needs update for new API?")
 class ChestServerSpec extends Specification {
 
     def "Can get block height"() {
@@ -29,6 +28,7 @@ class ChestServerSpec extends Specification {
         blockHeight > 323000  // Greater than a relatively recent main-net block
     }
 
+    @Ignore("Needs update for new API")
     def "Can get Chest consensus data (divisible)"() {
         setup:
         ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
@@ -42,6 +42,7 @@ class ChestServerSpec extends Specification {
         snapshot.entries.size() >= 1
     }
 
+    @Ignore("Needs update for new API")
     def "Can get Chest consensus data (indivisible)"() {
         setup:
         ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
@@ -69,29 +70,29 @@ class ChestServerSpec extends Specification {
         when: "we convert the list to a map"
         // This may be unnecessary if we can assume the property list is ordered by propertyid
         Map<CurrencyID, SmartPropertyListInfo> props = properties.collect { [it.propertyid, it] }.collectEntries()
-
-        then: "OMNI and TOMNI are not returned in Chest property list"
-        props[OMNI] == null
-        props[TOMNI] == null
+        
+        then: "OMNI and TOMNI are NOW returned in Chest property list"
+        props[OMNI] != null
+        props[TOMNI] != null
 
         and: "MAID is as expected"
         props[MAID].propertyid == MAID
         props[MAID].propertyid.ecosystem == Ecosystem.OMNI
         props[MAID].name == "MaidSafeCoin"
-        props[MAID].category == ""
-        props[MAID].subcategory == ""
-        props[MAID].data == ""
-        props[MAID].url == ""
+        props[MAID].category == "Crowdsale"
+        props[MAID].subcategory == "MaidSafe"
+        props[MAID].data == "SAFE Network Crowdsale (MSAFE)"
+        props[MAID].url == "www.buysafecoins.com"
         props[MAID].divisible == false
 
         and: "USDT is as expected"
         props[USDT].propertyid == USDT
         props[USDT].propertyid.ecosystem == Ecosystem.OMNI
         props[USDT].name == "TetherUS"
-        props[USDT].category == ""
-        props[USDT].subcategory == ""
-        props[USDT].data == ""
-        props[USDT].url == ""
+        props[USDT].category == "Financial and insurance activities"
+        props[USDT].subcategory == "Activities auxiliary to financial service and insurance activities"
+        props[USDT].data == "The next paradigm of money."
+        props[USDT].url == "https://tether.to"
         props[USDT].divisible == true
 
     }
