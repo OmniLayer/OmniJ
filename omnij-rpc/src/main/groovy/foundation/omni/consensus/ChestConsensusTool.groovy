@@ -59,11 +59,12 @@ class ChestConsensusTool implements ConsensusTool {
 
         def propertyType = ((String) item.balance).contains('.') ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE
 
+        // TODO: Don't hardcode "frozen" to 0 (and add to tests)
         if (propertyType == PropertyType.DIVISIBLE) {
-            return new BalanceEntry(balance.divisible, reserved.divisible)
+            return new BalanceEntry(balance.divisible, reserved.divisible, 0.divisible)
         } else {
 
-            return new BalanceEntry(balance.indivisible, reserved.indivisible)
+            return new BalanceEntry(balance.indivisible, reserved.indivisible, 0.indivisible)
         }
     }
 
