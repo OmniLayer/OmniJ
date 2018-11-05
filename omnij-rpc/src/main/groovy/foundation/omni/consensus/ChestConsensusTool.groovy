@@ -57,7 +57,9 @@ class ChestConsensusTool implements ConsensusTool {
         BigDecimal balance = jsonToBigDecimal(item.balance)
         BigDecimal reserved = jsonToBigDecimal(item.reserved)
 
-        def propertyType = ((String) item.balance).contains('.') ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE
+        def balanceString = (String) item.balance;
+        boolean hasDecimal = balanceString.contains('.') || balanceString.contains('E')
+        def propertyType = hasDecimal ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE
 
         // TODO: Don't hardcode "frozen" to 0 (and add to tests)
         if (propertyType == PropertyType.DIVISIBLE) {

@@ -28,7 +28,6 @@ class ChestServerSpec extends Specification {
         blockHeight > 323000  // Greater than a relatively recent main-net block
     }
 
-    @Ignore("getpropertybalances isn't giving us a PropertyType.DIVISIBLE hint")
     def "Can get Chest consensus data (divisible)"() {
         setup:
         ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
