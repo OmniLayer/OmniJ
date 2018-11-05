@@ -1,6 +1,6 @@
 package foundation.omni.test.consensus.chest.tmsc
 
-import foundation.omni.consensus.ChestConsensusTool
+import foundation.omni.consensus.ExplorerConsensusTool
 import foundation.omni.test.consensus.BaseConsensusSpec
 import spock.lang.Ignore
 import spock.lang.Title
@@ -14,7 +14,7 @@ import static foundation.omni.CurrencyID.TOMNI
 class CompareCoreChestSpec extends BaseConsensusSpec {
 
     void setupSpec() {
-        setupComparisonForCurrency(new ChestConsensusTool(ChestConsensusTool.ChestHost_Live),
+        setupComparisonForCurrency(new ExplorerConsensusTool(ExplorerConsensusTool.ExplorerHost_Live),
                 TOMNI)
     }
 }

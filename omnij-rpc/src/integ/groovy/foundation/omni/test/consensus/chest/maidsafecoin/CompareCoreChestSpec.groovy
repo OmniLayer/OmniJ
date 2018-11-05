@@ -1,6 +1,6 @@
 package foundation.omni.test.consensus.chest.maidsafecoin
 
-import foundation.omni.consensus.ChestConsensusTool
+import foundation.omni.consensus.ExplorerConsensusTool
 import foundation.omni.test.consensus.BaseConsensusSpec
 import spock.lang.Title
 
@@ -12,7 +12,7 @@ import static foundation.omni.CurrencyID.MAID
 class CompareCoreChestSpec extends BaseConsensusSpec {
 
     void setupSpec() {
-        setupComparisonForCurrency(new ChestConsensusTool(ChestConsensusTool.ChestHost_Live),
+        setupComparisonForCurrency(new ExplorerConsensusTool(ExplorerConsensusTool.ExplorerHost_Live),
                 MAID)
     }
 }

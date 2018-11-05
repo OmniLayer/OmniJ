@@ -11,11 +11,11 @@ import groovy.util.logging.Slf4j
 import org.bitcoinj.core.Address
 
 /**
- * Command-line tool and class for fetching OmniExplorer (formerly OmniChest) consensus data
+ * Command-line tool and class for fetching OmniExplorer consensus data
  */
 @Slf4j
-class ChestConsensusTool implements ConsensusTool {
-    static URI ChestHost_Live = new URI("https://api.omniexplorer.info");
+class ExplorerConsensusTool implements ConsensusTool {
+    static URI ExplorerHost_Live = new URI("https://api.omniexplorer.info");
     private final String proto
     private final String host
     private final int port
@@ -23,17 +23,17 @@ class ChestConsensusTool implements ConsensusTool {
     static String listFile = "/v1/properties/list"
     static String revisionFile = "/v1/system/revision.json"
 
-    static final Map apiExtraHeaders = ['User-Agent': 'OmniJ/ChestConsensusTool']
+    static final Map apiExtraHeaders = ['User-Agent': 'OmniJ/ExplorerConsensusTool']
     static final Map apiParameters = [requestProperties: apiExtraHeaders]
 
-    ChestConsensusTool(URI chestURI) {
-        proto = chestURI.scheme
-        port = chestURI.port
-        host = chestURI.host
+    ExplorerConsensusTool(URI explorerURI) {
+        proto = explorerURI.scheme
+        port = explorerURI.port
+        host = explorerURI.host
     }
 
     public static void main(String[] args) {
-        ChestConsensusTool tool = new ChestConsensusTool(ChestHost_Live)
+        ExplorerConsensusTool tool = new ExplorerConsensusTool(ExplorerHost_Live)
         tool.run(args.toList())
     }
 

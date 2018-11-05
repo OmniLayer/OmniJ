@@ -2,9 +2,8 @@ package foundation.omni.test.consensus
 
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.consensus.ChestConsensusTool
+import foundation.omni.consensus.ExplorerConsensusTool
 import foundation.omni.rpc.SmartPropertyListInfo
-import spock.lang.Ignore
 import spock.lang.Specification
 
 import static foundation.omni.CurrencyID.OMNI
@@ -13,13 +12,13 @@ import static foundation.omni.CurrencyID.MAID
 import static foundation.omni.CurrencyID.USDT
 
 /**
- * Basic functional test for getting consensus data from Chest API
+ * Basic functional test for getting consensus data from Explorer API
  */
-class ChestServerSpec extends Specification {
+class ExplorerServerSpec extends Specification {
 
     def "Can get block height"() {
         setup:
-        ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
+        ExplorerConsensusTool fetcher = new ExplorerConsensusTool(ExplorerConsensusTool.ExplorerHost_Live)
 
         when: "we get block height"
         def blockHeight = fetcher.currentBlockHeight()
@@ -30,7 +29,7 @@ class ChestServerSpec extends Specification {
 
     def "Can get Chest consensus data (divisible)"() {
         setup:
-        ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
+        ExplorerConsensusTool fetcher = new ExplorerConsensusTool(ExplorerConsensusTool.ExplorerHost_Live)
 
         when: "we get data"
         def snapshot = fetcher.getConsensusSnapshot(OMNI)
@@ -43,7 +42,7 @@ class ChestServerSpec extends Specification {
 
     def "Can get Chest consensus data (indivisible)"() {
         setup:
-        ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
+        ExplorerConsensusTool fetcher = new ExplorerConsensusTool(ExplorerConsensusTool.ExplorerHost_Live)
 
         when: "we get data"
         def snapshot = fetcher.getConsensusSnapshot(MAID)
@@ -56,7 +55,7 @@ class ChestServerSpec extends Specification {
 
     def "Can get Chest property list"() {
         setup:
-        ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
+        ExplorerConsensusTool fetcher = new ExplorerConsensusTool(ExplorerConsensusTool.ExplorerHost_Live)
 
         when: "we get data"
         def properties = fetcher.listProperties()

@@ -1,11 +1,11 @@
 package foundation.omni.cli
 
-import groovy.transform.CompileStatic
+
 import org.consensusj.bitcoin.cli.CliCommand
 import org.consensusj.bitcoin.cli.CliOptions
 import org.consensusj.jsonrpc.JsonRpcException
 import foundation.omni.CurrencyID
-import foundation.omni.consensus.ChestConsensusTool
+import foundation.omni.consensus.ExplorerConsensusTool
 import foundation.omni.rpc.ConsensusSnapshot
 import foundation.omni.consensus.ConsensusTool
 import foundation.omni.consensus.MultiPropertyComparison
@@ -70,7 +70,7 @@ class ConsensusCLI extends CliCommand {
         } else if (line.hasOption("omniwallet-url")) {
             tool1 = new OmniwalletConsensusTool(line.getOptionValue("omniwallet-url").toURI())
         } else if (line.hasOption("omnichest-url")) {
-            tool1 = new ChestConsensusTool(line.getOptionValue("omnichest-url").toURI())
+            tool1 = new ExplorerConsensusTool(line.getOptionValue("omnichest-url").toURI())
         } else {
             tool1 = new OmniCoreConsensusTool(this.getClient())
         }
