@@ -19,7 +19,7 @@ class ExplorerConsensusTool implements ConsensusTool {
     private final String proto
     private final String host
     private final int port
-    static String file = "/ask.aspx?api=getpropertybalances"
+    static String file = "/v1/property/distribution/"
     static String listFile = "/v1/properties/list"
     static String revisionFile = "/v1/system/revision.json"
 
@@ -150,7 +150,7 @@ class ExplorerConsensusTool implements ConsensusTool {
     }
 
     private consensusURL(CurrencyID currencyID) {
-        return new URL(proto, host, port, "${file}&prop=${currencyID.getValue()}")
+        return new URL(proto, host, port, "${file}${currencyID.getValue()}")
     }
 
 }
