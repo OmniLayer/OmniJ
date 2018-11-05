@@ -28,7 +28,7 @@ class ChestServerSpec extends Specification {
         blockHeight > 323000  // Greater than a relatively recent main-net block
     }
 
-    @Ignore("Needs update for new API")
+    @Ignore("getpropertybalances isn't giving us a PropertyType.DIVISIBLE hint")
     def "Can get Chest consensus data (divisible)"() {
         setup:
         ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
@@ -42,7 +42,6 @@ class ChestServerSpec extends Specification {
         snapshot.entries.size() >= 1
     }
 
-    @Ignore("Needs update for new API")
     def "Can get Chest consensus data (indivisible)"() {
         setup:
         ChestConsensusTool fetcher = new ChestConsensusTool(ChestConsensusTool.ChestHost_Live)
