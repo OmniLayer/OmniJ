@@ -4,7 +4,7 @@ import foundation.omni.test.consensus.remote_core.CompareCoreCoreBaseSpec
 import spock.lang.Ignore
 import spock.lang.Title
 
-import static foundation.omni.CurrencyID.TetherUS
+import static foundation.omni.CurrencyID.USDT
 
 /**
  * Local Omni Core vs Remote Omni Core consensus comparison for <code>TetherUS</code>
@@ -14,6 +14,6 @@ import static foundation.omni.CurrencyID.TetherUS
 class CompareCoreCoreSpec extends CompareCoreCoreBaseSpec {
 
     void setupSpec() {
-        setupCoreCoreComparisonForCurrency(TetherUS)
+        setupCoreCoreComparisonForCurrency(USDT)
     }
 }

@@ -14,42 +14,22 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
 
     public static final long    BTC_VALUE = 0;
     public static final long    OMNI_VALUE = 1;
-    /** @deprecated */
-    public static final long    MSC_VALUE = 1;
     public static final long    TOMNI_VALUE = 2;
-    /** @deprecated */
-    public static final long    TMSC_VALUE = 2;
     public static final long    MAID_VALUE = 3; // MaidSafeCoin
-    /** @deprecated */
-    public static final long    MaidSafeCoin_VALUE = 3;
-    /** @deprecated */
-    public static final long    TetherUS_VALUE = 31;
     public static final long    USDT_VALUE = 31;
     public static final long    AMP_VALUE = 39; // Synerio
     public static final long    EURT_VALUE = 41;
-    /** @deprecated */
-    public static final long    SEC_VALUE = 56; // SafeExchangeCoin
     public static final long    SAFEX_VALUE = 56; // SafeExchangeCoin
     public static final long    AGRS_VALUE = 58; // Agoras
     public static final long    PDC_VALUE = 59; // Project Decorum Coin
 
     public static final CurrencyID  BTC = new CurrencyID(BTC_VALUE);
     public static final CurrencyID  OMNI = new CurrencyID(OMNI_VALUE);
-    /** @deprecated */
-    public static final CurrencyID  MSC = new CurrencyID(OMNI_VALUE);
     public static final CurrencyID  TOMNI = new CurrencyID(TOMNI_VALUE);
-    /** @deprecated */
-    public static final CurrencyID  TMSC = new CurrencyID(TOMNI_VALUE);
     public static final CurrencyID  MAID = new CurrencyID(MAID_VALUE);
-    /** @deprecated */
-    public static final CurrencyID  MaidSafeCoin = new CurrencyID(MAID_VALUE);
-    /** @deprecated */
-    public static final CurrencyID  TetherUS = new CurrencyID(USDT_VALUE);
     public static final CurrencyID  USDT = new CurrencyID(USDT_VALUE);
     public static final CurrencyID  AMP = new CurrencyID(AMP_VALUE);
     public static final CurrencyID  EURT = new CurrencyID(EURT_VALUE);
-    /** @deprecated */
-    public static final CurrencyID  SEC = new CurrencyID(SEC_VALUE);
     public static final CurrencyID  SAFEX = new CurrencyID(SAFEX_VALUE);
     public static final CurrencyID  AGRS = new CurrencyID(AGRS_VALUE);
     public static final CurrencyID  PDC = new CurrencyID(PDC_VALUE);

@@ -4,7 +4,7 @@ import foundation.omni.consensus.ExplorerConsensusTool
 import foundation.omni.test.consensus.BaseConsensusSpec
 import spock.lang.Title
 
-import static foundation.omni.CurrencyID.TetherUS
+import static foundation.omni.CurrencyID.USDT
 
 /**
  */
@@ -13,6 +13,6 @@ class CompareCoreChestSpec extends BaseConsensusSpec {
 
     void setupSpec() {
         setupComparisonForCurrency(new ExplorerConsensusTool(ExplorerConsensusTool.ExplorerHost_Live),
-                TetherUS)
+                USDT)
     }
 }

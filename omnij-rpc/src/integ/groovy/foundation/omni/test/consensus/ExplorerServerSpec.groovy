@@ -5,6 +5,7 @@ import foundation.omni.Ecosystem
 import foundation.omni.consensus.ExplorerConsensusTool
 import foundation.omni.rpc.SmartPropertyListInfo
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import static foundation.omni.CurrencyID.OMNI
 import static foundation.omni.CurrencyID.TOMNI
@@ -27,30 +28,38 @@ class ExplorerServerSpec extends Specification {
         blockHeight > 323000  // Greater than a relatively recent main-net block
     }
 
-    def "Can get Chest consensus data (divisible)"() {
+    @Unroll
+    def "Can get Chest consensus data (divisible, #propId)"(CurrencyID propId) {
         setup:
         ExplorerConsensusTool fetcher = new ExplorerConsensusTool(ExplorerConsensusTool.ExplorerHost_Live)
 
         when: "we get data"
-        def snapshot = fetcher.getConsensusSnapshot(OMNI)
+        def snapshot = fetcher.getConsensusSnapshot(propId)
 
         then: "something is there"
-        snapshot.currencyID == OMNI
+        snapshot.currencyID == propId
         snapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
         snapshot.entries.size() >= 1
+
+        where:
+        propId << [OMNI, USDT]
     }
 
-    def "Can get Chest consensus data (indivisible)"() {
+    @Unroll
+    def "Can get Chest consensus data (indivisible, #propId)"(CurrencyID propId) {
         setup:
         ExplorerConsensusTool fetcher = new ExplorerConsensusTool(ExplorerConsensusTool.ExplorerHost_Live)
 
         when: "we get data"
-        def snapshot = fetcher.getConsensusSnapshot(MAID)
+        def snapshot = fetcher.getConsensusSnapshot(propId)
 
         then: "something is there"
-        snapshot.currencyID == MAID
+        snapshot.currencyID == propId
         snapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
         snapshot.entries.size() >= 1
+
+        where:
+        propId << [MAID]
     }
 
     def "Can get Chest property list"() {

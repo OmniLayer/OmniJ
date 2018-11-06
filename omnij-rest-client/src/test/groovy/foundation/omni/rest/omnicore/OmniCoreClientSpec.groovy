@@ -34,7 +34,7 @@ public class OmniCoreClientSpec extends Specification {
         balances.size() >= 1
 
         where:
-        currency << [OMNI, TOMNI, MAID, USDT, AGRS, EURT, SEC]
+        currency << [OMNI, TOMNI, MAID, USDT, AGRS, EURT, SAFEX]
     }
 
 
