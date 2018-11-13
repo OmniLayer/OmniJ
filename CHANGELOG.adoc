@@ -7,6 +7,10 @@ A high-level view of the changes in each OmniJ binary release.
 
 In progress
 
+=== omnij-core
+
+* Remove deprecated CurrencyIDs (e.g. `TetherUS` is now `USDT`)
+
 == v0.5.6
 
 Released: 2018.10.24
