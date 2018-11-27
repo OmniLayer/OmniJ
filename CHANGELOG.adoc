@@ -3,6 +3,10 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.5.8-SNAPSHOT
+
+In-progress
+
 == v0.5.7
 
 Released: 2018.11.27

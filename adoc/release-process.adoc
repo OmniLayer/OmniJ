@@ -25,7 +25,7 @@
 == After release
 
 . Set versions back to -SNAPSHOT
-.. `build.gradle`
+.. `gradle.properties`
 .. omnij-dsl `ExtensionModule`
 .. `CHANGELOG.adoc`
 .. *Not* `README.adoc` -- it should match release version
