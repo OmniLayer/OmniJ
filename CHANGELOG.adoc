@@ -3,13 +3,21 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
-== v0.5.7-SNAPSHOT
+== v0.5.7
 
-In progress
+Released: 2018.11.27
 
 === omnij-core
 
 * Remove deprecated CurrencyIDs (e.g. `TetherUS` is now `USDT`)
+
+=== omnij-rpc
+
+* Updates for new OmniExplorer API
+* Get `omni-mainnet-consensus` tests working again
+* Support `frozen` field in more places
+* `ChestConsensusTool` renamed `ExplorerConsensusTool`
+
 
 == v0.5.6
 
