@@ -275,7 +275,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def currencyMSC = new CurrencyID(ecosystem.getValue())
 
         def numberOfAllOwners = omniGetProperty(currencyMSC).size()
-        if ((startMSC.willets - amountSTO.willets) < (numberOfAllOwners - 1)) {
+        if ((startMSC.willetts - amountSTO.willetts) < (numberOfAllOwners - 1)) {
             throw new AssumptionViolatedException("actor may not have enough OMNI to pay the fee")
         }
 

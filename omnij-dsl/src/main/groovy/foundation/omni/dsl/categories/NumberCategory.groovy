@@ -53,7 +53,7 @@ class NumberCategory {
             return true;
         }
         if (obj instanceof OmniValue) {
-            return ((OmniValue)this).getWillets() == ((OmniValue)obj).getWillets();
+            return ((OmniValue)this).getWilletts() == ((OmniValue)obj).getWilletts();
         }
         return false;
     }

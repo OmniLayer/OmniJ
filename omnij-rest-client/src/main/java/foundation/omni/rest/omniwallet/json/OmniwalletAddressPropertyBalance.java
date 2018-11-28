@@ -30,10 +30,10 @@ public class OmniwalletAddressPropertyBalance {
         PropertyType propType = PropertyType.of(divisible);
         this.id = CurrencyID.of((id instanceof String) ? Long.parseLong((String) id) : ((Integer) id).longValue());
         this.symbol = symbol;
-        this.value = OmniValue.ofWillets(Long.parseLong(value), propType);
+        this.value = OmniValue.ofWilletts(Long.parseLong(value), propType);
         this.divisible = divisible;
-        this.pendingpos = OmniValue.ofWillets(Long.parseLong(pendingpos), propType);
-        this.pendingneg = OmniValue.ofWillets(Long.parseLong(pendingneg), propType);
+        this.pendingpos = OmniValue.ofWilletts(Long.parseLong(pendingpos), propType);
+        this.pendingneg = OmniValue.ofWilletts(Long.parseLong(pendingneg), propType);
         this.error = (error != null) ? error : false;
     }
 

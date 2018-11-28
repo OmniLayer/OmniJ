@@ -32,7 +32,7 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.OMNI).balance
         def orderAmountMSC = (OmniDivisibleValue) balanceAtStart * 5 // more than available!
-        def orderAmountBTC = Coin.valueOf(orderAmountMSC.willets)
+        def orderAmountBTC = Coin.valueOf(orderAmountMSC.willetts)
         when:
         def txid = createDexSellOffer(
                 actorAddress, CurrencyID.OMNI, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
@@ -66,7 +66,7 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.OMNI).balance
         def orderAmountMSC = (OmniDivisibleValue) balanceAtStart * 5 // more than available!
-        def orderAmountBTC = Coin.valueOf(orderAmountMSC.willets)
+        def orderAmountBTC = Coin.valueOf(orderAmountMSC.willetts)
         def blockBeforeActivation = activationBlock - 1
 
         while (getBlockCount() < blockBeforeActivation - 1) { // two extra, for transaction confirmation
@@ -93,7 +93,7 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.OMNI).balance
         def orderAmountMSC = (OmniDivisibleValue) balanceAtStart * 5 // more than available!
-        def orderAmountBTC = Coin.valueOf(orderAmountMSC.willets)
+        def orderAmountBTC = Coin.valueOf(orderAmountMSC.willetts)
 
         when:
         def txid = createDexSellOffer(
@@ -113,7 +113,7 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def balanceAtStart = omniGetBalance(actorAddress, CurrencyID.OMNI).balance
         def orderAmountMSC = (OmniDivisibleValue) balanceAtStart
-        def orderAmountBTC = Coin.valueOf(orderAmountMSC.willets)
+        def orderAmountBTC = Coin.valueOf(orderAmountMSC.willetts)
 
         when:
         def txid = createDexSellOffer(

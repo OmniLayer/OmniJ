@@ -138,7 +138,7 @@ public class OmniTxBuilder {
      * @param unspentOutputs A collection of unspent outputs for funding the transaction
      * @param toAddress The Omni reference address (for the reference output, destination address in this case)
      * @param currencyID The Omni currency ID
-     * @param amount The currency amount in willets
+     * @param amount The currency amount in willetts
      * @throws InsufficientMoneyException Not enough bitcoin for fees
      * @return Signed and ready-to-send Transaction
      */
@@ -156,7 +156,7 @@ public class OmniTxBuilder {
      * @param inputs unsigned inputs to use for the transaction
      * @param toAddress The Omni reference address (for the reference output, destination address in this case)
      * @param currencyID The Omni currency ID
-     * @param amount The currency amount in willets
+     * @param amount The currency amount in willetts
      * @return unsigned transaction
      * @throws InsufficientMoneyException Not enough bitcoin for fees
      */

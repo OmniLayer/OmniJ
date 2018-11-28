@@ -50,6 +50,6 @@ public class AddressBalanceEntriesDeserializer extends StdDeserializer<AddressBa
     }
 
     private boolean isNonZeroEntry(AddressBalanceEntry entry) {
-        return entry.getBalance().getWillets() != 0 || entry.getReserved().getWillets() != 0;
+        return entry.getBalance().getWilletts() != 0 || entry.getReserved().getWilletts() != 0;
     }
 }

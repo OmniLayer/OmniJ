@@ -10,7 +10,6 @@ import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
 import foundation.omni.CurrencyID
-import foundation.omni.rpc.OmniClientDelegate
 
 /**
  * Test support functions intended to be mixed-in to Spock test specs
@@ -33,8 +32,8 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
     Sha256Hash requestMSC(Address toAddress, OmniDivisibleValue requestedMSC, Boolean allowIntermediate) {
         // For 1.0 BTC an amount of 100.0 OMNI is generated, resulting in a minimal purchase amount of
         // 0.00000100 OMNI for 0.00000001 BTC
-        Coin btcForMSC = (requestedMSC.willets / 100).setScale(0, BigDecimal.ROUND_UP).satoshi
-        OmniDivisibleValue actualMSC = OmniDivisibleValue.ofWillets(btcForMSC.value * 100)
+        Coin btcForMSC = (requestedMSC.willetts / 100).setScale(0, BigDecimal.ROUND_UP).satoshi
+        OmniDivisibleValue actualMSC = OmniDivisibleValue.ofWilletts(btcForMSC.value * 100)
 
         if (!allowIntermediate) {
             assert actualMSC == requestedMSC
@@ -43,7 +42,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
         requestBitcoin(toAddress, btcForMSC + stdTxFee)
         def txid = sendBitcoin(toAddress, omniNetParams.moneyManAddress, btcForMSC)
 
-        if (actualMSC.willets != requestedMSC.willets) {
+        if (actualMSC.willetts != requestedMSC.willetts) {
             def excessiveMSC = actualMSC - requestedMSC
 
             // TODO: avoid magic numbers for dust calculation
@@ -90,7 +89,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
         log.debug "createFundedAddress: requestedBTC: {}, requestedMSC: {}, confirm: {}", requestedBTC.toFriendlyString(), requestedMSC, confirmTransactions
         def fundedAddress = newAddress
 
-        if (requestedMSC.willets > 0) {
+        if (requestedMSC.willetts > 0) {
             def txidMSC = requestMSC(fundedAddress, (OmniDivisibleValue) requestedMSC)
         }
 

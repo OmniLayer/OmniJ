@@ -195,8 +195,8 @@ class OmniwalletClientSpec extends Specification {
 
     boolean allBalancesValid(Map<Address, BalanceEntry> balances) {
         balances.every { address, entry ->
-                boolean valid = (entry.balance.willets >= 0) && (entry.balance.willets <= OmniValue.MAX_WILLETS) &&
-                        (entry.reserved.willets >= 0) && (entry.reserved.willets <= OmniValue.MAX_WILLETS)
+                boolean valid = (entry.balance.willetts >= 0) && (entry.balance.willetts <= OmniValue.MAX_WILLETTS) &&
+                        (entry.reserved.willetts >= 0) && (entry.reserved.willetts <= OmniValue.MAX_WILLETTS)
                 if (!valid) {
                     println("Invalid entry ${entry}")
                 }

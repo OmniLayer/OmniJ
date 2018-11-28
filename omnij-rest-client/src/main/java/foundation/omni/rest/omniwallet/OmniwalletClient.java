@@ -47,7 +47,6 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -189,7 +188,7 @@ public class OmniwalletClient implements ConsensusService {
             CurrencyID id = pb.getId();
             PropertyType type =  pb.isDivisible() ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
             OmniValue value = pb.getValue();
-            OmniValue zero = OmniValue.ofWillets(0, type);
+            OmniValue zero = OmniValue.ofWilletts(0, type);
             if (!pb.isError()) {
                 wab.put(id, new BalanceEntry(value, zero, zero));
             }

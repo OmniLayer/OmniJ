@@ -19,7 +19,7 @@ public final class OmniIndivisibleValue extends OmniValue {
 
 
     public static OmniIndivisibleValue of(BigInteger amount) {
-        checkWilletValue(amount);
+        checkWillettValue(amount);
         return new OmniIndivisibleValue(amount.intValue());
     }
 
@@ -33,13 +33,13 @@ public final class OmniIndivisibleValue extends OmniValue {
     }
 
     /**
-     * Create OmniIndivisibleValue from willets/internal/wire format
+     * Create OmniIndivisibleValue from willetts/internal/wire format
      *
-     * @param willets number of willets
-     * @return OmniIndivisibleValue equal to number of willets
+     * @param willetts number of willetts
+     * @return OmniIndivisibleValue equal to number of willetts
      */
-    public static OmniIndivisibleValue ofWillets(long willets) {
-        return OmniIndivisibleValue.of(willets);
+    public static OmniIndivisibleValue ofWilletts(long willetts) {
+        return OmniIndivisibleValue.of(willetts);
     }
 
     /**
@@ -49,7 +49,7 @@ public final class OmniIndivisibleValue extends OmniValue {
      * @throws ArithmeticException if less than minimum or greater than maximum allowed value
      */
     public static void checkValue(BigInteger candidate) throws ArithmeticException {
-        OmniValue.checkWilletValue(candidate);
+        OmniValue.checkWillettValue(candidate);
     }
 
     /**
@@ -62,11 +62,11 @@ public final class OmniIndivisibleValue extends OmniValue {
      * @throws ArithmeticException if less than minimum allowed value
      */
     public static void checkValue(long candidate) throws ArithmeticException {
-        OmniValue.checkWilletValue(candidate);
+        OmniValue.checkWillettValue(candidate);
     }
 
-    private OmniIndivisibleValue(long willets) {
-        super(willets);
+    private OmniIndivisibleValue(long willetts) {
+        super(willetts);
     }
 
     @Override
@@ -81,7 +81,7 @@ public final class OmniIndivisibleValue extends OmniValue {
 
     @Override
     public Long numberValue() {
-        return willets;
+        return willetts;
     }
 
     public BigDecimal bigDecimalValue() {
@@ -89,7 +89,7 @@ public final class OmniIndivisibleValue extends OmniValue {
     }
 
     private BigDecimal asBigDecimal() {
-        return new BigDecimal(willets);
+        return new BigDecimal(willetts);
     }
 
     @Override
@@ -98,11 +98,11 @@ public final class OmniIndivisibleValue extends OmniValue {
     }
 
     public OmniIndivisibleValue plus(OmniIndivisibleValue right) {
-        return OmniIndivisibleValue.of(this.willets + right.willets);
+        return OmniIndivisibleValue.of(this.willetts + right.willetts);
     }
 
     public OmniIndivisibleValue minus(OmniIndivisibleValue right) {
-        return OmniIndivisibleValue.of(this.willets - right.willets);
+        return OmniIndivisibleValue.of(this.willetts - right.willetts);
     }
 
 }

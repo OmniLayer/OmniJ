@@ -7,6 +7,11 @@ A high-level view of the changes in each OmniJ binary release.
 
 In-progress
 
+=== All modules
+
+* Switch to correct spelling of _Willett_ - https://github.com/OmniLayer/OmniJ/issues/142[Issue #142]
+
+
 == v0.5.7
 
 Released: 2018.11.27

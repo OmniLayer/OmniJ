@@ -12,7 +12,7 @@ class OmniValueSpec extends Specification {
     @Unroll
     def "checkValue does not throw exception for valid long value: #val" (long val) {
         when: "we check the value"
-        OmniValue.checkWilletValue(val)
+        OmniValue.checkWillettValue(val)
 
         then: "no exception is thrown"
         true
@@ -24,7 +24,7 @@ class OmniValueSpec extends Specification {
     @Unroll
     def "checkValue throws exception for invalid long value: #val" (long val) {
         when: "we check the value"
-        OmniValue.checkWilletValue(val)
+        OmniValue.checkWillettValue(val)
 
         then: "ArithmeticException is thrown"
         ArithmeticException e = thrown()
@@ -36,7 +36,7 @@ class OmniValueSpec extends Specification {
     @Unroll
     def "checkValue does not throw exception for valid BigInteger value: #val" (BigInteger val) {
         when: "we check the value"
-        OmniValue.checkWilletValue(val)
+        OmniValue.checkWillettValue(val)
 
         then: "no exception is thrown"
         true
@@ -48,7 +48,7 @@ class OmniValueSpec extends Specification {
     @Unroll
     def "checkValue throws exception for invalid BigInteger value: #val" (BigInteger val) {
         when: "we check the value"
-        OmniValue.checkWilletValue(val)
+        OmniValue.checkWillettValue(val)
 
         then: "ArithmeticException is thrown"
         ArithmeticException e = thrown()

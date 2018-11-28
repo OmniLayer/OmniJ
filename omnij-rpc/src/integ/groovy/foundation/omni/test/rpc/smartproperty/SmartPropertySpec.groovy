@@ -28,7 +28,7 @@ class SmartPropertySpec extends BaseRegTestSpec {
 
     def "Create smart property with divisible units"() {
         when: "we transmit a property creation transaction in main ecosystem"
-        def txid = createProperty(fundedAddress, Ecosystem.OMNI, OmniDivisibleValue.ofWillets(314159265L))
+        def txid = createProperty(fundedAddress, Ecosystem.OMNI, OmniDivisibleValue.ofWilletts(314159265L))
 
         and: "a new block is mined"
         client.generate()

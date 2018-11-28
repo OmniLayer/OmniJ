@@ -41,7 +41,7 @@ public class OmniExtendedClient extends OmniClient {
      *
      * @param address     address
      * @param currencyId  The identifier of the currency
-     * @param amount      The number of tokens to distribute (assumed in willets)
+     * @param amount      The number of tokens to distribute (assumed in willetts)
      * @return The transaction hash
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
@@ -49,7 +49,7 @@ public class OmniExtendedClient extends OmniClient {
      */
     @Deprecated
     public Sha256Hash sendToOwners(Address address, CurrencyID currencyId, OmniValue amount) throws JsonRpcException, IOException {
-        //  ... but it doesn't matter since  createSendToOwnersHex just converts back to willets.
+        //  ... but it doesn't matter since  createSendToOwnersHex just converts back to willetts.
         String rawTxHex = builder.createSendToOwnersHex(currencyId, amount);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;

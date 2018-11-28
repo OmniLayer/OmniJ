@@ -24,7 +24,7 @@ public class RawTxBuilder {
      * @return Hex encoded string for the transaction
      */
     public String createSimpleSendHex(CurrencyID currencyId, OmniValue amount) {
-        String rawTxHex = String.format("00000000%08x%016x", currencyId.getValue(), amount.getWillets());
+        String rawTxHex = String.format("00000000%08x%016x", currencyId.getValue(), amount.getWilletts());
         return rawTxHex;
     }
 
@@ -35,14 +35,14 @@ public class RawTxBuilder {
      * @return Hex encoded string for the transaction
      */
     public String createSendToOwnersHex(CurrencyID currencyId, OmniValue amount) {
-        String rawTxHex = String.format("00000003%08x%016x", currencyId.getValue(), amount.getWillets());
+        String rawTxHex = String.format("00000003%08x%016x", currencyId.getValue(), amount.getWilletts());
         return rawTxHex;
     }
 
     /**
      * Creates a hex-encoded raw transaction of type 20: "sell tokens for bitcoins".
      *
-     * Currency amounts are Long values in satoshis/willets
+     * Currency amounts are Long values in satoshis/willetts
      *
      * @param currencyId Currency ID to sell OMNI or TOMNI only
      * @param amountForSale Amount of OMNI/TOMNI for sale
@@ -56,7 +56,7 @@ public class RawTxBuilder {
                                         Byte paymentWindow, Coin commitmentFee, Byte action) {
         String rawTxHex = String.format("00010014%08x%016x%016x%02x%016x%02x",
                 currencyId.getValue(),
-                amountForSale.getWillets(),
+                amountForSale.getWilletts(),
                 amountDesired.value,
                 paymentWindow,
                 commitmentFee.value,
@@ -77,9 +77,9 @@ public class RawTxBuilder {
                                             OmniValue amountDesired, Byte action) {
         String rawTxHex = String.format("00000015%08x%016x%08x%016x%02x",
                 currencyForSale.getValue(),
-                amountForSale.getWillets(),
+                amountForSale.getWilletts(),
                 currencyDesired.getValue(),
-                amountDesired.getWillets(),
+                amountDesired.getWilletts(),
                 action);
         return rawTxHex;
     }
@@ -93,7 +93,7 @@ public class RawTxBuilder {
     public String createAcceptDexOfferHex(CurrencyID currencyId, OmniValue amount) {
         String rawTxHex = String.format("00000016%08x%016x",
                 currencyId.getValue(),
-                amount.getWillets());
+                amount.getWilletts());
         return rawTxHex;
     }
 
@@ -122,7 +122,7 @@ public class RawTxBuilder {
                 toHexString(label),
                 toHexString(website),
                 toHexString(info),
-                amount.getWillets());
+                amount.getWilletts());
         return rawTxHex;
     }
 
@@ -209,7 +209,7 @@ public class RawTxBuilder {
      * @return The hex-encoded raw transaction
      */
     public String createGrantTokensHex(CurrencyID currencyId, OmniValue amount, String memo) {
-        String rawTxHex = String.format("00000037%08x%016x%s00", currencyId.getValue(), amount.getWillets(), toHexString(memo));
+        String rawTxHex = String.format("00000037%08x%016x%s00", currencyId.getValue(), amount.getWilletts(), toHexString(memo));
         return rawTxHex;
     }
 
@@ -221,7 +221,7 @@ public class RawTxBuilder {
      * @return The hex-encoded raw transaction
      */
     public String createRevokeTokensHex(CurrencyID currencyId, OmniValue amount, String memo) {
-        String rawTxHex = String.format("00000038%08x%016x%s00", currencyId.getValue(), amount.getWillets(), toHexString(memo));
+        String rawTxHex = String.format("00000038%08x%016x%s00", currencyId.getValue(), amount.getWilletts(), toHexString(memo));
         return rawTxHex;
     }
 

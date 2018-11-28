@@ -25,7 +25,7 @@ class RawTxBuilderSpec extends Specification {
         when:
         def txHex = builder.createSimpleSendHex(
                 CurrencyID.OMNI,   // property
-                ONE_OMNI)         // amount to transfer: 1.0 OMNI (in willets)
+                ONE_OMNI)         // amount to transfer: 1.0 OMNI (in willetts)
 
         then:
         txHex == "00000000000000010000000005f5e100"
@@ -35,7 +35,7 @@ class RawTxBuilderSpec extends Specification {
         when:
         def txHex = builder.createSendToOwnersHex(
                 CurrencyID.OMNI,   // property
-                ONE_OMNI)         // amount to distribute: 1.0 OMNI (in willets)
+                ONE_OMNI)         // amount to distribute: 1.0 OMNI (in willetts)
 
         then:
         txHex == "00000003000000010000000005f5e100"
@@ -45,7 +45,7 @@ class RawTxBuilderSpec extends Specification {
         when:
         def txHex = builder.createDexSellOfferHex(
                 CurrencyID.OMNI,   // property
-                ONE_OMNI,         // amount for sale: 1.0 OMNI (in willets)
+                ONE_OMNI,         // amount for sale: 1.0 OMNI (in willetts)
                 0.2.btc,         // amount desired: 0.2 BTC (in satoshis)
                 (Byte) 10,        // payment window in blocks
                 0.0001.btc,       // commitment fee in satoshis
@@ -148,7 +148,7 @@ class RawTxBuilderSpec extends Specification {
         when:
         def txHex = builder.createGrantTokensHex(
                 new CurrencyID(8),           // property
-                OmniDivisibleValue.ofWillets(1000),                        // number of units to issue
+                OmniDivisibleValue.ofWilletts(1000),                        // number of units to issue
                 "First Milestone Reached!")  // additional information
 
         then:
@@ -159,7 +159,7 @@ class RawTxBuilderSpec extends Specification {
         when:
         def txHex = builder.createRevokeTokensHex(
                 new CurrencyID(8),                            // property
-                OmniDivisibleValue.ofWillets(1000),                                         // number of units to revoke
+                OmniDivisibleValue.ofWilletts(1000),                                         // number of units to revoke
                 "Redemption of tokens for Bob, Thanks Bob!")  // additional information
 
         then:

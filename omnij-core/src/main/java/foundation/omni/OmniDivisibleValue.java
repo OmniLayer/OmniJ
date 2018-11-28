@@ -3,7 +3,6 @@ package foundation.omni;
 import org.bitcoinj.core.Coin;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
@@ -20,10 +19,10 @@ public final class OmniDivisibleValue extends OmniValue {
     public static final BigDecimal   MAX_VALUE = new BigDecimal("92233720368.54775807");
     public static final long         MIN_INT_VALUE = 0L;
     public static final long         MAX_INT_VALUE = 92233720368L;
-    public static  OmniDivisibleValue MIN = OmniDivisibleValue.ofWillets(OmniValue.MIN_WILLETS);
-    public static  OmniDivisibleValue MAX = OmniDivisibleValue.ofWillets(OmniValue.MAX_WILLETS);
+    public static  OmniDivisibleValue MIN = OmniDivisibleValue.ofWilletts(OmniValue.MIN_WILLETTS);
+    public static  OmniDivisibleValue MAX = OmniDivisibleValue.ofWilletts(OmniValue.MAX_WILLETTS);
 
-    private static final BigDecimal willetsPerDivisibleBigDecimal = new BigDecimal(willetsPerDivisible);
+    private static final BigDecimal willettsPerDivisibleBigDecimal = new BigDecimal(willettsPerDivisible);
 
     /**
      * Create OmniDivisibleValue of the specified amount
@@ -40,17 +39,17 @@ public final class OmniDivisibleValue extends OmniValue {
      * @return OmniDivisibleValue representing amount
      */
     public static OmniDivisibleValue of(BigDecimal amount) {
-        return new OmniDivisibleValue(amount.multiply(willetsPerDivisibleBigDecimal).longValueExact());
+        return new OmniDivisibleValue(amount.multiply(willettsPerDivisibleBigDecimal).longValueExact());
     }
 
     /**
-     * Create OmniDivisibleValue from willets/internal/wire format
+     * Create OmniDivisibleValue from willetts/internal/wire format
      *
-     * @param willets number of willets
-     * @return OmniIndivisibleValue equal to number of willets
+     * @param willetts number of willetts
+     * @return OmniIndivisibleValue equal to number of willetts
      */
-    public static OmniDivisibleValue ofWillets(long willets) {
-        return new OmniDivisibleValue(willets);
+    public static OmniDivisibleValue ofWilletts(long willetts) {
+        return new OmniDivisibleValue(willetts);
     }
 
     /**
@@ -99,8 +98,8 @@ public final class OmniDivisibleValue extends OmniValue {
 
     @Override
     public BigDecimal numberValue() {
-        BigDecimal willets = new BigDecimal(this.willets);
-        return willets.divide(willetsPerDivisibleBigDecimal, DEFAULT_SCALE, RoundingMode.UNNECESSARY);
+        BigDecimal willetts = new BigDecimal(this.willetts);
+        return willetts.divide(willettsPerDivisibleBigDecimal, DEFAULT_SCALE, RoundingMode.UNNECESSARY);
     }
 
     @Override
@@ -178,27 +177,27 @@ public final class OmniDivisibleValue extends OmniValue {
     }
 
     public OmniDivisibleValue plus(OmniDivisibleValue right) {
-        return OmniDivisibleValue.ofWillets(this.willets + right.willets);
+        return OmniDivisibleValue.ofWilletts(this.willetts + right.willetts);
     }
 
     public OmniDivisibleValue minus(OmniDivisibleValue right) {
-        return OmniDivisibleValue.ofWillets(this.willets - right.willets);
+        return OmniDivisibleValue.ofWilletts(this.willetts - right.willetts);
     }
 
     OmniDivisibleValue multiply(Integer right) {
-        return OmniDivisibleValue.ofWillets(this.willets * right);
+        return OmniDivisibleValue.ofWilletts(this.willetts * right);
     }
 
     OmniDivisibleValue multiply(Long right) {
-        return OmniDivisibleValue.ofWillets(this.willets * right);
+        return OmniDivisibleValue.ofWilletts(this.willetts * right);
     }
 
     OmniDivisibleValue div(Integer right) {
-        return OmniDivisibleValue.ofWillets(this.willets / right);
+        return OmniDivisibleValue.ofWilletts(this.willetts / right);
     }
 
     OmniDivisibleValue div(Long right) {
-        return OmniDivisibleValue.ofWillets(this.willets / right);
+        return OmniDivisibleValue.ofWilletts(this.willetts / right);
     }
 
 

@@ -10,15 +10,15 @@ import spock.lang.Unroll
 class OmniDivisibleValueSpec extends Specification {
 
     @Unroll
-    def "When created from willets, resulting value is scaled correctly #willets -> #expectedValue" (Long willets, BigDecimal expectedValue) {
+    def "When created from willetts, resulting value is scaled correctly #willetts -> #expectedValue" (Long willetts, BigDecimal expectedValue) {
         when: "we try to create an OmniValue using a valid numeric type"
-        OmniValue value = OmniDivisibleValue.ofWillets(willets)
+        OmniValue value = OmniDivisibleValue.ofWilletts(willetts)
 
         then: "it is created correctly"
         value.numberValue() == expectedValue
 
         where:
-        willets                 | expectedValue
+        willetts                | expectedValue
         0                       | 0
         1                       | 0.00000001
         100                     | 0.00000100
@@ -156,7 +156,7 @@ class OmniDivisibleValueSpec extends Specification {
 
     def "Exception is thrown when converting to int would throw exception"() {
         when:
-        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_WILLETS)
+        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_WILLETTS)
         def v = value.intValue()
 
         then:
@@ -165,7 +165,7 @@ class OmniDivisibleValueSpec extends Specification {
 
     def "Exception is thrown when converting to int (via Groovy 'as') would throw exception"() {
         when:
-        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_WILLETS)
+        OmniValue value = OmniDivisibleValue.of(OmniValue.MAX_WILLETTS)
         def v = value as Integer
 
         then:
