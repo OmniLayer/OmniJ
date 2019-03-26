@@ -13,7 +13,6 @@ dependencies {
     }
 
     testCompile project(':omnij-dsl')
-    testCompile "com.msgilligan:bitcoinj-dsl:${consensusjVersion}"
 }
 
 idea {

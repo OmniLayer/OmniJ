@@ -6,7 +6,7 @@ dependencies {
     compile project(':omnij-core')
     compile project(':omnij-jsonrpc')
 
-    compile "com.msgilligan:cj-btc-jsonrpc-gvy:${consensusjVersion}"
+    compile "${consensusjGroup}:${consensusjBtcJsonRpcGvyArtifact}:${consensusjVersion}"
 
     compile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
     compile ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
@@ -19,7 +19,6 @@ dependencies {
     compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
 
     testCompile project(':omnij-dsl')
-    testCompile "com.msgilligan:bitcoinj-dsl:${consensusjVersion}"
     testCompile 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests
 }
 

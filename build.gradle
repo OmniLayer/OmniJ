@@ -46,9 +46,10 @@ subprojects {
     targetCompatibility = 1.8
 
     dependencies {
-        compile "org.bitcoinj:bitcoinj-core:${bitcoinjVersion}"
+        compile "${bitcoinjGroup}:${bitcoinjArtifact}:${bitcoinjVersion}"
         compile "org.slf4j:slf4j-api:${slf4jVersion}"
-        
+
+        testCompile "${consensusjGroup}:${consensusjBtcDslArtifact}:${consensusjVersion}"
         testCompile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
         testCompile("org.spockframework:spock-core:${spockVersion}") {
             exclude module: "groovy-all"
