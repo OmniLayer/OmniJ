@@ -27,6 +27,7 @@ allprojects {
         jcenter()
         //mavenLocal()   // Uncomment to work with local snapshots
         maven { url 'https://dl.bintray.com/msgilligan/maven' } // ConsensusJ (RPC client)
+        maven { url 'https://jitpack.io' }
     }
 
     tasks.withType(FindBugs) {
