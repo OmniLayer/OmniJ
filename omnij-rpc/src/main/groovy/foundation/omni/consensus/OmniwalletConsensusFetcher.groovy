@@ -9,6 +9,7 @@ import foundation.omni.rpc.SmartPropertyListInfo
 import groovy.json.JsonSlurper
 import groovy.transform.TypeChecked
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.LegacyAddress
 
 /**
  * Consensus Fetcher using Omniwallet REST API
@@ -128,7 +129,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
 
         balances.each { item ->
 
-            Address address = new Address(null, (String) item.address)
+            Address address = LegacyAddress.fromBase58(null, (String) item.address)
             BalanceEntry entry = itemToEntry(propertyType, item)
 
             if (address != "" && (entry.balance.numberValue() > 0 || entry.reserved.numberValue() > 0)) {

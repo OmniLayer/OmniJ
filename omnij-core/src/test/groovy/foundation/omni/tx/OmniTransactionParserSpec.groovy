@@ -20,7 +20,7 @@ class OmniTransactionParserSpec extends BaseTxSpec {
 
     def "Make sure tx string hashes to hash string"() {
         expect:
-        tx.hash.bytes == txHash
+        tx.txId.bytes == txHash
     }
 
     def "can create OmniTransaction from Omni-encoded Bitcoin transaction"() {

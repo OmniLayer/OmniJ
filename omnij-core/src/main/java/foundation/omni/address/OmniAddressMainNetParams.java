@@ -12,7 +12,6 @@ public class OmniAddressMainNetParams extends MainNetParams {
         super();
         addressHeader = 115;    // 'o'
         p2shHeader = 58;        // 'Q'
-        acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
     }
 
 

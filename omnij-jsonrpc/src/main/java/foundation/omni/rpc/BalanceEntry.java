@@ -67,12 +67,12 @@ public class BalanceEntry implements Iterable<OmniValue>  {
      */
     @Override
     public Iterator<OmniValue> iterator() {
-        return Arrays.asList(balance, reserved).iterator();
+        return Arrays.asList(balance, reserved, frozen).iterator();
     }
 
     @Override
     public String toString() {
-        return "[balance: " + balance + ", reserved: " + reserved + " ]";
+        return "[balance: " + balance + ", reserved: " + reserved + ", frozen: " + frozen + "]";
     }
 
 }

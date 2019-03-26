@@ -33,7 +33,7 @@ public class WalletBackupEntry {
     @JsonIgnore
     public Address getAddressObject() {
         try {
-            return Address.fromBase58(null, address);
+            return Address.fromString(null, address);
         } catch (AddressFormatException e) {
             throw new RuntimeException("Bitcoin AddressFormatException");
         }

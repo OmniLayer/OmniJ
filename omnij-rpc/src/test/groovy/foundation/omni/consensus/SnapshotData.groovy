@@ -5,6 +5,7 @@ import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.ConsensusSnapshot
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.ECKey
+import org.bitcoinj.core.LegacyAddress
 import org.bitcoinj.params.MainNetParams
 
 /**
@@ -14,9 +15,9 @@ class SnapshotData {
 
     static String TestDataConsensusSource = "TEST DATA";
 
-    static Address a = new ECKey().toAddress(MainNetParams.get())
-    static Address b = new ECKey().toAddress(MainNetParams.get())
-    static Address c = new ECKey().toAddress(MainNetParams.get())
+    static Address a = LegacyAddress.fromKey(MainNetParams.get(), new ECKey())
+    static Address b = LegacyAddress.fromKey(MainNetParams.get(), new ECKey())
+    static Address c = LegacyAddress.fromKey(MainNetParams.get(), new ECKey())
 
     static TreeMap<Address, BalanceEntry> empty = new TreeMap([:])
     static TreeMap<Address, BalanceEntry> small1 = new TreeMap([(a): new BalanceEntry(0.divisible, 0.divisible, 0.divisible),

@@ -2,6 +2,7 @@ package foundation.omni.address
 
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.ECKey
+import org.bitcoinj.core.LegacyAddress
 import org.bitcoinj.core.Utils
 import org.bitcoinj.params.MainNetParams
 import spock.lang.Specification
@@ -19,7 +20,7 @@ class OmniAddressMainNetParamsSpec extends Specification {
         def key = new ECKey()
 
         when: "We generate an Omni address from it"
-        def omniAddress = key.toAddress(omniParams)
+        def omniAddress = LegacyAddress.fromKey(omniParams, key)
 
         then: "It begins with an 'o'"
         omniAddress.toString().substring(0,1) == 'o'
@@ -30,7 +31,7 @@ class OmniAddressMainNetParamsSpec extends Specification {
         byte[] hash160 = Utils.sha256hash160([0] as byte[])
 
         when: "We generate an Omni address from it"
-        def omniAddress = Address.fromP2SHHash(omniParams, hash160)
+        def omniAddress = LegacyAddress.fromScriptHash(omniParams, hash160)
 
         then: "It begins with an 'Q'"
         omniAddress.toString().substring(0,1) == 'Q'
