@@ -204,7 +204,7 @@ class OmniwalletClientSpec extends Specification {
             }
     }
 
-        def setup() {
+    def setup() {
         HttpUrl baseURL = OmniwalletClient.omniwalletBase
         boolean debug = true
         client = new OmniwalletClient(baseURL, debug)

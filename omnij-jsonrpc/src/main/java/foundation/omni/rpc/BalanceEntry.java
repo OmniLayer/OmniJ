@@ -35,6 +35,7 @@ public class BalanceEntry implements Iterable<OmniValue>  {
 
         if (balance.compareTo(that.balance) != 0) return false;
         if (reserved.compareTo(that.reserved) != 0) return false;
+        if (frozen.compareTo(that.frozen) != 0) return false;
 
         return true;
     }
@@ -43,6 +44,7 @@ public class BalanceEntry implements Iterable<OmniValue>  {
     public int hashCode() {
         int result = balance.hashCode();
         result = 31 * result + reserved.hashCode();
+        result = 31 * result + frozen.hashCode();
         return result;
     }
 
