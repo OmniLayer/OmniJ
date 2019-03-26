@@ -23,7 +23,7 @@ public class BalanceEntry implements Iterable<OmniValue>  {
                         @JsonProperty("frozen") OmniValue frozen) {
         this.balance = balance;
         this.reserved = reserved;
-        this.frozen = frozen;
+        this.frozen = (frozen != null) ? frozen : OmniValue.of(0, balance.getPropertyType());
     }
 
     @Override
