@@ -3,13 +3,22 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
-== v0.5.8-SNAPSHOT
+== v0.5.8
 
-In-progress
+Released: 2019.03.28
 
 === All modules
 
-* Switch to correct spelling of _Willett_ - https://github.com/OmniLayer/OmniJ/issues/142[Issue #142]
+* Upgrade to *bitcoinj* https://bitcoinj.github.io/release-notes#version-015[0.15.1]. This is a major upgrade to *bitcoinj* to provide support for Segregated Witness transactions.
+* Upgrade to *ConsensusJ* https://github.com/ConsensusJ/consensusj/blob/master/CHANGELOG.adoc#v040[0.4.0].
+* Bug fixes for handling `frozen` Omni asset balances.
+* Breaking: Switch to correct spelling of _Willett_ - https://github.com/OmniLayer/OmniJ/issues/142[Issue #142]
+* `adoc` directory renamed to `doc`
+
+=== omnij-cli
+
+Known issue::
+Shadow JAR build is temporarily disabled.
 
 
 == v0.5.7
