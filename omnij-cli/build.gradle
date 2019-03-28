@@ -2,7 +2,8 @@
 // and a possible standalone executable with future AOT compilers
 plugins {
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '4.0.4'
+// Disable Shadow plugin for now (due to conflicts with bintray plugin)
+//    id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 dependencies {
@@ -19,10 +20,10 @@ jar {
     }
 }
 
-shadowJar {
-    baseName = 'omni-consensus'
-    classifier = ''
-}
+//shadowJar {
+//    baseName = 'omni-consensus'
+//    classifier = ''
+//}
 
 // Test Structure
 sourceSets {

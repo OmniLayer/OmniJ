@@ -11,11 +11,11 @@ public class OmniAddressConverter {
     static final OmniAddressMainNetParams omniParams = OmniAddressMainNetParams.get();
     static final MainNetParams btcParams = MainNetParams.get();
 
-    static LegacyAddress btcToOmni(Address btcAddress) {
+    static Address btcToOmni(Address btcAddress) {
         return LegacyAddress.fromPubKeyHash(omniParams, btcAddress.getHash());
     }
 
-    static LegacyAddress omniToBTC(Address omniAddress) {
+    static Address omniToBTC(Address omniAddress) {
         return LegacyAddress.fromPubKeyHash(btcParams, omniAddress.getHash());
     }
 }
