@@ -33,7 +33,7 @@ public class AddressBalanceEntriesDeserializer extends StdDeserializer<AddressBa
                 if (t == JsonToken.START_OBJECT) {
                     entry = (AddressBalanceEntry) entryDeserializer.deserialize(jp, ctxt);
                     if (isNonZeroEntry(entry)) {
-                        // Only add entries with balance or reserved greater than zero.
+                        // Only add entries with balance, reserved, or frozen greater than zero.
                         result.put(entry.getAddress(), new BalanceEntry(entry.getBalance(),
                                                                         entry.getReserved(),
                                                                         entry.getFrozen()));
@@ -50,6 +50,8 @@ public class AddressBalanceEntriesDeserializer extends StdDeserializer<AddressBa
     }
 
     private boolean isNonZeroEntry(AddressBalanceEntry entry) {
-        return entry.getBalance().getWilletts() != 0 || entry.getReserved().getWilletts() != 0;
+        return  entry.getBalance().getWilletts() != 0 ||
+                entry.getReserved().getWilletts() != 0 ||
+                entry.getFrozen().getWilletts() != 0;
     }
 }

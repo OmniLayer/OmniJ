@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     compile project(':omnij-core')
-    compile "com.msgilligan:cj-btc-jsonrpc:${consensusjVersion}"
+    compile "${consensusjGroup}:${consensusjBtcJsonRpcArtifact}:${consensusjVersion}"
 
     testCompile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
     testCompile ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
@@ -12,6 +12,5 @@ dependencies {
     }
     
     testCompile project(':omnij-dsl')
-    testCompile "com.msgilligan:bitcoinj-dsl:${consensusjVersion}"
 }
 

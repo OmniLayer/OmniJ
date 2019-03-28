@@ -7,7 +7,7 @@ repositories {
 dependencies {
     compile project(':omnij-core')
 
-    compile "com.msgilligan:bitcoinj-money:${consensusjVersion}"
+    compile "${consensusjGroup}:${consensusjBtcMoneyArtifact}:${consensusjVersion}"
 
     compile 'org.javamoney:moneta-bp:1.2'
 }

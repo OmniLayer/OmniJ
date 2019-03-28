@@ -8,6 +8,7 @@ import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniIndivisibleValue
 import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.params.RegTestParams
+import org.bitcoinj.params.TestNet3Params
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -24,10 +25,11 @@ abstract class BaseOmniClientMapperSpec extends Specification {
     @Shared
     def mapper
 
-    def setup() {
+    def setupSpec() {
+        NetworkParameters netParams = TestNet3Params.get()
         mapper = new ObjectMapper()
-        mapper.registerModule(new RpcClientModule(RegTestParams.get()))
-        mapper.registerModule(new OmniClientModule(RegTestParams.get()))
+        mapper.registerModule(new RpcClientModule(netParams))
+        mapper.registerModule(new OmniClientModule(netParams))
     }
 
 

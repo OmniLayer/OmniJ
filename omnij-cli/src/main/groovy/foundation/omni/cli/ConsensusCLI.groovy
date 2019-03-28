@@ -1,7 +1,6 @@
 package foundation.omni.cli
 
-
-import org.consensusj.bitcoin.cli.CliCommand
+import org.consensusj.bitcoin.cli.BitcoinCliCommand
 import org.consensusj.bitcoin.cli.CliOptions
 import org.consensusj.jsonrpc.JsonRpcException
 import foundation.omni.CurrencyID
@@ -21,7 +20,7 @@ import org.bitcoinj.core.Address
  * Tool to fetch Omni consensus from Omni Core or one of several other Omni APIs.
  */
 //@CompileStatic
-class ConsensusCLI extends CliCommand {
+class ConsensusCLI extends BitcoinCliCommand {
     public final static String commandName = "omni-consensus"
     public final static String commandUsage = "${commandName} [options] -property <id>"
 

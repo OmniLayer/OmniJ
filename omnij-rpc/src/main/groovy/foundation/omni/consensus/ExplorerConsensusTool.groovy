@@ -9,6 +9,7 @@ import foundation.omni.CurrencyID
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.LegacyAddress
 
 /**
  * Command-line tool and class for fetching OmniExplorer consensus data
@@ -43,7 +44,7 @@ class ExplorerConsensusTool implements ConsensusTool {
         TreeMap<Address, BalanceEntry> map = [:]
         balances.each { item ->
 
-            Address address = new Address(null, item.address)
+            Address address = LegacyAddress.fromBase58(null, item.address)
             BalanceEntry entry = itemToEntry(item)
 
             if (address != "" && (entry.balance.numberValue() > 0 || entry.reserved.numberValue() > 0)) {

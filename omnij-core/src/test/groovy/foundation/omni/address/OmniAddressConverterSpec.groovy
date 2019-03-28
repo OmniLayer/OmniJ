@@ -2,7 +2,9 @@ package foundation.omni.address
 
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.ECKey
+import org.bitcoinj.core.LegacyAddress
 import org.bitcoinj.params.MainNetParams
+import org.bitcoinj.script.Script
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -16,38 +18,37 @@ class OmniAddressConverterSpec extends Specification {
     def "2 way conversion works for a random address"() {
         given: "a random bitcoin address"
         def key = new ECKey()
-        def btcAddress = key.toAddress(btcParams)
+        def btcAddress = LegacyAddress.fromKey(btcParams, key)
 
         when: "we convert to Omni"
-        def omniAddress = OmniAddressConverter.btcToOmni(btcAddress)
+        LegacyAddress omniAddress = OmniAddressConverter.btcToOmni(btcAddress)
 
         then: "it's a valid Omni address"
         omniAddress.parameters == omniParams
-        !omniAddress.isP2SHAddress()
+        omniAddress.getOutputScriptType() == Script.ScriptType.P2PKH
         omniAddress.toString().substring(0,1) == 'o'
 
         when: "we convert back to Bitcoin"
-        def backAgainBTCAddress = OmniAddressConverter.omniToBTC(omniAddress)
+        LegacyAddress backAgainBTCAddress = OmniAddressConverter.omniToBTC(omniAddress)
 
         then: "it's the same, valid BTC address"
         backAgainBTCAddress == btcAddress
         backAgainBTCAddress.parameters == btcParams
-        !backAgainBTCAddress.isP2SHAddress()
+        backAgainBTCAddress.getOutputScriptType() == Script.ScriptType.P2PKH
         backAgainBTCAddress.toString().substring(0,1) == '1'
     }
 
     @Unroll
     def "2 way conversion works for Bitcoin address #addressString"(String addressString) {
         given: "a bitcoin address"
-        def btcAddress = new Address(btcParams, addressString)
+        def btcAddress = Address.fromString(btcParams, addressString)
 
         when: "we convert to Omni"
         def omniAddress = OmniAddressConverter.btcToOmni(btcAddress)
-        println "btc address -> omni address: ${btcAddress} -> ${omniAddress}"
 
         then: "it's a valid Omni address"
         omniAddress.parameters == omniParams
-        !omniAddress.isP2SHAddress()
+        omniAddress.getOutputScriptType() == Script.ScriptType.P2PKH
         omniAddress.toString().substring(0,1) == 'o'
 
         when: "we convert back to Bitcoin"
@@ -56,7 +57,7 @@ class OmniAddressConverterSpec extends Specification {
         then: "it's the same, valid BTC address"
         backAgainBTCAddress == btcAddress
         backAgainBTCAddress.parameters == btcParams
-        !backAgainBTCAddress.isP2SHAddress()
+        backAgainBTCAddress.getOutputScriptType() == Script.ScriptType.P2PKH
         backAgainBTCAddress.toString().substring(0,1) == '1'
 
         where:
@@ -66,15 +67,14 @@ class OmniAddressConverterSpec extends Specification {
     @Unroll
     def "2 way conversion works for Omni address #addressString"(String addressString) {
         given: "an Omni address"
-        def omniAddress = new Address(omniParams, addressString)
+        def omniAddress = Address.fromString(omniParams, addressString)
 
         when: "we convert to BTC"
         def btcAddress = OmniAddressConverter.omniToBTC(omniAddress)
-        println "omni address -> btc address: ${omniAddress} -> ${btcAddress} "
 
         then: "it's a valid BTC address"
         btcAddress.parameters == btcParams
-        !btcAddress.isP2SHAddress()
+        btcAddress.getOutputScriptType() == Script.ScriptType.P2PKH
         btcAddress.toString().substring(0,1) == '1'
 
         when: "we convert back to Omni"
@@ -83,7 +83,7 @@ class OmniAddressConverterSpec extends Specification {
         then: "it's the same, valid Omni address"
         backAgainOmniAddress == omniAddress
         backAgainOmniAddress.parameters == omniParams
-        !backAgainOmniAddress.isP2SHAddress()
+        backAgainOmniAddress.getOutputScriptType() == Script.ScriptType.P2PKH
         backAgainOmniAddress.toString().substring(0,1) == 'o'
 
         where:

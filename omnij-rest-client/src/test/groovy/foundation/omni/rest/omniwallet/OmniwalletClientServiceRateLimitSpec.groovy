@@ -4,6 +4,7 @@ import foundation.omni.net.OmniMainNetParams
 import foundation.omni.rest.omniwallet.json.OmniwalletAddressBalance
 import okhttp3.HttpUrl
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.LegacyAddress
 import retrofit2.Response
 import spock.lang.Ignore
 import spock.lang.Shared
@@ -19,7 +20,7 @@ import static foundation.omni.CurrencyID.*
 @Ignore("Functional STRESS test")
 class OmniwalletClientServiceRateLimitSpec extends Specification {
     final Address exodusAddress = OmniMainNetParams.get().exodusAddress;
-    final Address testAddr = new Address(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
+    final Address testAddr = LegacyAddress.fromBase58(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
 
     @Shared OmniwalletClient client
 

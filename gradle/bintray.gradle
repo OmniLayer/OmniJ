@@ -15,8 +15,8 @@ subprojects {
     }
 
     artifacts {
-        archives sourceJar
-        archives javadocJar
+//        archives sourceJar
+//        archives javadocJar
     }
 
     publishing {

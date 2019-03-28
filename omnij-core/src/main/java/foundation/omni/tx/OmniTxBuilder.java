@@ -8,7 +8,7 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.ScriptException;
+import org.bitcoinj.script.ScriptException;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
@@ -16,6 +16,7 @@ import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.crypto.TransactionSignature;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
+import org.bitcoinj.script.ScriptPattern;
 
 import java.util.Collection;
 
@@ -54,7 +55,7 @@ public class OmniTxBuilder {
      * @return Incomplete Transaction, no inputs or change output
      */
     public Transaction createOmniTransaction(ECKey redeemingKey, Address refAddress, byte[] payload) {
-        Address redeemingAddress = redeemingKey.toAddress(netParams);
+        Address redeemingAddress = Address.fromKey(netParams, redeemingKey, Script.ScriptType.P2PKH);
 
         // Encode the Omni Protocol Payload as a Class B transaction
         Transaction tx = transactionEncoder.encodeObfuscated(redeemingKey, payload, redeemingAddress.toString());
@@ -79,7 +80,7 @@ public class OmniTxBuilder {
      */
     public Transaction createSignedOmniTransaction(ECKey fromKey, Collection<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
-        Address fromAddress = fromKey.toAddress(netParams);
+        Address fromAddress = Address.fromKey(netParams, fromKey, Script.ScriptType.P2PKH);
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 
@@ -95,12 +96,12 @@ public class OmniTxBuilder {
             TransactionInput input = tx.getInput(i);
             Script scriptPubKey = input.getConnectedOutput().getScriptPubKey();
             TransactionSignature signature = tx.calculateSignature(i, fromKey, scriptPubKey, Transaction.SigHash.ALL, false);
-            if (scriptPubKey.isSentToRawPubKey())
+            if (ScriptPattern.isP2PK(scriptPubKey))
                 input.setScriptSig(ScriptBuilder.createInputScript(signature));
-            else if (scriptPubKey.isSentToAddress())
+            else if (ScriptPattern.isP2PKH(scriptPubKey))
                 input.setScriptSig(ScriptBuilder.createInputScript(signature, fromKey));
             else
-                throw new ScriptException("Don't know how to sign for this kind of scriptPubKey: " + scriptPubKey);
+                throw new RuntimeException("Don't know how to sign for this kind of scriptPubKey: " + scriptPubKey);
 
         }
         return tx;
@@ -118,7 +119,7 @@ public class OmniTxBuilder {
      */
     public Transaction createUnsignedOmniTransaction(ECKey fromKey, Collection<TransactionInput> inputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
-        Address fromAddress = fromKey.toAddress(netParams);
+        Address fromAddress = Address.fromKey(netParams, fromKey, Script.ScriptType.P2PKH);
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 

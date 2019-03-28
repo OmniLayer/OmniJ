@@ -3,9 +3,11 @@ package foundation.omni.tx;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
+import org.bitcoinj.core.LegacyAddress;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.script.Script;
+import org.bitcoinj.script.ScriptPattern;
 
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class OmniTransaction extends Transaction {
         List<TransactionOutput> outputs = transaction.getOutputs();
         for (TransactionOutput output : outputs) {
             Script script = new Script(output.getScriptBytes());
-            if (script.isSentToMultiSig()) {
+            if (ScriptPattern.isSentToMultisig(script)) {
                 keys = script.getPubKeys();
             }
         }
@@ -39,8 +41,8 @@ public class OmniTransaction extends Transaction {
 
         // For debugging
         for (ECKey key : keys) {
-            System.out.println("key " + key);
-            System.out.println("address: " + key.toAddress(transaction.getParams()));
+            //System.out.println("key " + key);
+            //System.out.println("address: " +  LegacyAddress.fromKey(transaction.getParams(), key));
         }
 
         /*
@@ -51,12 +53,12 @@ public class OmniTransaction extends Transaction {
         ECKey redeemKey = keys.get(0);
         ECKey dataKey = keys.get(1);    // 0th key is redeem key, 1st key contains data
 
-        Address redeemAddress = redeemKey.toAddress(transaction.getParams());
+        Address redeemAddress = LegacyAddress.fromKey(transaction.getParams(), redeemKey);
 
         byte[] input = dataKey.getPubKey();
         byte[] deobf = Obfuscation.obfuscate(input, redeemAddress);
 
-        System.out.println("deobf = " + RawTxBuilder.toHexString(deobf));
+        //System.out.println("deobf = " + RawTxBuilder.toHexString(deobf));
 
         // Create an Omni Transaction if valid otherwise throw "not Omni transaction"
         boolean valid = true;
