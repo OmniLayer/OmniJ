@@ -288,10 +288,10 @@ To do a consensus comparison between an Omni Core server and https://www.omniwal
 
 == Additional Documentation
 
-The `adoc` (AsciiDoctor) directory of this project contains some additional documents that might be of interest:
+The `doc` directory of this project contains some additional documents that might be of interest:
 
-. link:adoc/regtest-intro.adoc[Introduction to Regression Test Mode]
-. link:adoc/omnij-test-design-patterns.adoc[OmniJ Test Design Patterns]
-. link:adoc/omni-sto-testing.adoc[Omni Protocol Send To Owners Testing]
-. link:adoc/omni-consensus-hashing.adoc[Omni Protocol Consensus Hashing Proposal]
+. link:doc/regtest-intro.adoc[Introduction to Regression Test Mode]
+. link:doc/omnij-test-design-patterns.adoc[OmniJ Test Design Patterns]
+. link:doc/omni-sto-testing.adoc[Omni Protocol Send To Owners Testing]
+. link:doc/omni-consensus-hashing.adoc[Omni Protocol Consensus Hashing Proposal]
 

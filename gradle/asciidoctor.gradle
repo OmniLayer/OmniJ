@@ -4,8 +4,8 @@ asciidoctorj {
 }
 
 asciidoctor {
-    sourceDir = file('adoc')
-    outputDir = file("$buildDir/adoc")
+    sourceDir = file('doc')
+    outputDir = file("$buildDir/doc")
     separateOutputDirs = false
 
     requires  'asciidoctor-diagram'
