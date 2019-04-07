@@ -28,7 +28,6 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.MainNetParams;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.java8.Java8CallAdapterFactory;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -120,7 +119,6 @@ public class OmniwalletClient implements ConsensusService {
                 .client(client)
                 .baseUrl(baseURL)
                 .addConverterFactory(JacksonConverterFactory.create(mapper))
-                .addCallAdapterFactory(Java8CallAdapterFactory.create())
                 .build();
 
         service = restAdapter.create(OmniwalletService.class);

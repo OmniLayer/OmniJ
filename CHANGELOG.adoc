@@ -3,6 +3,14 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.5.9
+
+In progress
+
+=== omnij-rest-client
+
+* Upgrade to Retrofit 2.5.0
+
 == v0.5.8
 
 Released: 2019.03.28
