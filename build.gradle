@@ -79,5 +79,4 @@ task testReport(type: TestReport) {
 }
 
 task buildCI(dependsOn: [build, testReport, groovydocAll, asciidoctor])
-task jenkinsBuild(dependsOn: buildCI)
 
