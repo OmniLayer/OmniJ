@@ -1,13 +1,7 @@
-def xChangeVersion = '4.3.8'
-
-repositories {
-//    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' } // For snapshot versions of XChange
-}
-
 dependencies {
     compile project(':omnij-core')
 
     compile "${consensusjGroup}:${consensusjBtcMoneyArtifact}:${consensusjVersion}"
 
-    compile 'org.javamoney:moneta-bp:1.2'
+    compile 'org.javamoney:moneta-bp:1.3'
 }
