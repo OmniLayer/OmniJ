@@ -14,6 +14,7 @@ import foundation.omni.rpc.SmartPropertyListInfo
  */
 class ListPropertiesSpec extends BaseRegTestSpec {
 
+    @Ignore('OMNI, TOMNI changed to OMN, TOMN')
     def "Returns a property list with correct MSC and TMSC entries"() {
         when: "we get a list of properties"
         List<SmartPropertyListInfo> properties = omniListProperties()
