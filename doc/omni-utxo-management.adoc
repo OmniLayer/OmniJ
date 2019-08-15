@@ -1,0 +1,77 @@
+= Omni UTXO Management
+
+== Introduction
+
+This document is a working discussion around issues related to managing unspent bitcoins (referred to as "unspent transaction outputs" or UTXOs) in Omni Layer capable wallets.
+
+== Design Issues
+
+There are a handful of issues to consider:
+
+* Minimizing transaction fees
+* Maximizing privacy
+* Backup and restoration of wallets with 12/24-word seed phrases
+* Wallet interoperability
+* Multisig support
+* Payment channel support
+* Omni addresses formats
+
+== Technology we control
+
+* Omni Layer wallet standards through the OLE (**O**mni **L**ayer **E**nhancement specification) process
+* Omni Protocol transaction formats that can minimize fees and maximize privacy
+* Omni Protocol address formats, e.g. Bech 32 for Omni SegWit
+* Omni Lightning (Omni Bolt) support for payment channels
+
+== HD Wallet Standards
+
+=== BIP 32
+
+https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki[BIP-32: Hierarchical Deterministic Wallets]
+
+=== BIP 39
+
+https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki[BIP-39: Mnemonic code for generating deterministic keys]
+
+
+=== BIP 43
+
+https://github.com/bitcoin/bips/blob/master/bip-0043.mediawiki[BIP-43: Purpose Field for Deterministic Wallets]
+
+=== BIP 44
+
+https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki[BIP-44: Multi-Account Hierarchy for Deterministic Wallets]
+
+=== BIP 49
+
+https://github.com/bitcoin/bips/blob/master/bip-0049.mediawiki[BIP-49: Derivation scheme for P2WPKH-nested-in-P2SH based accounts]
+
+=== BIP 84
+
+https://github.com/bitcoin/bips/blob/master/bip-0084.mediawiki[BIP-84: Derivation scheme for P2WPKH based accounts]
+
+=== SLIP 44
+
+SatoshiLabs has created the **SLIP** family of specifications for the purpose of creating interoperability between hardware wallets. Since the **BIP** specifications are very Bitcoin-specific and the understandable reluctance of Bitcoin developers to spend time updating their specification documents for "alt coins", the **SLIP** specifications fill this gap and provide practical standards for wallet manufacturers and developers wishing ot support multiple blockchains in a standard matter.
+
+https://github.com/satoshilabs/slips/blob/master/slip-0044.md[SLIP-0044 : Registered coin types for BIP-0044] provides an official registry of BIP 44 coin types for various coins -- _including Omni!_  Omni is listed with coin type *200*.
+
+
+== Proposed Directions
+
+=== OLE 100
+
+This proposal will define the BIP 39 "purpose" fields recommended for Omni Layer HD Paths. It looks like the existing standards spell out an approach we can use:
+
+Purpose:: Omni will use *44* for P2PKH transactions and 84 for (to be implemented) SegWit transactions.
+
+Coin Type:: Omni will use *200* (already assigned in SLIP 44)
+
+So this OLE should be relatively short and just confirm that *Omni* recommends this approach.
+
+== Status
+
+This is an early draft of this document for review in our Omni "Brainstorming" conference call. Eventually the information in this document will become one or more OLE documents in the OLE Github repository.
+
+
+
