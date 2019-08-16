@@ -11,6 +11,12 @@ In progress
 
 * Upgrade to Retrofit 2.5.0
 
+=== All modules
+
+* Update to bitcoinj 0.15.2
+* Update to SLF4J 1.7.28 (has `Automatic-Module-Name` in `MANIFEST.MF`)
+* Update to Groovy 2.5.8
+
 == v0.5.8
 
 Released: 2019.03.28
