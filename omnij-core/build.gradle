@@ -1,4 +1,5 @@
 dependencies {
     compile 'javax.money:money-api-bp:1.0.3'
+    implementation 'com.google.guava:guava:28.1-android'
 }
 
