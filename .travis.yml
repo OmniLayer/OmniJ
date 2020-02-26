@@ -22,3 +22,7 @@ install:
 
 script:
   - ./test-omni-integ-regtest.sh
+
+jdk:
+  - openjdk8
+  - openjdk11
