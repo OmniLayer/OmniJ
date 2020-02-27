@@ -29,12 +29,12 @@ allprojects {
         maven { url 'https://dl.bintray.com/msgilligan/maven' } // ConsensusJ (RPC client)
     }
 
-    tasks.withType(FindBugs) {
-        reports {
-            xml.enabled false
-            html.enabled true
-        }
-    }
+//    tasks.withType(FindBugs) {
+//        reports {
+//            xml.enabled false
+//            html.enabled true
+//        }
+//    }
     
     tasks.withType(GroovyCompile) {
         groovyOptions.optimizationOptions.indy = true
