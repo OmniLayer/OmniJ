@@ -7,3 +7,10 @@ include 'omnij-core',
         'omnij-money'
 
 
+if (JavaVersion.current().isJava11Compatible()) {
+    System.err.println "Including JDK 11 client(s) because Java ${JavaVersion.current()} is JDK 11+"
+    include 'omnij-rest-client-micronaut'  // Micronaut HttpClient Omni REST client
+    include 'omnij-rest-client-mjdk'       // Modern JDK Omni REST client (using java.net.http)
+} else {
+    System.err.println "Skipping JDK 11 client(s), requires Java 11+, currently running Java ${JavaVersion.current()}"
+}

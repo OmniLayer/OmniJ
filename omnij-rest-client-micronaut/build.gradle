@@ -1,0 +1,21 @@
+sourceCompatibility = 11
+targetCompatibility = 11
+
+dependencies {
+    implementation project(':omnij-rest-client')
+    implementation project(':omnij-core')
+    implementation project(':omnij-jsonrpc')
+
+
+    implementation("io.micronaut:micronaut-http-client:1.3.2")
+
+    testImplementation "org.codehaus.groovy:groovy:3.0.1:indy"
+    testImplementation ("org.codehaus.groovy:groovy-json:3.0.1:indy")  {
+        transitive = false
+    }
+    testCompile("org.spockframework:spock-core:2.0-M2-groovy-3.0") {
+        exclude module: "groovy-all"
+    }
+
+    testCompile project(':omnij-dsl')
+}
