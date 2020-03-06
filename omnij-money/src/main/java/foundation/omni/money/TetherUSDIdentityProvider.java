@@ -12,11 +12,10 @@ import javax.money.convert.ProviderContext;
 import javax.money.convert.ProviderContextBuilder;
 import javax.money.convert.RateType;
 
-import com.msgilligan.bitcoinj.money.CurrencyUnitPair;
-import com.msgilligan.bitcoinj.money.ExchangeRateChange;
-import com.msgilligan.bitcoinj.money.ExchangeRateObserver;
-import com.msgilligan.bitcoinj.money.ObservableExchangeRateProvider;
-import org.javamoney.moneta.CurrencyUnitBuilder;
+import org.consensusj.exchange.CurrencyUnitPair;
+import org.consensusj.exchange.ExchangeRateChange;
+import org.consensusj.exchange.ExchangeRateObserver;
+import org.consensusj.exchange.ObservableExchangeRateProvider;
 import org.javamoney.moneta.convert.ExchangeRateBuilder;
 import org.javamoney.moneta.spi.AbstractRateProvider;
 import org.javamoney.moneta.spi.DefaultNumberValue;

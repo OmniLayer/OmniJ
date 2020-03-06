@@ -1,7 +1,7 @@
 dependencies {
     compile project(':omnij-core')
 
-    compile "${consensusjGroup}:${consensusjBtcMoneyArtifact}:${consensusjVersion}"
+    compile "${consensusjGroup}:${consensusjExchangeArtifact}:${consensusjVersion}"
 
     compile 'org.javamoney:moneta-bp:1.3'
 }
