@@ -30,7 +30,7 @@ abstract class BaseRegTestSpec extends Specification implements OmniTestClientDe
         // Previously Bitcoin Core (and Omni Core) used the same port as TESTNET for REGTEST
         // This recentBitcoinCore hack allows those tests to pass until we update `travis.yml`
         // and any other test configuration/infrastructure, etc.
-        boolean recentBitcoinCore = false;
+        boolean recentBitcoinCore = true;
         URI regTestRpcUri = recentBitcoinCore ? RpcURI.defaultRegTestURI : RpcURI.defaultTestNetURI
         client = new OmniTestClient(RegTestParams.get(), regTestRpcUri, rpcTestUser, rpcTestPassword)
         fundingSource = new RegTestFundingSource(client)

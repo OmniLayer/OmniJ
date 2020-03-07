@@ -15,7 +15,7 @@ class RegTestContext {
         // Previously Bitcoin Core (and Omni Core) used the same port as TESTNET for REGTEST
         // This recentBitcoinCore hack allows those tests to pass until we update `travis.yml`
         // and any other test configuration/infrastructure, etc.
-        def recentBitcoinCore = false;
+        def recentBitcoinCore = true;
         URI regTestRpcUri = recentBitcoinCore ? RpcURI.defaultRegTestURI : RpcURI.defaultTestNetURI
         def client = new OmniTestClient(RegTestParams.get(), regTestRpcUri, user, pass)
         def env = new RegTestEnvironment(client)
