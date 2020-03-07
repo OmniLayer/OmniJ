@@ -3,6 +3,10 @@
 
 A high-level view of the changes in each OmniJ binary release.
 
+== v0.5.10-SNAPSHOT
+
+Work-in-progress
+
 == v0.5.9
 
 Released: 2020.03.06
