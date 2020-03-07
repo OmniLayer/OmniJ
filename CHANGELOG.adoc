@@ -5,17 +5,38 @@ A high-level view of the changes in each OmniJ binary release.
 
 == v0.5.9
 
-In progress
+Released: 2020.03.06
+
+=== omnij-rest-client-mjdk
+
+New module: A JDK 11+ `java.net.http` asynchronous client for Omniwallet. It `extends OmniwalletAbstractClient` and `implements ConsensusService` and is compatible with the existing Retrofit-based `OmniwalletClient`. If you are using JDK 11+ and are looking for an Omniwallet API client with minimal dependencies, this is your JAR.
+
+=== omnij-rest-client-micronaut
+
+New module: Experimental, incomplete Omniwallet Client that uses the Micronaut Http client. This is a proof-of-concept, but development was discontinued in favor of the Modern JDK `mjdk` client above. *Use at your own risk*. Comments welcome.
 
 === omnij-rest-client
 
-* Upgrade to Retrofit 2.5.0
+* Upgrade to Retrofit 2.6.4 (OkHTTP 3.12.8)
+
+=== omnij-rpc
+
+* Omni integration tests have temporary workarounds to keep the Travis Omni RegTest tests passing until we update to newer Omni Core for those tests. This is related ot a Bitcoin Core change to the default RPC port for RegTest mode. (The `consensusj` constant `RpcURI.RPCPORT_REGTEST` was changed to reflect Bitcoin Core 0.16.0 and later)
+
+=== omnij-money
+
+* Upgrade to moneta-bp-1.3
 
 === All modules
 
-* Update to bitcoinj 0.15.2
-* Update to SLF4J 1.7.28 (has `Automatic-Module-Name` in `MANIFEST.MF`)
-* Update to Groovy 2.5.8
+* Official build now using JDK 11 (but all modules are src/target JDK 8)
+* Travis CI -- build with both JDK 11 and JDK 8 (skip JDK11 dependent module when
+  building under JDK 8)
+* Update to bitcoinj 0.15.6 (Guava 28.1-android)
+* Update to ConsensusJ 0.5.0
+* Update to SLF4J 1.7.30 (has `Automatic-Module-Name` in `MANIFEST.MF`)
+* Update to Groovy 2.5.9
+* Update to Gradle 6.2
 
 == v0.5.8
 

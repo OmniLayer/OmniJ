@@ -1,8 +1,8 @@
 = OmniJ Project
 Sean Gilligan <https://github.com/msgilligan>
-v0.5.8
+v0.5.9
 :description: OmniJ README document.
-:omnij-version: 0.5.8
+:omnij-version: 0.5.9
 
 [WARNING]
 This software is EXPERIMENTAL software for **REGTEST and TESTNET TRANSACTIONS** only. *USE ON MAINNET AT YOUR OWN RISK.*
@@ -17,7 +17,7 @@ image:https://travis-ci.org/OmniLayer/OmniJ.svg?branch=master["Build Status", li
 
 A Java/JVM implementation of the http://www.omnilayer.org[Omni Layer], an open-source, fully decentralized asset creation platform built on the Bitcoin blockchain.
 
-There are currently six subprojects of OmniJ. Each of which builds a JAR artifact.
+There are currently seven active subprojects of OmniJ. Each of which builds a JAR artifact. All JARs require JDK 8 or later, except where noted.
 
 [options="header",frame="all"]
 |===
@@ -25,19 +25,23 @@ There are currently six subprojects of OmniJ. Each of which builds a JAR artifac
 
 | omnij-core
 | Core Omni functionality
-| JDK 8+ Java-only, Android-compatible
+| Android-compatible
 
 | omnij-dsl
 | Domain Specific Language (DSL) support for Omni
-| JDK 8+, Groovy language
+| using the Groovy language
 
 | omnij-money
 | JavaMoney support for Omni currency codes and exchanges
-| JDK 8+, Java-only, tests in Groovy/Spock
+| Java-only, tests in Groovy/Spock
 
 | omnij-rest-client
-| JavaMoney support for Omni currency codes and exchanges
-| JDK 8+, Java-only, tests in Groovy/Spock
+| Http clients for Omniwallet & Omnicore with a common interface.
+| Java-only, tests in Groovy/Spock
+
+| omnij-rest-client-mjdk
+| Http clients for Omniwallet using JDK 11+ `java.net.http`
+| JDK 11+, Java-only, tests in Groovy/Spock
 
 | omnij-rpc
 | Omni Core RPC library, command-line API/tools, integration tests
@@ -45,7 +49,7 @@ There are currently six subprojects of OmniJ. Each of which builds a JAR artifac
 
 | omnij-cli
 | Builds the command-line Omni consensus-checking tool.
-| JDK 8+ Java & Groovy
+| Java & Groovy
 |===
 
 A Bitcoin JSON-RPC client (base class), and other components used by OmniJ are in the https://github.com/ConsensusJ/consensusj[ConsensusJ] project.
@@ -104,6 +108,9 @@ After a successful build, the jars will be in the following locations:
 
 | omnij-rest-client
 | omnij-dsl/build/libs/omnij-rest-client-_version_.jar
+
+| omnij-rest-client-mjdk
+| omnij-dsl/build/libs/omnij-rest-client-mjdk-_version_.jar
 
 | omnij-rpc
 | omnij-rpc/build/libs/omnij-rpc-_version_.jar
