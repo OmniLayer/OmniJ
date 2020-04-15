@@ -56,7 +56,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         def propertyInfo = omniGetProperty(currencyID)
 
         then:
-        propertyInfo.propertyid == currencyID.getValue()
+        propertyInfo.propertyid == currencyID
         propertyInfo.divisible == false
         propertyInfo.name == "ManagedTokens"
         propertyInfo.category == "Test Category"
