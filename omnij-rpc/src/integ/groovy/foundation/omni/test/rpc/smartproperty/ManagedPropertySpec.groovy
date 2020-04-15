@@ -70,8 +70,8 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         def propertyInfo = omniGetProperty(currencyID)
 
         then:
-        propertyInfo.fixedissuance == false
-        propertyInfo.totaltokens as Integer == 0
+        !propertyInfo.isFixedIssuance()
+        propertyInfo.totalTokens == 0
 
         when:
         def balanceForId = omniGetAllBalancesForId(currencyID)
@@ -88,8 +88,8 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         def propertyInfo = omniGetProperty(currencyID)
 
         then:
-        propertyInfo.issuer == actorAddress.toString()
-        propertyInfo.creationtxid == creationTxid.toString()
+        propertyInfo.issuer == actorAddress
+        propertyInfo.creationTxId == creationTxid
     }
 
     def "New tokens can be granted with transaction type 55"() {
@@ -111,7 +111,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         def propertyInfo = omniGetProperty(currencyID)
 
         then:
-        propertyInfo.totaltokens as Integer == 100
+        propertyInfo.totalTokens == 100
     }
 
     def "Granting tokens increases the issuer's balance"() {
@@ -137,7 +137,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).amount as Integer == 170
 
         and:
-        omniGetProperty(currencyID).totaltokens as Integer == 270
+        omniGetProperty(currencyID).totalTokens == 270
         omniGetBalance(actorAddress, currencyID).balance == 270 as BigDecimal
     }
 
@@ -159,7 +159,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).valid == false
 
         and:
-        omniGetProperty(nonManagedID).totaltokens == old(omniGetProperty(nonManagedID)).totaltokens
+        omniGetProperty(nonManagedID).totalTokens == old(omniGetProperty(nonManagedID)).totalTokens
         omniGetBalance(actorAddress, nonManagedID) == old(omniGetBalance(actorAddress, nonManagedID))
     }
 
@@ -172,7 +172,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).valid == false
 
         and:
-        omniGetProperty(currencyID).totaltokens as Integer == 270
+        omniGetProperty(currencyID).totalTokens == 270
         omniGetBalance(actorAddress, currencyID).balance == 270 as BigDecimal
         omniGetBalance(otherAddress, currencyID).balance == zeroAmount
     }
@@ -187,7 +187,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).amount as Long == 9223372036854775537L
 
         and:
-        omniGetProperty(currencyID).totaltokens as Long == 9223372036854775807L
+        omniGetProperty(currencyID).totalTokens == 9223372036854775807L
         omniGetBalance(actorAddress, currencyID).balance == 9223372036854775807.0
     }
 
@@ -201,7 +201,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).valid == false
 
         and:
-        omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens
+        omniGetProperty(currencyID).totalTokens == old(omniGetProperty(currencyID)).totalTokens
         omniGetBalance(actorAddress, currencyID) == old(omniGetBalance(actorAddress, currencyID))
     }
 
@@ -214,7 +214,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).valid
 
         and:
-        omniGetProperty(currencyID).totaltokens as Long == 9223372036854775807L
+        omniGetProperty(currencyID).totalTokens as Long == 9223372036854775807L
         omniGetBalance(actorAddress, currencyID).balance == 9223372036854775806.0
         omniGetBalance(otherAddress, currencyID).balance == 1.0
     }
@@ -229,7 +229,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).valid == false
 
         and:
-        omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens
+        omniGetProperty(currencyID).totalTokens == old(omniGetProperty(currencyID)).totalTokens
         omniGetBalance(actorAddress, currencyID) == old(omniGetBalance(actorAddress, currencyID))
         omniGetBalance(otherAddress, currencyID) == old(omniGetBalance(otherAddress, currencyID))
     }
@@ -253,7 +253,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         def propertyInfo = omniGetProperty(currencyID)
 
         then:
-        propertyInfo.totaltokens as Integer == 2
+        propertyInfo.totalTokens == 2
     }
 
     def "Revoking tokens decreases the issuer's balance"() {
@@ -283,7 +283,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).valid == false
 
         and:
-        omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens
+        omniGetProperty(currencyID).totalTokens == old(omniGetProperty(currencyID)).totalTokens
         omniGetBalance(actorAddress, currencyID) == old(omniGetBalance(actorAddress, currencyID))
         omniGetBalance(otherAddress, currencyID) == old(omniGetBalance(otherAddress, currencyID))
     }
@@ -297,7 +297,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).valid == false
 
         and:
-        omniGetProperty(nonManagedID).totaltokens == old(omniGetProperty(nonManagedID)).totaltokens
+        omniGetProperty(nonManagedID).totalTokens == old(omniGetProperty(nonManagedID)).totalTokens
         omniGetBalance(actorAddress, nonManagedID) == old(omniGetBalance(actorAddress, nonManagedID))
     }
 
@@ -310,7 +310,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).valid == false
 
         and:
-        omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens
+        omniGetProperty(currencyID).totalTokens == old(omniGetProperty(currencyID)).totalTokens
         omniGetBalance(actorAddress, currencyID) == old(omniGetBalance(actorAddress, currencyID))
         omniGetBalance(otherAddress, currencyID) == old(omniGetBalance(otherAddress, currencyID))
     }
