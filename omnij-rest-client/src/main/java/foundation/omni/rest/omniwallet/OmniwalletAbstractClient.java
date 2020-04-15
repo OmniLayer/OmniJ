@@ -5,13 +5,15 @@ import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniIndivisibleValue;
 import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
+import foundation.omni.json.pojo.OmniPropertyInfo;
 import foundation.omni.rest.ConsensusService;
 import foundation.omni.rest.OmniJBalances;
 import foundation.omni.rest.WalletAddressBalance;
 import foundation.omni.rest.omniwallet.json.AddressVerifyInfo;
 import foundation.omni.rest.omniwallet.json.OmniwalletAddressBalance;
 import foundation.omni.rest.omniwallet.json.OmniwalletAddressPropertyBalance;
-import foundation.omni.rest.omniwallet.json.PropertyVerifyInfo;
+import foundation.omni.rest.omniwallet.json.OmniwalletPropertiesListResponse;
+import foundation.omni.rest.omniwallet.json.OmniwalletPropertyInfo;
 import foundation.omni.rpc.AddressBalanceEntry;
 import foundation.omni.rpc.BalanceEntry;
 import foundation.omni.rpc.ConsensusSnapshot;
@@ -70,25 +72,32 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
         return height;
     }
 
-    protected abstract  CompletableFuture<List<PropertyVerifyInfo>> verifyProperties();
-
+    protected abstract  CompletableFuture<OmniwalletPropertiesListResponse> propertiesList();
 
     @Override
     public List<SmartPropertyListInfo> listProperties() throws InterruptedException, IOException {
-        List<PropertyVerifyInfo> properties;
+        OmniwalletPropertiesListResponse listResponse;
         try {
-            properties = verifyProperties().get();
+            listResponse = propertiesList().get();
         } catch (ExecutionException e) {
             throw new IOException(e);
         }
+        List<OmniwalletPropertyInfo> properties = listResponse.getPropertyInfoList();
         List<SmartPropertyListInfo> result = new ArrayList<>();
         properties.forEach(prop -> {
-            SmartPropertyListInfo info = propertyMapper(prop);
+            SmartPropertyListInfo info = mapToSmartPropertyListInfo(prop);
             if (info != null)  {
                 result.add(info);
             }
         });
         return result;
+    }
+
+    @Override
+    public CompletableFuture<List<OmniPropertyInfo>> listSmartProperties() throws InterruptedException, IOException {
+        return propertiesList().thenApply(response -> response.getPropertyInfoList().stream()
+                    .map(this::mapToOmniPropertyInfo)
+                    .collect(Collectors.toList()));
     }
 
     @Override
@@ -204,30 +213,30 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
         }
     }
 
-    protected SmartPropertyListInfo propertyMapper(PropertyVerifyInfo property) {
-        final String category = "";
-        final String subCategory = "";
-        final String data = "";
-        final String url = "";
-        long idnum = property.getCurrencyID();
-        CurrencyID id;
-        try {
-            id = new CurrencyID(idnum);
-        } catch (NumberFormatException e) {
-            id = null;
-        }
-        String protocol = property.getProtocol();
-        if (id != null && protocol.equals("Omni")) {
-            SmartPropertyListInfo prop = new SmartPropertyListInfo(id,
+    protected SmartPropertyListInfo mapToSmartPropertyListInfo(OmniwalletPropertyInfo property) {
+        return new SmartPropertyListInfo(property.getPropertyid(),
                     property.getName(),
-                    category,
-                    subCategory,
-                    data,
-                    url,
+                    property.getCategory(),
+                    property.getSubcategory(),
+                    property.getData(),
+                    property.getUrl(),
                     property.isDivisible());
-            return prop;
-        }
-        return null;
+    }
+
+    protected OmniPropertyInfo mapToOmniPropertyInfo(OmniwalletPropertyInfo property) {
+        return new OmniPropertyInfo(property.getPropertyid(),
+                property.getName(),
+                property.getCategory(),
+                property.getSubcategory(),
+                property.getData(),
+                property.getUrl(),
+                property.isDivisible(),
+                property.getIssuer(),
+                property.getCreationTxId(),
+                property.isFixedIssuance(),
+                property.isManagedIssuance(),
+                false,
+                property.getTotalTokens());
     }
 
     protected PropertyType lookupPropertyType(CurrencyID propertyID) throws IOException, InterruptedException {

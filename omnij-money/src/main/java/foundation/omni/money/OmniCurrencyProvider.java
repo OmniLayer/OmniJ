@@ -17,6 +17,8 @@ import java.util.Set;
 import static foundation.omni.money.OmniCurrencyCode.*;
 /**
  * First cut at Omni Currency Provider
+ * TODO: Either disallow building BTC currency here or detect presence
+ * of BitcoinProvider and use it to build BTC when present.
  */
 public class OmniCurrencyProvider implements CurrencyProviderSpi {
     final static int divisibleFractionDigits = 8;
@@ -101,12 +103,12 @@ public class OmniCurrencyProvider implements CurrencyProviderSpi {
                 .build();
     }
 
-    private static CurrencyUnit build(String code) {
+    private static CurrencyUnit build(String codeString) {
         int digits = divisibleFractionDigits;
-        if (code.equals(MAID.name()) || code.equals(SAFEX.name())) {
+        if (codeString.equals(MAID.name()) || codeString.equals(SAFEX.name())) {
             digits = indivisibleFractionDigits;
         }
-        return CurrencyUnitBuilder.of(code, CONTEXT)
+        return CurrencyUnitBuilder.of(codeString, CONTEXT)
                 .setDefaultFractionDigits(digits)
                 .build();
     }

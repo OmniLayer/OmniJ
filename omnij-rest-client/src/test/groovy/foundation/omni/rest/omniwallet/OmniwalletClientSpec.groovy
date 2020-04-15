@@ -92,7 +92,7 @@ class OmniwalletClientSpec extends Specification {
         balances != null
     }
 
-    def "Can get Omniwallet property list"() {
+    def "Can get Omniwallet property list (deprecated call)"() {
         when: "we get data"
         def properties = client.listProperties()
 
@@ -108,29 +108,71 @@ class OmniwalletClientSpec extends Specification {
         props[OMNI].propertyid == OMNI
         props[OMNI].propertyid.ecosystem == Ecosystem.OMNI
         props[OMNI].name == "Omni Token"
-        props[OMNI].category == ""
-        props[OMNI].subcategory == ""
-        props[OMNI].data == ""
-        props[OMNI].url == ""
+        props[OMNI].category == "N/A"
+        props[OMNI].subcategory == "N/A"
+        props[OMNI].data == "Omni tokens serve as the binding between Bitcoin, smart properties and contracts created on the Omni Layer."
+        props[OMNI].url == "http://www.omnilayer.org"
         props[OMNI].divisible == true
 
         props[TOMNI].propertyid == TOMNI
         props[TOMNI].propertyid.ecosystem == Ecosystem.TOMNI
         props[TOMNI].name == "Test Omni Token"
-        props[TOMNI].category == ""
-        props[TOMNI].subcategory == ""
-        props[TOMNI].data == ""
-        props[TOMNI].url == ""
+        props[TOMNI].category == "N/A"
+        props[TOMNI].subcategory == "N/A"
+        props[TOMNI].data == "Test Omni tokens serve as the binding between Bitcoin, smart properties and contracts created on the Omni Layer."
+        props[TOMNI].url == "http://www.omnilayer.org"
         props[TOMNI].divisible == true
 
         // Assumes MainNet
         props[USDT].propertyid == USDT
         props[USDT].propertyid.ecosystem == Ecosystem.OMNI
         props[USDT].name == "TetherUS"
-        props[USDT].category == ""
-        props[USDT].subcategory == ""
-        props[USDT].data == ""
-        props[USDT].url == ""
+        props[USDT].category == "Financial and insurance activities"
+        props[USDT].subcategory == "Activities auxiliary to financial service and insurance activities"
+        props[USDT].data == "The next paradigm of money."
+        props[USDT].url == "https://tether.to"
+        props[USDT].divisible == true
+    }
+
+    def "Can get Omniwallet property list"() {
+        when: "we get data"
+        def properties = client.listSmartProperties().get()
+
+        then: "we get a list of size >= 2"
+        properties != null
+        properties.size() >= 2
+
+        when: "we convert the list to a map"
+        // This may be unnecessary if we can assume the property list is ordered by propertyid
+        Map<CurrencyID, SmartPropertyListInfo> props = properties.collect{[it.propertyid, it]}.collectEntries()
+
+        then: "we can check OMNI and TOMNI are as expected"
+        props[OMNI].propertyid == OMNI
+        props[OMNI].propertyid.ecosystem == Ecosystem.OMNI
+        props[OMNI].name == "Omni Token"
+        props[OMNI].category == "N/A"
+        props[OMNI].subcategory == "N/A"
+        props[OMNI].data == "Omni tokens serve as the binding between Bitcoin, smart properties and contracts created on the Omni Layer."
+        props[OMNI].url == "http://www.omnilayer.org"
+        props[OMNI].divisible == true
+
+        props[TOMNI].propertyid == TOMNI
+        props[TOMNI].propertyid.ecosystem == Ecosystem.TOMNI
+        props[TOMNI].name == "Test Omni Token"
+        props[TOMNI].category == "N/A"
+        props[TOMNI].subcategory == "N/A"
+        props[TOMNI].data == "Test Omni tokens serve as the binding between Bitcoin, smart properties and contracts created on the Omni Layer."
+        props[TOMNI].url == "http://www.omnilayer.org"
+        props[TOMNI].divisible == true
+
+        // Assumes MainNet
+        props[USDT].propertyid == USDT
+        props[USDT].propertyid.ecosystem == Ecosystem.OMNI
+        props[USDT].name == "TetherUS"
+        props[USDT].category == "Financial and insurance activities"
+        props[USDT].subcategory == "Activities auxiliary to financial service and insurance activities"
+        props[USDT].data == "The next paradigm of money."
+        props[USDT].url == "https://tether.to"
         props[USDT].divisible == true
     }
 

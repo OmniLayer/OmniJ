@@ -1,11 +1,13 @@
 package foundation.omni.rest;
 
 import foundation.omni.CurrencyID;
+import foundation.omni.json.pojo.OmniPropertyInfo;
 import foundation.omni.rpc.BalanceEntry;
 import foundation.omni.rpc.ConsensusFetcher;
 import org.bitcoinj.core.Address;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.concurrent.CompletableFuture;
 
@@ -16,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 public interface ConsensusService extends OmniBalanceService, ConsensusFetcher {
     SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) throws InterruptedException, IOException;
 
-    // First (currently experimental) Async method
+    CompletableFuture<List<OmniPropertyInfo>> listSmartProperties() throws InterruptedException, IOException;
+
     CompletableFuture<Integer> currentBlockHeightAsync();
 }

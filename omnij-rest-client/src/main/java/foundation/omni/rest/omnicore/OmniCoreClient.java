@@ -1,6 +1,8 @@
 package foundation.omni.rest.omnicore;
 
 import com.msgilligan.bitcoinj.json.pojo.AddressGroupingItem;
+import foundation.omni.json.pojo.OmniPropertyInfo;
+import foundation.omni.rpc.SmartPropertyListInfo;
 import org.consensusj.jsonrpc.JsonRpcException;
 import org.consensusj.jsonrpc.JsonRpcStatusException;
 import foundation.omni.CurrencyID;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * Omni Core "REST" client that implements same interfaces as Omniwallet REST client
@@ -40,6 +43,24 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
         });
         return future;
     }
+
+    @Override
+    public CompletableFuture<List<OmniPropertyInfo>> listSmartProperties() throws InterruptedException, IOException {
+        final CompletableFuture<List<OmniPropertyInfo>> future = new CompletableFuture<>();
+        CompletableFuture.runAsync(() -> {
+            try {
+                List<SmartPropertyListInfo> smartPropertyList = listProperties();
+                List<OmniPropertyInfo> smartPropertyInfoList = smartPropertyList.stream()
+                        .map(OmniPropertyInfo::new)
+                        .collect(Collectors.toList());
+                future.complete(smartPropertyInfoList);
+            } catch (IOException e) {
+                future.completeExceptionally(e);
+            }
+        });
+        return future;
+    }
+
 
     @Override
     public OmniJBalances balancesForAddresses(List<Address> addresses) throws IOException {

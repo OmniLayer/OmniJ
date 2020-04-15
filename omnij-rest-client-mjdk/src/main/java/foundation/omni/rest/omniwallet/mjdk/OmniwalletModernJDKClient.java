@@ -8,7 +8,7 @@ import foundation.omni.rest.omniwallet.OmniwalletAbstractClient;
 import foundation.omni.rest.omniwallet.json.AddressVerifyInfo;
 import foundation.omni.rest.omniwallet.json.OmniwalletAddressBalance;
 import foundation.omni.rest.omniwallet.json.OmniwalletClientModule;
-import foundation.omni.rest.omniwallet.json.PropertyVerifyInfo;
+import foundation.omni.rest.omniwallet.json.OmniwalletPropertiesListResponse;
 import foundation.omni.rest.omniwallet.json.RevisionInfo;
 import org.bitcoinj.core.Address;
 import org.slf4j.Logger;
@@ -52,22 +52,20 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
             throw new RuntimeException(ie);
         }
     }
-
-
-    protected CompletableFuture<List<PropertyVerifyInfo>> verifyProperties() {
-        JavaType resultType = objectMapper.getTypeFactory().constructCollectionType(List.class, PropertyVerifyInfo.class);
-
+    
+    @Override
+    protected CompletableFuture<OmniwalletPropertiesListResponse> propertiesList() {
         HttpRequest request = HttpRequest
-                .newBuilder(baseURI.resolve("/v1/mastercoin_verify/properties"))
+                .newBuilder(baseURI.resolve("/v1/properties/list"))
                 .header("Accept", "application/json")
                 .build();
 
         return client.sendAsync(request, BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
-                .thenApply(s -> objectMapper.readValue(s, resultType));
+                .thenApply(s -> objectMapper.readValue(s, OmniwalletPropertiesListResponse.class));
 
     }
-    
+
     @Override
     public CompletableFuture<Integer> currentBlockHeightAsync() {
         return revisionInfoAsync().thenApply(RevisionInfo::getLastBlock);

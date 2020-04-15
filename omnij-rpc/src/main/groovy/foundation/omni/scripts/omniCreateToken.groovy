@@ -3,6 +3,7 @@ package foundation.omni.scripts
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
+import foundation.omni.json.pojo.OmniPropertyInfo
 import foundation.omni.test.RegTestContext
 
 // Initialize a client, a blockchain env, and a funding source
@@ -31,10 +32,10 @@ def sendTxId = client.omniSend(managerAddress, otherAddress, currencyID, 1.indiv
 env.waitForBlocks(1)
 
 // Some checks
-def totalSPT = client.omniGetProperty(currencyID).totaltokens as BigDecimal
+OmniPropertyInfo sptInfo = client.omniGetProperty(currencyID)
 def managerSPT = client.omniGetBalance(managerAddress, currencyID).balance
 def otherSPT = client.omniGetBalance(otherAddress, currencyID).balance
-println "Manager has ${managerSPT} SPT, Other has ${otherSPT}, total = ${totalSPT}"
-assert totalSPT == 100.0
+println "Manager has ${managerSPT} SPT, Other has ${otherSPT}, total = ${sptInfo.totalTokens}"
+assert sptInfo.totalTokens == 100.0
 assert managerSPT == 99.0
 assert otherSPT == 1.0

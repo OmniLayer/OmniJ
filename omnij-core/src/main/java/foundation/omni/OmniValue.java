@@ -49,18 +49,27 @@ public abstract class OmniValue extends NumberValue {
     }
 
     public static OmniValue of(BigDecimal amount, PropertyType type) {
-        return type.equals(PropertyType.DIVISIBLE) ?
-                OmniDivisibleValue.of(amount) : OmniIndivisibleValue.of(amount.longValueExact());
+        return of(amount, type.equals(PropertyType.DIVISIBLE));
     }
 
     public static OmniValue of(long amount, PropertyType type) {
-        return type.equals(PropertyType.DIVISIBLE) ?
-                OmniDivisibleValue.of(amount) : OmniIndivisibleValue.of(amount);
+        return of(amount, type.equals(PropertyType.DIVISIBLE));
+    }
+
+    public static OmniValue of(BigDecimal amount, boolean divisible) {
+        return divisible ? OmniDivisibleValue.of(amount) : OmniIndivisibleValue.of(amount.longValueExact());
+    }
+
+    public static OmniValue of(long amount, boolean divisible) {
+        return divisible ? OmniDivisibleValue.of(amount) : OmniIndivisibleValue.of(amount);
     }
 
     public static OmniValue ofWilletts(long amount, PropertyType type) {
-        return type.equals(PropertyType.DIVISIBLE) ?
-                OmniDivisibleValue.ofWilletts(amount) : OmniIndivisibleValue.ofWilletts(amount);
+        return ofWilletts(amount, type.equals(PropertyType.DIVISIBLE));
+    }
+
+    public static OmniValue ofWilletts(long amount, boolean divisible) {
+        return divisible ? OmniDivisibleValue.ofWilletts(amount) : OmniIndivisibleValue.ofWilletts(amount);
     }
 
     public long getWilletts() {

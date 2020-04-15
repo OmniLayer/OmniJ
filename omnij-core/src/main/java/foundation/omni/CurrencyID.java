@@ -135,7 +135,7 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
 
     @Override
     public String toString() {
-        return "CurrencyID:" + Long.toString(value);
+        return "CurrencyID:" + value;
     }
 
     @Override

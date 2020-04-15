@@ -31,15 +31,6 @@ public class SmartPropertyListInfo {
         this.divisible = divisible;
     }
 
-    /**
-     * @return currency id
-     * @deprecated Use getPropertyid()
-     */
-    @Deprecated
-    public CurrencyID getId() {
-        return propertyid;
-    }
-
     public CurrencyID getPropertyid() {
         return propertyid;
     }
@@ -50,14 +41,6 @@ public class SmartPropertyListInfo {
 
     public String getCategory() {
         return category;
-    }
-
-    /**
-     * @return subcategory
-     * @deprecated Use getSubcategory()
-     */
-    public String getSubCategory() {
-        return subcategory;
     }
 
     public String getSubcategory() {

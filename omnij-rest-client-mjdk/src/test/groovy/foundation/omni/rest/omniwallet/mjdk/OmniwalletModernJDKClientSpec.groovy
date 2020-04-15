@@ -23,7 +23,7 @@ import static foundation.omni.CurrencyID.*
 /**
  * Functional (Integration) test of OmniwalletClient
  */
-//@Ignore("This is really an integration test")
+@Ignore("This is really an integration test")
 class OmniwalletModernJDKClientSpec extends Specification {
     final static Address exodusAddress = OmniMainNetParams.get().exodusAddress;
     final static Address testAddr = LegacyAddress.fromBase58(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
@@ -120,29 +120,29 @@ class OmniwalletModernJDKClientSpec extends Specification {
         props[OMNI].propertyid == OMNI
         props[OMNI].propertyid.ecosystem == Ecosystem.OMNI
         props[OMNI].name == "Omni Token"
-        props[OMNI].category == ""
-        props[OMNI].subcategory == ""
-        props[OMNI].data == ""
-        props[OMNI].url == ""
+        props[OMNI].category == "N/A"
+        props[OMNI].subcategory == "N/A"
+        props[OMNI].data == "Omni tokens serve as the binding between Bitcoin, smart properties and contracts created on the Omni Layer."
+        props[OMNI].url == "http://www.omnilayer.org"
         props[OMNI].divisible == true
 
         props[TOMNI].propertyid == TOMNI
         props[TOMNI].propertyid.ecosystem == Ecosystem.TOMNI
         props[TOMNI].name == "Test Omni Token"
-        props[TOMNI].category == ""
-        props[TOMNI].subcategory == ""
-        props[TOMNI].data == ""
-        props[TOMNI].url == ""
+        props[TOMNI].category == "N/A"
+        props[TOMNI].subcategory == "N/A"
+        props[TOMNI].data == "Test Omni tokens serve as the binding between Bitcoin, smart properties and contracts created on the Omni Layer."
+        props[TOMNI].url == "http://www.omnilayer.org"
         props[TOMNI].divisible == true
 
         // Assumes MainNet
         props[USDT].propertyid == USDT
         props[USDT].propertyid.ecosystem == Ecosystem.OMNI
         props[USDT].name == "TetherUS"
-        props[USDT].category == ""
-        props[USDT].subcategory == ""
-        props[USDT].data == ""
-        props[USDT].url == ""
+        props[USDT].category == "Financial and insurance activities"
+        props[USDT].subcategory == "Activities auxiliary to financial service and insurance activities"
+        props[USDT].data == "The next paradigm of money."
+        props[USDT].url == "https://tether.to"
         props[USDT].divisible == true
     }
 

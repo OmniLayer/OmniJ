@@ -2,11 +2,11 @@ package foundation.omni.rest.omniwallet;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import foundation.omni.rest.omniwallet.json.OmniwalletPropertiesListResponse;
 import org.bitcoinj.core.Address;
 import foundation.omni.rest.omniwallet.json.AddressVerifyInfo;
 import foundation.omni.rest.omniwallet.json.OmniwalletAddressBalance;
 import foundation.omni.rest.omniwallet.json.OmniwalletClientModule;
-import foundation.omni.rest.omniwallet.json.PropertyVerifyInfo;
 import foundation.omni.rest.omniwallet.json.RevisionInfo;
 import foundation.omni.CurrencyID;
 import okhttp3.ConnectionSpec;
@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * Omniwallet REST Java client
  */
 public class OmniwalletClient extends OmniwalletAbstractClient {
-    private OmniwalletService service;
+    private final OmniwalletService service;
 
     interface OmniwalletService {
         @FormUrlEncoded
@@ -48,13 +48,12 @@ public class OmniwalletClient extends OmniwalletAbstractClient {
 
         @GET("/v1/system/revision.json")
         CompletableFuture<Response<RevisionInfo>> getRevisionInfo();
-
-        @GET("/v1/mastercoin_verify/properties")
-        CompletableFuture<Response<List<PropertyVerifyInfo>>> verifyProperties();
+        
+        @GET("/v1/properties/list")
+        CompletableFuture<Response<OmniwalletPropertiesListResponse>> propertiesList();
 
         @GET("/v1/mastercoin_verify/addresses")
         CompletableFuture<Response<List<AddressVerifyInfo>>> verifyAddresses(@Query("currency_id") String currencyId);
-
     }
 
     /**
@@ -148,12 +147,9 @@ public class OmniwalletClient extends OmniwalletAbstractClient {
         return service.getRevisionInfo()
                 .thenApply(response -> response.body().getLastBlock());
     }
-
-
+    
     @Override
-    protected CompletableFuture<List<PropertyVerifyInfo>> verifyProperties() {
-        return service.verifyProperties().thenApply(Response::body);
+    public CompletableFuture<OmniwalletPropertiesListResponse> propertiesList() {
+        return service.propertiesList().thenApply(Response::body);
     }
-
-
 }

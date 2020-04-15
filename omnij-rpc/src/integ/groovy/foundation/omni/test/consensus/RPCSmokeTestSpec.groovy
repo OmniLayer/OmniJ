@@ -3,6 +3,7 @@ package foundation.omni.test.consensus
 import foundation.omni.BaseMainNetSpec
 import foundation.omni.consensus.OmniCoreConsensusTool
 import foundation.omni.net.OmniMainNetParams
+import foundation.omni.json.pojo.OmniPropertyInfo
 
 import static foundation.omni.CurrencyID.*
 
@@ -41,6 +42,14 @@ class RPCSmokeTestSpec extends BaseMainNetSpec {
         then:
         balances[OMNI].balance >= 0.divisible
         balances[OMNI].reserved >= 0.divisible
+    }
+
+    def "omniGetProperty(OMNI) is working"() {
+        when:
+        OmniPropertyInfo info = omniGetProperty(OMNI)
+
+        then:
+        info.totalTokens > 1000
     }
 
 }

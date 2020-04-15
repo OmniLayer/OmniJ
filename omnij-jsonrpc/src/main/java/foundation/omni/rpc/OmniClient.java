@@ -2,6 +2,7 @@ package foundation.omni.rpc;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.msgilligan.bitcoinj.rpc.BitcoinExtendedClient;
+import foundation.omni.json.pojo.OmniPropertyInfo;
 import org.consensusj.jsonrpc.JsonRpcException;
 import com.msgilligan.bitcoinj.rpc.RpcConfig;
 import foundation.omni.CurrencyID;
@@ -86,15 +87,15 @@ public class OmniClient extends BitcoinExtendedClient {
     }
 
     /**
-     * Returns information about the given currency, property, or token.
+     * Returns information about the specified currency, property, or token.
      *
      * @param currency The identifier to look up
-     * @return An object with detailed information
+     * @return Omni Smart Property Info
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Map<String, Object> omniGetProperty(CurrencyID currency) throws JsonRpcException, IOException {
-        Map<String, Object> result = send("omni_getproperty", currency);
+    public OmniPropertyInfo omniGetProperty(CurrencyID currency) throws JsonRpcException, IOException {
+        OmniPropertyInfo result = send("omni_getproperty", OmniPropertyInfo.class, currency);
         return result;
     }
 

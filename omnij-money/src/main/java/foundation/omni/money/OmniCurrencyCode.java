@@ -5,6 +5,7 @@ import foundation.omni.PropertyType;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static foundation.omni.PropertyType.*;
 
@@ -20,7 +21,6 @@ public enum OmniCurrencyCode {
     MAID(CurrencyID.MAID, INDIVISIBLE),
     USDT(CurrencyID.USDT, DIVISIBLE),
     AMP(CurrencyID.AMP, DIVISIBLE),
-    //SEC(CurrencyID.SEC, INDIVISIBLE),
     SAFEX(CurrencyID.SAFEX, INDIVISIBLE),
     AGRS(CurrencyID.AGRS, DIVISIBLE),
     PDC(CurrencyID.PDC, INDIVISIBLE);
@@ -45,32 +45,77 @@ public enum OmniCurrencyCode {
         return type;
     }
 
+    /**
+     * Generate a currency code string from an Omni CurrencyID
+     *
+     * @param id CurrencyID to convert
+     * @return An enumerated code if available, or OMNI_SPT#nnn, or TOMNI_SPT#nnn
+     */
     public static String idToCodeString(CurrencyID id) {
+        return OmniCurrencyCode
+                .idToCode(id)
+                .map(Enum::name)
+                .orElseGet(() -> synthesizeCodeFromId(id));
+    }
+
+    /**
+     * Generate a OmniCurrencyCode for an Omni CurrencyID
+     *
+     * @param id CurrencyID to lookup
+     * @return An enumerated code if available, empty otherwise
+     */
+    public static Optional<OmniCurrencyCode> idToCode(CurrencyID id) {
         final long value = id.getValue();
 
-        for (OmniCurrencyCode candidate : assignedCodes) {
-            if (value == candidate.id.getValue()) {
-                return candidate.name();
-            }
-        }
-        if (CurrencyID.isValidReal(value)) {
-            return realEcosystemPrefix + value;
-        }
-        return testEcosystemPrefix + value;
+        return assignedCodes.stream()
+                .filter(candidate -> candidate.id.getValue() == value)
+                .findAny();
     }
 
-    public static CurrencyID codeToId(String code) {
-        for (OmniCurrencyCode candidate : assignedCodes) {
-            if (code.equals(candidate.name())) {
-                return candidate.id;
-            }
-        }
-        // TODO: More strict validation of string format
-        if (code.startsWith(realEcosystemPrefix) || code.startsWith(testEcosystemPrefix)) {
-            String num = code.split("#")[1];
-            Long val = Long.parseLong(num);
-            return new CurrencyID(val);
-        }
-        return null;
+    public static Optional<OmniCurrencyCode> stringToCode(String string) {
+        return assignedCodes.stream()
+                .filter(candidate -> string.equals(candidate.name()))
+                .findAny();
     }
+
+    public static CurrencyID codeToId(String codeString) {
+        return stringToCode(codeString)
+                .map(code -> code.id)
+                .orElse(parseSyntheticCode(codeString).orElse(null));
+    }
+
+    private static Optional<CurrencyID> codeStringToId(String codeString) {
+        return Optional.empty(); // TBD
+    }
+
+    private static Optional<CurrencyID> parseSyntheticCode(String codeString) {
+        // TODO: More strict validation of string format
+        if (codeString.startsWith(realEcosystemPrefix) || codeString.startsWith(testEcosystemPrefix)) {
+            String num = codeString.split("#")[1];
+            long val = Long.parseLong(num);
+            return Optional.of(new CurrencyID(val));
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Synthesize a currency code string from an Omni Property ID number
+     *
+     * @param id CurrencyID for non-enumerated currency
+     * @return OMNI_SPT#nnn, or TOMNI_SPT#nnn as appropriate
+     */
+    private static String synthesizeCodeFromId(CurrencyID id) {
+        return synthesizeCodeFromId(id.getValue());
+    }
+
+    /**
+     * Synthesize a currency code string from an Omni Property ID number
+     * 
+     * @param number Omni property ID for non-enumerated currency
+     * @return OMNI_SPT#nnn, or TOMNI_SPT#nnn as appropriate
+     */
+    private static String synthesizeCodeFromId(long number) {
+        return (CurrencyID.isValidReal(number) ? realEcosystemPrefix : testEcosystemPrefix) + number;
+    }
+
 }
