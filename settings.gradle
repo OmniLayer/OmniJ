@@ -2,13 +2,13 @@ include 'omnij-core',
         'omnij-dsl',
         'omnij-jsonrpc',    // Omni JSON-RPC pure Java
         'omnij-rpc',        // Omni JSON-RPC + Groovy + Integration tests
-        'omnij-cli',
         'omnij-rest-client',
         'omnij-money'
 
 
 if (JavaVersion.current().isJava11Compatible()) {
-    System.err.println "Including JDK 11 client(s) because Java ${JavaVersion.current()} is JDK 11+"
+    System.err.println "Including JDK 11 modules because Java ${JavaVersion.current()} is JDK 11+"
+    include 'omnij-cli'
     include 'omnij-rest-client-micronaut'  // Micronaut HttpClient Omni REST client
     include 'omnij-rest-client-mjdk'       // Modern JDK Omni REST client (using java.net.http)
 } else {

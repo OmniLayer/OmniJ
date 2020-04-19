@@ -6,6 +6,9 @@ plugins {
 //    id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
+sourceCompatibility = 11
+targetCompatibility = 11
+
 dependencies {
     compile project(':omnij-rpc')
 
