@@ -1,32 +1,23 @@
 package foundation.omni.money;
 
-
 import java.math.BigDecimal;
-import java.util.concurrent.ScheduledExecutorService;
 
-import javax.money.CurrencyUnit;
-import javax.money.Monetary;
 import javax.money.convert.ConversionQuery;
 import javax.money.convert.ExchangeRate;
 import javax.money.convert.ProviderContext;
 import javax.money.convert.ProviderContextBuilder;
 import javax.money.convert.RateType;
 
-import org.consensusj.exchange.CurrencyUnitPair;
-import org.consensusj.exchange.ExchangeRateChange;
-import org.consensusj.exchange.ExchangeRateObserver;
-import org.consensusj.exchange.ObservableExchangeRateProvider;
 import org.javamoney.moneta.convert.ExchangeRateBuilder;
 import org.javamoney.moneta.spi.AbstractRateProvider;
 import org.javamoney.moneta.spi.DefaultNumberValue;
 
 /**
- * Based on Moneta Identity provider licensed under Apache license
+ * A {@link javax.money.convert.ExchangeRateProvider} that provides a fixed 1-to-1 mapping of USDT to USD.
+ * Note that on real-world exchanges USDT can fluctuate in price relative to USD.
+ * Based on Moneta Identity provider.
  */
-public class TetherUSDIdentityProvider extends AbstractRateProvider implements ObservableExchangeRateProvider {
-
-    private CurrencyUnit base = Monetary.getCurrency("USDT");
-    private CurrencyUnit target= Monetary.getCurrency("USD");
+public class TetherUSDIdentityProvider extends AbstractRateProvider {
 
     /**
      * The {@link javax.money.convert.ConversionContext} of this provider.
@@ -40,17 +31,7 @@ public class TetherUSDIdentityProvider extends AbstractRateProvider implements O
     public TetherUSDIdentityProvider() {
         super(CONTEXT);
     }
-
-    /**
-     * Even though we use no threads, we need same constructor as other
-     * ObservableExchangeRateProviders
-     * 
-     * @param dummy Constructor to match other ObservableExchangeRateProvider
-     */
-    public TetherUSDIdentityProvider(ScheduledExecutorService dummy) {
-        this();
-    }
-
+    
     /**
      * Check if this provider can provide a rate, which is only the case if base and term are equal.
      *
@@ -74,21 +55,7 @@ public class TetherUSDIdentityProvider extends AbstractRateProvider implements O
         }
         return null;
     }
-
-    private ExchangeRateChange buildExchangeRateChange() {
-        return new ExchangeRateChange(buildExchangeRate(), 0);
-
-    }
-
-    private ExchangeRate buildExchangeRate() {
-        ExchangeRateBuilder builder = new ExchangeRateBuilder(getContext().getProviderName(), RateType.OTHER)
-                .setBase(base);
-        builder.setTerm(target);
-        builder.setFactor(DefaultNumberValue.of(BigDecimal.ONE));
-        return builder.build();
-
-    }
-
+    
     /*
      * (non-Javadoc)
 	 *
@@ -103,21 +70,5 @@ public class TetherUSDIdentityProvider extends AbstractRateProvider implements O
                     .setBase(rate.getCurrency()).setFactor(new DefaultNumberValue(BigDecimal.ONE)).build();
         }
         return null;
-    }
-
-    @Override
-    public void registerExchangeRateObserver(CurrencyUnitPair pair, ExchangeRateObserver observer) {
-        // Call the observer once to set the fixed exchange rate
-        observer.onExchangeRateChange(buildExchangeRateChange());
-    }
-
-    @Override
-    public void start() {
-        // NOOP because rate never changes
-    }
-
-    @Override
-    public void stop() {
-        // NOOP because rate never changes
     }
 }

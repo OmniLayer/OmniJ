@@ -1,7 +1,5 @@
 package foundation.omni.money
 
-import org.javamoney.moneta.CurrencyUnitBuilder
-import org.javamoney.moneta.Money
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -9,8 +7,6 @@ import javax.money.CurrencyQuery
 import javax.money.CurrencyQueryBuilder
 import javax.money.CurrencyUnit
 import javax.money.Monetary
-import javax.money.MonetaryAmount
-
 
 /**
  *
