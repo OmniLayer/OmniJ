@@ -19,7 +19,9 @@ mainClassName = "foundation.omni.cli.ConsensusCLI"
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'BTC/OMNI Status', 'Implementation-Version': version, 'Consensus-Class': mainClassName
+        attributes 'Implementation-Title': 'BTC/OMNI Status',
+                'Implementation-Version': version,
+                'Consensus-Class': mainClassName
     }
 }
 
