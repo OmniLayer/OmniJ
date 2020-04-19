@@ -1,7 +1,6 @@
 package foundation.omni.cli
 
 import org.consensusj.bitcoin.cli.BitcoinCliCommand
-import org.consensusj.bitcoin.cli.CliOptions
 import org.consensusj.jsonrpc.JsonRpcException
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.ExplorerConsensusTool
@@ -12,7 +11,6 @@ import foundation.omni.consensus.OmniCoreConsensusTool
 import foundation.omni.consensus.OmniwalletConsensusTool
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.OmniClient
-import org.apache.commons.cli.OptionGroup
 import org.bitcoinj.core.Address
 
 /**
@@ -24,7 +22,7 @@ class ConsensusCLI extends BitcoinCliCommand {
     public final static String commandUsage = "${commandName} [options] -property <id>"
 
     public ConsensusCLI(String[] args) {
-        super(commandName, commandUsage, new ConsensusCLIOptions(), args)
+        super(commandName, commandUsage, new OmniConsensusToolOptions(), args)
     }
 
     public static void main(String[] args) {
@@ -123,42 +121,6 @@ class ConsensusCLI extends BitcoinCliCommand {
             } else {
                 writer.println("${address}: ${balance}, ${reserved}")
             }
-        }
-    }
-
-
-    public static class ConsensusCLIOptions extends CliOptions {
-        public ConsensusCLIOptions() {
-            super()
-            this.addOption(Option.builder().withLongOpt('output')
-                    .withDescription('Output filename')
-                    .hasArg()
-                    .withArgName('filename')
-                    .create('o'))
-                .addOption(Option.builder().withLongOpt('property')
-                    .withDescription('Omni property/currency id (numeric)')
-                    .hasArg()
-                    .withArgName('id')
-                    .create('p'))
-                .addOption(Option.builder().withLongOpt('compare')
-                    .withDescription('Compare properties from two URLs')
-                    .create('x'))
-                .addOptionGroup(new OptionGroup()
-                    .addOption(Option.builder().withLongOpt('omnicore-url')
-                        .withDescription('Use Omni Core API via URL')
-                        .hasArg()
-                        .withArgName('url')
-                        .create('core'))
-                    .addOption(Option.builder().withLongOpt('omniwallet-url')
-                        .withDescription('Use Omniwallet API via URL')
-                        .hasArg()
-                        .withArgName('url')
-                        .create('wallet'))
-                    .addOption(Option.builder().withLongOpt('omnichest-url')
-                        .withDescription('Use Omnichest API via URL')
-                        .hasArg()
-                        .withArgName('url')
-                        .create('chest')))
         }
     }
 }
