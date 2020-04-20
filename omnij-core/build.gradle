@@ -1,5 +1,9 @@
+plugins {
+    id 'java-library'
+}
+
 dependencies {
-    compile 'javax.money:money-api-bp:1.0.3'
+    api 'javax.money:money-api:1.0.3'
     implementation 'com.google.guava:guava:28.2-android'
 }
 
