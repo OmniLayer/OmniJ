@@ -3,13 +3,13 @@ apply plugin: 'groovy'
 def groovydocSpec = {
     use = true
     if (project != rootProject) source = project.sourceSets.main.groovy + project.sourceSets.main.java
-    groovyClasspath = project.configurations.jansi
+    groovyClasspath = project.configurations.documentation
 
     overviewText = project.resources.text.fromFile(rootProject.file('src/main/java/overview.html'))
     includePrivate = false
     link 'https://docs.oracle.com/javase/8/docs/api/', 'java.', 'org.xml.', ' javax.xml.', 'javax.sql.', 'javax.net.', 'org.w3c.'
     link 'https://commons.apache.org/proper/commons-cli/javadocs/api-release/', 'org.apache.commons.cli.'
-    link 'https://bitcoinj.github.io/javadoc/0.15.6/', 'org.bitcoin.', 'org.bitcoinj.'
+    link 'https://bitcoinj.github.io/javadoc/0.15.7/', 'org.bitcoin.', 'org.bitcoinj.'
     link 'https://consensusj.github.io/consensusj/apidoc/', 'com.msgilligan.bitcoinj.', 'org.consensusj.'
 
 }
@@ -18,16 +18,14 @@ allprojects {
     apply plugin: 'groovy'
 
     configurations {
-        // jansi configuration is a workaround for a broken transitive dependency
-        // See: http://forums.gradle.org/gradle/topics/gradle_task_groovydoc_failing_with_noclassdeffounderror
-        jansi.extendsFrom(runtime)
+        // set up `documentation` configuration for groovydoc
+        documentation.extendsFrom implementation
     }
 
     dependencies {
-        jansi 'org.fusesource.jansi:jansi:1.16'         // Transitive dependency of GroovyDoc
-        jansi "org.codehaus.groovy:groovy-ant:${groovyVersion}"    // used in Groovy doc
-        jansi "org.codehaus.groovy:groovy-templates:${groovyVersion}"    // used in Groovy doc 
-        jansi "org.codehaus.groovy:groovy-dateutil:${groovyVersion}"    // used in Groovy doc
+        documentation 'com.github.javaparser:javaparser-core:3.15.14'
+        documentation "org.codehaus.groovy:groovy-ant:${groovyVersion}"
+        documentation "org.codehaus.groovy:groovy-templates:${groovyVersion}"
     }
 
     groovydoc groovydocSpec
