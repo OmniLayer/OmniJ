@@ -45,7 +45,7 @@ namespace com.msgilligan.bitcoinj.rpc {
     BitcoinClient <|-- BitcoinExtendedClient
     BitcoinExtendedClient <|-- BitcoinScriptingClient
     DynamicRpcMethodFallback <|.. BitcoinScriptingClient
-    BitcoinClient <|-- class BitcoinCLIClient
+    BitcoinClient <|-- BitcoinCLIClient
 }
 
 
@@ -58,7 +58,7 @@ namespace foundation.omni.rpc {
     com.msgilligan.bitcoinj.rpc.BitcoinExtendedClient <|-- OmniClient
     OmniClient <|-- OmniScriptingClient
     com.msgilligan.bitcoinj.rpc.DynamicRpcMethodFallback <|.. OmniScriptingClient
-    OmniClient <|-- class OmniCLIClient
+    OmniClient <|-- OmniCLIClient
 }
 
 
