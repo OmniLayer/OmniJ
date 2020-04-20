@@ -11,8 +11,8 @@ Work-in-progress
 
 * Update to bitcoinj 0.15.7 (Guava 28.2-android)
 * Update to Gradle 6.3
-* Update to Groovy 2.5.10
-* Run RegTest integration tests against Omni Core 0.8.0
+* Update to Groovy 2.5.11
+* Run RegTest integration tests against Omni Core 0.8.1
 
 == v0.5.9
 
