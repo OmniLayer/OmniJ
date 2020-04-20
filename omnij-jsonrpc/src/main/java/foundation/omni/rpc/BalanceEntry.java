@@ -33,11 +33,9 @@ public class BalanceEntry implements Iterable<OmniValue>  {
 
         BalanceEntry that = (BalanceEntry) o;
 
-        if (balance.compareTo(that.balance) != 0) return false;
-        if (reserved.compareTo(that.reserved) != 0) return false;
-        if (frozen.compareTo(that.frozen) != 0) return false;
-
-        return true;
+        return  balance.equals(that.balance) &&
+                reserved.equals(that.reserved) &&
+                frozen.equals(that.frozen);
     }
 
     @Override

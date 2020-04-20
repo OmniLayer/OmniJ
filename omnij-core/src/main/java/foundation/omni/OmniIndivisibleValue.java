@@ -76,7 +76,7 @@ public final class OmniIndivisibleValue extends OmniValue {
 
     @Override
     public OmniIndivisibleValue round(MathContext mathContext) {
-        return OmniIndivisibleValue.of(asBigDecimal().round(mathContext).longValue());
+        return OmniIndivisibleValue.of(bigDecimalValue().round(mathContext).longValue());
     }
 
     @Override
@@ -85,10 +85,6 @@ public final class OmniIndivisibleValue extends OmniValue {
     }
 
     public BigDecimal bigDecimalValue() {
-        return asBigDecimal();
-    }
-
-    private BigDecimal asBigDecimal() {
         return new BigDecimal(willetts);
     }
 

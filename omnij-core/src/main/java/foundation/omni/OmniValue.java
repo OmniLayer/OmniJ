@@ -11,10 +11,7 @@ import java.math.BigInteger;
  * Known as "Number of Coins" in the Omni Protocol Specification.</p>
  *
  * <p>The internal representation is a <code>long</code> which corresponds to what we call a
- * "willet" in honour of J.R. Willett in the same fashion as the smallest Bitcoin unit is called a "satoshi".</p>
- *
- * <p>Note: J.R. Willett spells his name with two t's. OmniJ is currently using a single t misspelling.
- * This should probably be fixed. See https://github.com/OmniLayer/OmniJ/issues/142</p>
+ * "willett" in honour of J.R. Willett in the same fashion as the smallest Bitcoin unit is called a "satoshi".</p>
  *
  * <p>The constructors are <code>protected</code> and instances should be created with the <code>of()</code>
  * static methods which can take either <code>BigDecimal</code> or <code>long</code> values as parameters.</p>
@@ -23,6 +20,8 @@ import java.math.BigInteger;
  * return values as used in the Omni Protocol Specification, which means that <b>for divisible tokens the
  * values will be treated a decimal values and methods returning integer types will be throw exceptions if their
  * is a fractional component that would be truncated.</b></p>
+ *
+ * TODO: Refactor to extend java.lang.Number to remove dependency on javax.money in omnij-core
  *
  * <p>TODO: provide examples of *value() methods and what they return</p>
  *
