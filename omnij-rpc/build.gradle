@@ -8,8 +8,8 @@ dependencies {
 
     api "${consensusjGroup}:${consensusjBtcJsonRpcGvyArtifact}:${consensusjVersion}"
 
-    implementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
-    implementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+    api "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+    api ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
         transitive = false
     }
 
