@@ -10,9 +10,9 @@ sourceCompatibility = 11
 targetCompatibility = 11
 
 dependencies {
-    compile project(':omnij-rpc')
+    implementation project(':omnij-rpc')
 
-    compile "${consensusjGroup}:${consensusjBtcCliArtifact}:${consensusjVersion}"
+    implementation "${consensusjGroup}:${consensusjBtcCliArtifact}:${consensusjVersion}"
 }
 
 mainClassName = "foundation.omni.cli.ConsensusCLI"
@@ -20,7 +20,7 @@ mainClassName = "foundation.omni.cli.ConsensusCLI"
 jar {
     manifest {
         attributes 'Implementation-Title': 'BTC/OMNI Status',
-                'Implementation-Version': version,
+                'Implementation-Version': archiveVersion.get(),
                 'Consensus-Class': mainClassName
     }
 }

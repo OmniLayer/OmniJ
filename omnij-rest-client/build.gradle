@@ -1,19 +1,24 @@
+plugins {
+    id 'java-library'
+}
+
+
 dependencies {
-    compile project(':omnij-core')
-    compile project(':omnij-jsonrpc')
+    api project(':omnij-core')
+    api project(':omnij-jsonrpc')
 
-    compile 'com.squareup.retrofit2:retrofit:2.6.4'
-    compile 'com.squareup.retrofit2:converter-jackson:2.6.4'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.12.8'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.4'
+    implementation 'com.squareup.retrofit2:converter-jackson:2.6.4'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.8'
 
-    compile 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
-    testCompile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
-    testCompile ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+    testImplementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+    testImplementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
         transitive = false
     }
 
-    testCompile project(':omnij-dsl')
+    testImplementation project(':omnij-dsl')
 }
 
 idea {

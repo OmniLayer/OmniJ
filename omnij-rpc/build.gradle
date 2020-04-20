@@ -1,25 +1,25 @@
 plugins {
-    id 'maven'
+    id 'java-library'
 }
 
 dependencies {
-    compile project(':omnij-core')
-    compile project(':omnij-jsonrpc')
+    api project(':omnij-core')
+    api project(':omnij-jsonrpc')
 
-    compile "${consensusjGroup}:${consensusjBtcJsonRpcGvyArtifact}:${consensusjVersion}"
+    api "${consensusjGroup}:${consensusjBtcJsonRpcGvyArtifact}:${consensusjVersion}"
 
-    compile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
-    compile ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+    implementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+    implementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
         transitive = false
     }
 
-    compile ("org.codehaus.groovy:groovy-sql:${groovyVersion}:indy") {
+    implementation ("org.codehaus.groovy:groovy-sql:${groovyVersion}:indy") {
         transitive = false
     }
-    compile 'org.postgresql:postgresql:9.3-1102-jdbc41'
+    implementation 'org.postgresql:postgresql:9.3-1102-jdbc41'
 
-    testCompile project(':omnij-dsl')
-    testCompile 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests
+    testImplementation project(':omnij-dsl')
+    testImplementation 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests
 }
 
 // Test Structure

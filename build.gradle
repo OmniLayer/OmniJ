@@ -46,15 +46,14 @@ subprojects {
     targetCompatibility = 1.8
 
     dependencies {
-        compile "${bitcoinjGroup}:${bitcoinjArtifact}:${bitcoinjVersion}"
-        compile "org.slf4j:slf4j-api:${slf4jVersion}"
+        implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
-        testCompile "${consensusjGroup}:${consensusjBtcDslArtifact}:${consensusjVersion}"
-        testCompile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
-        testCompile("org.spockframework:spock-core:${spockVersion}") {
+        testImplementation "${consensusjGroup}:${consensusjBtcDslArtifact}:${consensusjVersion}"
+        testImplementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+        testImplementation("org.spockframework:spock-core:${spockVersion}") {
             exclude module: "groovy-all"
         }
-        testRuntime "org.slf4j:slf4j-jdk14:${slf4jVersion}"     // Runtime implementation of slf4j for tests
+        testRuntimeOnly "org.slf4j:slf4j-jdk14:${slf4jVersion}"     // Runtime implementation of slf4j for tests
     }
 
     compileJava {

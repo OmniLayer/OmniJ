@@ -1,8 +1,9 @@
-apply plugin: 'java'
-apply plugin: 'groovy'
+plugins {
+    id 'java-library'
+}
 
 dependencies {
-    compile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
-    compile project(':omnij-core')
+    api project(':omnij-core')
+    implementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
 }
 

@@ -1,3 +1,7 @@
+plugins {
+    id 'java-library'
+}
+
 sourceCompatibility = 11
 targetCompatibility = 11
 
@@ -13,9 +17,9 @@ dependencies {
     testImplementation ("org.codehaus.groovy:groovy-json:3.0.1:indy")  {
         transitive = false
     }
-    testCompile("org.spockframework:spock-core:2.0-M2-groovy-3.0") {
+    testImplementation("org.spockframework:spock-core:2.0-M2-groovy-3.0") {
         exclude module: "groovy-all"
     }
 
-    testCompile project(':omnij-dsl')
+    testImplementation project(':omnij-dsl')
 }

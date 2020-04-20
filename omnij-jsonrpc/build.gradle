@@ -1,16 +1,16 @@
 plugins {
-    id 'maven'
+    id 'java-library'
 }
 
 dependencies {
-    compile project(':omnij-core')
-    compile "${consensusjGroup}:${consensusjBtcJsonRpcArtifact}:${consensusjVersion}"
+    api project(':omnij-core')
+    api "${consensusjGroup}:${consensusjBtcJsonRpcArtifact}:${consensusjVersion}"
 
-    testCompile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
-    testCompile ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+    testImplementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+    testImplementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
         transitive = false
     }
-    
-    testCompile project(':omnij-dsl')
+
+    testImplementation project(':omnij-dsl')
 }
 

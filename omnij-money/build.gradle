@@ -1,5 +1,9 @@
-dependencies {
-    compile project(':omnij-core')
+plugins {
+    id 'java-library'
+}
 
-    compile 'org.javamoney:moneta-bp:1.3'
+dependencies {
+    api project(':omnij-core')
+
+    implementation 'org.javamoney:moneta-bp:1.3'
 }
