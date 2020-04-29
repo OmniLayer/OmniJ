@@ -16,7 +16,8 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OmniwalletPropertyInfo {
-
+    // Satoshi's address that received the block reward for Block 0
+    private static Address bitcoinIssuerAddress = Address.fromString(null, "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa");
 
     private final long blocktime;
     private final String category;
@@ -118,9 +119,17 @@ public class OmniwalletPropertyInfo {
         return url;
     }
 
+    /**
+     * Map "issuer" from String to Address.
+     * Omniwallet doesn't return a valid "issuer" {@code Address} for the BTC property, instead it returns
+     * "Satoshi Nakamoto". To return a strongly typed {@code Address}, we'll return the address
+     * that received the block reward for the genesis block.
+     *
+     * @param issuerString The "issuer" JSON value returned by Omniwallet
+     * @return The issuer converted to an {@code Address}
+     */
     private static Address mapIssuer(String issuerString) {
-        return issuerString.equals("Satoshi Nakamoto") ?
-                OmniPropertyInfo.defaultIssuerAddress : Address.fromString(null, issuerString);
+        return issuerString.equals("Satoshi Nakamoto") ? bitcoinIssuerAddress : Address.fromString(null, issuerString);
     }
 }
 
