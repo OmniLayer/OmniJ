@@ -2,14 +2,19 @@ plugins {
     id 'java-library'
 }
 
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
 dependencies {
     api project(':omnij-core')
     api project(':omnij-jsonrpc')
 
     api "${consensusjGroup}:${consensusjBtcJsonRpcGvyArtifact}:${consensusjVersion}"
 
-    api "org.codehaus.groovy:groovy:${groovyVersion}:indy"
-    api ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+    implementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+    implementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
         transitive = false
     }
 
@@ -25,8 +30,8 @@ dependencies {
 // Test Structure
 sourceSets {
     integrationTest {
-        compileClasspath = sourceSets.main.output + configurations.testRuntime
-        runtimeClasspath = output + sourceSets.main.output + configurations.testRuntime
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
         java {
             srcDir 'src/integ/java'
         }
