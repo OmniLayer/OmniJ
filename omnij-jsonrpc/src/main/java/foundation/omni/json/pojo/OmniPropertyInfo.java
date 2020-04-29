@@ -17,7 +17,7 @@ import java.math.BigDecimal;
  * because it is a superset of that information.
  */
 public class OmniPropertyInfo extends SmartPropertyListInfo {
-    static public final Address defaultIssuerAddress =  OmniMainNetParams.get().getExodusAddress();
+    static private final Address defaultIssuerAddress =  OmniMainNetParams.get().getExodusAddress();
 
     private final Address issuer;
     private final Sha256Hash creationTxId;
@@ -94,7 +94,7 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
                 sptListInfo.getData(),
                 sptListInfo.getUrl(),
                 sptListInfo.getDivisible());
-        this.issuer = defaultIssuerAddress;
+        this.issuer = defaultIssuerAddress;         // Use the Exodus address for now
         this.creationTxId = Sha256Hash.ZERO_HASH;
         this.fixedIssuance = true;
         this.managedIssuance = false;
