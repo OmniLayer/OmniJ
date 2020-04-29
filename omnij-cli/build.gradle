@@ -9,8 +9,15 @@ plugins {
 sourceCompatibility = 11
 targetCompatibility = 11
 
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
 dependencies {
     implementation project(':omnij-rpc')
+
+    implementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
 
     implementation "${consensusjGroup}:${consensusjBtcCliArtifact}:${consensusjVersion}"
 }
@@ -33,8 +40,8 @@ jar {
 // Test Structure
 sourceSets {
     integrationTest {
-        compileClasspath = sourceSets.main.output + configurations.testRuntime
-        runtimeClasspath = output + sourceSets.main.output + configurations.testRuntime
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
         java {
             srcDir 'src/integ/java'
         }
