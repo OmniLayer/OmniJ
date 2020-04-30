@@ -1,11 +1,13 @@
 package foundation.omni.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import foundation.omni.CurrencyID;
 
 /**
  * Result for a single property from {@code "omni_listproperties"}
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SmartPropertyListInfo {
     private final CurrencyID  propertyid;
     private final String      name;
