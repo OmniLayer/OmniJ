@@ -32,10 +32,6 @@ allprojects {
 //            html.enabled true
 //        }
 //    }
-    
-    tasks.withType(GroovyCompile) {
-        groovyOptions.optimizationOptions.indy = true
-    }
 }
 
 subprojects {
@@ -56,6 +52,17 @@ subprojects {
 
     compileJava {
         options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
+    }
+
+    tasks.withType(GroovyCompile) {
+        groovyOptions.optimizationOptions.indy = true
+    }
+
+    tasks.withType(AbstractArchiveTask) {
+        // This should result in reproducible JAR builds
+        // See: https://docs.gradle.org/current/userguide/working_with_files.html#sec:reproducible_archives
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
     }
 
     test {
