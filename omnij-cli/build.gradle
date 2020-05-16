@@ -1,9 +1,6 @@
-// Work-in-progress support for building CLI tools with ShadowJar
-// and a possible standalone executable with future AOT compilers
+// Work-in-progress support for building CLI tools
 plugins {
     id 'application'
-// Disable Shadow plugin for now (due to conflicts with bintray plugin)
-//    id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 sourceCompatibility = 11
@@ -31,11 +28,6 @@ jar {
                 'Consensus-Class': mainClassName
     }
 }
-
-//shadowJar {
-//    baseName = 'omni-consensus'
-//    classifier = ''
-//}
 
 // Test Structure
 sourceSets {

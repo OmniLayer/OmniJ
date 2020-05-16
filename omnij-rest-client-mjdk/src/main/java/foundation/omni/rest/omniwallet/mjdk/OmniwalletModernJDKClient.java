@@ -135,16 +135,17 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
     }
 
     class UncheckedObjectMapper extends com.fasterxml.jackson.databind.ObjectMapper {
-        /**
-         * Parses the given JSON string into a Map.
-         */
-        Map<String, String> readValue(String content) {
-            return this.readValue(content, new TypeReference<>() {
-            });
-        }
+//        /**
+//         * Parses the given JSON string into a Map.
+//         */
+//        Map<String, String> readValue(String content) {
+//            return this.readValue(content, new TypeReference<>() {
+//            });
+//        }
         /**
          * Parses the given JSON string into a Class.
          */
+        @Override
         public <T> T readValue(String content, Class<T> clazz) {
             try {
                 return super.readValue(content, clazz);
@@ -156,6 +157,7 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
         /**
          * Parses the given JSON string into a JavaType.
          */
+        @Override
         public <T> T readValue(String content, JavaType javaType) {
             try {
                 return super.readValue(content, javaType);
@@ -167,6 +169,7 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
         /**
          * Parses the given JSON string into a JavaType.
          */
+        @Override
         public <T> T readValue(String content, TypeReference<T> type) {
             try {
                 return super.readValue(content, type);
