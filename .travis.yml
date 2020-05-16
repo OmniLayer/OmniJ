@@ -21,6 +21,7 @@ install:
   - mv /tmp/$OMNICORE_RELEASE/bin/omnicored copied-artifacts/src/
 
 script:
+  - ./gradlew buildCI --stacktrace --info
   - ./test-omni-integ-regtest.sh
 
 jdk:
