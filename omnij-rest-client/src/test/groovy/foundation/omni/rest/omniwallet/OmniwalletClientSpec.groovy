@@ -6,7 +6,6 @@ import foundation.omni.OmniValue
 import foundation.omni.PropertyType
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
-import okhttp3.HttpUrl
 import org.bitcoinj.core.LegacyAddress
 import spock.lang.Ignore
 import spock.lang.Shared
@@ -229,6 +228,29 @@ class OmniwalletClientSpec extends Specification {
 
         and: "all balances are in valid range"
         allBalancesValid(balances)
+    }
+
+    def "Can get native Omniwallet property list"() {
+        when: "we get data"
+        def response = client.propertiesList().get()
+
+        then: "we get a list of size >= 2"
+        response.propertyInfoList != null
+        response.propertyInfoList.size() >= 2
+
+        when: "we look at Tether information"
+        def usdtInfo = response.propertyInfoList.stream()
+                .filter({it.propertyid == USDT})
+                .findFirst().get()
+        def totalIssuance = usdtInfo.issuances.stream()
+                .map({p -> (p.grant > 0) ? p.grant : -p.revoke })   // Grants are +, revokes are -
+                .reduce(0.0, { a,b -> a + b })
+
+        then: "there is some issuance info there"
+        usdtInfo.issuances.size() >= 90
+
+        and: "the total of grants and revokes equals totalTokens"
+        totalIssuance == usdtInfo.totalTokens
     }
 
     boolean allPropTypesValid(Map<Address, BalanceEntry> balances, PropertyType expectedPropType) {

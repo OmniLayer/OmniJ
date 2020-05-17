@@ -2,9 +2,9 @@ package foundation.omni.rest.omniwallet.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
-import foundation.omni.json.pojo.OmniPropertyInfo;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Sha256Hash;
 
@@ -27,7 +27,7 @@ public class OmniwalletPropertyInfo {
     private final boolean fixedIssuance;
     private final boolean freezingEnabled;
     private final Address issuer;
-    private final List<Object> issuances;
+    private final List<Issuance> issuances;
     private final boolean managedIssuance;
     private final String name;
     private final CurrencyID propertyid;
@@ -43,7 +43,7 @@ public class OmniwalletPropertyInfo {
                                   @JsonProperty("fixedissuance") boolean fixedIssuance,
                                   @JsonProperty("freezingenabled") boolean freezingEnabled,
                                   @JsonProperty("issuer") String issuerString,
-                                  @JsonProperty("issuances") List<Object> issuances,
+                                  @JsonProperty("issuances") List<Issuance> issuances,
                                   @JsonProperty("managedissuance") boolean managedIssuance,
                                   @JsonProperty("name") String name,
                                   @JsonProperty("propertyid") CurrencyID propertyid,
@@ -91,8 +91,16 @@ public class OmniwalletPropertyInfo {
         return fixedIssuance;
     }
 
+    public boolean isFreezingEnabled() {
+        return freezingEnabled;
+    }
+
     public Address getIssuer() {
         return issuer;
+    }
+
+    public List<Issuance> getIssuances() {
+        return issuances;
     }
 
     public boolean isManagedIssuance() {
@@ -119,6 +127,32 @@ public class OmniwalletPropertyInfo {
         return url;
     }
 
+    public static class Issuance {
+        private final BigDecimal grant;
+        private final BigDecimal revoke;
+        private final Sha256Hash txid;
+
+        public Issuance(@JsonProperty("grant")  BigDecimal grant,
+                        @JsonProperty("revoke") BigDecimal revoke,
+                        @JsonProperty("txid") Sha256Hash txid) {
+            this.grant = grant;
+            this.revoke = revoke;
+            this.txid = txid;
+        }
+
+        public BigDecimal getGrant() {
+            return grant;
+        }
+
+        public BigDecimal getRevoke() {
+            return revoke;
+        }
+
+        public Sha256Hash getTxid() {
+            return txid;
+        }
+    }
+
     /**
      * Map "issuer" from String to Address.
      * Omniwallet doesn't return a valid "issuer" {@code Address} for the BTC property, instead it returns
@@ -132,46 +166,3 @@ public class OmniwalletPropertyInfo {
         return issuerString.equals("Satoshi Nakamoto") ? bitcoinIssuerAddress : Address.fromString(null, issuerString);
     }
 }
-
-
-/*
-
-{
-    "properties": [
-        {
-            "blocktime": 1377994675,
-            "category": "N/A",
-            "creationtxid": "0000000000000000000000000000000000000000000000000000000000000000",
-            "data": "Omni serve as the binding between Bitcoin, smart properties and contracts created on the Omni Layer.",
-            "divisible": true,
-            "fixedissuance": false,
-            "issuer": "1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P",
-            "managedissuance": false,
-            "name": "Omni",
-            "propertyid": 1,
-            "subcategory": "N/A",
-            "totaltokens": "617211.68177584",
-            "url": "http://www.omnilayer.org"
-        },
-        {
-            "blocktime": 1377994675,
-            "category": "N/A",
-            "creationtxid": "0000000000000000000000000000000000000000000000000000000000000000",
-            "data": "Test Omni serve as the binding between Bitcoin, smart properties and contracts created on the Omni Layer.",
-            "divisible": true,
-            "fixedissuance": false,
-            "issuer": "1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P",
-            "managedissuance": false,
-            "name": "Test Omni",
-            "propertyid": 2,
-            "subcategory": "N/A",
-            "totaltokens": "563162.35759628",
-            "url": "http://www.omnilayer.org"
-        },
-        {
-            "additional records": "..."
-        }
-    ],
-    "status": "OK"
-}
- */

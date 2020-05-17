@@ -235,7 +235,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
                 property.getCreationTxId(),
                 property.isFixedIssuance(),
                 property.isManagedIssuance(),
-                false,
+                property.isFreezingEnabled(),
                 property.getTotalTokens());
     }
 
