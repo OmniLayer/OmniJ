@@ -10,8 +10,9 @@ import org.bitcoinj.params.MainNetParams;
 public class OmniAddressMainNetParams extends MainNetParams {
     public OmniAddressMainNetParams() {
         super();
-        addressHeader = 115;    // 'o'
-        p2shHeader = 58;        // 'Q'
+        addressHeader = 115;    // 'o' prefix for Base58 P2PKH (deprecated)
+        p2shHeader = 58;        // 'Q' prefix for Base58 P2SH (deprecated)
+        segwitAddressHrp = "o"; // Human-readable-part for Omni-Layer Bech32 addresses
     }
 
 
