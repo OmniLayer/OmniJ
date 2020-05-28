@@ -11,7 +11,7 @@ import spock.lang.Unroll
 /**
  * Proof-of-concept test of conversion between Omni and BTC addresses
  */
-class OmniAddressConverterSpec extends Specification {
+class OmniBase58LegacyAddressConverterSpec extends Specification {
     static final omniParams = OmniAddressMainNetParams.get()
     static final btcParams = MainNetParams.get();
 
@@ -21,7 +21,7 @@ class OmniAddressConverterSpec extends Specification {
         def btcAddress = LegacyAddress.fromKey(btcParams, key)
 
         when: "we convert to Omni"
-        LegacyAddress omniAddress = OmniAddressConverter.btcToOmni(btcAddress)
+        LegacyAddress omniAddress = OmniBase58LegacyAddressConverter.btcToOmni(btcAddress)
 
         then: "it's a valid Omni address"
         omniAddress.parameters == omniParams
@@ -29,7 +29,7 @@ class OmniAddressConverterSpec extends Specification {
         omniAddress.toString().substring(0,1) == 'o'
 
         when: "we convert back to Bitcoin"
-        LegacyAddress backAgainBTCAddress = OmniAddressConverter.omniToBTC(omniAddress)
+        LegacyAddress backAgainBTCAddress = OmniBase58LegacyAddressConverter.omniToBTC(omniAddress)
 
         then: "it's the same, valid BTC address"
         backAgainBTCAddress == btcAddress
@@ -44,7 +44,7 @@ class OmniAddressConverterSpec extends Specification {
         def btcAddress = Address.fromString(btcParams, addressString)
 
         when: "we convert to Omni"
-        def omniAddress = OmniAddressConverter.btcToOmni(btcAddress)
+        def omniAddress = OmniBase58LegacyAddressConverter.btcToOmni(btcAddress)
 
         then: "it's a valid Omni address"
         omniAddress.parameters == omniParams
@@ -52,7 +52,7 @@ class OmniAddressConverterSpec extends Specification {
         omniAddress.toString().substring(0,1) == 'o'
 
         when: "we convert back to Bitcoin"
-        def backAgainBTCAddress = OmniAddressConverter.omniToBTC(omniAddress)
+        def backAgainBTCAddress = OmniBase58LegacyAddressConverter.omniToBTC(omniAddress)
 
         then: "it's the same, valid BTC address"
         backAgainBTCAddress == btcAddress
@@ -70,7 +70,7 @@ class OmniAddressConverterSpec extends Specification {
         def omniAddress = Address.fromString(omniParams, addressString)
 
         when: "we convert to BTC"
-        def btcAddress = OmniAddressConverter.omniToBTC(omniAddress)
+        def btcAddress = OmniBase58LegacyAddressConverter.omniToBTC(omniAddress)
 
         then: "it's a valid BTC address"
         btcAddress.parameters == btcParams
@@ -78,7 +78,7 @@ class OmniAddressConverterSpec extends Specification {
         btcAddress.toString().substring(0,1) == '1'
 
         when: "we convert back to Omni"
-        def backAgainOmniAddress = OmniAddressConverter.btcToOmni(btcAddress)
+        def backAgainOmniAddress = OmniBase58LegacyAddressConverter.btcToOmni(btcAddress)
 
         then: "it's the same, valid Omni address"
         backAgainOmniAddress == omniAddress
