@@ -2,6 +2,7 @@ package foundation.omni.rest.omniwallet;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import foundation.omni.json.pojo.OmniPropertyInfo;
 import foundation.omni.rest.omniwallet.json.OmniwalletClientModule;
 import foundation.omni.rest.omniwallet.json.OmniwalletPropertiesListResponse;
 import org.bitcoinj.params.MainNetParams;
@@ -10,24 +11,32 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *  Utility to read OmniwalletPropertiesListResponse from an Input Stream (resource) or from
  *  a string.
  */
-public class PropertyListInfoFile {
-
-    public static OmniwalletPropertiesListResponse readFromInputStream(InputStream inputStream) {
+public class PropertyInfoFromJsonFile {
+    
+    public static List<OmniPropertyInfo> readPropertyInfoListFromInputStream(InputStream inputStream) {
+        return readResponseFromInputStream(inputStream)
+                .getPropertyInfoList().stream()
+                .map(OmniwalletAbstractClient::mapToOmniPropertyInfo)
+                .collect(Collectors.toList());
+    }
+    public static OmniwalletPropertiesListResponse readResponseFromInputStream(InputStream inputStream) {
         String json;
         try {
             json = readStringFromInputStream(inputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return readFromString(json);
+        return readResponseFromString(json);
     }
 
-    public static OmniwalletPropertiesListResponse readFromString(String json) {
+    public static OmniwalletPropertiesListResponse readResponseFromString(String json) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new OmniwalletClientModule(MainNetParams.get()));
         OmniwalletPropertiesListResponse response;

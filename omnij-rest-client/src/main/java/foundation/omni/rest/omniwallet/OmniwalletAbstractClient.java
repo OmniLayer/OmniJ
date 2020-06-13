@@ -96,7 +96,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
     @Override
     public CompletableFuture<List<OmniPropertyInfo>> listSmartProperties() throws InterruptedException, IOException {
         return propertiesList().thenApply(response -> response.getPropertyInfoList().stream()
-                    .map(this::mapToOmniPropertyInfo)
+                    .map(OmniwalletAbstractClient::mapToOmniPropertyInfo)
                     .collect(Collectors.toList()));
     }
 
@@ -223,7 +223,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
                     property.isDivisible());
     }
 
-    protected OmniPropertyInfo mapToOmniPropertyInfo(OmniwalletPropertyInfo property) {
+    static OmniPropertyInfo mapToOmniPropertyInfo(OmniwalletPropertyInfo property) {
         return new OmniPropertyInfo(property.getPropertyid(),
                 property.getName(),
                 property.getCategory(),
