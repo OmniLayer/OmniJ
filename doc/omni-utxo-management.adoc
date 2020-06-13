@@ -59,13 +59,13 @@ https://github.com/satoshilabs/slips/blob/master/slip-0044.md[SLIP-0044 : Regist
 
 == Proposed Directions
 
-=== OLE 100
+=== OLE 301
 
-This proposal will define the BIP 39 "purpose" fields recommended for Omni Layer HD Paths. It looks like the existing standards spell out an approach we can use:
+https://github.com/OmniLayer/Documentation/blob/master/OLEs/ole-301.adoc[OLE 301] defines the BIP 0044/SLIP 044 "coin type" fields recommended for Omni Layer HD Paths. It looks like the existing standards spell out an approach we can use:
 
-Purpose:: Omni will use *44* for P2PKH transactions and 84 for (to be implemented) SegWit transactions.
+Purpose:: Omni will use *44* for Omni P2PKH transactions and 84 for (to be implemented) Omni SegWit transactions.
 
-Coin Type:: Omni will use *200* (already assigned in SLIP 44)
+Coin Type:: Omni will use *200* (already assigned in SLIP 0044)
 
 So this OLE should be relatively short and just confirm that *Omni* recommends this approach.
 
