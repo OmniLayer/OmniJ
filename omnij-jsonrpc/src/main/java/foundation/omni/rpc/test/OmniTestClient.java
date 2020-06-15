@@ -39,6 +39,7 @@ public class OmniTestClient extends OmniClient {
     /**
      * Creates and broadcasts a "send to owners" transaction.
      *
+     * @param address     address
      * @param currencyId  The identifier of the currency
      * @param amount      The number of tokens to distribute (assumed in willetts)
      * @return transaction hash/id

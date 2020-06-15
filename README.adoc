@@ -17,39 +17,57 @@ image:https://travis-ci.org/OmniLayer/OmniJ.svg?branch=master["Build Status", li
 
 A Java/JVM implementation of the http://www.omnilayer.org[Omni Layer], an open-source, fully decentralized asset creation platform built on the Bitcoin blockchain.
 
-There are currently seven active subprojects of OmniJ. Each of which builds a JAR artifact. All JARs require JDK 8 or later, except where noted.
+There are currently nine active subprojects of OmniJ. Each of which builds a JAR artifact. All JARs require JDK 8 or later, except where noted.
 
 [options="header",frame="all"]
 |===
-| module | Description | Languages/Version
+| module | Description | JDK | Notes
+
+| omnij-cli
+| Omni consensus-checking command-line tool.
+| JDK 11
+| Uses the Apache Groovy Language
 
 | omnij-core
-| Core Omni functionality
+| Core OmniJ classes
+| JDK 8
 | Android-compatible
 
 | omnij-dsl
-| Domain Specific Language (DSL) support for Omni
-| using the Groovy language
+| Groovy Domain Specific Language (DSL) support for Omni
+| JDK 8
+| Useful in Spock unit and integration tests. Uses the Apache Groovy Language
+
+| omnij-jsonrpc
+| `OmniClient` JSON-RPC client and JSON-RPC support.
+| JDK 8
+|
 
 | omnij-money
 | JavaMoney support for Omni currency codes and exchanges
-| Java-only, tests in Groovy/Spock
+| JDK 8
+|
+
+| omnij-net-api
+| Http interfaces and objects for Omniwallet & Omni Core with a common interface.
+| JDK 8
+|
 
 | omnij-rest-client
-| Http clients for Omniwallet & Omnicore with a common interface.
-| Java-only, tests in Groovy/Spock
+| Omniwallet REST client using Retrofit library
+| JDK 8
+| Android-compatible
 
 | omnij-rest-client-mjdk
-| Http clients for Omniwallet using JDK 11+ `java.net.http`
-| JDK 11+, Java-only, tests in Groovy/Spock
+| Omniwallet REST client using JDK 11+ `java.net.http`
+| JDK 11
+|
 
 | omnij-rpc
-| Omni Core RPC library, command-line API/tools, integration tests
-| JDK 8+ Java & Groovy
+| *Omni Core* *RegTest*/Integration Tests, Groovy JSON-PRC clients, command-line API/tools
+| JDK 8
+| Uses the Apache Groovy Language
 
-| omnij-cli
-| Builds the command-line Omni consensus-checking tool.
-| Java & Groovy
 |===
 
 A Bitcoin JSON-RPC client (base class), and other components used by OmniJ are in the https://github.com/ConsensusJ/consensusj[ConsensusJ] project.
@@ -91,32 +109,15 @@ or for Windows:
 
     ./gradlew.bat build :omnij-cli:shadowJar
 
-After a successful build, the jars will be in the following locations:
+After a successful build, each `omnij-_module_` JAR can be found in a standard location:
 
 [options="header",frame="all"]
 |===
 | module | jar path
 
-| omnij-core
-| omnij-core/build/libs/omnij-core-_version_.jar
+| `omnij-_module_`
+| `omnij-_module_/build/libs/omnij-_module_-_version_.jar`
 
-| omnij-dsl
-| omnij-dsl/build/libs/omnij-dsl-_version_.jar
-
-| omnij-money
-| omnij-dsl/build/libs/omnij-money-_version_.jar
-
-| omnij-rest-client
-| omnij-dsl/build/libs/omnij-rest-client-_version_.jar
-
-| omnij-rest-client-mjdk
-| omnij-dsl/build/libs/omnij-rest-client-mjdk-_version_.jar
-
-| omnij-rpc
-| omnij-rpc/build/libs/omnij-rpc-_version_.jar
-
-| omnij-cli 
-| omnij-cli/build/libs/omni-consensus-_version_.jar
 |===
 
 == Omni Integration Testing with Spock Framework
