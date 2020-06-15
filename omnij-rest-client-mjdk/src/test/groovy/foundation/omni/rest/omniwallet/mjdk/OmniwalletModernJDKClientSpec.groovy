@@ -5,10 +5,9 @@ import foundation.omni.Ecosystem
 import foundation.omni.OmniValue
 import foundation.omni.PropertyType
 import foundation.omni.net.OmniMainNetParams
-import foundation.omni.rest.OmniJBalances
-import foundation.omni.rest.WalletAddressBalance
-import foundation.omni.rest.omniwallet.OmniwalletAbstractClient
-import foundation.omni.rest.omniwallet.OmniwalletClient
+import foundation.omni.netapi.OmniJBalances
+import foundation.omni.netapi.WalletAddressBalance
+import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
 import org.bitcoinj.core.Address

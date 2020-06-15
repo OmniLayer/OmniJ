@@ -1,7 +1,7 @@
 package foundation.omni.rest.omniwallet.mn;
 
 
-import foundation.omni.rest.omniwallet.json.RevisionInfo;
+import foundation.omni.netapi.omniwallet.json.RevisionInfo;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.uri.UriBuilder;
 import io.reactivex.Maybe;

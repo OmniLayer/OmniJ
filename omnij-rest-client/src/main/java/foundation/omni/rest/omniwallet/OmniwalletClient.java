@@ -2,12 +2,13 @@ package foundation.omni.rest.omniwallet;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import foundation.omni.rest.omniwallet.json.OmniwalletPropertiesListResponse;
+import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient;
+import foundation.omni.netapi.omniwallet.json.OmniwalletPropertiesListResponse;
 import org.bitcoinj.core.Address;
-import foundation.omni.rest.omniwallet.json.AddressVerifyInfo;
-import foundation.omni.rest.omniwallet.json.OmniwalletAddressBalance;
-import foundation.omni.rest.omniwallet.json.OmniwalletClientModule;
-import foundation.omni.rest.omniwallet.json.RevisionInfo;
+import foundation.omni.netapi.omniwallet.json.AddressVerifyInfo;
+import foundation.omni.netapi.omniwallet.json.OmniwalletAddressBalance;
+import foundation.omni.netapi.omniwallet.json.OmniwalletClientModule;
+import foundation.omni.netapi.omniwallet.json.RevisionInfo;
 import foundation.omni.CurrencyID;
 import okhttp3.ConnectionSpec;
 import okhttp3.HttpUrl;

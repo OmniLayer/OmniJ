@@ -6,7 +6,7 @@ sourceCompatibility = 11
 targetCompatibility = 11
 
 dependencies {
-    api project(':omnij-rest-client')
+    api project(':omnij-net-api')
     api project(':omnij-core')
     implementation project(':omnij-jsonrpc')
     

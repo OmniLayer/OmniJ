@@ -6,11 +6,6 @@ plugins {
 dependencies {
     api project(':omnij-core')
     api project(':omnij-jsonrpc')
-    api project(':omnij-net-api')
-
-    implementation 'com.squareup.retrofit2:retrofit:2.6.4'
-    implementation 'com.squareup.retrofit2:converter-jackson:2.6.4'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.8'
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 

@@ -1,5 +1,6 @@
 package foundation.omni.rest.omniwallet
 
+import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.OmniValue

@@ -1,8 +1,8 @@
 package foundation.omni.rest.omniwallet
 
 import foundation.omni.net.OmniMainNetParams
-import foundation.omni.rest.omniwallet.json.OmniwalletAddressBalance
-import foundation.omni.rest.omniwallet.json.RevisionInfo
+import foundation.omni.netapi.omniwallet.json.OmniwalletAddressBalance
+import foundation.omni.netapi.omniwallet.json.RevisionInfo
 import okhttp3.HttpUrl
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.LegacyAddress
