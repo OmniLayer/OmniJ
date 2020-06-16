@@ -1,18 +1,64 @@
 = OmniJ Changes
 :homepage: https://github.com/OmniLayer/OmniJ
 
-A high-level view of the changes in each OmniJ binary release.
+A high-level view of the changes in each *OmniJ* binary release.
 
 == v0.5.10-SNAPSHOT
 
-Work-in-progress
+Work-in-progress (Notice that there are three *TBDs*)
+
+=== omnij-core
+
+* Prototype Omni safe Bech32 (SegWit) address implementation https://github.com/OmniLayer/Documentation/blob/master/OLEs/ole-300.adoc[OLE 300] implementation (https://github.com/OmniLayer/OmniJ/pull/170[PR #170])
+
+
+=== omnij-jsonrpc
+
+* Breaking: `omniGetProperty()` now returns `OmniPropertyInfo` (instead of a `Map`)
+* New `OmniPropertyInfo` record (extends SmartPropertyListInfo), , see: https://github.com/OmniLayer/OmniJ/commit/90e1598ca35a64ac38e0e94b72ad16111620ac51[90e1598ca35a64ac38e0e94b72ad16111620ac51]
+* Remove deprecated getters from `SmartPropertyListInfo`
+* Remove deprecated `OmniExtendedClient`.
+
+
+=== REST
+
+* Refactor REST client modules
+** `omnij-net-api`: base definitions for OmniWallet REST API and universal Omni Core
+** `omnij-rest-client`: Retrofit-based Omniwallet client (Android-compatible)
+** `omnij-rest-client-mjdk`: Modern JDK Omniwallet client (JDK 11+)
+* *TBD*: Ignore Unknown JSON Properties ???
+* `OmniPropertyInfo` support, see: https://github.com/OmniLayer/OmniJ/commit/90e1598ca35a64ac38e0e94b72ad16111620ac51[90e1598ca35a64ac38e0e94b72ad16111620ac51]
+* Add `isFreezingEnabled` to `OmniwalletPropertyInfo`
+* Add `PropertyInfoFromJsonFile` to read Omni smart property list from a JSON `String` or `InputStream`.
+
+=== Regression Tests / Integration Tests
+
+* Fix RegTest and Integration Test classpath issues (https://github.com/OmniLayer/OmniJ/pull/168[PR #168])
+* Run RegTest integration tests against Omni Core 0.8.1 (*TBD*: 0.8.2)
+* Other test scripting improvements for RegTest on Travis CI
+
+=== omnij-cli
+
+* Requires JDK11+
+* Stop using deprecated `OptionBuilder`, other internal improvements
+
+=== omnij-money
+
+* Remove dependency on `consensusj-exchange`
+* `TetherUSDIdentityRateProvider` no longer implements `ObservableExchangeRateProvider`
 
 === All modules
 
+* Use Gradle `java-library` plugin and declare `api` dependencies
+* Gradle: Set `reproducibleFileOrder`, `preserveFileTimestamps` (helps make builds reproducible)
+* TravisCI: Full build in addition to running `regTest`
 * Update to bitcoinj 0.15.7 (Guava 28.2-android)
+* Update to Java Money (BP?) x.xx (in-progress, *TBD*)
 * Update to Gradle 6.3
-* Update to Groovy 2.5.11
-* Run RegTest integration tests against Omni Core 0.8.1
+* Update to Groovy 3.0.4
+* Update to Spock 2.0-M3
+* Update to JUnit 4.13
+* Asciidoctor Gradle plugin to 3.1.0
 
 == v0.5.9
 
