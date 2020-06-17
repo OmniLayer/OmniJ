@@ -1,5 +1,6 @@
 package foundation.omni.rpc;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.msgilligan.bitcoinj.rpc.BitcoinExtendedClient;
 import foundation.omni.json.pojo.OmniPropertyInfo;
@@ -48,6 +49,7 @@ public class OmniClient extends BitcoinExtendedClient {
 
     public OmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) throws IOException {
         super(netParams, server, rpcuser, rpcpassword);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.registerModule(new OmniClientModule(getNetParams()));
         // Create a DecimalFormat that fits our requirements
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();

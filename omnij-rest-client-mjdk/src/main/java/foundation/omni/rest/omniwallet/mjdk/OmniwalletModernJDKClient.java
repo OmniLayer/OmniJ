@@ -2,6 +2,7 @@ package foundation.omni.rest.omniwallet.mjdk;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import foundation.omni.CurrencyID;
 import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient;
@@ -42,6 +43,7 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
         super(baseURI, true, false);
         this.client = HttpClient.newHttpClient();
         objectMapper = new UncheckedObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.registerModule(new OmniwalletClientModule(netParams));
     }
     
