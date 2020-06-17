@@ -5,5 +5,5 @@ plugins {
 dependencies {
     api project(':omnij-core')
 
-    implementation 'org.javamoney:moneta:1.3'
+    implementation 'org.javamoney:moneta-bp:1.4'
 }

@@ -5,7 +5,7 @@ A high-level view of the changes in each *OmniJ* binary release.
 
 == v0.5.10-SNAPSHOT
 
-Work-in-progress (Notice that there are three *TBDs*)
+Work-in-progress (Notice that there are two *TBDs*)
 
 === omnij-core
 
@@ -53,7 +53,7 @@ Work-in-progress (Notice that there are three *TBDs*)
 * Gradle: Set `reproducibleFileOrder`, `preserveFileTimestamps` (helps make builds reproducible)
 * TravisCI: Full build in addition to running `regTest`
 * Update to bitcoinj 0.15.7 (Guava 28.2-android)
-* Update to Java Money (BP?) x.xx (in-progress, *TBD*)
+* Update to Java Money BP 1.4 (API BP 1.0.4)
 * Update to Gradle 6.3
 * Update to Groovy 3.0.4
 * Update to Spock 2.0-M3
