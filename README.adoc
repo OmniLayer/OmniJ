@@ -25,47 +25,47 @@ There are currently nine active subprojects of OmniJ. Each of which builds a JAR
 
 | omnij-cli
 | Omni consensus-checking command-line tool.
-| JDK 11
+| 11
 | Uses the Apache Groovy Language
 
 | omnij-core
 | Core OmniJ classes
-| JDK 8
+| 8
 | Android-compatible
 
 | omnij-dsl
 | Groovy Domain Specific Language (DSL) support for Omni
-| JDK 8
+| 8
 | Useful in Spock unit and integration tests. Uses the Apache Groovy Language
 
 | omnij-jsonrpc
 | `OmniClient` JSON-RPC client and JSON-RPC support.
-| JDK 8
+| 8
 |
 
 | omnij-money
 | JavaMoney support for Omni currency codes and exchanges
-| JDK 8
+| 8
 |
 
 | omnij-net-api
 | Http interfaces and objects for Omniwallet & Omni Core with a common interface.
-| JDK 8
+| 8
 |
 
 | omnij-rest-client
 | Omniwallet REST client using Retrofit library
-| JDK 8
+| 8
 | Android-compatible
 
 | omnij-rest-client-mjdk
 | Omniwallet REST client using JDK 11+ `java.net.http`
-| JDK 11
+| 11
 |
 
 | omnij-rpc
 | *Omni Core* *RegTest*/Integration Tests, Groovy JSON-PRC clients, command-line API/tools
-| JDK 8
+| 8
 | Uses the Apache Groovy Language
 
 |===
