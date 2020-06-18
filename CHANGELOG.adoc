@@ -56,7 +56,7 @@ Work-in-progress (Notice that there is one remaining *TBD*)
 * *TBD*: Update to (forthcoming) ConsensusJ 0.5.1
 * Update to bitcoinj 0.15.7 (Guava 28.2-android)
 * Update to Java Money BP 1.4 (API BP 1.0.4)
-* Update to Gradle 6.3
+* Update to Gradle 6.5
 * Update to Groovy 3.0.4
 * Update to Spock 2.0-M3
 * Update to JUnit 4.13
