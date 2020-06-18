@@ -5,7 +5,7 @@ A high-level view of the changes in each *OmniJ* binary release.
 
 == v0.5.10-SNAPSHOT
 
-Work-in-progress (Notice that there are two *TBDs*)
+Work-in-progress (Notice that there is one remaining *TBD*)
 
 === omnij-core
 
@@ -14,8 +14,9 @@ Work-in-progress (Notice that there are two *TBDs*)
 
 === omnij-jsonrpc
 
+* By default, tell Jackson to ignore unknown JSON Properties, see https://github.com/OmniLayer/OmniJ/commit/6d983089f030dd8e38f742e5ecd615f1b1051d9e[6d98308]
 * Breaking: `omniGetProperty()` now returns `OmniPropertyInfo` (instead of a `Map`)
-* New `OmniPropertyInfo` record (extends SmartPropertyListInfo), , see: https://github.com/OmniLayer/OmniJ/commit/90e1598ca35a64ac38e0e94b72ad16111620ac51[90e1598ca35a64ac38e0e94b72ad16111620ac51]
+* New `OmniPropertyInfo` record (extends SmartPropertyListInfo), , see: https://github.com/OmniLayer/OmniJ/commit/90e1598ca35a64ac38e0e94b72ad16111620ac51[90e1598]
 * Remove deprecated getters from `SmartPropertyListInfo`
 * Remove deprecated `OmniExtendedClient`.
 
@@ -26,15 +27,15 @@ Work-in-progress (Notice that there are two *TBDs*)
 ** `omnij-net-api`: base definitions for OmniWallet REST API and universal Omni Core
 ** `omnij-rest-client`: Retrofit-based Omniwallet client (Android-compatible)
 ** `omnij-rest-client-mjdk`: Modern JDK Omniwallet client (JDK 11+)
-* *TBD*: Ignore Unknown JSON Properties ???
-* `OmniPropertyInfo` support, see: https://github.com/OmniLayer/OmniJ/commit/90e1598ca35a64ac38e0e94b72ad16111620ac51[90e1598ca35a64ac38e0e94b72ad16111620ac51]
+* By default, tell Jackson to ignore unknown JSON Properties, see https://github.com/OmniLayer/OmniJ/commit/6d983089f030dd8e38f742e5ecd615f1b1051d9e[6d98308]
+* `OmniPropertyInfo` support, see: https://github.com/OmniLayer/OmniJ/commit/90e1598ca35a64ac38e0e94b72ad16111620ac51[90e1598]
 * Add `isFreezingEnabled` to `OmniwalletPropertyInfo`
 * Add `PropertyInfoFromJsonFile` to read Omni smart property list from a JSON `String` or `InputStream`.
 
 === Regression Tests / Integration Tests
 
 * Fix RegTest and Integration Test classpath issues (https://github.com/OmniLayer/OmniJ/pull/168[PR #168])
-* Run RegTest integration tests against Omni Core 0.8.1 (*TBD*: 0.8.2)
+* Run RegTest integration tests against Omni Core 0.8.2
 * Other test scripting improvements for RegTest on Travis CI
 
 === omnij-cli
@@ -52,6 +53,7 @@ Work-in-progress (Notice that there are two *TBDs*)
 * Use Gradle `java-library` plugin and declare `api` dependencies
 * Gradle: Set `reproducibleFileOrder`, `preserveFileTimestamps` (helps make builds reproducible)
 * TravisCI: Full build in addition to running `regTest`
+* *TBD*: Update to (forthcoming) ConsensusJ 0.5.1
 * Update to bitcoinj 0.15.7 (Guava 28.2-android)
 * Update to Java Money BP 1.4 (API BP 1.0.4)
 * Update to Gradle 6.3

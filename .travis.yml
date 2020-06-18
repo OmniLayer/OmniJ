@@ -5,9 +5,9 @@ language: java
 env:
   global:
   - OMNICORE_HOST=https://bintray.com/artifact/download/omni/OmniBinaries
-  - OMNICORE_RELEASE=omnicore-0.8.1
+  - OMNICORE_RELEASE=omnicore-0.8.2
   - OMNICORE_FILE=$OMNICORE_RELEASE-x86_64-linux-gnu.tar.gz
-  - OMNICORE_HASH=bfd7486d8cb84f1bd2cd72a1c0f1c993d30ad1bcb8ba16e75d2271872cfe0ce8
+  - OMNICORE_HASH=13fad4537f98ab5356454436df6a808995c2c462563d4256a191fea0f10458e9
 
 cache:
   directories:
