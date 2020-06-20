@@ -26,6 +26,10 @@ class MultiPropertyComparison {
         compareProperties(props1 + props2)
     }
 
+    void compareProperty(CurrencyID propertyId) {
+        compareProperties(Collections.singleton(propertyId))
+    }
+
     void compareProperties(Set<CurrencyID> propertiesToCompare) {
         propertiesToCompare.each { id ->
             log.debug("fetching ID:${id} from fetcher 1")
