@@ -5,6 +5,8 @@ import org.bitcoinj.core.NetworkParameters;
 
 /**
  * Base class for Omni Protocol network parameters
+ * TODO: Convert from abstract class to interface -- also consider creating a data class to hold
+ * these fields so the interface will just return the data class
  */
 public abstract class OmniNetworkParameters {
     protected NetworkParameters params;
