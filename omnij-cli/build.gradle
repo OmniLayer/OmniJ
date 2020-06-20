@@ -13,10 +13,9 @@ configurations {
 
 dependencies {
     implementation project(':omnij-rpc')
+    implementation "${consensusjGroup}:${consensusjBtcCliArtifact}:${consensusjVersion}"
 
     implementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
-
-    implementation "${consensusjGroup}:${consensusjBtcCliArtifact}:${consensusjVersion}"
 }
 
 mainClassName = "foundation.omni.cli.ConsensusCLI"

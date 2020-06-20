@@ -47,7 +47,7 @@ public class OmniClient extends BitcoinExtendedClient {
         this(config.getNetParams(), config.getURI(), config.getUsername(), config.getPassword());
     }
 
-    public OmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) throws IOException {
+    public OmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
         super(netParams, server, rpcuser, rpcpassword);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.registerModule(new OmniClientModule(getNetParams()));

@@ -19,16 +19,10 @@ import java.util.SortedMap;
  *
  */
 public class OmniCoreConsensusFetcher implements ConsensusFetcher {
-    protected OmniClient client;
+    protected final OmniClient client;
 
     public OmniCoreConsensusFetcher(NetworkParameters netParams, URI coreURI, String user, String pass) {
-        OmniClient client = null;
-        try {
-            client = new OmniClient(netParams, coreURI, user, pass);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        this.client = client;
+        client = new OmniClient(netParams, coreURI, user, pass);
     }
 
     /**
