@@ -63,11 +63,11 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
             omniSend(actorAddress, owners[n], currencySPT, starting)
             println String.format("Sending %s SPT to owner #%d ...", starting.toPlainString(), n)
             if (n % 500 == 0) {
-                generate()
+                generateBlocks(1)
             }
         }
-        generate()
-        generate()
+        generateBlocks(1)
+        generateBlocks(1)
 
         // Check starting balances of actor
         def reallyBalanceMSC = omniGetBalance(actorAddress, OMNI)
@@ -96,7 +96,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
 
         // Send to owners
         def stoTxid = omniSendSTO(actorAddress, currencySPT, actorSPT)
-        generate()
+        generateBlocks(1)
 
         // Check updated owner balances
         for (n in 1..maxN) {
@@ -157,11 +157,11 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
             owners[n] = newAddress
             omniSend(actorAddress, owners[n], currencySPT, starting)
             if (n % 500 == 0) {
-                generate()
+                generateBlocks(1)
             }
         }
-        generate()
-        generate()
+        generateBlocks(1)
+        generateBlocks(1)
 
         // Check starting balances of actor
         def reallyBalanceMSC = omniGetBalance(actorAddress, OMNI)
@@ -178,7 +178,7 @@ class SendToManyOwnersSpec extends BaseRegTestSpec {
 
         // Send to owners
         def stoTxid = omniSendSTO(actorAddress, currencySPT, actorSPT)
-        generate()
+        generateBlocks(1)
 
         def stoTx = omniGetTransaction(stoTxid)
         assert stoTx.valid == true

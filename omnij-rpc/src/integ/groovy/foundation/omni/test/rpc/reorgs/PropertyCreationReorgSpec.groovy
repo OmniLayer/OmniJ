@@ -36,7 +36,7 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         def dummyB = createFundedAddress(Coin.CENT, 0.divisible, false)
         fundNewProperty(dummyA, 3405691582.indivisible, Ecosystem.OMNI)
         fundNewProperty(dummyB, 4276994270.indivisible, Ecosystem.TOMNI)
-        generate()
+        generateBlocks(1)
 
         propertyListAtStart = omniListProperties()
         def mainProperties = propertyListAtStart.findAll { it.propertyid.ecosystem == Ecosystem.OMNI }
@@ -87,11 +87,11 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         for (int i = 0; i < extraBlocks; ++i) {
             // after a certain number of blocks the whole state is cleared,
             // initiating the reprocessing of all Omni transactions
-            generate()
+            generateBlocks(1)
         }
         invalidateBlock(blockHashOfCreation)
         clearMemPool()
-        generate()
+        generateBlocks(1)
 
         then: "the transaction is no longer valid"
         !checkTransactionValidity(txid)

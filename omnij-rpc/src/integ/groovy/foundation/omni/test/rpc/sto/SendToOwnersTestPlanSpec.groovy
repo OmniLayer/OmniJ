@@ -65,7 +65,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         ownerIds.each { owners << newAddress }
         owners = owners.sort { it.toString() }
         ownerIds.each { omniSend(actorAddress, owners[it], currencySPT, OmniValue.of(sptAvailableOwners[it], propertyType)) }
-        generate()
+        generateBlocks(1)
 
         then: "the actor starts with the correct #currencySPT and #currencyMSC balance"
         assertBalance(actorAddress, currencyMSC, mscAvailable, mscReserved)
@@ -78,7 +78,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         when: "#amountSTO is sent to owners of #currencySPT"
         def txid = executeSendToOwners(actorAddress, currencySPT, OmniValue.of(amountSTO, propertyType), expectException)
-        generate()
+        generateBlocks(1)
 
         then: "the transaction validity is #expectedValidity"
         if (txid != null) {
@@ -141,7 +141,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         when: "#amountSTO is sent to owners of #currencySPT"
         def txid = executeSendToOwners(actorAddress, currencySPT, OmniValue.of(amountSTO, propertyType), expectException)
-        generate()
+        generateBlocks(1)
 
         then: "the transaction validity is #expectedValidity"
         if (txid != null) {
@@ -177,7 +177,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         when: "#amountSTO is sent to the bitcoin owners"
         def txid = executeSendToOwners(actorAddress, CurrencyID.BTC, amountSTO, expectException)
-        generate()
+        generateBlocks(1)
 
         then: "the transaction validity is #expectedValidity"
         if (txid != null) {
@@ -218,7 +218,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 //            numberOfTokens = BTC.btcToSatoshis(numberOfTokens)
 //        }
         def txidCreation = createProperty(ownerA, ecosystem, amountSTO)
-        generate()
+        generateBlocks(1)
         def txCreation = omniGetTransaction(txidCreation)
         assert txCreation.valid == true
         assert txCreation.confirmations == 1
@@ -231,7 +231,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         // Owner A sends half of the tokens to owner B
         omniSend(ownerA, ownerB, currencySPT, (amountSTO / 2L))
-        generate()
+        generateBlocks(1)
         assert omniGetBalance(actorAddress, currencySPT).balance == 0.0.divisible
         assert omniGetBalance(ownerA, currencySPT).balance == (amountSTO.numberValue() / 2)
         assert omniGetBalance(ownerB, currencySPT).balance == (amountSTO.numberValue() / 2)
@@ -239,14 +239,14 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         // Owner A and B send the tokens to the main actor
         omniSend(ownerA, actorAddress, currencySPT, (amountSTO / 2))
         omniSend(ownerB, actorAddress, currencySPT, (amountSTO / 2))
-        generate()
+        generateBlocks(1)
         assert omniGetBalance(actorAddress, currencySPT).balance == amountSTO
         assert omniGetBalance(ownerA, currencySPT).balance == 0.0.divisible
         assert omniGetBalance(ownerB, currencySPT).balance == 0.0.divisible
 
         when: "#amountSTO is sent to owners of #currencySPT"
         def txid = executeSendToOwners(actorAddress, currencySPT, amountSTO, expectException)
-        generate()
+        generateBlocks(1)
 
         then: "the transaction validity is #expectedValidity"
         if (txid != null) {
@@ -304,7 +304,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         when: "#amountSTO is sent to three owners with similar effective balance of #currencyOMNI"
         def txid = executeSendToOwners(actorAddress, currencyOMNI, amountSTO, expectException)
-        generate()
+        generateBlocks(1)
 
         then: "the transaction is valid"
         if (txid != null) {
@@ -359,7 +359,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
             if (numberOfTokens > 0) {
                 assert numberOfTokens.propertyType == PropertyType.DIVISIBLE
                 requestMSC(actorAddress, (OmniDivisibleValue) numberOfTokens)
-                generate()
+                generateBlocks(1)
             }
             return CurrencyID.valueOf(propertyName)
         }
@@ -371,7 +371,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 //        }
 
         def txid = createProperty(actorAddress, ecosystem, numberOfTokens)
-        generate()
+        generateBlocks(1)
 
         def transaction = omniGetTransaction(txid)
         assert transaction.valid == true
@@ -391,7 +391,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         Byte action = 1 // new offer
 
         def txid = omniSendDExSell(actorAddress, currency, amount, desiredBTC, blockSpan, commitFee, action)
-        generate()
+        generateBlocks(1)
 
         def transaction = omniGetTransaction(txid)
         assert transaction.valid == true

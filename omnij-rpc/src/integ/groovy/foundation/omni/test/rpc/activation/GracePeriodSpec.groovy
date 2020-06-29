@@ -24,7 +24,7 @@ class GracePeriodSpec extends BaseActivationSpec {
 
         when:
         def txid = omniSendActivation(actorAddress, unallocatedFeatureId, activationBlock, minClientVersion)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid == false
@@ -41,7 +41,7 @@ class GracePeriodSpec extends BaseActivationSpec {
 
         when:
         def txid = omniSendActivation(actorAddress, unallocatedFeatureId, activationBlock, minClientVersion)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid == false
@@ -58,7 +58,7 @@ class GracePeriodSpec extends BaseActivationSpec {
 
         when:
         def txid = omniSendActivation(actorAddress, unallocatedFeatureId, activationBlock, minClientVersion)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid == true
