@@ -35,7 +35,7 @@ class OmniTxBuilderIntegSpec extends BaseRegTestSpec {
         def txid = sendRawTransaction(tx)
 
         and: "a block is generated"
-        generate()
+        generateBlocks(1)
         def endBalance = omniGetBalance(fundedAddress, OMNI).balance
 
         then: "the toAddress has the correct OMNI balance and source address is reduced by correct amount"
@@ -61,7 +61,7 @@ class OmniTxBuilderIntegSpec extends BaseRegTestSpec {
         println "Fee is: ${tx.getFee()}"
 
         and: "a block is generated"
-        generate()
+        generateBlocks(1)
         def endBalance = omniGetBalance(fundedAddress, OMNI).balance
 
         then: "the toAddress has the correct OMNI balance and source address is reduced by correct amount"

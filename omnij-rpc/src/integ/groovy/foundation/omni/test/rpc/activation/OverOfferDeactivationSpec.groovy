@@ -36,7 +36,7 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         when:
         def txid = createDexSellOffer(
                 actorAddress, CurrencyID.OMNI, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid
@@ -55,7 +55,7 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
 
         when:
         def txid = omniSendActivation(actorAddress, overOffersFeatureId, activationBlock, minClientVersion)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid
@@ -70,13 +70,13 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         def blockBeforeActivation = activationBlock - 1
 
         while (getBlockCount() < blockBeforeActivation - 1) { // two extra, for transaction confirmation
-            generate()
+            generateBlocks(1)
         }
 
         when:
         def txid = createDexSellOffer(
                 actorAddress, CurrencyID.OMNI, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid
@@ -98,7 +98,7 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         when:
         def txid = createDexSellOffer(
                 actorAddress, CurrencyID.OMNI, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid == false
@@ -118,7 +118,7 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
         when:
         def txid = createDexSellOffer(
                 actorAddress, CurrencyID.OMNI, orderAmountMSC, orderAmountBTC, stdBlockSpan, stdCommitFee, actionNew)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid

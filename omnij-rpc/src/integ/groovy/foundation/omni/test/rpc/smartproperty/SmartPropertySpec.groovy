@@ -31,7 +31,7 @@ class SmartPropertySpec extends BaseRegTestSpec {
         def txid = createProperty(fundedAddress, Ecosystem.OMNI, OmniDivisibleValue.ofWilletts(314159265L))
 
         and: "a new block is mined"
-        client.generate()
+        client.generateBlocks(1)
 
         then: "the transaction confirms"
         def transaction = client.omniGetTransaction(txid)
@@ -58,7 +58,7 @@ class SmartPropertySpec extends BaseRegTestSpec {
         def txid = createProperty(fundedAddress, Ecosystem.TOMNI, OmniIndivisibleValue.of(4815162342L))
 
         and: "a new block is mined"
-        client.generate()
+        client.generateBlocks(1)
 
         then: "the transaction confirms"
         def transaction = client.omniGetTransaction(txid)

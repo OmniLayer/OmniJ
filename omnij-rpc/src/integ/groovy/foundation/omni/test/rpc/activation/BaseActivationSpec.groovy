@@ -48,7 +48,7 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
             throw new AssumptionViolatedException('The client has no "omni_getactivations" command')
         }
 
-        generate()
+        generateBlocks(1)
         def currentBlockCount = getBlockCount()
         initialBlock = getBlockHash(currentBlockCount)
     }
@@ -58,11 +58,11 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
             return
         }
         for (int i = 0; i < 50; ++i) {
-            generate()
+            generateBlocks(1)
         }
         invalidateBlock(initialBlock)
         clearMemPool()
-        generate()
+        generateBlocks(1)
     }
 
     def skipIfActivated(def featureId) {
