@@ -48,6 +48,7 @@ sourceSets {
  */
 class IntegrationTest extends Test {
     public IntegrationTest() {
+        useJUnitPlatform()
         testClassesDirs = project.sourceSets.integrationTest.output.classesDirs
         classpath = project.sourceSets.integrationTest.runtimeClasspath
         outputs.upToDateWhen { false }
