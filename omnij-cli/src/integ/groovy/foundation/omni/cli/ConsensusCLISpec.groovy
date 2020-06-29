@@ -1,7 +1,7 @@
 package foundation.omni.cli
 
 import org.consensusj.jsonrpc.cli.test.CLICommandResult
-import org.consensusj.bitcoin.cli.test.CLITestSupport
+import org.consensusj.jsonrpc.cli.test.CLITestSupport
 import foundation.omni.rpc.test.TestServers
 import spock.lang.Ignore
 import spock.lang.Specification
