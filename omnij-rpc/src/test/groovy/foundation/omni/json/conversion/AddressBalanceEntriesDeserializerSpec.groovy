@@ -21,7 +21,7 @@ class AddressBalanceEntriesDeserializerSpec extends BaseOmniClientMapperSpec {
     static final LegacyAddress moneyMan = LegacyAddress.fromBase58(null, "moneyqMan7uh8FqdCA2BV5yZ8qVrc9ikLP")
 
     @Unroll
-    def "fragment #fragment scans to #expectedResult"(String fragment, BalanceEntry expectedEntry) {
+    def "fragment #fragment scans to #expectedEntry"(String fragment, BalanceEntry expectedEntry) {
         when:
         AddressBalanceEntries expectedResult = new AddressBalanceEntries();
         if (expectedEntry != null) {
