@@ -12,6 +12,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
 import org.junit.AssumptionViolatedException
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Unroll
 import spock.util.mop.Use
@@ -20,6 +21,7 @@ import spock.util.mop.Use
  * Data driven tests for the "send to owners" transaction type
  */
 @Use(NumberCategory)
+@Ignore("Spock 2.0 doesn't seem to handle AssumptionViolatedException as we expect")
 class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
     final static Coin startBTC = 0.1.btc
 
