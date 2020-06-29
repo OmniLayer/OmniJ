@@ -1,5 +1,6 @@
 sudo: false
 os: linux
+dist: xenial
 language: java
 
 env:
@@ -14,6 +15,8 @@ cache:
   - $HOME/.gradle/caches
 
 install:
+  - sudo apt-get update
+  - sudo apt-get install graphviz
   - wget "$OMNICORE_HOST/$OMNICORE_FILE"
   - echo "$OMNICORE_HASH  $OMNICORE_FILE" | shasum --algorithm 256 --check
   - mkdir -p copied-artifacts/src/
