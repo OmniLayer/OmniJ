@@ -2,12 +2,12 @@ package foundation.omni.cli;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
-import org.consensusj.bitcoin.cli.CliOptions;
+import org.consensusj.bitcoin.cli.BitcoinRpcCliOptions;
 
 /**
  * Option definitions for Omni Consensus Tool
  */
-public class OmniConsensusToolOptions extends CliOptions {
+public class OmniConsensusToolOptions extends BitcoinRpcCliOptions {
     public OmniConsensusToolOptions() {
         super();
         this.addOption(Option.builder("o").longOpt("output")

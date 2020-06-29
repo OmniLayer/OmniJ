@@ -22,7 +22,7 @@ allprojects {
 
     repositories {
         jcenter()
-        //mavenLocal()   // Uncomment to work with local snapshots
+        // mavenLocal()   // Uncomment to work with local snapshots
         maven { url 'https://dl.bintray.com/msgilligan/maven' } // ConsensusJ (RPC client)
     }
 

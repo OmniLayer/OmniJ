@@ -1,6 +1,8 @@
 package foundation.omni.consensus
 
 import foundation.omni.CurrencyID
+import foundation.omni.OmniDivisibleValue
+import foundation.omni.OmniIndivisibleValue
 import foundation.omni.PropertyType
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.ConsensusFetcher
@@ -144,9 +146,9 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
         BigDecimal reserved = jsonToBigDecimal(item.reserved_balance)
         // TODO: Add `frozen` to the test
         if (propertyType == PropertyType.DIVISIBLE) {
-            return new BalanceEntry(balance.divisible, reserved.divisible, 0.divisible)
+            return new BalanceEntry(OmniDivisibleValue.of(balance), OmniDivisibleValue.of(reserved), OmniDivisibleValue.of(0))
         } else {
-            return new BalanceEntry(balance.indivisible, reserved.indivisible, 0.indivisible)
+            return new BalanceEntry(OmniIndivisibleValue.of(balance.longValue()), OmniIndivisibleValue.of(reserved.longValue()), OmniIndivisibleValue.of(0))
         }
     }
 
