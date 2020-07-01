@@ -4,7 +4,7 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.OmniValue
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
-import org.junit.internal.AssumptionViolatedException
+import org.junit.AssumptionViolatedException
 import spock.lang.Shared
 
 /**
