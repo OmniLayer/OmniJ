@@ -29,13 +29,13 @@ class MetaDexSpec extends BaseRegTestSpec {
 
         when:
         def txidTradeA = omniSendTrade(actorA, propertyOMNI, 0.00000006.divisible , propertySPX, 6.indivisible)
-        generate()
+        generateBlocks(1)
         def txidTradeB = omniSendTrade(actorB, propertySPX, 10.indivisible, propertyOMNI, 0.00000001.divisible)
-        generate()
+        generateBlocks(1)
         def txidTradeC = omniSendTrade(actorC, propertyOMNI, 0.00000001.divisible, propertySPX, 10.indivisible)
-        generate()
+        generateBlocks(1)
         def txidTradeD = omniSendTrade(actorD, propertyOMNI, 0.00000001.divisible, propertySPX, 4.indivisible)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTrade(txidTradeA).valid
@@ -91,9 +91,9 @@ class MetaDexSpec extends BaseRegTestSpec {
 
         when:
         def txidTradeA = omniSendTrade(actorA, propertySPX, 25.indivisible, propertyOMNI, 2.50.divisible)
-        generate()
+        generateBlocks(1)
         def txidTradeB = omniSendTrade(actorB, propertyOMNI, 0.55.divisible, propertySPX, 5.indivisible)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txidTradeA).valid
@@ -169,9 +169,9 @@ class MetaDexSpec extends BaseRegTestSpec {
 
         when:
         def txidTradeA = omniSendTrade(actorA, propertyOMNI, 0.00000020.divisible , propertySPX, 10.indivisible)
-        generate()
+        generateBlocks(1)
         def txidTradeB = omniSendTrade(actorB, propertySPX, 12.indivisible, propertyOMNI, 0.00000017.divisible)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTrade(txidTradeA).valid
@@ -200,9 +200,9 @@ class MetaDexSpec extends BaseRegTestSpec {
 
         when:
         def txidTradeA = omniSendTrade(actorA, propertySPX, 1.divisible, propertyOMNI, 2.divisible)
-        generate()
+        generateBlocks(1)
         def txidTradeB = omniSendTrade(actorB, propertyOMNI, 1.66666666.divisible, propertySPX, 0.83333333.divisible)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTrade(txidTradeA).valid
@@ -231,9 +231,9 @@ class MetaDexSpec extends BaseRegTestSpec {
 
         when:
         def txidTradeA = omniSendTrade(actorA, propertyOMNI, 23.divisible , propertySPX, 100.divisible)
-        generate()
+        generateBlocks(1)
         def txidTradeB = omniSendTrade(actorB, propertySPX, 50.divisible, propertyOMNI, 10.divisible)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTrade(txidTradeA).valid
@@ -258,7 +258,7 @@ class MetaDexSpec extends BaseRegTestSpec {
 
         when:
         def txidTrade = omniSendTrade(actorAdress, propertySPA, 1.divisible, propertySPB, 1.divisible)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTrade(txidTrade).valid == false
@@ -285,7 +285,7 @@ class MetaDexSpec extends BaseRegTestSpec {
 
         when: "trader A offers OMNI and desired SPX"
         def txidOfferA = omniSendTrade(traderA, propertyOMNI, amountOMNI, propertySPX, amountSPX)
-        generate()
+        generateBlocks(1)
 
         then: "it is a valid open order"
         omniGetTrade(txidOfferA).valid
@@ -302,7 +302,7 @@ class MetaDexSpec extends BaseRegTestSpec {
 
         when: "trader B offers SPX and desires OMNI"
         def txidOfferB = omniSendTrade(traderB, propertySPX, amountSPX, propertyOMNI, amountOMNI)
-        generate()
+        generateBlocks(1)
 
         then: "the order is filled"
         omniGetTrade(txidOfferB).valid
@@ -359,7 +359,7 @@ class MetaDexSpec extends BaseRegTestSpec {
 
         when: "trader A offers SPX and desired OMNI"
         def txidOfferA = omniSendTrade(traderA, propertySPX, amountSPX, propertyOMNI, amountOMNI)
-        generate()
+        generateBlocks(1)
 
         then: "it is a valid open order"
         omniGetTrade(txidOfferA).valid
@@ -376,7 +376,7 @@ class MetaDexSpec extends BaseRegTestSpec {
 
         when: "trader B offers OMNI and desires SPX"
         def txidOfferB = omniSendTrade(traderB, propertyOMNI, amountOMNI, propertySPX, amountSPX)
-        generate()
+        generateBlocks(1)
 
         then: "the order is filled"
         omniGetTrade(txidOfferB).valid

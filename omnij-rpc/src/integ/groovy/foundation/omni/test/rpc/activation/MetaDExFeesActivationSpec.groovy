@@ -35,7 +35,7 @@ class MetaDExFeesActivationSpec extends BaseActivationSpec {
 
         when:
         def txid = omniSendActivation(actorAddress, metaDExFeesFeatureId, activationBlock, minClientVersion)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid
@@ -61,7 +61,7 @@ class MetaDExFeesActivationSpec extends BaseActivationSpec {
     def "After the successful activation of the feature, the feature activation completed"() {
         setup:
         while (getBlockCount() < activationBlock) {
-            generate()
+            generateBlocks(1)
         }
 
         when:

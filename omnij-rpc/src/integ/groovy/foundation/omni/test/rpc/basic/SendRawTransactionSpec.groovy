@@ -29,7 +29,7 @@ class SendRawTransactionSpec extends BaseRegTestSpec {
         def txid = client.omniSendRawTx(activeAddress, rawTxHex, passiveAddress)
 
         and: "a new block is mined"
-        client.generate()
+        client.generateBlocks(1)
 
         then: "the transaction confirms"
         def transaction = client.omniGetTransaction(txid)
@@ -54,7 +54,7 @@ class SendRawTransactionSpec extends BaseRegTestSpec {
         def txid = client.omniSendRawTx(activeAddress, rawTxHex)
 
         and: "a new block is mined"
-        client.generate()
+        client.generateBlocks(1)
 
         then: "the transaction confirmed"
         def transaction = client.omniGetTransaction(txid)

@@ -38,7 +38,7 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
     def "Creating trades involving two non-Omni pairs before the activation is invalid"() {
         when:
         def txid = omniSendTrade(actorAddress, tokenA, 445.indivisible, tokenB, 20.indivisible)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid == false
@@ -54,7 +54,7 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
 
         when:
         def txid = omniSendActivation(actorAddress, allPairDExFeatureId, activationBlock, minClientVersion)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid
@@ -80,7 +80,7 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
     def "Creating trades involving non-Omni tokens during the grace period is still invalid"() {
         when:
         def txid = omniSendTrade(actorAddress, tokenA, 445.indivisible, tokenB, 20.indivisible)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid == false
@@ -93,7 +93,7 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
     def "After the successful activation of the feature, the feature activation completed"() {
         setup:
         while (getBlockCount() < activationBlock) {
-            generate()
+            generateBlocks(1)
         }
 
         when:
@@ -123,7 +123,7 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
 
         when:
         def tradeTxid = omniSendTrade(actorAddress, tokenA, amountForSale, tokenB, amountDesired)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(tradeTxid).valid
@@ -146,7 +146,7 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
 
         when:
         def cancelTxid = omniSendCancelTradesByPrice(actorAddress, tokenA, amountForSale, tokenB, amountDesired)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(cancelTxid).valid
@@ -183,7 +183,7 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
 
         when: "trader A offers SPX and desired SPY"
         def txidOfferA = omniSendTrade(traderA, propertySPX, amountSPX, propertySPY, amountSPY)
-        generate()
+        generateBlocks(1)
 
         then: "it is a valid open order"
         omniGetTrade(txidOfferA).valid
@@ -201,7 +201,7 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
 
         when: "trader B offers SPY and desires SPX"
         def txidOfferB = omniSendTrade(traderB, propertySPY, amountSPY, propertySPX, amountSPX)
-        generate()
+        generateBlocks(1)
 
         then: "the order is filled"
         omniGetTrade(txidOfferB).valid

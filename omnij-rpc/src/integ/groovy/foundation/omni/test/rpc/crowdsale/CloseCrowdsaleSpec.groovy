@@ -23,7 +23,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
 
         def txid = createCrowdsale(actorAddress, Ecosystem.TOMNI, PropertyType.DIVISIBLE, CurrencyID.TOMNI, 500000000L,
                                    2147483648L, 0 as Byte, 0 as Byte)
-        generate()
+        generateBlocks(1)
         def creationTx = omniGetTransaction(txid)
         assert (creationTx.valid)
         currencyID = new CurrencyID(creationTx.propertyid as Long)
@@ -33,7 +33,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
     def "Closing a non-existing crowdsale is invalid"() {
         when:
         def txid = closeCrowdsale(actorAddress, new CurrencyID(CurrencyID.MAX_REAL_ECOSYSTEM_VALUE))
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid == false
@@ -42,7 +42,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
     def "Closing a non-crowdsale is invalid"() {
         when:
         def txid = closeCrowdsale(actorAddress, nonCrowdsaleID)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid == false
@@ -51,7 +51,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
     def "A crowdsale can not be closed by a non-issuer"() {
         when:
         def txid = closeCrowdsale(otherAddress, currencyID)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid == false
@@ -63,7 +63,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
     def "Before closing a crowdsale, tokens can be purchased"() {
         when:
         def txid = omniSend(otherAddress, actorAddress, CurrencyID.TOMNI, 0.5.divisible)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid
@@ -80,7 +80,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
     def "A crowdsale can be closed with transaction type 53"() {
         when:
         def txid = closeCrowdsale(actorAddress, currencyID)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid
@@ -92,7 +92,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
     def "A crowdsale can only be closed once"() {
         when:
         def txid = closeCrowdsale(actorAddress, currencyID)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid == false
@@ -101,7 +101,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
     def "Sending tokens, after a crowdsale was closed, does not grant tokens"() {
         when:
         def txid = omniSend(otherAddress, actorAddress, CurrencyID.TOMNI, 0.5.divisible)
-        generate()
+        generateBlocks(1)
 
         then:
         omniGetTransaction(txid).valid

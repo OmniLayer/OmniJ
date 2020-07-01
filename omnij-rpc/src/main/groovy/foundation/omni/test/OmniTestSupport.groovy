@@ -98,7 +98,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
         }
 
         if (confirmTransactions) {
-            generate()
+            generateBlocks(1)
         }
 
         // TODO: maybe add assertions to check correct funding amounts?
@@ -129,7 +129,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
                 "",                 // data
                 amount);
 
-        generate()
+        generateBlocks(1)
         def txCreation = omniGetTransaction(txidCreation)
         assert txCreation.valid == true
         assert txCreation.confirmations == 1
@@ -146,7 +146,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
                 "MSP",
                 "",                 // url
                 "")                 // data
-        generate()
+        generateBlocks(1)
         def txCreation = omniGetTransaction(txidCreation)
         assert txCreation.valid == true
         assert txCreation.confirmations == 1
