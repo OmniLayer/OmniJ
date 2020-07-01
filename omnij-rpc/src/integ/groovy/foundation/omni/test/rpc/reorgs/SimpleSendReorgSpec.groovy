@@ -22,6 +22,7 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
 
         when: "invalidating the block with the send transaction"
         invalidateBlock(blockHashOfSend)
+        sleep(1000)  // Wait 1 second to avoid `ProcessNewBlock, block not accepted` (duplicate block)
 
         then: "the send transaction is no longer confirmed"
         getBlockCount() == blockCountBeforeSend
@@ -57,6 +58,7 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
         when: "invalidating the block with the send transaction and after a new block is mined"
         invalidateBlock(blockHashOfSend)
         clearMemPool()
+        sleep(1000)  // Wait 1 second to avoid `ProcessNewBlock, block not accepted` (duplicate block)
         generateBlocks(1)
 
         then: "the send transaction is no longer valid and the balances before the send are restored"
@@ -67,6 +69,7 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
         when: "rolling back all blocks until before the initial funding"
         invalidateBlock(blockHashBeforeFunding)
         clearMemPool()
+        sleep(1000)  // Wait 1 second to avoid `ProcessNewBlock, block not accepted` (duplicate block)
         generateBlocks(1)
 
         then: "the actors have zero balances"
