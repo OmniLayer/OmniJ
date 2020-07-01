@@ -59,7 +59,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
 
     def "STO fails when amount sent is zero"() {
         setup:
-        def fundedAddress = createFundedAddress(10.0, 100.0)
+        def fundedAddress = createFundedAddress(10.0.btc, 100.0.divisible)
         def currencyID = TOMNI
         def startBalances = consensusTool.getConsensusSnapshot(currencyID)
 

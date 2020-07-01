@@ -1,5 +1,7 @@
 package foundation.omni.test.rpc.reorgs
 
+import foundation.omni.OmniDivisibleValue
+import org.bitcoinj.core.Coin
 import org.consensusj.jsonrpc.JsonRpcException
 import foundation.omni.BaseRegTestSpec
 import org.bitcoinj.core.Sha256Hash
@@ -7,8 +9,8 @@ import org.junit.internal.AssumptionViolatedException
 
 abstract class BaseReorgSpec extends BaseRegTestSpec {
 
-    static protected BigDecimal startBTC = 0.1
-    static protected BigDecimal startMSC = 0.2
+    static protected Coin startBTC = 0.1.btc
+    static protected OmniDivisibleValue startOMNI = 0.2.divisible
 
     def setupSpec() {
         try {

@@ -71,16 +71,6 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
         return txid
     }
 
-    @Deprecated
-    Address createFundedAddress(BigDecimal requestedBTC, BigDecimal requestedMSC) {
-        return createFundedAddress(btcToCoin(requestedBTC), OmniDivisibleValue.of(requestedMSC), true)
-    }
-
-    @Deprecated
-    Address createFundedAddress(BigDecimal requestedBTC, BigDecimal requestedMSC, Boolean confirmTransactions) {
-        return createFundedAddress(btcToCoin(requestedBTC), OmniDivisibleValue.of(requestedMSC), confirmTransactions)
-    }
-
     Address createFundedAddress(Coin requestedBTC, OmniValue requestedMSC) {
         return createFundedAddress(requestedBTC, requestedMSC, true)
     }
