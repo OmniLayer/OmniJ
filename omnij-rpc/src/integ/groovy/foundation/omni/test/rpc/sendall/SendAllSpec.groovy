@@ -3,7 +3,7 @@ package foundation.omni.test.rpc.sendall
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import org.junit.internal.AssumptionViolatedException
+import org.junit.AssumptionViolatedException
 import spock.lang.Unroll
 
 class SendAllSpec extends BaseRegTestSpec {
