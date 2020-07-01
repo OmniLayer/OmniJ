@@ -6,6 +6,7 @@ import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
+import org.bitcoinj.core.Coin
 import spock.lang.Shared
 
 /*
@@ -16,8 +17,8 @@ import spock.lang.Shared
 
 class SmartPropertySpec extends BaseRegTestSpec {
 
-    final static BigDecimal startBTC = 1.0
-    final static BigDecimal startMSC = 50.0
+    final static Coin startBTC = 1.0.btc
+    final static OmniDivisibleValue startMSC = 50.0.divisible
 
     @Shared
     Address fundedAddress

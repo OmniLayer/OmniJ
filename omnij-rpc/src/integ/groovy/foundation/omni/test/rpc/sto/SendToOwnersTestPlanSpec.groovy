@@ -12,6 +12,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
 import org.junit.AssumptionViolatedException
+
 import spock.lang.Shared
 import spock.lang.Unroll
 import spock.util.mop.Use

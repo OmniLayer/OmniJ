@@ -3,8 +3,10 @@ package foundation.omni.test.rpc.smartproperty
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
+import foundation.omni.OmniDivisibleValue
 import foundation.omni.PropertyType
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
 import spock.lang.Ignore
 import spock.lang.Shared
@@ -13,8 +15,8 @@ import spock.lang.Stepwise
 @Stepwise
 class ManagedPropertySpec extends BaseRegTestSpec {
 
-    final static BigDecimal startBTC = 0.1
-    final static BigDecimal zeroAmount = 0.0
+    final static Coin startBTC = 0.1.btc
+    final static OmniDivisibleValue zeroAmount = 0.0.divisible
 
     @Shared Address actorAddress
     @Shared Address otherAddress

@@ -60,7 +60,7 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
     @Unroll
     def "In #ecosystem, after invalidating the creation of #value tokens, the transaction and the tokens are invalid"()
     {
-        def actorAddress = createFundedAddress(startBTC, startMSC)
+        def actorAddress = createFundedAddress(startBTC, startOMNI)
 
         when: "broadcasting and confirming a property creation transaction"
         def txid = createProperty(actorAddress, ecosystem, value)

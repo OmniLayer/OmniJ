@@ -10,7 +10,7 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
     {
         given:
         def receiverAddress = newAddress
-        def senderAddress = createFundedAddress(startBTC, startMSC)
+        def senderAddress = createFundedAddress(startBTC, startOMNI)
         def blockCountBeforeSend = getBlockCount()
 
         when: "broadcasting and confirming a simple send"
@@ -40,7 +40,7 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
         def blockHashBeforeFunding = generateAndGetBlockHash()
 
         def receiverAddress = newAddress
-        def senderAddress = createFundedAddress(startBTC, startMSC)
+        def senderAddress = createFundedAddress(startBTC, startOMNI)
 
         def balanceBeforeSendActor = omniGetBalance(senderAddress, CurrencyID.OMNI)
         def balanceBeforeSendReceiver = omniGetBalance(receiverAddress, CurrencyID.OMNI)
