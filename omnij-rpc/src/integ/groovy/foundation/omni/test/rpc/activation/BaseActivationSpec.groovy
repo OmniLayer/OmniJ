@@ -62,7 +62,7 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
         }
         invalidateBlock(initialBlock)
         clearMemPool()
-        delayAfterInvalidate()     // Sleep for a while to avoid duplicate block
+        delayAfterInvalidate()   // Sleep for a few seconds to avoid duplicate block
         generateBlocks(1)
     }
 

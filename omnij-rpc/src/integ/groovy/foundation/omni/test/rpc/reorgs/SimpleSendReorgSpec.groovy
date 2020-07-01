@@ -69,7 +69,7 @@ class SimpleSendReorgSpec extends BaseReorgSpec {
         when: "rolling back all blocks until before the initial funding"
         invalidateBlock(blockHashBeforeFunding)
         clearMemPool()
-        delayAfterInvalidate()  // Sleep for a little while to avoid `ProcessNewBlock, block not accepted` (duplicate block)
+        longerDelayAfterInvalidate()  // Sleep for a LONGER while to avoid `ProcessNewBlock, block not accepted` (duplicate block)
         generateBlocks(1)
 
         then: "the actors have zero balances"
