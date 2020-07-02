@@ -91,6 +91,7 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
         }
         invalidateBlock(blockHashOfCreation)
         clearMemPool()
+        delayAfterInvalidate()  // Sleep for a little while to avoid `ProcessNewBlock, block not accepted` (duplicate block)
         generateBlocks(1)
 
         then: "the transaction is no longer valid"

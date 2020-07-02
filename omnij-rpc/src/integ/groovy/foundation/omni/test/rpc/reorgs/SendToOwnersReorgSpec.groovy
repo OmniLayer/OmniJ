@@ -25,6 +25,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         when: "invalidating the block and send to owners transaction"
         invalidateBlock(blockHashOfSend)
         clearMemPool()
+        delayAfterInvalidate()  // Sleep for a little while to avoid `ProcessNewBlock, block not accepted` (duplicate block)
         generateBlocks(1)
 
         then: "the send transaction is no longer valid"
@@ -79,6 +80,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         when: "invalidating the block and send to owners transaction"
         invalidateBlock(blockHashOfSend)
         clearMemPool()
+        delayAfterInvalidate()  // Sleep for a little while to avoid `ProcessNewBlock, block not accepted` (duplicate block)
         generateBlocks(1)
 
         then: "the send to owners transaction is no longer valid"
@@ -95,6 +97,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         when: "rolling back until before the funding of the owners"
         invalidateBlock(blockHashOfOwnerFunding)
         clearMemPool()
+        delayAfterInvalidate()  // Sleep for a little while to avoid `ProcessNewBlock, block not accepted` (duplicate block)
         generateBlocks(1)
 
         then: "the owners have no tokens"
@@ -157,6 +160,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         and: "invalidating the block with the second STO transaction"
         invalidateBlock(blockHashOfSecond)
         clearMemPool()
+        delayAfterInvalidate()  // Sleep for a little while to avoid `ProcessNewBlock, block not accepted` (duplicate block)
         generateBlocks(1)
         def secondOrphanedTx = omniGetTransaction(secondTxid)
 

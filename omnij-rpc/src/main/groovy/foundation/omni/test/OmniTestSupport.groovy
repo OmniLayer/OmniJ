@@ -16,6 +16,22 @@ import foundation.omni.CurrencyID
  */
 trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDelegate {
 
+    /**
+     * Delay long enough to avoid Duplicate block errors when resubmitting blocks in
+     * RegTest mode after invalidating a block. See OmniJ Issue #185.
+     */
+    void delayAfterInvalidate() {
+        sleep(2_000)
+    }
+
+    /**
+     * Longer delay to avoid Duplicate block errors when resubmitting blocks in
+     * RegTest mode after invalidating a block. See OmniJ Issue #185.
+     */
+    void longerDelayAfterInvalidate() {
+        sleep(30_000)
+    }
+
     Sha256Hash requestMSC(Address toAddress, OmniDivisibleValue requestedOmni) {
         return requestMSC(toAddress, requestedOmni, true)
     }
