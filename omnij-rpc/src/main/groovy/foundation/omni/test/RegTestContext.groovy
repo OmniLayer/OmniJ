@@ -20,6 +20,7 @@ class RegTestContext {
         def client = new OmniTestClient(RegTestParams.get(), regTestRpcUri, user, pass)
         def env = new RegTestEnvironment(client)
         def funder = new RegTestOmniFundingSource(client)
+        funder.checkForLegacyBitcoinCore() // Remove this line after we're based on Bitcoin Core 0.19+
         return [client, env, funder]
     }
 }
