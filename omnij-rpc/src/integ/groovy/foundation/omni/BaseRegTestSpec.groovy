@@ -34,6 +34,7 @@ abstract class BaseRegTestSpec extends Specification implements OmniTestClientDe
         URI regTestRpcUri = recentBitcoinCore ? RpcURI.defaultRegTestURI : RpcURI.defaultTestNetURI
         client = new OmniTestClient(RegTestParams.get(), regTestRpcUri, rpcTestUser, rpcTestPassword)
         fundingSource = new RegTestFundingSource(client)
+        ((RegTestFundingSource) fundingSource).checkForLegacyBitcoinCore() // Remove once we're using Bitcoin Core 0.19+
     }
 
     void setupSpec() {

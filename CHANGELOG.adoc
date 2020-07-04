@@ -55,7 +55,7 @@ Work-in-progress (but pretty much ready at this point)
 * Use Gradle `java-library` plugin and declare `api` dependencies
 * Gradle: Set `reproducibleFileOrder`, `preserveFileTimestamps` (helps make builds reproducible)
 * TravisCI: Full build in addition to running `regTest`
-* Update to ConsensusJ 0.5.2
+* Update to ConsensusJ 0.5.4
 * Update to bitcoinj 0.15.7 (Guava 28.2-android)
 * Update to Java Money BP 1.4 (API BP 1.0.4)
 * Update to Gradle 6.5
