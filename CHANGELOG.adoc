@@ -1,11 +1,11 @@
 = OmniJ Changes
 :homepage: https://github.com/OmniLayer/OmniJ
 
-A high-level view of the changes in each *OmniJ* binary release.
+A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.5.10-SNAPSHOT
+== v0.5.10
 
-Work-in-progress (but pretty much ready at this point)
+Released: 2020.07.07
 
 === omnij-core
 
@@ -34,6 +34,7 @@ Work-in-progress (but pretty much ready at this point)
 
 === Regression Tests / Integration Tests
 
+* RegTests now default to using server RPC Port 18443. (Bitcoin Core default since 0.16.0)
 * Running with Spock 2.0-M3, Groovy 3, JUnitPlatform, `spock-junit4` adapter
 * Add delays after invalidating blocks see https://github.com/OmniLayer/OmniJ/issues/185[Issue #185]
 * Fix RegTest and Integration Test classpath issues (https://github.com/OmniLayer/OmniJ/pull/168[PR #168])
