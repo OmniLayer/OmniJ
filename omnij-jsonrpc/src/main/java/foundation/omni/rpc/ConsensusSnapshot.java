@@ -75,19 +75,4 @@ public class ConsensusSnapshot {
         this.sourceURI = sourceURI;
         this.entries = entries;
     }
-
-    /**
-     * ConsensusSnapshot from SortedMap and parameters
-     * @param currencyID currency id
-     * @param blockHeight blockheight of snapshot
-     * @param sourceType type of server returning the snapshot
-     * @param sourceURI URI of server returning the snapshot
-     * @param entries map of balance entries
-     * @deprecated Use constructor with int blockHeight
-     */
-    @Deprecated
-    public ConsensusSnapshot(CurrencyID currencyID, Long blockHeight, String sourceType, URI sourceURI, SortedMap<Address, BalanceEntry> entries)
-    {
-        this(currencyID, blockHeight.intValue(), sourceType, sourceURI, entries);
-    }
 }

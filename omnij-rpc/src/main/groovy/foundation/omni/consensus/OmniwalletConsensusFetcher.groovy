@@ -119,7 +119,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
             // Otherwise we have to try again
             beforeBlockHeight = curBlockHeight
         }
-        def snap = new ConsensusSnapshot(currencyID, (Long) curBlockHeight, "Omniwallet", consensusURL(currencyID).toURI(), entries);
+        def snap = new ConsensusSnapshot(currencyID, curBlockHeight, "Omniwallet", consensusURL(currencyID).toURI(), entries);
         return snap
     }
 
