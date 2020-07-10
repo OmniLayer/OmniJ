@@ -34,7 +34,7 @@ public abstract class OmniValue extends NumberValue {
 
     // Willett max/min values, same as max/min for indivisible, but different than for divisible
     public static final long MIN_WILLETTS = 0; // Minimum value of 1 in transactions?
-    public static final long MAX_WILLETTS = Long.MAX_VALUE; // = 2^63 - 1 = 9223372036854775807L;
+    public static final long MAX_WILLETTS = Long.MAX_VALUE; // = 2^63 - 1 = 9_223_372_036_854_775_807L;
 
     /**
      * Default Constructor

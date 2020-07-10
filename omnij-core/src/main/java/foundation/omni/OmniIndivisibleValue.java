@@ -20,7 +20,7 @@ public final class OmniIndivisibleValue extends OmniValue {
 
     public static OmniIndivisibleValue of(BigInteger amount) {
         checkWillettValue(amount);
-        return new OmniIndivisibleValue(amount.intValue());
+        return new OmniIndivisibleValue(amount.longValueExact());
     }
 
     /**

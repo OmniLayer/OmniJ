@@ -1,30 +1,31 @@
 package foundation.omni.rest.omniwallet
 
-import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.OmniValue
 import foundation.omni.PropertyType
+import foundation.omni.net.OmniMainNetParams
+import foundation.omni.netapi.OmniJBalances
+import foundation.omni.netapi.WalletAddressBalance
+import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
+import org.bitcoinj.core.Address
 import org.bitcoinj.core.LegacyAddress
 import spock.lang.Ignore
 import spock.lang.Shared
+import spock.lang.Specification
 import spock.lang.Unroll
 
 import static foundation.omni.CurrencyID.*
-import foundation.omni.net.OmniMainNetParams
-import org.bitcoinj.core.Address
-import spock.lang.Specification
-
 
 /**
  * Functional (Integration) test of OmniwalletClient
  */
 @Ignore("This is really an integration test")
 class OmniwalletClientSpec extends Specification {
-    final Address exodusAddress = OmniMainNetParams.get().exodusAddress;
-    final Address testAddr = LegacyAddress.fromBase58(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
+    final static Address exodusAddress = OmniMainNetParams.get().exodusAddress;
+    final static Address testAddr = LegacyAddress.fromBase58(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
 
     @Shared OmniwalletAbstractClient client
 
@@ -46,9 +47,19 @@ class OmniwalletClientSpec extends Specification {
         height > 400000
     }
 
+    def "load balances of address with single address"() {
+        when:
+        WalletAddressBalance balances = client.balancesForAddress(testAddr)
+
+        then:
+        balances != null
+        balances[BTC].balance.numberValue() >= 0
+        balances[USDT].balance.numberValue() >= 0
+    }
+
     def "load balances of addresses with single address"() {
         when:
-        def balances = client.balancesForAddresses([testAddr])
+        OmniJBalances balances = client.balancesForAddresses([testAddr])
 
         then:
         balances != null
@@ -214,6 +225,38 @@ class OmniwalletClientSpec extends Specification {
         allBalancesValid(balances)
     }
 
+
+    def "we can get consensus info for Mulligan coin (largest indivisible issuance)"() {
+        setup:
+        def propType = PropertyType.INDIVISIBLE
+        when: "we get data"
+        SortedMap<Address, BalanceEntry> balances = client.getConsensusForCurrency(CurrencyID.of(340))
+
+        then: "something is there"
+        balances.size() >= 0
+
+        and: "all balances of correct property type"
+        allPropTypesValid(balances, propType)
+
+        and: "all balances are in valid range"
+        allBalancesValid(balances)
+    }
+
+    def "we can get consensus info for wbch.xyz coin (large indivisible issuance)"() {
+        setup:
+        def propType = PropertyType.INDIVISIBLE
+        when: "we get data"
+        SortedMap<Address, BalanceEntry> balances = client.getConsensusForCurrency(CurrencyID.of(381))
+
+        then: "something is there"
+        balances.size() >= 0
+
+        and: "all balances of correct property type"
+        allPropTypesValid(balances, propType)
+
+        and: "all balances are in valid range"
+        allBalancesValid(balances)
+    }
 
     def "we can get consensus info for SAFEX"() {
         setup:

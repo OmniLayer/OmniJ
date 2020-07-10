@@ -184,6 +184,38 @@ class OmniwalletModernJDKClientSpec extends Specification {
     }
 
 
+    def "we can get consensus info for Mulligan coin (largest indivisible issuance)"() {
+        setup:
+        def propType = PropertyType.INDIVISIBLE
+        when: "we get data"
+        SortedMap<Address, BalanceEntry> balances = client.getConsensusForCurrency(CurrencyID.of(340))
+
+        then: "something is there"
+        balances.size() >= 0
+
+        and: "all balances of correct property type"
+        allPropTypesValid(balances, propType)
+
+        and: "all balances are in valid range"
+        allBalancesValid(balances)
+    }
+
+    def "we can get consensus info for wbch.xyz coin (large indivisible issuance)"() {
+        setup:
+        def propType = PropertyType.INDIVISIBLE
+        when: "we get data"
+        SortedMap<Address, BalanceEntry> balances = client.getConsensusForCurrency(CurrencyID.of(381))
+
+        then: "something is there"
+        balances.size() >= 0
+
+        and: "all balances of correct property type"
+        allPropTypesValid(balances, propType)
+
+        and: "all balances are in valid range"
+        allBalancesValid(balances)
+    }
+
     def "we can get consensus info for SAFEX"() {
         setup:
         def propType = PropertyType.INDIVISIBLE

@@ -10,6 +10,42 @@ import spock.lang.Unroll
 class OmniIndivisibleValueSpec extends Specification {
 
     @Unroll
+    def "When created via of(Long), resulting value is unchanged #willetts == #expectedValue" (Long willetts, Long expectedValue) {
+        when: "we try to create an OmniValue using a valid numeric type"
+        OmniValue value = OmniIndivisibleValue.of(willetts)
+
+        then: "it is created correctly"
+        value.longValue() == expectedValue
+
+        where:
+        willetts                | expectedValue
+        0                       | 0
+        1                       | 1
+        100                     | 100
+        10000000                | 10000000
+        100000000               | 100000000
+        9223372036854775807     | 9223372036854775807
+    }
+
+    @Unroll
+    def "When created via of(BigInteger), resulting value is unchanged #willetts == #expectedValue" (BigInteger willetts, Long expectedValue) {
+        when: "we try to create an OmniValue using a valid numeric type"
+        OmniValue value = OmniIndivisibleValue.of(willetts)
+
+        then: "it is created correctly"
+        value.longValue() == expectedValue
+
+        where:
+        willetts                | expectedValue
+        0                       | 0
+        1                       | 1
+        100                     | 100
+        10000000                | 10000000
+        100000000               | 100000000
+        9223372036854775807     | 9223372036854775807
+    }
+
+    @Unroll
     def "When created from willetts, resulting value is unchanged #willetts == #expectedValue" (Long willetts, Long expectedValue) {
         when: "we try to create an OmniValue using a valid numeric type"
         OmniValue value = OmniIndivisibleValue.ofWilletts(willetts)
