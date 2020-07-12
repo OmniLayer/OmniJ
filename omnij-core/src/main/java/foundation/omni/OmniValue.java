@@ -21,7 +21,7 @@ import java.math.BigInteger;
  * values will be treated a decimal values and methods returning integer types will be throw exceptions if their
  * is a fractional component that would be truncated.</b></p>
  *
- * TODO: Refactor to extend java.lang.Number to remove dependency on javax.money in omnij-core
+ * TODO: Consider refactoring to extend java.lang.Number to remove dependency on javax.money in omnij-core
  *
  * <p>TODO: provide examples of *value() methods and what they return</p>
  *
@@ -35,6 +35,8 @@ public abstract class OmniValue extends NumberValue {
     // Willett max/min values, same as max/min for indivisible, but different than for divisible
     public static final long MIN_WILLETTS = 0; // Minimum value of 1 in transactions?
     public static final long MAX_WILLETTS = Long.MAX_VALUE; // = 2^63 - 1 = 9_223_372_036_854_775_807L;
+
+    // -9_223_372_036_854_775_616
 
     /**
      * Default Constructor
@@ -140,9 +142,7 @@ public abstract class OmniValue extends NumberValue {
     }
 
     @Override
-    public double doubleValueExact() {
-        throw new UnsupportedOperationException("Operation not supported");
-    }
+    abstract public double doubleValueExact();
 
     @Override
     public <T extends Number> T numberValue(Class<T> numberType) {
@@ -195,10 +195,15 @@ public abstract class OmniValue extends NumberValue {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
+    /**
+     * Return a double value. Warning: this will result in rounding errors.
+     * Only use this for applications like plotting data, never for anything
+     * that counts currency.
+
+     * @return The value rounded to the nearest {@code double}.
+     */
     @Override
-    public double doubleValue() {
-        return doubleValueExact();
-    }
+    abstract public double doubleValue();
 
     @Override
     public int hashCode() {
@@ -230,7 +235,7 @@ public abstract class OmniValue extends NumberValue {
         return numberValue().toString();
     }
 
-    public  abstract BigDecimal bigDecimalValue();
+    public abstract BigDecimal bigDecimalValue();
 
     public OmniValue plus(OmniValue right) {
         if (this instanceof OmniDivisibleValue && right instanceof OmniDivisibleValue) {

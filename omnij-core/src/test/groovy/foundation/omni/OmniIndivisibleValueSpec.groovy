@@ -151,10 +151,28 @@ class OmniIndivisibleValueSpec extends Specification {
         UnsupportedOperationException e = thrown()
     }
 
-    def "Converting to double not allowed"() {
+    @Unroll
+    def "Converting to double works with some loss of information (#longVal, #doubleExpected)"(long longVal, double doubleExpected) {
+        when:
+        OmniValue value = OmniIndivisibleValue.of(longVal)
+        double v = value.doubleValue()
+
+        then:
+        v == doubleExpected
+
+        where:
+        longVal           | doubleExpected
+        0                 | 0.0
+        1                 | 1.0
+        Long.MAX_VALUE-1  | 9.223372036854776E18d  // NOTE: expected loss of precision, this value was rounded up
+        Long.MAX_VALUE    | 9.223372036854776E18d
+
+    }
+
+    def "Converting (exactly) to double not allowed"() {
         when:
         OmniValue value = new OmniIndivisibleValue(1)
-        def v = value.doubleValue()
+        def v = value.doubleValueExact()
 
         then:
         UnsupportedOperationException e = thrown()
