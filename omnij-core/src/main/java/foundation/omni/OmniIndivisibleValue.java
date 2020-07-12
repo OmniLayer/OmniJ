@@ -75,6 +75,16 @@ public final class OmniIndivisibleValue extends OmniValue {
     }
 
     @Override
+    public double doubleValueExact() {
+        throw new UnsupportedOperationException("Operation not supported");
+    }
+
+    @Override
+    public double doubleValue() {
+        return (double) willetts;   // Cast/conversion to double can result in rounding
+    }
+
+    @Override
     public OmniIndivisibleValue round(MathContext mathContext) {
         return OmniIndivisibleValue.of(bigDecimalValue().round(mathContext).longValue());
     }

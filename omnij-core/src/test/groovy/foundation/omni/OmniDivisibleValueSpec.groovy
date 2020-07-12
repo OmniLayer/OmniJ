@@ -145,14 +145,38 @@ class OmniDivisibleValueSpec extends Specification {
         UnsupportedOperationException e = thrown()
     }
 
-    def "Converting to double not allowed"() {
+    def "Converting (exactly) to double not allowed"() {
         when:
         OmniValue value = OmniDivisibleValue.of(1)
-        def v = value.doubleValue()
+        def v = value.doubleValueExact()
 
         then:
         UnsupportedOperationException e = thrown()
     }
+
+    def "demonstration of long to double rounding"() {
+        expect:
+        (double) Long.MAX_VALUE == (double) Long.MAX_VALUE-1
+    }
+
+    @Unroll
+    def "Converting to double works with some loss of information (#willetts, #doubleExpected)"(long willetts, double doubleExpected) {
+        when:
+        OmniValue value = OmniDivisibleValue.ofWilletts(willetts)
+        double v = value.doubleValue()
+
+        then:
+        v == doubleExpected
+
+        where:
+        willetts         | doubleExpected
+        0                | 0.0
+        1                | 0.00000001d
+        100000000        | 1.0
+        Long.MAX_VALUE-1 | 9.223372036854776E10d // NOTE: expected loss of precision, this value was rounded up
+        Long.MAX_VALUE   | 9.223372036854776E10d
+    }
+
 
     def "Exception is thrown when converting to int would throw exception"() {
         when:

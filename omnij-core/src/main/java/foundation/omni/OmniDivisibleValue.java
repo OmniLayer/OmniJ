@@ -98,8 +98,7 @@ public final class OmniDivisibleValue extends OmniValue {
 
     @Override
     public BigDecimal numberValue() {
-        BigDecimal willetts = new BigDecimal(this.willetts);
-        return willetts.divide(willettsPerDivisibleBigDecimal, DEFAULT_SCALE, RoundingMode.UNNECESSARY);
+        return bigDecimalValue();
     }
 
     @Override
@@ -169,11 +168,13 @@ public final class OmniDivisibleValue extends OmniValue {
 
     @Override
     public double doubleValue() {
-        return doubleValueExact();
+        return bigDecimalValue().doubleValue(); // Warning: Converting BigDecimal to Double can result in rounding
     }
 
     public BigDecimal bigDecimalValue() {
-        return numberValue();
+        BigDecimal willetts = new BigDecimal(this.willetts);
+        // TODO: Consider moving the decimal point rather than dividing
+        return willetts.divide(willettsPerDivisibleBigDecimal, DEFAULT_SCALE, RoundingMode.UNNECESSARY);
     }
 
     public OmniDivisibleValue plus(OmniDivisibleValue right) {
