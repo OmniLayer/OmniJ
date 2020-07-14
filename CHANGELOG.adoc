@@ -3,13 +3,18 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.5.11-SNAPSHOT
+== v0.5.11
 
-Released: In development
+Released: 2020.07.14
 
 === omnij-core
 
 * Fixed bug in `OmniIndivisibleValue.of(BigInteger)` for large, but valid values.
+* Provide an implementation of `OmniValue.doubleValue()` (Warning: this will use rounding and should only be used for charting and similar applications.)
+
+=== omnij-core
+
+* Remove deprecated `ConsensusSnapshot` constructor that took a `Long` for `blockheight`. (The remaining constructor takes an `int`)
 
 == v0.5.10
 
