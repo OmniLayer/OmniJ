@@ -38,7 +38,7 @@ public class PropertyInfoFromJsonFile {
 
     public static OmniwalletPropertiesListResponse readResponseFromString(String json) {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new OmniwalletClientModule(MainNetParams.get()));
+        mapper.registerModule(new OmniwalletClientModule());
         OmniwalletPropertiesListResponse response;
         try {
             response = mapper.readValue(json, OmniwalletPropertiesListResponse.class);

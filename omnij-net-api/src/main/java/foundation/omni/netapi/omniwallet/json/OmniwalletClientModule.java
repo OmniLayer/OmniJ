@@ -22,9 +22,25 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 
 /**
- * A module of Jackson converters for OmniwalletClient
+ * A module of Jackson converters for OmniwalletClient that provides all converters necessary for an Omniwallet Client.
  */
 public class OmniwalletClientModule extends SimpleModule {
+
+    /**
+     * Construct a Jackson converter module with all converters necessary
+     * for an Omniwallet Client.
+     *
+     */
+    public OmniwalletClientModule() {
+        this(null);
+    }
+
+    /**
+     * Construct a Jackson converter module with all converters necessary for an Omniwallet Client
+     * that enforces valid address formats for the specified {@link NetworkParameters}.
+     *
+     * @param netParams Specifies the network to validate addresses for
+     */
     public OmniwalletClientModule(NetworkParameters netParams) {
         super("OmniJOWMappingClient", new Version(1, 0, 0, null, null, null));
         this    .addKeyDeserializer(Address.class, new AddressKeyDeserializer(netParams))

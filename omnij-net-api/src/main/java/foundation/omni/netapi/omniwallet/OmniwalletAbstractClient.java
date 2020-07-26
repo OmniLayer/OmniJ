@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 /**
  * Base class for Omniwallet Client implementations
- * TODO: We should probably use composition rather than inheritence and have
+ * TODO: We should probably use composition rather than inheritance and have
  * a RawOmniwallet interface and inject an implementation of
  * that into the constructor of an OmniwalletConsensusService type.
  */
@@ -58,7 +58,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
         this.baseURI = baseURI;
         this.debug = debug;
         this.strictMode = strictMode;
-        netParams = MainNetParams.get();
+        netParams = null;   // Don't enforce address validation in the client
     }
 
     @Override
