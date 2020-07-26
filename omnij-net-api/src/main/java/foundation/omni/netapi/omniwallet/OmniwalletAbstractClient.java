@@ -141,15 +141,16 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
         }
         // TODO: We need an accurate, efficient way of determining divisible vs indivisible
         final PropertyType propertyType = lookupPropertyType(currencyID);
-        Map<Address, BalanceEntry> unsorted = balances.stream()
+        return balances.stream()
                 .map(bal -> balanceMapper(bal, propertyType))
                 .collect(Collectors.toMap(
                         AddressBalanceEntry::getAddress,
                         address -> new BalanceEntry(address.getBalance(),
                                 address.getReserved(),
-                                address.getFrozen())
-                ));
-        return new TreeMap<>(unsorted);
+                                address.getFrozen()),
+                        (a,b)->a,
+                        TreeMap::new)
+                );
     }
 
     @Override
