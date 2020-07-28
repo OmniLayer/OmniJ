@@ -12,6 +12,7 @@ import foundation.omni.netapi.omniwallet.json.OmniwalletClientModule;
 import foundation.omni.netapi.omniwallet.json.OmniwalletPropertiesListResponse;
 import foundation.omni.netapi.omniwallet.json.RevisionInfo;
 import org.bitcoinj.core.Address;
+import org.bitcoinj.core.NetworkParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
- * OmniwalletAbstractClient implementation using JDK 11+ java.net.http HttpClient
+ * {@link OmniwalletAbstractClient} implementation using JDK 11+ {@link HttpClient}
  */
 public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
     private static final Logger log = LoggerFactory.getLogger(OmniwalletModernJDKClient.class);
@@ -40,13 +41,24 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
     private final UncheckedObjectMapper objectMapper;
 
     public OmniwalletModernJDKClient(URI baseURI) {
-        super(baseURI, true, false);
+        this(baseURI, true, false, null);
+    }
+
+    /**
+     *
+     * @param baseURI Base URL of server
+     * @param debug Enable debugging, logging, etc.
+     * @param strictMode Only accept valid amounts from server
+     * @param netParams Specify active Bitcoin network (used for Address validation)
+     */
+    public OmniwalletModernJDKClient(URI baseURI, boolean debug, boolean strictMode, NetworkParameters netParams) {
+        super(baseURI, true, false, netParams);
         this.client = HttpClient.newHttpClient();
         objectMapper = new UncheckedObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.registerModule(new OmniwalletClientModule(netParams));
     }
-    
+
     public Integer currentBlockHeight() {
         try {
             return currentBlockHeightAsync().get();

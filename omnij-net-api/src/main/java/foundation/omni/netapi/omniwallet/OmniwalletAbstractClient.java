@@ -20,7 +20,6 @@ import foundation.omni.rpc.ConsensusSnapshot;
 import foundation.omni.rpc.SmartPropertyListInfo;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.params.MainNetParams;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -44,21 +43,31 @@ import java.util.stream.Collectors;
  */
 public abstract class OmniwalletAbstractClient implements ConsensusService {
     public static final URI omniwalletBase =  URI.create("https://www.omniwallet.org");
+    public static final URI omniwalletApiBase =  URI.create("https://api.omniwallet.org");
+    public static final URI omniExplorerApiBase =  URI.create("https://api.omniexplorer.info");
     public static final URI stagingBase = URI.create("https://staging.omniwallet.org");
     static public final int BALANCES_FOR_ADDRESSES_MAX_ADDR = 20;
     static public final int CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
     static public final int READ_TIMEOUT_MILLIS = 120 * 1000; // 120s (long enough to load USDT rich list)
-    protected URI baseURI;
+    protected final URI baseURI;
     private boolean debug;
-    protected Map<CurrencyID, PropertyType> cachedPropertyTypes = new HashMap<>();
     protected boolean strictMode;
-    protected NetworkParameters netParams;
+    /**
+     * netParams, if non-null, is used for validating addresses during deserialization
+     */
+    protected final NetworkParameters netParams;
+
+    protected final Map<CurrencyID, PropertyType> cachedPropertyTypes = new HashMap<>();
 
     public OmniwalletAbstractClient(URI baseURI, boolean debug, boolean strictMode) {
+        this(baseURI, debug, strictMode, null);
+    }
+
+    public OmniwalletAbstractClient(URI baseURI, boolean debug, boolean strictMode, NetworkParameters netParams) {
         this.baseURI = baseURI;
         this.debug = debug;
         this.strictMode = strictMode;
-        netParams = null;   // Don't enforce address validation in the client
+        this.netParams = netParams;
     }
 
     @Override
