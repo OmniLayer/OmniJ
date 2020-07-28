@@ -10,13 +10,16 @@ public class AddressVerifyInfo {
     private final String balance;
     private final String reservedBalance;
     private final Address address;
+    private final boolean isFrozen;
 
     public AddressVerifyInfo(@JsonProperty("balance") String balance,
                              @JsonProperty("reserved_balance") String reservedBalance,
-                             @JsonProperty("address") Address address) {
+                             @JsonProperty("address") Address address,
+                             @JsonProperty("frozen") Boolean frozen) {
         this.balance = balance;
         this.reservedBalance = reservedBalance;
         this.address = address;
+        this.isFrozen = (frozen != null) ? frozen : false;
     }
 
     public String getBalance() {
@@ -29,5 +32,9 @@ public class AddressVerifyInfo {
 
     public Address getAddress() {
         return address;
+    }
+
+    public boolean isFrozen() {
+        return isFrozen;
     }
 }

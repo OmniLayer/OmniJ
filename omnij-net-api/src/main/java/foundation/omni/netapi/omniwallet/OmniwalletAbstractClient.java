@@ -153,11 +153,13 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
         return balances.stream()
                 .map(bal -> balanceMapper(bal, propertyType))
                 .collect(Collectors.toMap(
+                        // Key is Address
                         AddressBalanceEntry::getAddress,
-                        address -> new BalanceEntry(address.getBalance(),
-                                address.getReserved(),
-                                address.getFrozen()),
-                        (a,b)->a,
+                        // Value is a BalanceEntry (with no Address field)
+                        address -> new BalanceEntry(address.getBalance(), address.getReserved(), address.getFrozen()),
+                        // If duplicate key keep existing value (there should be no duplicate keys)
+                        (existingValue, duplicateValue) -> existingValue,
+                        // Use a TreeMap so map is sorted by Address
                         TreeMap::new)
                 );
     }
@@ -202,15 +204,23 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
 
     protected abstract CompletableFuture<List<AddressVerifyInfo>> verifyAddresses(CurrencyID currencyID);
 
+
     protected AddressBalanceEntry balanceMapper(AddressVerifyInfo item, PropertyType propertyType) {
 
         Address address = item.getAddress();
-        String balanceStr = item.getBalance();
-        String reservedStr = item.getReservedBalance();
+        OmniValue balance = toOmniValue(item.getBalance(), propertyType);
+        OmniValue reserved = toOmniValue(item.getReservedBalance(), propertyType);
+        boolean isFrozen = item.isFrozen();
 
-        OmniValue balance = toOmniValue(balanceStr, propertyType);
-        OmniValue reserved = toOmniValue(reservedStr, propertyType);
-        OmniValue frozen = OmniValue.of(0, propertyType);   // Placeholder
+        OmniValue frozen;
+
+        if (isFrozen) {
+            frozen = balance;
+            balance = OmniValue.of(0, propertyType);
+        } else {
+            frozen = OmniValue.of(0, propertyType);
+        }
+
         return new AddressBalanceEntry(address, balance, reserved, frozen);
     }
 
@@ -329,8 +339,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
     }
 
     protected PropertyType divisibleToPropertyType(boolean divisible) {
-        PropertyType type =  divisible ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
-        return type;
+        return divisible ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
     }
 
 }
