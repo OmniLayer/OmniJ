@@ -2,7 +2,7 @@ package foundation.omni.consensus
 
 import foundation.omni.CurrencyID
 import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
-import foundation.omni.rest.omniwallet.OmniwalletClient
+import foundation.omni.rest.omniwallet.mjdk.OmniwalletModernJDKClient
 import foundation.omni.rpc.ConsensusFetcher
 import foundation.omni.rpc.ConsensusSnapshot
 import foundation.omni.rpc.SmartPropertyListInfo
@@ -26,7 +26,7 @@ class OmniwalletConsensusFetcher implements ConsensusFetcher {
 
     @TypeChecked
     OmniwalletConsensusFetcher (URI hostURI) {
-        client = new OmniwalletClient(hostURI, false, true, MainNetParams.get())
+        client = new OmniwalletModernJDKClient(hostURI, false, true, MainNetParams.get())
     }
 
     @Override

@@ -1,6 +1,6 @@
 package foundation.omni.consensus;
 
-import foundation.omni.rest.omniwallet.OmniwalletClient;
+import foundation.omni.rest.omniwallet.mjdk.OmniwalletModernJDKClient;
 import org.bitcoinj.params.MainNetParams;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
@@ -9,9 +9,8 @@ import java.net.URI;
 
 /**
  * Command-line tool and class for fetching OmniWallet consensus data
- * TODO: Migrate to OmniwalletModernJDKClient ?
  */
-public class OmniwalletConsensusTool extends OmniwalletClient implements ConsensusTool {
+public class OmniwalletConsensusTool extends OmniwalletModernJDKClient implements ConsensusTool {
     public OmniwalletConsensusTool() {
         super(omniwalletBase, true, true, MainNetParams.get());
     }

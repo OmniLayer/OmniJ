@@ -3,8 +3,9 @@ package foundation.omni.test.consensus
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
-import foundation.omni.rest.omniwallet.OmniwalletClient
+import foundation.omni.rest.omniwallet.mjdk.OmniwalletModernJDKClient
 import foundation.omni.rpc.SmartPropertyListInfo
+import org.bitcoinj.params.MainNetParams
 import spock.lang.Unroll
 
 import static foundation.omni.CurrencyID.*
@@ -131,7 +132,7 @@ class OmniwalletServerSpec extends Specification {
 //        props[USDT].divisible == true
     }
 
-    private OmniwalletAbstractClient getOmniwalletClient() {
-        return new OmniwalletClient(OmniwalletAbstractClient.omniwalletBase, false, true)
+    private static OmniwalletAbstractClient getOmniwalletClient() {
+        return new OmniwalletModernJDKClient(OmniwalletAbstractClient.omniwalletBase, false, true, MainNetParams.get())
     }
 }

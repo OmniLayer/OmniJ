@@ -17,9 +17,7 @@ import java.io.PrintWriter;
 import java.net.URI;
 
 /**
- * Tool to fetch Omni consensus from Omni Core or one of several other Omni APIs.
- * This is in Groovy because it calls some tools that ARE/WERE written in Groovy (e.g. OmniwalletConsensusTool)
- * TODO: Convert to Java now that OmniwalletConsensusTool is in Java
+ * Tool to fetch Omni and optionally compare consensus data from Omni Core and/or Omniwallet.
  */
 public class ConsensusCLI extends BitcoinCLITool {
     public static final String commandName = "omni-consensus";

@@ -26,7 +26,7 @@ There are currently nine active subprojects of OmniJ. Each of which builds a JAR
 | omnij-cli
 | Omni consensus-checking command-line tool.
 | 11
-| Uses the Apache Groovy Language
+| 
 
 | omnij-core
 | Core OmniJ classes
@@ -64,8 +64,8 @@ There are currently nine active subprojects of OmniJ. Each of which builds a JAR
 |
 
 | omnij-rpc
-| *Omni Core* *RegTest*/Integration Tests, Groovy JSON-PRC clients, command-line API/tools
-| 8
+| *Omni Core* *RegTest*/Integration Tests, Groovy JSON-RPC clients, command-line API/tools
+| 11
 | Uses the Apache Groovy Language
 
 |===
