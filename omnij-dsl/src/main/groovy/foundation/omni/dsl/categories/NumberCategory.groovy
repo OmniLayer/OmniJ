@@ -8,7 +8,7 @@ import foundation.omni.OmniIndivisibleValue
 
 
 /**
- * Convenience Category for converting Numbers to the Coin class
+ * Convenience Category for converting Numbers to an OmniValue class
  *
  */
 @CompileStatic
@@ -43,19 +43,8 @@ class NumberCategory {
     static long asIndivisible(Number self) {
         switch(self) {
             case BigDecimal:    return ((BigDecimal) self).longValueExact()
-            case BigInteger:    return ((BigInteger) self).longValue()
+            case BigInteger:    return ((BigInteger) self).longValueExact()
             default:            return self.longValue()
         }
     }
-
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (obj instanceof OmniValue) {
-            return ((OmniValue)this).getWilletts() == ((OmniValue)obj).getWilletts();
-        }
-        return false;
-    }
-
 }
