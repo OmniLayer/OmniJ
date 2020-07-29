@@ -250,4 +250,60 @@ class OmniDivisibleValueSpec extends Specification {
         OmniDivisibleValue.of(1.1) != OmniDivisibleValue.of(1.0)    // GROOVY-7608,Fixed in Groovy 2.5.0-alpha-1
     }
 
+    @Unroll
+    def "toString works"(BigDecimal decimal, String expectedString) {
+        when:
+        def actualString = OmniDivisibleValue.of(decimal).toString()
+
+        then:
+        actualString == expectedString
+
+        where:
+        decimal                      | expectedString
+        0.0                          | "0E-8"
+        0.00000001                   | "1E-8"
+        0.10000000                   | "0.10000000"
+        1                            | "1.00000000"
+        100.00000000                 | "100.00000000"
+        1000.0                       | "1000.00000000"
+        OmniDivisibleValue.MAX_VALUE | "92233720368.54775807"
+    }
+
+    @Unroll
+    def "toPlainString works"(BigDecimal decimal, String expectedString) {
+        when:
+        def actualString = OmniDivisibleValue.of(decimal).toPlainString()
+
+        then:
+        actualString == expectedString
+
+        where:
+        decimal                      | expectedString
+        0.0                          | "0.00000000"
+        0.00000001                   | "0.00000001"
+        0.10000000                   | "0.10000000"
+        1                            | "1.00000000"
+        100.00000000                 | "100.00000000"
+        1000.0                       | "1000.00000000"
+        OmniDivisibleValue.MAX_VALUE | "92233720368.54775807"
+    }
+
+    @Unroll
+    def "toFormattedString works"(BigDecimal decimal, String expectedString) {
+        when:
+        def actualString = OmniDivisibleValue.of(decimal).toFormattedString()
+
+        then:
+        actualString == expectedString
+
+        where:
+        decimal                      | expectedString
+        0.0                          | "0.0"
+        0.00000001                   | "0.00000001"
+        0.10000000                   | "0.1"
+        1                            | "1.0"
+        100.00000000                 | "100.0"
+        1000.0                       | "1,000.0"
+        OmniDivisibleValue.MAX_VALUE | "92,233,720,368.54775807"
+    }
 }

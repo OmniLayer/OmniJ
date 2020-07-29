@@ -196,4 +196,55 @@ class OmniIndivisibleValueSpec extends Specification {
         ArithmeticException e = thrown()
     }
 
+    @Unroll
+    def "toString works"(Long number, String expectedString) {
+        when:
+        def actualString = OmniIndivisibleValue.of(number).toString()
+
+        then:
+        actualString == expectedString
+
+        where:
+        number                         | expectedString
+        0                              | "0"
+        1                              | "1"
+        100                            | "100"
+        1000                           | "1000"
+        OmniIndivisibleValue.MAX_VALUE | "9223372036854775807"
+    }
+
+    @Unroll
+    def "toPlainString works"(Long number, String expectedString) {
+        when:
+        def actualString = OmniIndivisibleValue.of(number).toPlainString()
+
+        then:
+        actualString == expectedString
+
+        where:
+        number                         | expectedString
+        0                              | "0"
+        1                              | "1"
+        100                            | "100"
+        1000                           | "1000"
+        OmniIndivisibleValue.MAX_VALUE | "9223372036854775807"
+    }
+
+    @Unroll
+    def "toFormattedString works"(Long number, String expectedString) {
+        when:
+        def actualString = OmniIndivisibleValue.of(number).toFormattedString()
+
+        then:
+        actualString == expectedString
+
+        where:
+        number                         | expectedString
+        0                              | "0"
+        1                              | "1"
+        100                            | "100"
+        1000                           | "1,000"
+        OmniIndivisibleValue.MAX_VALUE | "9,223,372,036,854,775,807"
+    }
+
 }

@@ -3,6 +3,7 @@ package foundation.omni;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.text.NumberFormat;
 
 /**
  * Numeric Value of Indivisible Omni Token
@@ -11,12 +12,12 @@ import java.math.MathContext;
  */
 public final class OmniIndivisibleValue extends OmniValue {
     public static final long   MIN_VALUE = 0; // Minimum value of 1 in transactions?
-    public static final long   MAX_VALUE = 9223372036854775807L;
+    public static final long   MAX_VALUE = 9_223_372_036_854_775_807L;
     public static final BigInteger MIN_BIGINT = BigInteger.valueOf(MIN_VALUE);
     public static final BigInteger MAX_BIGINT = BigInteger.valueOf(MAX_VALUE);
     public static final OmniIndivisibleValue MIN = OmniIndivisibleValue.of(MIN_VALUE);
     public static final OmniIndivisibleValue MAX = OmniIndivisibleValue.of(MAX_VALUE);
-
+    private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance();
 
     public static OmniIndivisibleValue of(BigInteger amount) {
         checkWillettValue(amount);
@@ -78,6 +79,21 @@ public final class OmniIndivisibleValue extends OmniValue {
             return true;
         }
         return this.willetts == ((OmniIndivisibleValue)obj).willetts;
+    }
+
+    @Override
+    public String toString() {
+        return Long.toString(willetts);
+    }
+
+    @Override
+    public String toPlainString() {
+        return toString();
+    }
+
+    @Override
+    public String toFormattedString() {
+        return numberFormatter.format(willetts);
     }
 
     @Override

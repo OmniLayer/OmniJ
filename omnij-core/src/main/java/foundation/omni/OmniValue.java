@@ -223,11 +223,12 @@ public abstract class OmniValue extends NumberValue {
     }
 
     @Override
-    public String toString() {
-        return numberValue().toString();
-    }
+    abstract public String toString();
 
-    public abstract BigDecimal bigDecimalValue();
+    abstract public String toPlainString();
+    abstract public String toFormattedString();
+
+    abstract public BigDecimal bigDecimalValue();
 
     public OmniValue plus(OmniValue right) {
         if (this instanceof OmniDivisibleValue && right instanceof OmniDivisibleValue) {

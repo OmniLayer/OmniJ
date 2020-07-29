@@ -5,11 +5,12 @@ import org.bitcoinj.core.Coin;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 /**
  * Numeric Value of Divisible Omni Token
  * An Omni Divisible token is typically represented to the user as a decimal amount and hence
- * you can have a fractional number of tokens. Internally it uses the same format as a divisible token.
+ * you can have a fractional number of tokens. Internally it uses the same format as an indivisible token.
  *
  */
 public final class OmniDivisibleValue extends OmniValue {
@@ -21,8 +22,7 @@ public final class OmniDivisibleValue extends OmniValue {
     public static final long         MAX_INT_VALUE = 92233720368L;
     public static  OmniDivisibleValue MIN = OmniDivisibleValue.ofWilletts(OmniValue.MIN_WILLETTS);
     public static  OmniDivisibleValue MAX = OmniDivisibleValue.ofWilletts(OmniValue.MAX_WILLETTS);
-
-    private static final BigDecimal willettsPerDivisibleBigDecimal = new BigDecimal(willettsPerDivisible);
+    private static final DecimalFormat numberFormatter = new DecimalFormat("###,###,###,##0.0#######");
 
     /**
      * Create OmniDivisibleValue of the specified amount
@@ -39,7 +39,7 @@ public final class OmniDivisibleValue extends OmniValue {
      * @return OmniDivisibleValue representing amount
      */
     public static OmniDivisibleValue of(BigDecimal amount) {
-        return new OmniDivisibleValue(amount.multiply(willettsPerDivisibleBigDecimal).longValueExact());
+        return new OmniDivisibleValue(amount.movePointRight(Coin.SMALLEST_UNIT_EXPONENT).longValueExact());
     }
 
     /**
@@ -95,6 +95,21 @@ public final class OmniDivisibleValue extends OmniValue {
             return true;
         }
         return this.willetts == ((OmniDivisibleValue)obj).willetts;
+    }
+
+    @Override
+    public String toString() {
+        return bigDecimalValue().toString();
+    }
+
+    @Override
+    public String toPlainString() {
+        return bigDecimalValue().toPlainString();
+    }
+
+    @Override
+    public String toFormattedString() {
+        return numberFormatter.format(bigDecimalValue());
     }
 
     @Override
@@ -183,9 +198,7 @@ public final class OmniDivisibleValue extends OmniValue {
     }
 
     public BigDecimal bigDecimalValue() {
-        BigDecimal willetts = new BigDecimal(this.willetts);
-        // TODO: Consider moving the decimal point rather than dividing
-        return willetts.divide(willettsPerDivisibleBigDecimal, DEFAULT_SCALE, RoundingMode.UNNECESSARY);
+        return new BigDecimal(this.willetts).movePointLeft(Coin.SMALLEST_UNIT_EXPONENT);
     }
 
     public OmniDivisibleValue plus(OmniDivisibleValue right) {
