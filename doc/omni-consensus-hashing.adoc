@@ -1,8 +1,6 @@
-Omni Protocol Consensus Hashing Proposal
-========================================
-:toc:
-:toc-placement: manual
+= Omni Protocol Consensus Hashing Proposal
 :numbered:
+:toc: macro
 
 A draft proposal for using hashing of Omni Protocol balances for testing and validation.
 
@@ -14,13 +12,13 @@ toc::[]
 
 == Background
 
-The Omni project has historically used "Consensus Checking" as a method of validating the correctness of Omni Protocol implementations. Checking consensus for a Omni Protocol currency (such as MSC, TMSC, or any user currency) means asking two or more implementations of the Omni Protocol to generate a list of every address that contains a balance in that currency and the balance amount. To check for valid consensus the total balance and the reserved balance at each address containing that currency are compared.
+The Omni project has historically used "Consensus Checking" as a method of validating the correctness of Omni Protocol implementations. Checking consensus for a Omni Protocol currency (such as OMNI, TOMNI, or any user currency) means asking two or more implementations of the Omni Protocol to generate a list of every address that contains a balance in that currency and the balance amount. To check for valid consensus the total balance and the reserved balance at each address containing that currency are compared.
 
 One problem with this method of validation is that it is becoming less useful as we focus our efforts on the Omni Core reference implementation. When a new feature that could affect address balances is added to the reference implementation it is not possible to consensus check against a second implementation until the new feature is added to the second implementation.
 
-A secpmd problem with consensus checking is that a valid comparison requires that both implementations return consensus data for the same block height. If an implementation can only return a consensus snapshot for the current block height and one implementation is lagging behind another in parsing transaction data, then an accurate comparison is not possible unless consensus data from the more up-to-date implementaiton is saved until the second implementation catches up.
+A second problem with consensus checking is that a valid comparison requires that both implementations return consensus data for the same block height. If an implementation can only return a consensus snapshot for the current block height and one implementation is lagging behind another in parsing transaction data, then an accurate comparison is not possible unless consensus data from the more up-to-date implementation is saved until the second implementation catches up.
 
-Although it would be possible to save consensus data for each new block as it is processed by an implentation, the amount of storage required quickly becomes prohibited.
+Although it would be possible to save consensus data for each new block as it is processed by an implementation, the amount of storage required quickly becomes prohibited.
 
 It is for these reasons that we propose using a hashing function to create hashes representing consensus data. These hashes can be stored for long periods of time, perhaps indefinitely and can be used for comparison purposes.
 
@@ -28,9 +26,9 @@ It is for these reasons that we propose using a hashing function to create hashe
 
 * Create a hash that represents the state of particular currency at specific block height.
 * Create a hash that represents the state of all currencies at a specific block height.
-* Create a hash that represents the changes to balances (deltas) that occured during a particular block. (This may be hard to calculate and/or of limited use)
+* Create a hash that represents the changes to balances (deltas) that occurred during a particular block. (This may be hard to calculate and/or of limited use)
 * Chance of hash collision is astronomically low
-* Hash data can be stored for every block height value from a trusted implmentation and used to regression test changes to that implementation.
+* Hash data can be stored for every block height value from a trusted implementation and used to regression test changes to that implementation.
 * Hash data can be used to track an inconsistency to a particular block and currency ID when troubleshooting.
 
 == Proposed Implementation
@@ -49,15 +47,15 @@ This is a hash of all consensus data for a particular Currency ID at a specific 
 
 === Block Consensus Hash
 
-This is a hash of all consensus data for all currencies in existance at a specific block height.
+This is a hash of all consensus data for all currencies in existence at a specific block height.
 
 === Currency Delta Consensus Hash
 
-A hash of only the changes to balances of a specific CurrencyID that occured during the specific block.  This has may not be very useful and/or may be difficult to compute. 
+A hash of only the changes to balances of a specific CurrencyID that occurred during the specific block.  This has may not be very useful and/or may be difficult to compute.
 
 === Block Delta Consensus Hash
 
-A hash of the changes to balances of a all currencies that occured during the specific block.  This has may not be very useful and/or may be difficult to compute. 
+A hash of the changes to balances of all currencies that occurred during the specific block.  This has may not be very useful and/or may be difficult to compute.
 
 == Notes on Hash Algorithms
 
@@ -67,6 +65,6 @@ This proposal suggests using the SHA-256 Algorithm for three reasons.
 . It is a well-known algorithm
 . All Bitcoin and Omni Protocol implementations have an implementation available
 
-Because Consensus Hashing is neither used or required by the specification for determining balances or for validating tranactions, it is not strictly necessary that a cyrptographically secure algorithm be used, nor are there any direct security implications of this proposals.
+Because Consensus Hashing is neither used nor required by the specification for determining balances or for validating transactions, it is not strictly necessary to use a cryptographically secure algorithm, nor are there any direct security implications of this proposal.
 
 
