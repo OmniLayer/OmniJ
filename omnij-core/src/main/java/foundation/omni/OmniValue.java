@@ -207,7 +207,7 @@ public abstract class OmniValue extends NumberValue {
 
     @Override
     public int hashCode() {
-        return Long.valueOf(willetts).hashCode();
+        return Long.hashCode(willetts);
     }
 
     @Override
