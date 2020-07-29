@@ -1,9 +1,9 @@
 package foundation.omni.cli
 
+import org.consensusj.jsonrpc.JsonRpcStatusException
 import org.consensusj.jsonrpc.cli.test.CLICommandResult
 import org.consensusj.jsonrpc.cli.test.CLITestSupport
 import foundation.omni.rpc.test.TestServers
-import spock.lang.Ignore
 import spock.lang.Specification
 
 
@@ -22,8 +22,8 @@ class ConsensusCLISpec extends Specification implements CLITestSupport {
 
         then:
         result.status == 1
-        result.output.length() > 0
-        result.error.length() == 0
+        result.output.length() == 0
+        result.error.length() >= 0
     }
 
     def "fetch Omni consensus to stdout"() {
@@ -42,8 +42,8 @@ class ConsensusCLISpec extends Specification implements CLITestSupport {
 
         then:
         result.status == 1
-        result.output.length() > 0
-        result.error.length() == 0
+        result.output.length() == 0
+        result.error.length() >= 0
     }
 
     def "fetch Omni consensus to stdout with rpcconnect option"() {
@@ -56,17 +56,21 @@ class ConsensusCLISpec extends Specification implements CLITestSupport {
         result.error.length() == 0
     }
 
-
-    @Ignore("Currently failing on Omni Bitcoin 0.13 branch due to NPE")
     def "fetch Omni consensus to stdout setting bad username & password"() {
         when:
         def result = command '-regtest -rpcwait -rpcuser=x -rpcpassword=y -property=1'
 
         then:
-        result.status == 1
-        result.output.length() == 0
-        result.error.length() > 0
-        result.error == "JSON-RPC Exception: Authorization Required\n"
+        RuntimeException rte = thrown()
+        rte.cause instanceof RuntimeException
+        rte.cause.cause instanceof JsonRpcStatusException
+
+        when:
+        JsonRpcStatusException jse = rte.cause.cause
+
+        then:
+        jse.message == "Unauthorized"
+        jse.httpCode == 401
     }
 
     /**
@@ -79,8 +83,7 @@ class ConsensusCLISpec extends Specification implements CLITestSupport {
         String[] args = parseCommandLine(line)     // Parse line into separate args
 
         // Run the command
-        ConsensusCLI cli = new ConsensusCLI(args)
-        return runCommand(cli)
+        ConsensusCLI cli = new ConsensusCLI()
+        return runTool(cli, args)
     }
-
 }

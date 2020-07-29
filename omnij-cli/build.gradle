@@ -14,17 +14,22 @@ configurations {
 dependencies {
     implementation project(':omnij-rpc')
     implementation "${consensusjGroup}:${consensusjBtcCliArtifact}:${consensusjVersion}"
-
-    implementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
 }
 
-mainClassName = "foundation.omni.cli.ConsensusCLI"
+application {
+    mainClass = 'foundation.omni.cli.ConsensusCLI'
+    applicationName = 'ConsensusCLI'
+}
+
+run {
+    args = ['-regtest', '-rpcwait', '-rpcconnect=127.0.0.1', "-property=1"]
+}
 
 jar {
     manifest {
         attributes 'Implementation-Title': 'BTC/OMNI Status',
                 'Implementation-Version': archiveVersion.get(),
-                'Consensus-Class': mainClassName
+                'Main-Class': application.mainClass
     }
 }
 
@@ -46,8 +51,9 @@ sourceSets {
 }
 
 task regTest(type: Test) {
-    testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
+    useJUnitPlatform()
+    testClassesDirs = project.sourceSets.integrationTest.output.classesDirs
+    classpath = project.sourceSets.integrationTest.runtimeClasspath
     outputs.upToDateWhen { false }
     testLogging.showStandardStreams = true
     beforeSuite { descriptor ->

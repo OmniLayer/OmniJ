@@ -45,8 +45,8 @@ class ConsensusCLIComparisonSpec extends Specification implements CLITestSupport
         String[] args = parseCommandLine(line)     // Parse line into separate args
 
         // Run the command
-        ConsensusCLI cli = new ConsensusCLI(args)
-        return runCommand(cli)
+        ConsensusCLI cli = new ConsensusCLI()
+        return runTool(cli, args)
     }
 
 }

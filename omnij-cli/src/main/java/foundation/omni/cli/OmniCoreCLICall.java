@@ -4,6 +4,7 @@ import com.msgilligan.bitcoinj.rpc.RpcConfig;
 import foundation.omni.rpc.OmniClient;
 import org.consensusj.bitcoin.cli.BitcoinCLITool;
 
+import java.io.PrintStream;
 import java.io.PrintWriter;
 
 /**
@@ -12,6 +13,10 @@ import java.io.PrintWriter;
 public class OmniCoreCLICall extends BitcoinCLITool.BitcoinCLICall {
     public OmniCoreCLICall(BitcoinCLITool tool, PrintWriter out, PrintWriter err, String[] args) {
         super(tool, out, err, args);
+    }
+
+    public OmniCoreCLICall(BitcoinCLITool tool, PrintStream out, PrintStream err, String[] args) {
+        super(tool, new PrintWriter(out, true), new PrintWriter(err,true), args);
     }
 
     @Override
