@@ -4,7 +4,6 @@ import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Options
 import org.consensusj.bitcoin.cli.BitcoinCLITool
 import foundation.omni.CurrencyID
-import foundation.omni.consensus.ExplorerConsensusTool
 import foundation.omni.rpc.ConsensusSnapshot
 import foundation.omni.consensus.ConsensusTool
 import foundation.omni.consensus.MultiPropertyComparison
@@ -81,8 +80,6 @@ public class ConsensusCLI extends BitcoinCLITool {
             tool1 = new OmniCoreConsensusTool(getRPCConfig().netParams, line.getOptionValue("omnicore-url").toURI())
         } else if (line.hasOption("omniwallet-url")) {
             tool1 = new OmniwalletConsensusTool(line.getOptionValue("omniwallet-url").toURI())
-        } else if (line.hasOption("omnichest-url")) {
-            tool1 = new ExplorerConsensusTool(line.getOptionValue("omnichest-url").toURI())
         } else {
             tool1 = new OmniCoreConsensusTool((OmniClient)call.rpcClient())
         }

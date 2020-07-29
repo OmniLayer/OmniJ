@@ -5,6 +5,7 @@ import foundation.omni.Ecosystem
 import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
 import foundation.omni.rest.omniwallet.OmniwalletClient
 import foundation.omni.rpc.SmartPropertyListInfo
+import spock.lang.Unroll
 
 import static foundation.omni.CurrencyID.*
 import spock.lang.Specification
@@ -36,20 +37,41 @@ class OmniwalletServerSpec extends Specification {
 
         then: "it looks valid"
         /* TODO:  Check to make sure it's within 15 blocks of Omni Core, or something like that? */
-        blockHeight >= 315121
+        blockHeight > 323000
     }
 
-    def "Can get Omniwallet consensus data"() {
+    @Unroll
+    def "Can get Omniwallet consensus data (divisible, #propId)"(CurrencyID propId) {
         setup:
         OmniwalletAbstractClient omniFetcher = getOmniwalletClient()
 
         when: "we get data"
-        def omniSnapshot = omniFetcher.getConsensusSnapshot(OMNI)
+        def omniSnapshot = omniFetcher.getConsensusSnapshot(propId)
 
         then: "something is there"
-        omniSnapshot.currencyID == OMNI
+        omniSnapshot.currencyID == propId
         omniSnapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
         omniSnapshot.entries.size() >= 1
+
+        where:
+        propId << [OMNI, TOMNI, /* USDT */]
+    }
+
+    @Unroll
+    def "Can get Omniwallet consensus data (indivisible, #propId)"(CurrencyID propId) {
+        setup:
+        OmniwalletAbstractClient omniFetcher = getOmniwalletClient()
+
+        when: "we get data"
+        def omniSnapshot = omniFetcher.getConsensusSnapshot(propId)
+
+        then: "something is there"
+        omniSnapshot.currencyID == propId
+        omniSnapshot.blockHeight > 323000  // Greater than a relatively recent main-net block
+        omniSnapshot.entries.size() >= 1
+
+        where:
+        propId << [MAID, SAFEX]
     }
 
     def "Can get Omniwallet property list"() {
@@ -96,6 +118,17 @@ class OmniwalletServerSpec extends Specification {
         props[TOMNI].data == "Test Omni tokens serve as the binding between Bitcoin, smart properties and contracts created on the Omni Layer."
         props[TOMNI].url == "http://www.omnilayer.org"
         props[TOMNI].divisible == true
+
+// TODO: Re-enable once timeout issues with USDT are fixed.
+//        and: "USDT is as expected"
+//        props[USDT].propertyid == USDT
+//        props[USDT].propertyid.ecosystem == Ecosystem.OMNI
+//        props[USDT].name == "TetherUS"
+//        props[USDT].category == "Financial and insurance activities"
+//        props[USDT].subcategory == "Activities auxiliary to financial service and insurance activities"
+//        props[USDT].data == "The next paradigm of money."
+//        props[USDT].url == "https://tether.to"
+//        props[USDT].divisible == true
     }
 
     private OmniwalletAbstractClient getOmniwalletClient() {

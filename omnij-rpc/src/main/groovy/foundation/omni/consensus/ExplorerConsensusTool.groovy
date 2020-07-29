@@ -13,8 +13,10 @@ import org.bitcoinj.core.LegacyAddress
 
 /**
  * Command-line tool and class for fetching OmniExplorer consensus data
+ * @deprecated Use OmniwalletConsensusTool
  */
 @Slf4j
+@Deprecated
 class ExplorerConsensusTool implements ConsensusTool {
     static URI ExplorerHost_Live = new URI("https://api.omniexplorer.info");
     private final String proto
@@ -151,6 +153,7 @@ class ExplorerConsensusTool implements ConsensusTool {
     }
 
     private consensusURL(CurrencyID currencyID) {
+        // TODO: NOTE: This URL doesn't exist on recent Omniwallet/OmniExplorer
         return new URL(proto, host, port, "${file}${currencyID.getValue()}")
     }
 

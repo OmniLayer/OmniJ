@@ -81,13 +81,7 @@ task getOmniConsensus(dependsOn: 'classes',  type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
-task getChestConsensus(dependsOn: 'classes',  type: JavaExec) {
-    main = 'foundation.omni.consensus.ChestConsensusTool'
-    args = [currencyID, 'build/chest_consensus.txt']
-    classpath = sourceSets.main.runtimeClasspath
-}
-
-task getConsensus(dependsOn: ['getCoreConsensus', 'getOmniConsensus', 'getChestConsensus']) {
+task getConsensus(dependsOn: ['getCoreConsensus', 'getOmniConsensus']) {
     doLast {
         logger.info "Consensus files are in build/*_consensus.txt"
     }
