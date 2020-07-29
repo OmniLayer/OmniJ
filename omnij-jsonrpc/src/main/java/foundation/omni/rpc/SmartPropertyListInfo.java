@@ -15,7 +15,7 @@ public class SmartPropertyListInfo {
     private final String      subcategory;
     private final String      data;
     private final String      url;
-    private final Boolean     divisible;
+    private final boolean     divisible;
 
     public SmartPropertyListInfo(@JsonProperty("propertyid")    CurrencyID propertyid,
                                  @JsonProperty("name")          String name,
@@ -23,7 +23,7 @@ public class SmartPropertyListInfo {
                                  @JsonProperty("subCategory")   String subCategory,
                                  @JsonProperty("data")          String data,
                                  @JsonProperty("url")           String url,
-                                 @JsonProperty("divisible")     Boolean divisible) {
+                                 @JsonProperty("divisible")     boolean divisible) {
         this.propertyid = propertyid;
         this.name = name;
         this.category = category;
@@ -57,7 +57,7 @@ public class SmartPropertyListInfo {
         return url;
     }
 
-    public Boolean getDivisible() {
+    public boolean getDivisible() {
         return divisible;
     }
 }
