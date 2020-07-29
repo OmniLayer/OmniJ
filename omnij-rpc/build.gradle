@@ -10,6 +10,8 @@ configurations {
 dependencies {
     api project(':omnij-core')
     api project(':omnij-jsonrpc')
+    api project(':omnij-net-api')        // For OmniwalletAbstractClient
+    api project(':omnij-rest-client')    // For OmniwalletClient (TODO: Switch to JDK11 client)
 
     api "${consensusjGroup}:${consensusjBtcJsonRpcGvyArtifact}:${consensusjVersion}"
 

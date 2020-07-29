@@ -3,8 +3,6 @@ package foundation.omni.cli
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Options
 import org.consensusj.bitcoin.cli.BitcoinCLITool
-import org.consensusj.bitcoin.cli.BitcoinRpcCliOptions
-import org.consensusj.jsonrpc.JsonRpcException
 import foundation.omni.CurrencyID
 import foundation.omni.consensus.ExplorerConsensusTool
 import foundation.omni.rpc.ConsensusSnapshot
@@ -15,11 +13,11 @@ import foundation.omni.consensus.OmniwalletConsensusTool
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.OmniClient
 import org.bitcoinj.core.Address
-import org.consensusj.jsonrpc.cli.BaseJsonRpcTool
 
 /**
  * Tool to fetch Omni consensus from Omni Core or one of several other Omni APIs.
- * This is in Groovy because it calls some tools that are written in Groovy (e.g. OmniwalletConsensusTool)
+ * This is in Groovy because it calls some tools that ARE/WERE written in Groovy (e.g. OmniwalletConsensusTool)
+ * TODO: Convert to Java now that OmniwalletConsensusTool is in Java
  */
 //@CompileStatic
 public class ConsensusCLI extends BitcoinCLITool {
