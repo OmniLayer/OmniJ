@@ -87,6 +87,17 @@ public final class OmniDivisibleValue extends OmniValue {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof OmniDivisibleValue)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        return this.willetts == ((OmniDivisibleValue)obj).willetts;
+    }
+
+    @Override
     public PropertyType getPropertyType() {
         return PropertyType.DIVISIBLE;
     }

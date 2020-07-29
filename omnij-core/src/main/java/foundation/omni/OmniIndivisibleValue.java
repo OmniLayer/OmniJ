@@ -70,6 +70,17 @@ public final class OmniIndivisibleValue extends OmniValue {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof OmniIndivisibleValue)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        return this.willetts == ((OmniIndivisibleValue)obj).willetts;
+    }
+
+    @Override
     public Class<Long> getNumberType() {
         return Long.class;
     }

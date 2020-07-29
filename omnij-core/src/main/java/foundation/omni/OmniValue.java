@@ -211,15 +211,7 @@ public abstract class OmniValue extends NumberValue {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof OmniValue)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        return this.willetts == ((OmniValue)obj).willetts;
-    }
+    abstract public boolean equals(Object obj);
 
     @Override
     public int compareTo(NumberValue o) {
