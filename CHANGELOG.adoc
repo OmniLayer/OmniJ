@@ -7,6 +7,51 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: Under development
 
+=== omnij-core
+
+* Fix bug in `OmniValue.equals()` that would identify `OmniDivisibleValue` and `OmniIndivisibleValue` of the same number of _willetts_ "equal" (`Object` equality)
+
+=== omnij-dsl
+
+* Use `.longValueExact()` for `Number.getDivisible()`
+* Remove unneeded/unused/incorrect `.equals()` on `Number`
+
+=== omnij-netapi
+
+* Add constants for https://api.omniexplorer.info and https://api.omniwallet.org
+* Improved Omniwallet client support for Bitcoin Testnet
+** NetworkParameters defaults to `null` in `OmniwalletAbstractClient`
+** Ability to set `NetworkParameters in the constructor`
+* Add support for returning `frozen` balances in `verifyAddresses()` and `getConsensusForCurrency()`
+
+
+==== omnij-rest-client
+
+* see `omnij-netapi`
+
+
+==== omnij-rest-client-mjdk
+
+* see `omnij-netapi`
+
+
+=== omnij-jsonrpc
+
+* Add `BalanceEntry.totalBalance` static method.
+
+=== omnij-rpc (Integration Test support)
+
+* Deprecate `OmniwalletConsensusFetcher`
+* Deprecate `ExplorerConsensusTool` (was OmniChest, Explorer and Omniwallet now have the same API)
+* Remove obsolete OmniChest/OmniExplorer tests
+* Refactor `ConsensusTool`/`OmniWalletConsensusTool` from Groovy to Java
+
+=== omnij-cli
+
+* Port ConsensusCLI tool from Groovy to Java
+* Re-enable and fix RegTest integration tests of `ConsensusCLI` tool
+* Remove `-omnichest-url` option and use of `ExplorerConsensusTool` from `ConsensusCLI` tool
+
 === All modules
 
 * Update to Groovy 3.0.5
