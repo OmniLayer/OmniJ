@@ -13,7 +13,7 @@ import spock.lang.Specification
  */
 abstract class BaseObjectMapperSpec extends Specification {
     @Shared
-    def mapper
+    ObjectMapper mapper
 
     def setup() {
         mapper = new ObjectMapper()

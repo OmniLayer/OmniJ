@@ -1,17 +1,9 @@
 package foundation.omni.json.conversion
 
-import com.fasterxml.jackson.databind.module.SimpleModule
-import foundation.omni.CurrencyID
-import foundation.omni.OmniDivisibleValue
-import foundation.omni.OmniValue
+
 import foundation.omni.rpc.AddressBalanceEntries
 import foundation.omni.rpc.BalanceEntry
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.Context
 import org.bitcoinj.core.LegacyAddress
-import org.bitcoinj.params.RegTestParams
-import org.bitcoinj.params.TestNet3Params
-import spock.lang.Ignore
 import spock.lang.Unroll
 
 /**

@@ -15,6 +15,7 @@ public final class OmniIndivisibleValue extends OmniValue {
     public static final long   MAX_VALUE = 9_223_372_036_854_775_807L;
     public static final BigInteger MIN_BIGINT = BigInteger.valueOf(MIN_VALUE);
     public static final BigInteger MAX_BIGINT = BigInteger.valueOf(MAX_VALUE);
+    public static final OmniIndivisibleValue ZERO = OmniIndivisibleValue.of(0);
     public static final OmniIndivisibleValue MIN = OmniIndivisibleValue.of(MIN_VALUE);
     public static final OmniIndivisibleValue MAX = OmniIndivisibleValue.of(MAX_VALUE);
     private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance();
@@ -88,6 +89,11 @@ public final class OmniIndivisibleValue extends OmniValue {
 
     @Override
     public String toPlainString() {
+        return toString();
+    }
+
+    @Override
+    public String toJsonFormattedString() {
         return toString();
     }
 

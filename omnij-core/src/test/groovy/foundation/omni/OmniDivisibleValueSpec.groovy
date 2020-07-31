@@ -289,6 +289,25 @@ class OmniDivisibleValueSpec extends Specification {
     }
 
     @Unroll
+    def "toJsonFormattedString works"(BigDecimal decimal, String expectedString) {
+        when:
+        def actualString = OmniDivisibleValue.of(decimal).toJsonFormattedString()
+
+        then:
+        actualString == expectedString
+
+        where:
+        decimal                      | expectedString
+        0.0                          | "0.0"
+        0.00000001                   | "0.00000001"
+        0.10000000                   | "0.1"
+        1                            | "1.0"
+        100.00000000                 | "100.0"
+        1000.0                       | "1000.0"
+        OmniDivisibleValue.MAX_VALUE | "92233720368.54775807"
+    }
+
+    @Unroll
     def "toFormattedString works"(BigDecimal decimal, String expectedString) {
         when:
         def actualString = OmniDivisibleValue.of(decimal).toFormattedString()

@@ -16,6 +16,6 @@ public class OmniValueSerializer  extends JsonSerializer<OmniValue> {
     public void serialize(OmniValue value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
         // OmniValues are serialized as quoted strings, not JSON Numbers
         // That is what the server requires
-        gen.writeString(value.toPlainString());
+        gen.writeString(value.toJsonFormattedString());
     }
 }

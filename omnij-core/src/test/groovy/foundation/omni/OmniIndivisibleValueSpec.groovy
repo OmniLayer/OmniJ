@@ -231,6 +231,23 @@ class OmniIndivisibleValueSpec extends Specification {
     }
 
     @Unroll
+    def "toJsonFormattedString works"(Long number, String expectedString) {
+        when:
+        def actualString = OmniIndivisibleValue.of(number).toJsonFormattedString()
+
+        then:
+        actualString == expectedString
+
+        where:
+        number                         | expectedString
+        0                              | "0"
+        1                              | "1"
+        100                            | "100"
+        1000                           | "1000"
+        OmniIndivisibleValue.MAX_VALUE | "9223372036854775807"
+    }
+
+    @Unroll
     def "toFormattedString works"(Long number, String expectedString) {
         when:
         def actualString = OmniIndivisibleValue.of(number).toFormattedString()

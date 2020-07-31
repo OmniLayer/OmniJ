@@ -21,10 +21,16 @@ class OmniValueSerializerSpec extends BaseObjectMapperSpec {
         then:
         result == expectedResult
 
+        when:
+        def roundTrip = mapper.readValue(result, OmniValue.class)
+
+        then:
+        roundTrip == value
+
         where:
         expectedResult         | value
-        '"21000000"'           | OmniDivisibleValue.ofWilletts(NetworkParameters.MAX_MONEY.value)
-        '"1"'                  | OmniDivisibleValue.ofWilletts(Coin.COIN.value)
+        '"21000000.0"'         | OmniDivisibleValue.ofWilletts(NetworkParameters.MAX_MONEY.value)
+        '"1.0"'                | OmniDivisibleValue.ofWilletts(Coin.COIN.value)
         '"0.001"'              | OmniDivisibleValue.ofWilletts(Coin.MILLICOIN.value)
         '"0.000001"'           | OmniDivisibleValue.ofWilletts(Coin.MICROCOIN.value)
         '"0.00000001"'         | OmniDivisibleValue.ofWilletts(Coin.SATOSHI.value)
@@ -38,6 +44,12 @@ class OmniValueSerializerSpec extends BaseObjectMapperSpec {
         then:
         result == expectedResult
 
+        when:
+        def roundTrip = mapper.readValue(result, OmniValue.class)
+
+        then:
+        roundTrip == value
+
         where:
         expectedResult          | value
         '"2100000000000000"'    | OmniIndivisibleValue.ofWilletts(NetworkParameters.MAX_MONEY.value)
@@ -49,6 +61,7 @@ class OmniValueSerializerSpec extends BaseObjectMapperSpec {
 
     def configureModule(SimpleModule module) {
         module.addSerializer(OmniValue.class, new OmniValueSerializer())
+        module.addDeserializer(OmniValue.class, new OmniValueDeserializer())
     }
 
 }

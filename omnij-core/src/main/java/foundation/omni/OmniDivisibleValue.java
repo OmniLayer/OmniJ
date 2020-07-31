@@ -20,8 +20,10 @@ public final class OmniDivisibleValue extends OmniValue {
     public static final BigDecimal   MAX_VALUE = new BigDecimal("92233720368.54775807");
     public static final long         MIN_INT_VALUE = 0L;
     public static final long         MAX_INT_VALUE = 92233720368L;
+    public static  OmniDivisibleValue ZERO = OmniDivisibleValue.ofWilletts(0);
     public static  OmniDivisibleValue MIN = OmniDivisibleValue.ofWilletts(OmniValue.MIN_WILLETTS);
     public static  OmniDivisibleValue MAX = OmniDivisibleValue.ofWilletts(OmniValue.MAX_WILLETTS);
+    private static final DecimalFormat jsonFormatter = new DecimalFormat("###########0.0#######");
     private static final DecimalFormat numberFormatter = new DecimalFormat("###,###,###,##0.0#######");
 
     /**
@@ -105,6 +107,11 @@ public final class OmniDivisibleValue extends OmniValue {
     @Override
     public String toPlainString() {
         return bigDecimalValue().toPlainString();
+    }
+
+    @Override
+    public String toJsonFormattedString() {
+        return jsonFormatter.format(bigDecimalValue());
     }
 
     @Override

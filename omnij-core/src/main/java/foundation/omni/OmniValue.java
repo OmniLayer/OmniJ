@@ -222,10 +222,34 @@ public abstract class OmniValue extends NumberValue {
         }
     }
 
+    /**
+     * Convert to {@link String}. Uses standard JVM {@code toString()} formats. For {@link OmniDivisibleValue} it is the same format as
+     * {@link BigDecimal} (this means{@code "0E-8"} for {@link OmniDivisibleValue#ZERO}.) For {@link OmniIndivisibleValue}
+     * it is the same format as {@link Long}.
+     * @return Number as a string
+     */
     @Override
     abstract public String toString();
 
+    /**
+     * Convert to {@link String}. For {@link OmniDivisibleValue} the same format as {@link BigDecimal#toPlainString()}. For
+     * {@link OmniIndivisibleValue} it is the same as {@link OmniIndivisibleValue#toString()}.
+     * @return Number as a string
+     */
     abstract public String toPlainString();
+
+    /**
+     * Convert to {@link String}. The recommended format for OmniValues in JSON. For {@link OmniDivisibleValue} there is always at least one
+     * place after the decimal point (e.g. {@code "0.0"}). This allows humans and parsers to easily tell {@link OmniDivisibleValue}s
+     * from {@link OmniIndivisibleValue}s.
+     * @return Number as a string
+     */
+    abstract public String toJsonFormattedString();
+
+    /**
+     * Convert to {@link String}. A more human-readable format using comma place-separators.
+     * @return Number as a string
+     */
     abstract public String toFormattedString();
 
     abstract public BigDecimal bigDecimalValue();
