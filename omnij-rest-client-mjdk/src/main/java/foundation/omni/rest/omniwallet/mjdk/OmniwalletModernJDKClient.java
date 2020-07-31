@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
@@ -58,15 +57,8 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.registerModule(new OmniwalletClientModule(netParams));
     }
-
-    public Integer currentBlockHeight() {
-        try {
-            return currentBlockHeightAsync().get();
-        } catch (InterruptedException | ExecutionException ie) {
-            throw new RuntimeException(ie);
-        }
-    }
     
+
     @Override
     protected CompletableFuture<OmniwalletPropertiesListResponse> propertiesList() {
         HttpRequest request = HttpRequest
@@ -81,11 +73,7 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
     }
 
     @Override
-    public CompletableFuture<Integer> currentBlockHeightAsync() {
-        return revisionInfoAsync().thenApply(RevisionInfo::getLastBlock);
-    }
-
-    private CompletableFuture<RevisionInfo> revisionInfoAsync() {
+    public CompletableFuture<RevisionInfo> revisionInfo() {
         HttpRequest request = HttpRequest
                 .newBuilder(baseURI.resolve("/v1/system/revision.json"))
                 .header("Accept", "application/json")
@@ -137,8 +125,8 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
 
     /**
      * Convert an address list containing 1 or more entries
-     * @param addressList
-     * @return
+     * @param addressList A list of addresses
+     * @return a form-encoded string containing the list of addresses
      */
     static String formEncodeAddressList(List<Address> addressList) {
         return addressList.stream()

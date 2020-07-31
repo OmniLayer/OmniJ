@@ -26,7 +26,7 @@ class OmniCoreConsensusToolSpec extends Specification {
         OmniCoreConsensusTool fetcher = new OmniCoreConsensusTool(MainNetParams.get(), uri)
 
         when: "we get block height"
-        def blockHeight = fetcher.currentBlockHeight()
+        def blockHeight = fetcher.currentBlockHeightAsync().get()
 
         then: "it looks reasonable"
         blockHeight > 323000  // Greater than a relatively recent main-net block

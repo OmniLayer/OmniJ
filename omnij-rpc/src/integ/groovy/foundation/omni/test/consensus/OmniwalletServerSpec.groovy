@@ -34,7 +34,7 @@ class OmniwalletServerSpec extends Specification {
 
         when: "we get a block height"
         /* Private method, but we can still call it with Groovy for a test */
-        def blockHeight = omniFetcher.currentBlockHeight()
+        def blockHeight = omniFetcher.currentBlockHeightAsync().get()
 
         then: "it looks valid"
         /* TODO:  Check to make sure it's within 15 blocks of Omni Core, or something like that? */
@@ -80,7 +80,7 @@ class OmniwalletServerSpec extends Specification {
         OmniwalletAbstractClient omniFetcher = getOmniwalletClient()
 
         when: "we get data"
-        def properties = omniFetcher.listProperties()
+        def properties = omniFetcher.listSmartProperties().get();
 
         then: "we get a list of size >= 2"
         properties != null

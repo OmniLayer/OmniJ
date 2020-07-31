@@ -166,15 +166,9 @@ public class OmniwalletClient extends OmniwalletAbstractClient {
                 .thenApply(Response::body);
     }
 
-    public CompletableFuture<RevisionInfo> revisionInfoAsync() {
-        return service.getRevisionInfo().thenApply(Response::body);
-    }
-
-
     @Override
-    public CompletableFuture<Integer> currentBlockHeightAsync() {
-        return service.getRevisionInfo()
-                .thenApply(response -> response.body().getLastBlock());
+    public CompletableFuture<RevisionInfo> revisionInfo() {
+        return service.getRevisionInfo().thenApply(Response::body);
     }
     
     @Override

@@ -14,6 +14,8 @@ configurations {
 dependencies {
     implementation project(':omnij-rpc')
     implementation "${consensusjGroup}:${consensusjBtcCliArtifact}:${consensusjVersion}"
+
+    runtimeOnly "org.slf4j:slf4j-jdk14:${slf4jVersion}"
 }
 
 application {
@@ -22,7 +24,20 @@ application {
 }
 
 run {
-    args = ['-regtest', '-rpcwait', '-rpcconnect=127.0.0.1', "-property=1"]
+// Local vs remote omniwallet
+    args = [ '-verbose', '-rpcwait', '-rpcconnect=127.0.0.1', '-property=1', '-compare', '-omniwallet-url=https://www.omniwallet.org']   // Local vs remote omniwallet
+
+// Local vs remote omniwallet ALL PROPERTIES
+//    args = [ '-verbose', '-rpcwait', '-rpcconnect=127.0.0.1', '-compare', '-omniwallet-url=https://www.omniwallet.org']
+
+// Local vs "remote" Omni Core RegTest ALL PROPERTIES
+//    args = [ '-verbose', '-regtest', '-rpcwait', '-rpcconnect=127.0.0.1', '-compare', "--omnicore-url=http://${rpcTestUser}:${rpcTestPassword}@127.0.0.1:18443/"]
+
+// Local vs "remote" Omni Core  ALL PROPERTIES
+//    args = [ '-verbose', '-rpcwait', '-rpcconnect=127.0.0.1', '-compare', "--omnicore-url=http://${rpcTestUser}:${rpcTestPassword}@127.0.0.1:8332/"]   // Local vs "remote" Omni Core  ALL PROPERTIES
+
+// Print property balance from Localhost
+//    args = ['-verbose', '-regtest', '-rpcwait', '-rpcconnect=127.0.0.1', "-property=1"]   // RegTest Localhost
 }
 
 jar {

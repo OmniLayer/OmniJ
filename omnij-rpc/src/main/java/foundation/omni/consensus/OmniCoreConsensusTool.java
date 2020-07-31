@@ -1,6 +1,7 @@
 package foundation.omni.consensus;
 
 import com.msgilligan.bitcoinj.rpc.RpcURI;
+import foundation.omni.netapi.omnicore.OmniCoreClient;
 import foundation.omni.rpc.OmniClient;
 import foundation.omni.rpc.test.TestServers;
 import org.bitcoinj.core.NetworkParameters;
@@ -9,11 +10,12 @@ import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Command-line tool and class for fetching Omni Core consensus data
  */
-public class OmniCoreConsensusTool extends OmniCoreConsensusFetcher implements ConsensusTool {
+public class OmniCoreConsensusTool extends OmniCoreClient implements ConsensusTool {
     /**
      * URI Constructor
      *
@@ -21,7 +23,7 @@ public class OmniCoreConsensusTool extends OmniCoreConsensusFetcher implements C
      * @param coreURI URI to connect to - user/pass if required, must be encoded in URL
      */
     public OmniCoreConsensusTool(NetworkParameters netParams, URI coreURI) {
-        super(netParams, coreURI);
+        super(netParams, coreURI, coreURI.getUserInfo().split(":")[0], coreURI.getUserInfo().split(":")[1]);
     }
 
     /**
@@ -33,7 +35,7 @@ public class OmniCoreConsensusTool extends OmniCoreConsensusFetcher implements C
         super(client);
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         OmniClient client = new OmniClient(MainNetParams.get(), RpcURI.getDefaultMainNetURI(), TestServers.getInstance().getRpcTestUser(), TestServers.getInstance().getRpcTestPassword());
         OmniCoreConsensusTool tool = new OmniCoreConsensusTool(client);
         tool.run(DefaultGroovyMethods.toList(args));

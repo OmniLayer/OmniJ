@@ -18,7 +18,7 @@ class OmniEngineDBSmokeSpec extends Specification {
         source.user = "username"
         source.password = "password"
         source.databaseName = "omniwallet"
-        DBConsensusTool fetcher = new DBConsensusTool(source)
+        //DBConsensusTool fetcher = new DBConsensusTool(source)
 
         when: "we get data"
         def height = fetcher.fetchBlockHeight()
