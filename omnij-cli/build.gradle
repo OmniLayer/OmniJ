@@ -48,6 +48,25 @@ jar {
     }
 }
 
+// Compile a native image using GraalVM's native-image tool
+// Graal must be installed at $GRAAL_HOME
+task nativeImage(type:Exec, dependsOn: jar) {
+    workingDir = projectDir
+    executable = "${System.env.GRAAL_HOME}/bin/native-image"
+    args = [ '--verbose',
+             '--no-fallback',
+             '-cp', "${-> configurations.runtimeClasspath.asPath}", // Lazy configuration resolution
+             '-jar', jar.archiveFile.get(),
+             '-H:Path=build',
+             '-H:Name=omnij-consensus-tool',
+             '--initialize-at-build-time=com.fasterxml.jackson.annotation.JsonProperty$Access',
+             '-H:IncludeResources=logging.properties',
+             '-H:ReflectionConfigurationFiles=graal-reflection-config.json',
+             '-H:EnableURLProtocols=http,https',
+             '-H:+ReportUnsupportedElementsAtRuntime'
+    ]
+}
+
 // Test Structure
 sourceSets {
     integrationTest {

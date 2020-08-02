@@ -1,0 +1,100 @@
+[
+  {
+    "name" : "java.lang.Object",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name" : "java.util.List",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name" : "org.consensusj.jsonrpc.JsonRpcRequest",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name" : "org.consensusj.jsonrpc.JsonRpcResponse",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "org.consensusj.jsonrpc.JsonRpcError",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "org.consensusj.jsonrpc.internal.NumberStringSerializer",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "foundation.omni.rpc.AddressBalanceEntry",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "foundation.omni.netapi.omniwallet.json.RevisionInfo",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "foundation.omni.netapi.omniwallet.json.AddressVerifyInfo",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "foundation.omni.netapi.omniwallet.json.OmniwalletPropertiesListResponse",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "foundation.omni.netapi.omniwallet.json.OmniwalletPropertyInfo",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredClasses" : true
+  },
+  {
+    "name" : "foundation.omni.netapi.omniwallet.json.OmniwalletPropertyInfo$Issuance",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredClasses" : true
+  },
+  {
+    "name" : "foundation.omni.rpc.SmartPropertyListInfo",
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true,
+    "allPublicConstructors" : true,
+    "fields" : [
+      { "name" : "subcategory", "allowWrite" : true }
+    ]
+  }
+]
