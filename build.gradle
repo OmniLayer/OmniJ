@@ -11,6 +11,16 @@ plugins {
 
 // See gradle.properties for some dependency version settings
 
+buildScan {
+    if (System.getenv('CI')) {
+        publishAlways()
+        uploadInBackground = false
+        tag 'CI'
+    }
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+}
+
 allprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'

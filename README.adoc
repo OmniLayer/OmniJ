@@ -13,7 +13,7 @@ This is pre-release software and APIs may change without notice.
 
 == OmniJ
 
-image:https://travis-ci.org/OmniLayer/OmniJ.svg?branch=master["Build Status", link="https://travis-ci.org/OmniLayer/OmniJ"] image:https://api.bintray.com/packages/omni/maven/omnij/images/download.svg[link="https://bintray.com/omni/maven/omnij/_latestVersion"]
+image:https://github.com/OmniLayer/OmniJ/workflows/Gradle%20Build/badge.svg["Build Status", link="https://github.com/OmniLayer/OmniJ/actions?query=workflow%3A%22Gradle+Build%22"] image:https://github.com/OmniLayer/OmniJ/workflows/Omni%20Core%20RegTest/badge.svg["Build Status", link="https://github.com/OmniLayer/OmniJ/actions?query=workflow%3A%22Omni+Core+RegTest%22"] image:https://github.com/OmniLayer/OmniJ/workflows/GraalVM%20Build/badge.svg["Build Status", link="https://github.com/OmniLayer/OmniJ/actions?query=workflow%3A%22GraalVM+Build%22"] image:https://travis-ci.org/OmniLayer/OmniJ.svg?branch=master["Build Status", link="https://travis-ci.org/OmniLayer/OmniJ"] image:https://api.bintray.com/packages/omni/maven/omnij/images/download.svg[link="https://bintray.com/omni/maven/omnij/_latestVersion"]
 
 A Java/JVM implementation of the http://www.omnilayer.org[Omni Layer], an open-source, fully decentralized asset creation platform built on the Bitcoin blockchain.
 
@@ -241,6 +241,13 @@ These sample Spock "feature tests" are from the file https://github.com/OmniLaye
 The command-line consensus tool, `omnij-consensus-tool` can be built into a native, self-contained, executable using https://www.graalvm.org[GraalVM]. You'll need a Java 11 (or later) version of GraalVM, we currently recommend version 20.1.0 (java11).
 
 === Building
+
+Before building you'll need a GraalVM setup on your system. Besides intalling the Graal JDK, you'll need to do the following:
+
+1. Set `GRAAL_HOME` to the `JAVA_HOME` of the GraalVM JDK
+2. With the GraalVM active, type `gu install native-image` to install the optional `native-image` tool.
+
+On Ubuntu you might need to do: `sudo apt install gcc g++ binutils`. Similar installs of development tools may be needed on other Linux distros.
 
 The OmniJ Command-line Consensus tool can be built with the following command:
 

@@ -1,0 +1,39 @@
+name: Omni Core RegTest
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        java: [ '11', '14' ]
+      fail-fast: false
+    name: ${{ matrix.os }} JDK ${{ matrix.java }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download Omni Core
+      run: ./test-download-omnicore-ubuntu.sh
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.java }}
+    - name: Verify Gradle Wrapper
+      uses: gradle/wrapper-validation-action@v1
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: ${{ runner.os }}-gradle
+    - name: Run RegTests
+      run: ./test-omni-integ-regtest.sh
+    - name: Upload RegTest results as artifact
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: regtest-omnij-jdk${{ matrix.java }}-${{ matrix.os }}-reports
+        path: |
+          omnij-cli/build/reports/tests/regTest
+          omnij-rpc/build/reports/tests/regTest

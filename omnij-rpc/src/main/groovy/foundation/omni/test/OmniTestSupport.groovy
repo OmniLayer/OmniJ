@@ -29,7 +29,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
      * RegTest mode after invalidating a block. See OmniJ Issue #185.
      */
     void longerDelayAfterInvalidate() {
-        sleep(30_000)
+        sleep(120_000)
     }
 
     Sha256Hash requestMSC(Address toAddress, OmniDivisibleValue requestedOmni) {
