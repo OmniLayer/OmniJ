@@ -1,0 +1,39 @@
+name: GraalVM Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        graalvm: [ '20.1.0.java11' ]
+      fail-fast: false
+    name: ${{ matrix.os }} JDK ${{ matrix.graalvm }}
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v1
+    - name: Set up GraalVM
+      uses: DeLaGuardo/setup-graalvm@3
+      with:
+        graalvm-version: '20.1.0.java11'
+    - name: Set GRAAL_HOME
+      run: echo '::set-env name=GRAAL_HOME::${{env.JAVA_HOME}}'
+    - name: Install native-image plugin
+      run: gu install native-image
+    - name: Verify Gradle Wrapper
+      uses: gradle/wrapper-validation-action@v1
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: ${{ runner.os }}-gradle
+    - name: Build with Gradle
+      run: ./gradlew :omnij-cli:nativeImage --scan --info --stacktrace
+    - name: Upload omnij-consensus-tool as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: omnij-cosensus-tool-${{ matrix.os }}
+        path: omnij-cli/build/omnij-consensus-tool

@@ -1,3 +1,7 @@
+plugins {
+    id "com.gradle.enterprise" version "3.4"
+}
+
 include 'omnij-core',
         'omnij-dsl',
         'omnij-jsonrpc',    // Omni JSON-RPC pure Java
