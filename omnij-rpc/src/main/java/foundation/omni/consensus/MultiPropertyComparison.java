@@ -7,11 +7,11 @@ import foundation.omni.rpc.SmartPropertyListInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
@@ -27,16 +27,17 @@ public class MultiPropertyComparison {
         this.f2 = right;
     }
 
-    public long compareAllProperties() throws IOException, InterruptedException, ExecutionException {
+    public long compareAllProperties() throws InterruptedException, ExecutionException {
         CompletableFuture<Set<CurrencyID>> props1f = f1.listSmartProperties()
                 .thenApply(l -> l.stream()
                     .map(SmartPropertyListInfo::getPropertyid)
-                    .collect(Collectors.toSet())
+                    .collect(TreeSet::new, SortedSet::add, SortedSet::addAll)
                 );
         CompletableFuture<Set<CurrencyID>> props2f = f2.listSmartProperties()
                 .thenApply(l -> l.stream()
-                .map(SmartPropertyListInfo::getPropertyid)
-                .collect(Collectors.toSet()));
+                    .map(SmartPropertyListInfo::getPropertyid)
+                    .collect(TreeSet::new, SortedSet::add, SortedSet::addAll)
+                );
         Set<CurrencyID> props = props1f.thenCombine(props2f, (props1, props2) -> {
             props1.addAll(props2);
             return props1;
@@ -50,7 +51,7 @@ public class MultiPropertyComparison {
         ConsensusComparison comparison = getConsensusComparison(id).get();
         log.info("comparing {} h1:{} h2:{}", id, comparison.getC1().getBlockHeight(), comparison.getC2().getBlockHeight());
 
-        long mismatches = StreamSupport.stream(comparison.spliterator(), true)
+        long mismatches = StreamSupport.stream(comparison.spliterator(), false)
                 .filter(this::pairNotEqual)
                 .peek(pair -> printMismatch(id, pair))
                 .count();
@@ -85,7 +86,7 @@ public class MultiPropertyComparison {
         return ((entry1 == null && entry2 == null) ||
                 (entry1 == null && BalanceEntry.totalBalance(entry2).getWilletts() == 0) ||
                 (entry2 == null && BalanceEntry.totalBalance(entry1).getWilletts() == 0) ||
-                entry1.equals(entry2));
+                ((entry1 != null) && (entry2 != null)  && entry1.equals(entry2)));
     }
 
     void printMismatch(CurrencyID id, ConsensusEntryPair pair) {

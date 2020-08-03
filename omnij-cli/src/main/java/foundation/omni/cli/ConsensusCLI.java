@@ -26,8 +26,9 @@ import java.util.concurrent.ExecutionException;
  * Tool to fetch Omni and optionally compare consensus data from Omni Core and/or Omniwallet.
  */
 public class ConsensusCLI extends BitcoinCLITool {
-    public static final String commandName = "omni-consensus";
-    public static final String commandUsage = commandName + " [options] -property <id>";
+    public static final String commandName = "omnij-consensus-tool";
+    // omnij-consensus-tool [_OMNICORE_SETTING_]... _URL_OPTION_ -compare [-property id]
+    public static final String commandUsage = commandName + " [omnicore-options...] [url-option] [options] [-? | -property <id> | -compare]";
     // For a GraalVM command-line tool we muse configure Java Logging in main
     // before initializing this Logger object
     private static Logger log;
@@ -58,17 +59,15 @@ public class ConsensusCLI extends BitcoinCLITool {
     }
 
     public static void main(String[] args) {
-        ConsensusCLI command = new ConsensusCLI();
-        OmniCoreCLICall call = new OmniCoreCLICall(command, System.out, System.err, args);
-        /* int status */
         try {
+            ConsensusCLI command = new ConsensusCLI();
+            OmniCoreCLICall call = new OmniCoreCLICall(command, System.out, System.err, args);
             command.run(call);
-        } catch (IOException e) {
+        } catch (ToolException te) {
+            System.exit(te.resultCode);
+        } catch (Throwable e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+            System.exit(1);
         }
         System.exit(0);
     }
@@ -82,12 +81,8 @@ public class ConsensusCLI extends BitcoinCLITool {
     public void run(Call call) {
         try {
             run((OmniCoreCLICall) call);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        } catch (IOException | InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -121,8 +116,11 @@ public class ConsensusCLI extends BitcoinCLITool {
             tool2 = new OmniwalletConsensusTool(uri2);
         }
 
-        if (line.hasOption("compare") && (tool2 != null) && (uri2 != null)) {
-            // TODO: Make sure that if compare option is used one of the above xxx-url options is also chosen
+        if (line.hasOption("compare") && (tool2 == null) ) {
+            printError(call, "-omnicore-url or -omniwallet-url must be specified for -x/-compare option");
+            printHelp(call, commandUsage);
+            throw new ToolException(1, "usage error");
+        } else if (line.hasOption("compare")) {
             MultiPropertyComparison multiComparison = new MultiPropertyComparison(tool1, tool2);
             if (line.hasOption("p")) {
                 log.info("Comparing {} and {}, Property: {}", uri1, uri2,currencyID);
@@ -130,7 +128,7 @@ public class ConsensusCLI extends BitcoinCLITool {
                 if (mismatchCount > 0) {
                     printError(call, "Failure: " + mismatchCount + " mismatched address");
                 } else {
-                    log.info("Servers {} and {} are IN CONSENSUS  for property: {}", uri1, uri2,currencyID);
+                    log.info("Servers {} and {} are IN CONSENSUS  for property: {}", uri1, uri2, currencyID);
                 }
             } else {
                 log.info("Comparing {} and {}, ALL PROPERTIES", uri1, uri2);
@@ -138,12 +136,12 @@ public class ConsensusCLI extends BitcoinCLITool {
                 if (mismatchCount > 0) {
                     printError(call, "Failure: " + mismatchCount + " mismatched properties");
                 } else {
-                    log.info("Servers {} and {} are IN CONSENSUS for all properties: {}", uri1, uri2,currencyID);
+                    log.info("Servers {} and {} are IN CONSENSUS for all properties", uri1, uri2);
                 }
             }
-            //multiComparison.compareProperty(CurrencyID.OMNI)
         } else {
-            ConsensusSnapshot consensus = tool1.getConsensusSnapshot(currencyID);
+            ConsensusSnapshot consensus = (tool2 == null) ? tool1.getConsensusSnapshot(currencyID) :
+                                                            tool2.getConsensusSnapshot(currencyID);
 
             if (fileName != null) {
                 ConsensusToolOutput.save(consensus, new File(fileName));

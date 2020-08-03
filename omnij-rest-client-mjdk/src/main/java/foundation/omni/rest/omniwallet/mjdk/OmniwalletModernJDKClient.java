@@ -23,6 +23,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -52,12 +53,23 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
      */
     public OmniwalletModernJDKClient(URI baseURI, boolean debug, boolean strictMode, NetworkParameters netParams) {
         super(baseURI, true, false, netParams);
-        this.client = HttpClient.newHttpClient();
+        log.info("OmniwalletModernJDKClient opened for: {}", baseURI);
+        this.client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMinutes(2))
+                .build();
         objectMapper = new UncheckedObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.registerModule(new OmniwalletClientModule(netParams));
     }
-    
+
+//    private static void log(String s, Throwable t) {
+//        if ((s != null)) {
+//            log.debug(s.substring(0 ,Math.min(100, s.length())));
+//        } else {
+//            log.error("exception: ", t);
+//        }
+//    }
+
 
     @Override
     protected CompletableFuture<OmniwalletPropertiesListResponse> propertiesList() {
@@ -66,8 +78,10 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
                 .header("Accept", "application/json")
                 .build();
 
+        //log.debug("Send aysnc: {}", request);
         return client.sendAsync(request, BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
+                //.whenComplete(OmniwalletModernJDKClient::log)
                 .thenApply(s -> objectMapper.readValue(s, OmniwalletPropertiesListResponse.class));
 
     }
@@ -79,8 +93,10 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
                 .header("Accept", "application/json")
                 .build();
 
+        //log.debug("Send aysnc: {}", request);
         return client.sendAsync(request, BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
+                //.whenComplete(OmniwalletModernJDKClient::log)
                 .thenApply(s -> objectMapper.readValue(s, RevisionInfo.class));
 
     }
@@ -103,9 +119,10 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
                 .POST(HttpRequest.BodyPublishers.ofString(addressesFormEnc))
                 .build();
 
+        //log.debug("Send aysnc: {}", request);
         return client.sendAsync(request, BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
-                .whenComplete((s,e) -> log.info(s))
+                //.whenComplete((s,e) -> log.info(s))
                 .thenApply(s -> objectMapper.readValue(s, typeRef));
     }
 
@@ -118,8 +135,10 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
                 .header("Accept", "application/json")
                 .build();
 
+        //log.debug("Send aysnc: {}", request);
         return client.sendAsync(request, BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
+                //.whenComplete(OmniwalletModernJDKClient::log)
                 .thenApply(s -> objectMapper.readValue(s, resultType));
     }
 

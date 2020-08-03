@@ -167,7 +167,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
 
 
     protected AddressBalanceEntry balanceMapper(AddressVerifyInfo item, PropertyType propertyType) {
-
+        //log.info("Mapping AddressVerifyInfo to AddressBalanceEntry: {}, {}, {}, {}", item.getAddress(), item.getBalance(), item.getReservedBalance(), item.isFrozen());
         Address address = item.getAddress();
         OmniValue balance = toOmniValue(item.getBalance(), propertyType);
         OmniValue reserved = toOmniValue(item.getReservedBalance(), propertyType);
@@ -236,8 +236,15 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
                     infos.forEach(info -> {
                         cachedPropertyTypes.put(info.getPropertyid(), divisibleToPropertyType(info.getDivisible()));
                     });
+                    PropertyType type = cachedPropertyTypes.get(propertyID);
+                    if (type != null) {
+                        future.complete(type);
+                    } else {
+                        future.completeExceptionally(new RuntimeException("Can't find PropertyType for id " + propertyID));
+                    }
+                } else {
+                    future.completeExceptionally(t);
                 }
-                future.complete(cachedPropertyTypes.get(propertyID));
             });
         } else {
             future.complete(cachedPropertyTypes.get(propertyID));

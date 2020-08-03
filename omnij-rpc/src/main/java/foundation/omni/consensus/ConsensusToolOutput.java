@@ -32,13 +32,13 @@ public interface ConsensusToolOutput {
     static void output(ConsensusSnapshot snap, PrintWriter writer, boolean tsv) {
         snap.getEntries().forEach((Address address, BalanceEntry entry) -> {
             if (tsv) {
-                writer.println(address + "\t" + entry.getBalance().toPlainString() +
-                        "\t" + entry.getReserved().toPlainString() +
-                        "\t" + entry.getFrozen().toPlainString());
+                writer.println(address + "\t" + entry.getBalance().toJsonFormattedString() +
+                        "\t" + entry.getReserved().toJsonFormattedString() +
+                        "\t" + entry.getFrozen().toJsonFormattedString());
             } else {
-                writer.println(address + ": " + entry.getBalance().toPlainString() +
-                        ", " + entry.getReserved().toPlainString() +
-                        ", " + entry.getFrozen().toPlainString());
+                writer.println(address + ": " + entry.getBalance().toJsonFormattedString() +
+                        ", " + entry.getReserved().toJsonFormattedString() +
+                        ", " + entry.getFrozen().toJsonFormattedString());
             }
         });
     }
