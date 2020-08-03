@@ -16,9 +16,4 @@ import java.util.concurrent.CompletableFuture;
  * OmniPortfolio, for example.
  */
 public interface ConsensusService extends OmniBalanceService, ConsensusFetcher {
-    SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) throws InterruptedException, IOException;
-
-    CompletableFuture<List<OmniPropertyInfo>> listSmartProperties() throws InterruptedException, IOException;
-
-    CompletableFuture<Integer> currentBlockHeightAsync();
 }

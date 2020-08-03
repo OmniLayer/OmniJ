@@ -77,7 +77,9 @@ public class BalanceEntry implements Iterable<OmniValue>  {
 
     @Override
     public String toString() {
-        return "[balance: " + balance + ", reserved: " + reserved + ", frozen: " + frozen + "]";
+        return "[balance: " + balance.toJsonFormattedString() +
+                ", reserved: " + reserved.toJsonFormattedString() +
+                ", frozen: " + frozen.toJsonFormattedString() + "]";
     }
 
 }

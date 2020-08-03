@@ -31,7 +31,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
 
     def "get block height" () {
         when:
-        def height = client.currentBlockHeight()
+        def height = client.currentBlockHeightAsync().get()
 
         then: "height is a reasonable MainNet block height"
         height > 400000
@@ -105,7 +105,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
 
     def "Can get Omniwallet property list"() {
         when: "we get data"
-        def properties = client.listProperties()
+        def properties = client.listSmartProperties().get()
 
         then: "we get a list of size >= 2"
         properties != null
@@ -163,7 +163,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
         allBalancesValid(balances)
 
         where:
-        [id, info] << client.listProperties().collect{[it.propertyid, it]}  // Test for ALL currencies on MainNet
+        [id, info] << client.listSmartProperties().get().collect{[it.propertyid, it]}  // Test for ALL currencies on MainNet
     }
 
     @Ignore("USDT just takes too damn long: 504: Gateway time-out")

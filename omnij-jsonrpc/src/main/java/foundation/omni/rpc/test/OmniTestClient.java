@@ -185,9 +185,9 @@ public class OmniTestClient extends OmniClient {
      * @param previousPropertyId an identifier of a predecessor token (0 for new tokens)
      * @param category a category for the new tokens (can be "")
      * @param subCategory a subcategory for the new tokens (can be "")
-     * @param label
+     * @param label label
      * @param website an URL for further information about the new tokens (can be "")
-     * @param info
+     * @param info info
      * @return transaction hash/id
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error

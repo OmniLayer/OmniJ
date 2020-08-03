@@ -11,7 +11,7 @@ import javax.sql.DataSource
 /**
  * Command-line tool and class for fetching consensus data from OmniEngine DB
  */
-class DBConsensusTool implements ConsensusTool {
+abstract class DBConsensusTool implements ConsensusTool {
     private final PGSimpleDataSource dataSource
     private final Sql sql = null
 
@@ -26,18 +26,16 @@ class DBConsensusTool implements ConsensusTool {
         source.user = "username"
         source.password = "password"
         source.databaseName = "omniwallet"
-        DBConsensusTool tool = new DBConsensusTool(source)
-        tool.run(args.toList())
+        //DBConsensusTool tool = new DBConsensusTool(source)
+        //tool.run(args.toList())
     }
 
-    @Override
     Integer currentBlockHeight() {
         def row = sql.rows("select max(blocknumber) from blocks")[0]
         def height = row.max
         return height;
     }
 
-    @Override
     List<SmartPropertyListInfo> listProperties() {
         throw new RuntimeException("Unimplemented method")
         return null

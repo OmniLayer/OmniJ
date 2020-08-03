@@ -20,7 +20,7 @@ public class OmniCoreClientSpec extends Specification {
 
     def "get block height" () {
         when:
-        def height = client.currentBlockHeight()
+        def height = client.currentBlockHeightAsync().get()
 
         then: "height is a reasonable MainNet block height"
         height > 400000

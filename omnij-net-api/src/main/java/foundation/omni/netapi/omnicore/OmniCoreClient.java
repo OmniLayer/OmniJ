@@ -2,11 +2,11 @@ package foundation.omni.netapi.omnicore;
 
 import com.msgilligan.bitcoinj.json.pojo.AddressGroupingItem;
 import foundation.omni.json.pojo.OmniPropertyInfo;
-import foundation.omni.rpc.SmartPropertyListInfo;
+import foundation.omni.rpc.ConsensusSnapshot;
+import foundation.omni.rpc.OmniClient;
 import org.consensusj.jsonrpc.JsonRpcException;
 import org.consensusj.jsonrpc.JsonRpcStatusException;
 import foundation.omni.CurrencyID;
-import foundation.omni.consensus.OmniCoreConsensusFetcher;
 import foundation.omni.netapi.ConsensusService;
 import foundation.omni.netapi.OmniJBalances;
 import foundation.omni.netapi.WalletAddressBalance;
@@ -26,17 +26,29 @@ import java.util.stream.Collectors;
 /**
  * Omni Core "REST" client that implements same interfaces as Omniwallet REST client
  */
-public class OmniCoreClient extends OmniCoreConsensusFetcher implements ConsensusService {
-    public OmniCoreClient(NetworkParameters netParms, URI server, String rpcuser, String rpcpassword) {
-        super(netParms, server, rpcuser, rpcpassword);
+public class OmniCoreClient implements ConsensusService {
+    protected final OmniClient client;
+    
+    /**
+     * Constructor that takes an existing OmniClient
+     *
+     * @param client An existing client instance
+     */
+    public OmniCoreClient(OmniClient client)
+    {
+        this.client = client;
     }
 
+    public OmniCoreClient(NetworkParameters netParams, URI coreURI, String user, String pass) {
+        client = new OmniClient(netParams, coreURI, user, pass);
+    }
+    
     @Override
     public CompletableFuture<Integer> currentBlockHeightAsync() {
         final CompletableFuture<Integer> future = new CompletableFuture<>();
         CompletableFuture.runAsync(() -> {
             try {
-                future.complete(currentBlockHeight());
+                future.complete(client.getBlockCount());
             } catch (IOException e) {
                 future.completeExceptionally(e);
             }
@@ -45,15 +57,29 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
     }
 
     @Override
-    public CompletableFuture<List<OmniPropertyInfo>> listSmartProperties() throws InterruptedException, IOException {
+    public CompletableFuture<List<OmniPropertyInfo>> listSmartProperties() {
         final CompletableFuture<List<OmniPropertyInfo>> future = new CompletableFuture<>();
         CompletableFuture.runAsync(() -> {
             try {
-                List<SmartPropertyListInfo> smartPropertyList = listProperties();
-                List<OmniPropertyInfo> smartPropertyInfoList = smartPropertyList.stream()
+                List<OmniPropertyInfo> smartPropertyInfoList = client.omniListProperties().stream()
                         .map(OmniPropertyInfo::new)
                         .collect(Collectors.toList());
                 future.complete(smartPropertyInfoList);
+            } catch (IOException e) {
+                future.completeExceptionally(e);
+            }
+        });
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<SortedMap<Address, BalanceEntry>> getConsensusForCurrencyAsync(CurrencyID currencyID) {
+        final CompletableFuture<SortedMap<Address, BalanceEntry>> future = new CompletableFuture<>();
+        CompletableFuture.runAsync(() -> {
+            try {
+                // TODO: Filter out empty address strings or 0 balances?
+                SortedMap<Address, BalanceEntry> consensus = client.omniGetAllBalancesForId(currencyID);
+                future.complete(consensus);
             } catch (IOException e) {
                 future.completeExceptionally(e);
             }
@@ -103,6 +129,12 @@ public class OmniCoreClient extends OmniCoreConsensusFetcher implements Consensu
         entries.forEach(result::put);
         return result;
     }
+
+    @Override
+    public ConsensusSnapshot createSnapshot(CurrencyID id, int blockHeight, SortedMap<Address, BalanceEntry> entries) {
+        return new ConsensusSnapshot(id,blockHeight, "Omni Core", client.getServerURI(), entries);
+    }
+
 
     public CompletableFuture<WalletAddressBalance> balancesForAddressAsync(Address address) {
         final CompletableFuture<WalletAddressBalance> future = new CompletableFuture<>();

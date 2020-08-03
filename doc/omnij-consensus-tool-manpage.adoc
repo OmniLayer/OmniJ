@@ -1,0 +1,157 @@
+= omnij-consensus-tool(1)
+Sean Gilligan
+:doctype: manpage
+:man manual: OmniJ Manual
+:man source: OmniJ 0.5.12
+:page-layout: base
+
+== NAME
+
+omnij-consensus-tool - A command-line tool for displaying and comparing OmniLayer consensus information.
+
+== SYNOPSIS
+
+omnij-consensus-tool [_OMNICORE_SETTING_]... -property id [-output filename]
+
+omnij-consensus-tool _URL_OPTION_  -property id [-output filename]
+
+omnij-consensus-tool [_OMNICORE_SETTING_]... _URL_OPTION_ -compare [-property id]
+
+== DESCRIPTION
+
+omnij-consensus-tool(1) can display or save to a file the consensus balance information for a numerically-specified OmniLayer property or it can compare consensus balance information between an Omni Core server and a second server (either Omni Core or Omniwallet) for a single property or for all properties.
+
+If neither URL option is specified, `omnij-consensus-tool` will connect to an Omni Core server. By default it reads configuration from the local `bitcoin.conf` for host, port, username, and password information. Additional Omni Core connection settings options may be specified to override the default.
+
+If a URL option is specified without -compare, omnij-consensus-tool will display or save consensus information for the specified property.
+
+If a URL option is specified with -compare, omnij-consensus-tool will compare consensus information between an Omni Core server (specified by the Omni Core connection settings) and a second server (specified by URL) for a specified property or for all properties.
+
+== OPTIONS
+
+=== Omni Core Connection Settings
+
+The Omni Core connection settings options are based on the https://en.bitcoin.it/wiki/Running_Bitcoin#Command-line_arguments[RPC server options] from the `bitcoin-cli` tool.
+
+*-regtest*::
+  Server is in *RegTest* mode, connect to the RegTest port (18443).
+
+*-testnet*::
+  Server is running on *TestNet*, connect to the TestNet port (18332).
+
+*--rpcconnect* _HOST_::
+  Hostname or IP of server to connect to.
+  Defaults to _localhost_.
+
+*--rpcport* _PORT_::
+  TCP port for connection.
+  Defaults to _8332_.
+
+*--rpcuser* _USER_::
+  Username for connection.
+  Defaults to "".
+
+*--rpcpassword* _PASSWORD_::
+  Password for connection.
+  Defaults to "".
+
+*--rpcssl*::
+  Use HTTPS / SSL for the connection.
+
+WARNING: SSL cert validation temporarily disabled to support self-signed certificates.
+
+*--rpcwait*::
+  Wait for `bitcoind` to start up.
+
+=== URL-based (Omni Core or Omniwallet) connection setting
+
+*-omnicore-url* _url_, *-core* _url_::
+ Specify a URL of a remote Omni Core server
+
+*-omniwallet-url* _url_, *-wallet* _url_::
+Specify a URL of a remote Omniwallet server
+
+=== Options
+
+*-property* _id_, *-p* _id_::
+Specify an Omni property id
+
+*-o _filename_::
+Write consensus info to _filename_
+
+*-v*, *-verbose*::
+Verbose (logging) outpu.
+
+
+*-x*, *-compare*::
+Perform a consensus comparison
+
+=== Program Information
+
+*-?*::
+  Show the help message.
+
+== EXIT STATUS
+
+*0*::
+  Success.
+
+*1*::
+  Failure (syntax or usage error; configuration error; unexpected error).
+
+== EXAMPLES
+
+Here are some examples.
+
+* Print consensus info for property id 1 (OMNI) from localhost Omni Core. The command will use the information in `bitcion.conf` to find the local server.
++
+------------
+$ omnij-consensus-tool -property 1
+------------
+
+* Save consensus info for property id 1 (OMNI) from localhost Omni Core to a tab-seperate-value file named `omni_balances.tsv`. The command will use the information in `bitcion.conf` to find the local server.
++
+------------
+$ omnij-consensus-tool -property 1 -output omni_balances.tsv
+------------
+
+* Print consensus info for property id 1 (OMNI) from Omniwallet.
++
+------------
+$ omnij-consensus-tool --omniwallet-url -property 1
+------------
+
+* Compare consensus for OMNI between local Omni Core and Omniwallet
+
+------------
+$ omnij-consensus-tool --omniwallet-url https://www.omniwallet.org -property 1 -compare
+------------
+
+* Compare consensus for ALL PROPERTIES between local Omni Core and Omniwallet
+
+------------
+$ omnij-consensus-tool --omniwallet-url https://www.omniwallet.org -compare
+------------
+
+== BUGS
+
+Refer to the *OmniJ* issue tracker at https://github.com/OmniLayer/OmniJ/issues.
+
+== AUTHORS
+
+*omnij-consensus-tool* was written by Sean Gilligan.
+
+*OmniJ* was written by Sean Gilligan and DexX7.
+
+*consensusj* was written by Sean Gilligan and DexX7.
+
+*bitcoinj* was written by the bitcoinj project team.
+
+== RESOURCES
+
+*Git source repository on GitHub:* https://github.com/OmniLayer/OmniJ
+
+== COPYING
+
+Copyright \(C) 2014-2020 Sean Gilligan.
+Free use of this software is granted under the terms of the Apache Software License v2.

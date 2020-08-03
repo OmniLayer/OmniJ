@@ -14,24 +14,26 @@ import foundation.omni.netapi.omniwallet.json.OmniwalletAddressBalance;
 import foundation.omni.netapi.omniwallet.json.OmniwalletAddressPropertyBalance;
 import foundation.omni.netapi.omniwallet.json.OmniwalletPropertiesListResponse;
 import foundation.omni.netapi.omniwallet.json.OmniwalletPropertyInfo;
+import foundation.omni.netapi.omniwallet.json.RevisionInfo;
 import foundation.omni.rpc.AddressBalanceEntry;
 import foundation.omni.rpc.BalanceEntry;
 import foundation.omni.rpc.ConsensusSnapshot;
 import foundation.omni.rpc.SmartPropertyListInfo;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.NetworkParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -42,6 +44,7 @@ import java.util.stream.Collectors;
  * that into the constructor of an OmniwalletConsensusService type.
  */
 public abstract class OmniwalletAbstractClient implements ConsensusService {
+    private static final Logger log = LoggerFactory.getLogger(OmniwalletAbstractClient.class);
     public static final URI omniwalletBase =  URI.create("https://www.omniwallet.org");
     public static final URI omniwalletApiBase =  URI.create("https://api.omniwallet.org");
     public static final URI omniExplorerApiBase =  URI.create("https://api.omniexplorer.info");
@@ -57,7 +60,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
      */
     protected final NetworkParameters netParams;
 
-    protected final Map<CurrencyID, PropertyType> cachedPropertyTypes = new HashMap<>();
+    protected final Map<CurrencyID, PropertyType> cachedPropertyTypes = new ConcurrentHashMap<>();
 
     public OmniwalletAbstractClient(URI baseURI, boolean debug, boolean strictMode) {
         this(baseURI, debug, strictMode, null);
@@ -71,98 +74,51 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
     }
 
     @Override
-    public Integer currentBlockHeight() throws InterruptedException, IOException  {
-        Integer height;
-        try {
-            height = currentBlockHeightAsync().get();
-        } catch (ExecutionException ee) {
-            throw new IOException(ee);
-        }
-        return height;
+    public CompletableFuture<Integer> currentBlockHeightAsync() {
+        return revisionInfo().thenApply(RevisionInfo::getLastBlock);
     }
+
+    abstract public CompletableFuture<RevisionInfo> revisionInfo();
 
     protected abstract  CompletableFuture<OmniwalletPropertiesListResponse> propertiesList();
 
     @Override
-    public List<SmartPropertyListInfo> listProperties() throws InterruptedException, IOException {
-        OmniwalletPropertiesListResponse listResponse;
-        try {
-            listResponse = propertiesList().get();
-        } catch (ExecutionException e) {
-            throw new IOException(e);
-        }
-        List<OmniwalletPropertyInfo> properties = listResponse.getPropertyInfoList();
-        List<SmartPropertyListInfo> result = new ArrayList<>();
-        properties.forEach(prop -> {
-            SmartPropertyListInfo info = mapToSmartPropertyListInfo(prop);
-            if (info != null)  {
-                result.add(info);
-            }
-        });
-        return result;
-    }
-
-    @Override
-    public CompletableFuture<List<OmniPropertyInfo>> listSmartProperties() throws InterruptedException, IOException {
+    public CompletableFuture<List<OmniPropertyInfo>> listSmartProperties()  {
         return propertiesList().thenApply(response -> response.getPropertyInfoList().stream()
                     .map(OmniwalletAbstractClient::mapToOmniPropertyInfo)
                     .collect(Collectors.toList()));
     }
-
+    
     @Override
-    public ConsensusSnapshot getConsensusSnapshot(CurrencyID currencyID) throws IOException, InterruptedException {
-        /* Since getConsensusForCurrency() doesn't return the blockHeight, we have to check
-         * blockHeight before and after the call to make sure it didn't change.
-         *
-         * Note: Omniwallet blockheight can lag behind Blockchain.info and Omni Core and this
-         * loop does not resolve that issue, it only makes sure the reported block height
-         * matches the data returned.
-         */
-        int beforeBlockHeight = currentBlockHeight();
-        int curBlockHeight;
-        SortedMap<Address, BalanceEntry> entries;
-        while (true) {
-            entries = this.getConsensusForCurrency(currencyID);
-            curBlockHeight = currentBlockHeight();
-            if (curBlockHeight == beforeBlockHeight) {
-                // If blockHeight didn't change, we're done
-                break;
-            }
-            // Otherwise we have to try again
-            beforeBlockHeight = curBlockHeight;
-        }
-        ConsensusSnapshot snap = new ConsensusSnapshot(currencyID,
-                curBlockHeight,
-                "Omniwallet",
-                consensusURI(currencyID),
-                entries);
-        return snap;
+    public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) throws InterruptedException, ExecutionException {
+        return getConsensusForCurrencyAsync(currencyID).get();
     }
 
-
+    /**
+     *  Get a sorted map of consensus information for a currency. Internally we use an {@link CompletableFuture#thenCombine}
+     *  to make an async call to {@link OmniwalletAbstractClient#lookupPropertyType} which if it doesn't find the property type in
+     *  the cache may result in a network I/O to get the property list.
+     *
+     * @param currencyID the currency.
+     * @return A future for a sorted map of address-balance consensus information
+     */
     @Override
-    public SortedMap<Address, BalanceEntry> getConsensusForCurrency(CurrencyID currencyID) throws InterruptedException, IOException {
-        List<AddressVerifyInfo> balances;
-        try {
-            balances = verifyAddresses(currencyID).get();
-        } catch (ExecutionException e) {
-            throw new IOException(e);
-        }
-        // TODO: We need an accurate, efficient way of determining divisible vs indivisible
-        final PropertyType propertyType = lookupPropertyType(currencyID);
-        return balances.stream()
-                .map(bal -> balanceMapper(bal, propertyType))
-                .collect(Collectors.toMap(
-                        // Key is Address
-                        AddressBalanceEntry::getAddress,
-                        // Value is a BalanceEntry (with no Address field)
-                        address -> new BalanceEntry(address.getBalance(), address.getReserved(), address.getFrozen()),
-                        // If duplicate key keep existing value (there should be no duplicate keys)
-                        (existingValue, duplicateValue) -> existingValue,
-                        // Use a TreeMap so map is sorted by Address
-                        TreeMap::new)
-                );
+    public CompletableFuture<SortedMap<Address, BalanceEntry>> getConsensusForCurrencyAsync(CurrencyID currencyID) {
+        return verifyAddresses(currencyID)
+                .thenCombine(lookupPropertyType(currencyID), (balances, ptype) -> balances.stream()
+                        .map(bal -> balanceMapper(bal, ptype))
+                        .collect(Collectors.toMap(
+                                // Key is Address
+                                AddressBalanceEntry::getAddress,
+                                // Value is a BalanceEntry (with no Address field)
+                                address -> new BalanceEntry(address.getBalance(), address.getReserved(), address.getFrozen()),
+                                // If duplicate key keep existing value (there should be no duplicate keys)
+                                (existingValue, duplicateValue) -> existingValue,
+                                // Use a TreeMap so map is sorted by Address
+                                TreeMap::new)
+                        ));
     }
+
 
     @Override
     public OmniJBalances balancesForAddresses(List<Address> addresses) throws InterruptedException, IOException {
@@ -198,15 +154,20 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
         return balanceEntryMapper(result);
     }
 
+    @Override
+    public ConsensusSnapshot createSnapshot(CurrencyID id, int blockHeight, SortedMap<Address, BalanceEntry> entries) {
+        return new ConsensusSnapshot(id,blockHeight, "Omniwallet", baseURI, entries);
+    }
+
+
     protected abstract CompletableFuture<Map<Address, OmniwalletAddressBalance>> balanceMapForAddress(Address address);
     protected abstract CompletableFuture<Map<Address, OmniwalletAddressBalance>> balanceMapForAddresses(List<Address> addresses);
-
 
     protected abstract CompletableFuture<List<AddressVerifyInfo>> verifyAddresses(CurrencyID currencyID);
 
 
     protected AddressBalanceEntry balanceMapper(AddressVerifyInfo item, PropertyType propertyType) {
-
+        //log.info("Mapping AddressVerifyInfo to AddressBalanceEntry: {}, {}, {}, {}", item.getAddress(), item.getBalance(), item.getReservedBalance(), item.isFrozen());
         Address address = item.getAddress();
         OmniValue balance = toOmniValue(item.getBalance(), propertyType);
         OmniValue reserved = toOmniValue(item.getReservedBalance(), propertyType);
@@ -259,15 +220,36 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
                 property.getTotalTokens());
     }
 
-    protected PropertyType lookupPropertyType(CurrencyID propertyID) throws IOException, InterruptedException {
+    /**
+     * Get the property type for a propertyId. Is asynchronous using {@link CompletableFuture} because
+     * if the value isn't in the cache, we'll need to fetch a list of properties from the server.
+     * TODO: Should we consider making this method more general and returning OmniPropertyInfo?
+     *
+     * @param propertyID The propertyId to lookup
+     * @return The property type.
+     */
+    protected CompletableFuture<PropertyType> lookupPropertyType(CurrencyID propertyID)  {
+        CompletableFuture<PropertyType> future = new CompletableFuture<>();
         if (!cachedPropertyTypes.containsKey(propertyID)) {
-            // If we don't have the info, fetch info for all properties from server and update
-            List<SmartPropertyListInfo> infos = listProperties();
-            infos.forEach(info -> {
-                cachedPropertyTypes.put(info.getPropertyid(), divisibleToPropertyType(info.getDivisible()));
+            listSmartProperties().whenComplete((infos,t) -> {
+                if (infos != null) {
+                    infos.forEach(info -> {
+                        cachedPropertyTypes.put(info.getPropertyid(), divisibleToPropertyType(info.getDivisible()));
+                    });
+                    PropertyType type = cachedPropertyTypes.get(propertyID);
+                    if (type != null) {
+                        future.complete(type);
+                    } else {
+                        future.completeExceptionally(new RuntimeException("Can't find PropertyType for id " + propertyID));
+                    }
+                } else {
+                    future.completeExceptionally(t);
+                }
             });
+        } else {
+            future.complete(cachedPropertyTypes.get(propertyID));
         }
-        return cachedPropertyTypes.get(propertyID);
+        return future;
     }
 
     protected WalletAddressBalance balanceEntryMapper(OmniwalletAddressBalance owb) {

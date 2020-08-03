@@ -1,6 +1,7 @@
 package foundation.omni.cli;
 
 import foundation.omni.CurrencyID;
+import foundation.omni.consensus.ConsensusToolOutput;
 import foundation.omni.consensus.MultiPropertyComparison;
 import foundation.omni.consensus.OmniCoreConsensusTool;
 import foundation.omni.consensus.OmniwalletConsensusTool;
@@ -10,19 +11,31 @@ import foundation.omni.rpc.OmniClient;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.consensusj.bitcoin.cli.BitcoinCLITool;
+import org.consensusj.jsonrpc.cli.GenericJsonRpcTool;
+import org.consensusj.jsonrpc.cli.JavaLoggingSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Tool to fetch Omni and optionally compare consensus data from Omni Core and/or Omniwallet.
  */
 public class ConsensusCLI extends BitcoinCLITool {
-    public static final String commandName = "omni-consensus";
-    public static final String commandUsage = commandName + " [options] -property <id>";
+    public static final String commandName = "omnij-consensus-tool";
+    // omnij-consensus-tool [_OMNICORE_SETTING_]... _URL_OPTION_ -compare [-property id]
+    public static final String commandUsage = commandName + " [omnicore-options...] [url-option] [options] [-? | -property <id> | -compare]";
+    // For a GraalVM command-line tool we muse configure Java Logging in main
+    // before initializing this Logger object
+    private static Logger log;
+
     private final Options options = new OmniConsensusToolOptions();
+
+    private boolean verboseOutput;
 
     @Override
     public String name() {
@@ -41,18 +54,20 @@ public class ConsensusCLI extends BitcoinCLITool {
 
     public ConsensusCLI() {
         super();
+        JavaLoggingSupport.configure("foundation.omni.cli");
+        log = LoggerFactory.getLogger(ConsensusCLI.class);
     }
 
     public static void main(String[] args) {
-        ConsensusCLI command = new ConsensusCLI();
-        OmniCoreCLICall call = new OmniCoreCLICall(command, System.out, System.err, args);
-        /* int status */
         try {
+            ConsensusCLI command = new ConsensusCLI();
+            OmniCoreCLICall call = new OmniCoreCLICall(command, System.out, System.err, args);
             command.run(call);
-        } catch (IOException e) {
+        } catch (ToolException te) {
+            System.exit(te.resultCode);
+        } catch (Throwable e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.exit(1);
         }
         System.exit(0);
     }
@@ -66,19 +81,17 @@ public class ConsensusCLI extends BitcoinCLITool {
     public void run(Call call) {
         try {
             run((OmniCoreCLICall) call);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (IOException | InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public void run(OmniCoreCLICall call) throws IOException, InterruptedException {
+    public void run(OmniCoreCLICall call) throws IOException, InterruptedException, ExecutionException {
         CommandLine line = call.line;
-        // Must have -p (property id) or -x (compare), but not both
-        // TODO: This will change when we allow download of all property ids or comparison of a single one
-        if (!(line.hasOption("p") ^ line.hasOption("x"))) {
-            printError(call, "Must either specify a property id with -p or the -x/-compare option, but not both");
+        verboseOutput = line.hasOption("verbose");
+        // Must have -p (property id) or -x (compare)
+        if (!(line.hasOption("p") || line.hasOption("x"))) {
+            printError(call, "Must either specify a property id with -p and/or the -x/-compare option");
             printHelp(call, commandUsage);
             throw new ToolException(1, "usage error");
         }
@@ -90,56 +103,51 @@ public class ConsensusCLI extends BitcoinCLITool {
         String fileName = line.getOptionValue("output");
 
         ConsensusFetcher tool1;
-        ConsensusFetcher tool2;
+        ConsensusFetcher tool2 = null;
+        URI uri1;
+        URI uri2 = null;
+        uri1 = call.rpcClient().getServerURI();
+        tool1 = new OmniCoreConsensusTool((OmniClient) call.rpcClient());
         if (line.hasOption("omnicore-url")) {
-            tool1 = new OmniCoreConsensusTool(call.getRPCConfig().getNetParams(), URI.create(line.getOptionValue("omnicore-url")));
+            uri2 = URI.create(line.getOptionValue("omnicore-url"));
+            tool2 = new OmniCoreConsensusTool(call.getRPCConfig().getNetParams(), uri2);
         } else if (line.hasOption("omniwallet-url")) {
-            tool1 = new OmniwalletConsensusTool(URI.create(line.getOptionValue("omniwallet-url")));
-        } else {
-            tool1 = new OmniCoreConsensusTool((OmniClient) call.rpcClient());
+            uri2 = URI.create(line.getOptionValue("omniwallet-url"));
+            tool2 = new OmniwalletConsensusTool(uri2);
         }
 
-
-        if (line.hasOption("compare")) {
-            // TODO: Make sure that if compare option is used one of the above xxx-url options is also chosen
-            tool2 = new OmniCoreConsensusTool((OmniClient) call.rpcClient());
-            //pwerr.println "Comparing ${tool2.serverURI} with ${tool1.serverURI}"
-            MultiPropertyComparison multiComparison = new MultiPropertyComparison(tool2, tool1);
-            multiComparison.compareAllProperties();
-            //multiComparison.compareProperty(CurrencyID.OMNI)
+        if (line.hasOption("compare") && (tool2 == null) ) {
+            printError(call, "-omnicore-url or -omniwallet-url must be specified for -x/-compare option");
+            printHelp(call, commandUsage);
+            throw new ToolException(1, "usage error");
+        } else if (line.hasOption("compare")) {
+            MultiPropertyComparison multiComparison = new MultiPropertyComparison(tool1, tool2);
+            if (line.hasOption("p")) {
+                log.info("Comparing {} and {}, Property: {}", uri1, uri2,currencyID);
+                long mismatchCount = multiComparison.compareProperty(currencyID);
+                if (mismatchCount > 0) {
+                    printError(call, "Failure: " + mismatchCount + " mismatched address");
+                } else {
+                    log.info("Servers {} and {} are IN CONSENSUS  for property: {}", uri1, uri2, currencyID);
+                }
+            } else {
+                log.info("Comparing {} and {}, ALL PROPERTIES", uri1, uri2);
+                long mismatchCount = multiComparison.compareAllProperties();
+                if (mismatchCount > 0) {
+                    printError(call, "Failure: " + mismatchCount + " mismatched properties");
+                } else {
+                    log.info("Servers {} and {} are IN CONSENSUS for all properties", uri1, uri2);
+                }
+            }
         } else {
-            ConsensusSnapshot consensus = tool1.getConsensusSnapshot(currencyID);
+            ConsensusSnapshot consensus = (tool2 == null) ? tool1.getConsensusSnapshot(currencyID) :
+                                                            tool2.getConsensusSnapshot(currencyID);
 
             if (fileName != null) {
-                File output = new File(fileName);
-                save(consensus, output);
+                ConsensusToolOutput.save(consensus, new File(fileName));
             } else {
-                print(consensus, call.out);
+                ConsensusToolOutput.print(consensus, call.out);
             }
-
         }
-
-    }
-
-    public static void save(ConsensusSnapshot snap, File file) throws IOException {
-        PrintWriter pw = new PrintWriter(file);
-        output(snap, pw, true);
-        pw.flush();
-    }
-
-    public void print(ConsensusSnapshot snap, PrintWriter pwout) {
-        output(snap, pwout, false);
-    }
-
-    public static void output(ConsensusSnapshot snap, final PrintWriter writer, final boolean tsv) {
-        snap.getEntries().forEach((address, balanceEntry) -> {
-            final String balance = balanceEntry.getBalance().toString();
-            final String reserved = balanceEntry.getReserved().toString();
-            if (tsv) {
-                writer.println(address + "\t" + balance + "\t" + reserved);
-            } else {
-                writer.println(address + ": " + balance + ", " + reserved);
-            }
-        });
     }
 }
