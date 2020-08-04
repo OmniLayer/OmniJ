@@ -7,6 +7,8 @@ import org.bitcoinj.core.Address;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+//import java.util.Spliterator;
+//import java.util.Spliterators;
 
 /**
  * A pair of ConsensusSnapshots with comparison iterators for Spock tests
@@ -42,6 +44,13 @@ public class ConsensusComparison implements Iterable<ConsensusEntryPair> {
 
         return new PairIterator(this, unionAddresses.iterator());
     }
+
+// TODO: Get a working spliterator @Override
+
+//    @Override
+//    public Spliterator<ConsensusEntryPair> spliterator() {
+//        return Spliterators.spliterator(iterator(), unionAddresses.size(), Spliterator.NONNULL | Spliterator.DISTINCT);
+//    }
 
     public final ConsensusSnapshot getC1() {
         return c1;
