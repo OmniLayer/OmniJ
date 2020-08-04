@@ -3,8 +3,8 @@
 == Main Release Process
 
 
-. Official builds are now done with JDK 11. (Although the release JARs are JDK 8-compatible)
-.. `sdk use java 11.0.7.hs-adpt`
+. Official builds are now done with JDK 11. (Although most release JARs are JDK 8-compatible)
+.. `sdk use java 11.0.8.hs-adpt`
 . Update `CHANGELOG.adoc`
 . Set versions
 .. `gradle.properties`

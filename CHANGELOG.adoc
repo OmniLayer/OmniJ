@@ -3,9 +3,9 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.5.12-SNAPSHOT
+== v0.5.12
 
-Released: Under development
+Released: 2020.08.04
 
 === omnij-core
 
