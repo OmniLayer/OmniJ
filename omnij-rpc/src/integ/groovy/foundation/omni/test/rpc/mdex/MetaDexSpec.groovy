@@ -72,7 +72,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         txTradeC.amountdesired as BigDecimal == 10.indivisible.bigDecimalValue()
         txTradeC.amountremaining as BigDecimal == 0.00000001.divisible.bigDecimalValue()
         txTradeC.amounttofill as BigDecimal == 10.indivisible.bigDecimalValue()
-        txTradeC.matches.size == 0
+        txTradeC.matches.size() == 0
         if (omniGetInfo().omnicoreversion_int < 1100000) {
             assert txTradeC.unitprice == "0.00000000100000000000000000000000000000000000000000"
         } else {
@@ -119,7 +119,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         txTradeA.unitprice == "0.10000000000000000000000000000000000000000000000000"
         txTradeA.amountremaining as BigDecimal == 20.indivisible.bigDecimalValue()
         txTradeA.amounttofill as BigDecimal == 2.0.divisible.bigDecimalValue()
-        txTradeA.matches.size == 1
+        txTradeA.matches.size() == 1
 
         when:
         def tradeMatchA = txTradeA.matches.find { it.txid == txidTradeB.toString() } as Map<String, Object>
@@ -142,7 +142,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         txTradeB.amountdesired as BigDecimal == 5.indivisible.bigDecimalValue()
         txTradeB.amountremaining as BigDecimal == 0.05.divisible.bigDecimalValue()
         txTradeB.amounttofill as BigDecimal == 1.indivisible.bigDecimalValue()
-        txTradeB.matches.size == 1
+        txTradeB.matches.size() == 1
         if (omniGetInfo().omnicoreversion_int < 1100000) {
             assert txTradeB.unitprice == "0.11000000000000000000000000000000000000000000000000"
         } else {

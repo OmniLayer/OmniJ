@@ -140,7 +140,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         firstTx.divisible
         firstTx.amount as BigDecimal == 30.0
         firstTx.totalstofee as BigDecimal == 0.00000002
-        firstTx.recipients.size == 2
+        firstTx.recipients.size() == 2
         firstTx.recipients.any { it.address == ownerA.toString() }
         firstTx.recipients.any { it.address == ownerB.toString() }
         firstTx.recipients.every { it.amount as BigDecimal == 15.0 } // 30.0 for two owners
@@ -178,7 +178,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         thirdTx.valid
         thirdTx.amount as BigDecimal == 50.0
         thirdTx.totalstofee as BigDecimal == 0.00000002
-        thirdTx.recipients.size == 2
+        thirdTx.recipients.size() == 2
         thirdTx.recipients.any { it.address == ownerA.toString() }
         thirdTx.recipients.any { it.address == ownerB.toString() }
         thirdTx.recipients.every { it.amount as BigDecimal == 25.0 } // 50.0 for two owners
@@ -190,7 +190,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         firstTxNow.valid
         firstTx.amount as BigDecimal == 30.0
         firstTx.totalstofee as BigDecimal == 0.00000002
-        firstTx.recipients.size == 2
+        firstTx.recipients.size() == 2
         firstTx.recipients.any { it.address == ownerA.toString() }
         firstTx.recipients.any { it.address == ownerB.toString() }
         firstTx.recipients.every { it.amount as BigDecimal == 15.0 } // 30.0 for two owners
