@@ -9,6 +9,11 @@ Released: Under development
 
 === omnij-core
 
+* Make toString() abstract in OmniValue and implement in subclasses
+* Add toPlainString() method
+* Add toFormattedString method
+* OmniDivisibleValue.bigDecimalValue() use movePointLeft rather than divide
+* OmniDivisibleValue.of(BigDecimal) use movePointRight rather than multiply
 * Fix bug in `OmniValue.equals()` that would identify `OmniDivisibleValue` and `OmniIndivisibleValue` of the same number of _willetts_ "equal" (`Object` equality)
 
 === omnij-dsl
@@ -23,37 +28,58 @@ Released: Under development
 ** NetworkParameters defaults to `null` in `OmniwalletAbstractClient`
 ** Ability to set `NetworkParameters in the constructor`
 * Add support for returning `frozen` balances in `verifyAddresses()` and `getConsensusForCurrency()`
-
+* OmniCoreClient — update to new ConsensusFetcher, make more async
+* Omniwallet*Client — update to new ConsensusFetcher, make more async
 
 ==== omnij-rest-client
 
 * see `omnij-netapi`
 
-
 ==== omnij-rest-client-mjdk
 
 * see `omnij-netapi`
 
-
 === omnij-jsonrpc
 
 * Add `BalanceEntry.totalBalance` static method.
+* OmniValueSerializer use OmniValue::toJsonFormattedString.
+* Change OmniValueSerializerSpec to require a decimal point for divisible currencies
 
 === omnij-rpc (Integration Test support)
 
+* RegTest/Integation now Require JDK11+
+* Omniwallet Integration test/consensus tools use OmniwalletModernJDKClient
+* Drop `openjdk8` job from TravisCI
 * Deprecate `OmniwalletConsensusFetcher`
 * Deprecate `ExplorerConsensusTool` (was OmniChest, Explorer and Omniwallet now have the same API)
 * Remove obsolete OmniChest/OmniExplorer tests
 * Refactor `ConsensusTool`/`OmniWalletConsensusTool` from Groovy to Java
+* Rework ConsensusFetcher interface
+** Focus on Async (remote some synch calls, add more async calls)
+** default methods some synchronous calls (so subclasses don’t have to implement)
+** default methods to compose getBeforeheight-getConsensus-getAfterheight-retry
+* semi-deprecate DBConsensusTool by making it abstract
+* further deprecate ExplorerConsensusTool by making it abstract
+* further deprecate OmniwalletConesnsusTool by making it abstract
+* Move `save`, `print`, and `output` methods from ConsensusTool to ConsensusToolOutput
+* MultiPropertyComparison - use CompletableFuture and “combine” to fetch property lists and consensus data from both servers in parallel
 
 === omnij-cli
 
+* Add Graal `native-image` build of ConsensusCLI tool (`omnij-consensus-tool`)
+* Add manual page for `omnij-consensus-tool`.
+* Consensus tool can now fetch and display or save data from Omniwallet server URLs.
 * Port ConsensusCLI tool from Groovy to Java
 * Re-enable and fix RegTest integration tests of `ConsensusCLI` tool
 * Remove `-omnichest-url` option and use of `ExplorerConsensusTool` from `ConsensusCLI` tool
 
 === All modules
 
+* Add Github Actions builds for 3 workflows:
+** Regular Gradle build
+** Run RegTests
+** GraalVM build of `omnij-consensus-tool`
+* Enable Gradle build scans
 * Update to Groovy 3.0.5
 
 == v0.5.11
