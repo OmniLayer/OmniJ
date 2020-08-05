@@ -1,25 +1,19 @@
-// Handles publication of distributions to Bintray
+// Handles publication of distributions to Bintray (and now Github Packages, too)
 subprojects {
     apply plugin: 'com.jfrog.bintray'
-    //apply plugin: 'maven'
     apply plugin: 'maven-publish'
-
-    task sourceJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
-        from javadoc.destinationDir
-    }
-
-    artifacts {
-        archives sourceJar
-        archives javadocJar
-    }
-
+    
     publishing {
+        repositories {
+            maven {
+                name = "OmniJGitHubPackages"
+                url = "https://maven.pkg.github.com/OmniLayer/OmniJ"
+                credentials {
+                    username = project.findProperty("omnij.github.user") ?: System.getenv("GITHUB_ACTOR")
+                    password = project.findProperty("omnij.github.key") ?: System.getenv("GITHUB_TOKEN")
+                }
+            }
+        }
         publications {
             jar(MavenPublication) {
                 from components.java
