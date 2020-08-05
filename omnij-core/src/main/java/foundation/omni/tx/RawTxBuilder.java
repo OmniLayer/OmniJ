@@ -104,9 +104,9 @@ public class RawTxBuilder {
      * @param previousPropertyId an identifier of a predecessor token (0 for new tokens)
      * @param category a category for the new tokens (can be "")
      * @param subCategory a subcategory for the new tokens (can be "")
-     * @param label
+     * @param label label
      * @param website an URL for further information about the new tokens (can be "")
-     * @param info
+     * @param info info
      * @param amount the number of tokens to create
      * @return The hex-encoded raw transaction
      */
@@ -133,9 +133,9 @@ public class RawTxBuilder {
      * @param previousPropertyId an identifier of a predecessor token (0 for new crowdsales)
      * @param category a category for the new tokens (can be "")
      * @param subCategory a subcategory for the new tokens (can be "")
-     * @param label
+     * @param label label
      * @param website an URL for further information about the new tokens (can be "")
-     * @param info
+     * @param info info
      * @param propertyDesired the identifier of a token eligible to participate in the crowdsale
      * @param tokensPerUnit the amount of tokens granted per unit invested in the crowdsale
      * @param deadline the deadline of the crowdsale as Unix timestamp
@@ -181,9 +181,9 @@ public class RawTxBuilder {
      * @param previousPropertyId an identifier of a predecessor token (0 for new tokens)
      * @param category a category for the new tokens (can be "")
      * @param subCategory a subcategory for the new tokens (can be "")
-     * @param label
+     * @param label label
      * @param website an URL for further information about the new tokens (can be "")
-     * @param info
+     * @param info info
      * @return The hex-encoded raw transaction
      */
     public String createManagedPropertyHex(Ecosystem ecosystem, PropertyType propertyType, Long previousPropertyId,
