@@ -61,6 +61,11 @@ subprojects {
         testRuntimeOnly "org.slf4j:slf4j-jdk14:${slf4jVersion}"     // Runtime implementation of slf4j for tests
     }
 
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
+
     compileJava {
         options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
     }
@@ -85,6 +90,7 @@ subprojects {
 
 apply from: 'gradle/idea.gradle'
 apply from: 'gradle/groovydoc.gradle'
+apply from: 'gradle/javadoc.gradle'
 apply from: 'gradle/asciidoctor.gradle'
 apply from: 'gradle/bintray.gradle'
 
@@ -94,5 +100,5 @@ task testReport(type: TestReport) {
     reportOn subprojects*.test
 }
 
-task buildCI(dependsOn: [build, testReport, groovydocAll, asciidoctor])
+task buildCI(dependsOn: [build, testReport, javadocAll, groovydocAll, asciidoctor])
 

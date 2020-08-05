@@ -1,4 +1,4 @@
 /**
- *  Omni Command-line tools communicating with Omni Core using JSON-RPC
+ *  OmniJ command-line Consensus Tool
  */
 package foundation.omni.cli;

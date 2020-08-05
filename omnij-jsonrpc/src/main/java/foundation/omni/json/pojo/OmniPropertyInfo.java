@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 
 /**
  * JSON bean representing the set of information on an Omni Property as returned by the
- * {@code omni_getproperty} RPC method. It is a subclass of {@code SmartPropertyListInfo}
+ * {@code omni_getproperty} RPC method. It is a subclass of {@link SmartPropertyListInfo}
  * because it is a superset of that information.
  */
 public class OmniPropertyInfo extends SmartPropertyListInfo {

@@ -2,14 +2,14 @@ apply plugin: 'groovy'
 
 def groovydocSpec = {
     use = true
-    if (project != rootProject) source = project.sourceSets.main.groovy + project.sourceSets.main.java
+    if (project != rootProject) source = project.sourceSets.main.groovy
     groovyClasspath = project.configurations.documentation
 
     overviewText = project.resources.text.fromFile(rootProject.file('src/main/java/overview.html'))
     includePrivate = false
     link 'https://docs.oracle.com/javase/8/docs/api/', 'java.', 'org.xml.', ' javax.xml.', 'javax.sql.', 'javax.net.', 'org.w3c.'
     link 'https://commons.apache.org/proper/commons-cli/javadocs/api-release/', 'org.apache.commons.cli.'
-    link 'https://bitcoinj.github.io/javadoc/0.15.7/', 'org.bitcoin.', 'org.bitcoinj.'
+    link "https://bitcoinj.github.io/javadoc/${bitcoinjVersion}/", 'org.bitcoin.', 'org.bitcoinj.'
     link 'https://consensusj.github.io/consensusj/apidoc/', 'com.msgilligan.bitcoinj.', 'org.consensusj.'
 
 }
@@ -33,7 +33,7 @@ allprojects {
 
 task groovydocAll(type: Groovydoc)
 groovydocAll {
-    destinationDir = new File(buildDir, 'allgroovydoc')
+    destinationDir = new File(buildDir, 'docs/groovydoc')
     source = groovydoc.source
     classpath = groovydoc.classpath
     groovyClasspath = groovydoc.groovyClasspath

@@ -1,0 +1,23 @@
+ext.javadocSpec = {
+    options.links(  'https://docs.oracle.com/en/java/javase/11/docs/api/',
+            "https://bitcoinj.github.io/javadoc/${bitcoinjVersion}/",
+            "https://consensusj.github.io/consensusj/apidoc/",
+            "https://javadoc.io/doc/javax.money/money-api-bp/1.0.4/",
+            "https://fasterxml.github.io/jackson-core/javadoc/2.10/",
+            "https://fasterxml.github.io/jackson-databind/javadoc/2.10/")
+}
+
+allprojects {
+    javadoc javadocSpec
+}
+
+task javadocAll(type: Javadoc) {
+    source subprojects.collect {project -> project.sourceSets.main.allJava }
+    classpath = files(subprojects.collect {project -> project.sourceSets.main.compileClasspath})
+}
+javadocAll javadocSpec << {
+    options.overview = rootProject.file('src/main/java/overview.html').toPath()
+}
+javadocAll.doLast {
+    logger.info "Consolidated JavaDoc generated at <file://${javadocAll.destinationDir}/index.html>"
+}
