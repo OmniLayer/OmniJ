@@ -14,3 +14,7 @@ dependencies {
     testImplementation project(':omnij-dsl')
 }
 
+test {
+    systemProperty 'java.util.logging.config.file', "${project.projectDir}/src/test/logging.properties"
+}
+
