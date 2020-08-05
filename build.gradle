@@ -86,7 +86,7 @@ subprojects {
 apply from: 'gradle/idea.gradle'
 apply from: 'gradle/groovydoc.gradle'
 apply from: 'gradle/asciidoctor.gradle'
-apply from: 'gradle/bintray.gradle'
+apply from: 'gradle/publish-package.gradle'
 
 task testReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/allTests")
