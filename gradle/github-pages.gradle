@@ -2,7 +2,7 @@ apply plugin: 'org.ajoberstar.git-publish'
 
 def siteDir = "$buildDir/doc"
 def apiDocDir = "$buildDir/docs/javadoc"
-def groovyDocDir = "$buildDir/docs/javadoc"
+def groovyDocDir = "$buildDir/docs/groovydoc"
 
 gitPublish {
     repoUri = 'git@github.com:OmniLayer/OmniJ.git'
