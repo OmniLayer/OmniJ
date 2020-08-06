@@ -7,6 +7,7 @@ buildscript {
 plugins {
     id 'org.asciidoctor.jvm.convert' version '3.2.0'
     id 'com.jfrog.bintray'           version '1.8.4' apply false
+    id 'org.ajoberstar.git-publish'  version '2.1.3'
 }
 
 // See gradle.properties for some dependency version settings
@@ -93,6 +94,7 @@ apply from: 'gradle/groovydoc.gradle'
 apply from: 'gradle/javadoc.gradle'
 apply from: 'gradle/asciidoctor.gradle'
 apply from: 'gradle/bintray.gradle'
+apply from: 'gradle/github-pages.gradle'
 
 task testReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/allTests")

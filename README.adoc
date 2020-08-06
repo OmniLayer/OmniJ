@@ -74,12 +74,13 @@ A Bitcoin JSON-RPC client (base class), and other components used by OmniJ are i
 
 === OmniLayer Documentation
 
-* https://github.com/OmniLayer/spec[Omni Protocol Specification]
+* https://github.com/OmniLayer/spec/blob/master/OmniSpecification.adoc#omni-protocol-specification[Omni Protocol Specification]
 
 === OmniJ Documentation and Build Reports
 
-* OmniJ https://ci.omni.foundation/job/OmniJ/javadoc/[API Doc]
-* OmniJ https://ci.omni.foundation/job/OmniJ/[Unit Test Results]
+* OmniJ https://www.omnilayer.org/OmniJ/apidoc/[JavaDoc]
+* OmniJ https://www.omnilayer.org/OmniJ/groovydoc/[GroovyDoc]
+* OmniJ https://ci.omni.foundation/job/OmniJ/[Unit Test Results] (currently unavailable)
 
 === OmniJ Maven Artifacts
 
@@ -265,7 +266,7 @@ This will output the tool's command line options.
 
 === Man Page
 
-See the link:doc/omnij-consensus-tool-manpage.adoc[omnij-consensus-tool Man Page] for further instructions.
+See the https://www.omnilayer.org/OmniJ/omnij-consensus-tool-manpage.html[omnij-consensus-tool Man Page] for further instructions.
 
 == Additional Documentation
 
