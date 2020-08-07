@@ -53,11 +53,12 @@ subprojects {
         implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
         testImplementation "${consensusjGroup}:${consensusjBtcDslArtifact}:${consensusjVersion}"
-        testImplementation "junit:junit:4.13"
         testImplementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
         testImplementation("org.spockframework:spock-core:${spockVersion}") {
             exclude module: "groovy-all"
         }
+        // TODO: Remove JUnit 4 dependency (AssumptionViolatedException) in RegTests
+        testImplementation "junit:junit:4.13"
         testImplementation "org.spockframework:spock-junit4:${spockVersion}"
         testRuntimeOnly "org.slf4j:slf4j-jdk14:${slf4jVersion}"     // Runtime implementation of slf4j for tests
     }
