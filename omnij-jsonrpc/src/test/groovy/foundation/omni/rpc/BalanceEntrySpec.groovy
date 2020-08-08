@@ -23,7 +23,7 @@ class BalanceEntrySpec extends Specification {
         balanceEntry.balance.bigDecimalValue() == balance
         balanceEntry.reserved.bigDecimalValue() == reserved
         balanceEntry.frozen.bigDecimalValue() == frozen ?: 0
-        BalanceEntry.totalBalance(balanceEntry) == balance + reserved + frozen
+        BalanceEntry.totalBalance(balanceEntry) == balance + reserved
 
 
         where:
@@ -47,7 +47,7 @@ class BalanceEntrySpec extends Specification {
         balanceEntry.balance.longValueExact() == balance
         balanceEntry.reserved.longValueExact() == reserved
         balanceEntry.frozen.longValueExact() == frozen ?: 0
-        BalanceEntry.totalBalance(balanceEntry) == balance + reserved + frozen
+        BalanceEntry.totalBalance(balanceEntry) == balance + reserved
 
 
         where:
