@@ -11,7 +11,6 @@ import foundation.omni.rpc.OmniClient;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.consensusj.bitcoin.cli.BitcoinCLITool;
-import org.consensusj.jsonrpc.cli.GenericJsonRpcTool;
 import org.consensusj.jsonrpc.cli.JavaLoggingSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

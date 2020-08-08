@@ -13,7 +13,8 @@ import java.util.function.Function;
 /**
  * Interface implemented by all consensus fetching tools.
  * Should really be in the package foundation.omni.consensus, but is here as a workaround
- * to what appears to be a Groovy joint-compilation issue.
+ * to what was once a Groovy joint-compilation issue.
+ * TODO: Consolidate with other Consensus-related classes now that joint compilation issue is gone.
  */
 public interface ConsensusFetcher {
     /**

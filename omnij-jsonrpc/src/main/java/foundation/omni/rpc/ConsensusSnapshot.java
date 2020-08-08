@@ -10,7 +10,10 @@ import java.util.SortedMap;
 /**
  * Consensus data for a specified CurrencyID at a given blockHeight.
  * Should really be in the package foundation.omni.consensus, but is here as a workaround
- * to what appears to be a Groovy joint-compilation issue.
+ * to what was once a Groovy joint-compilation issue.
+ * TODO: Consolidate with other Consensus-related classes now that joint compilation issue is gone.
+ * TODO: A consensus snapshot should really capture the total number of coins for that property at the same block height
+ * so we can make sure the individual numbers sum up to the grand total.
  */
 public class ConsensusSnapshot {
     /**
