@@ -40,8 +40,7 @@ public class BalanceEntry implements Iterable<OmniValue>  {
 
     public static OmniValue totalBalance(BalanceEntry balanceEntry) {
         return balanceEntry.balance
-                .plus(balanceEntry.reserved)
-                .plus(balanceEntry.frozen);
+                .plus(balanceEntry.reserved);
     }
 
     @Override

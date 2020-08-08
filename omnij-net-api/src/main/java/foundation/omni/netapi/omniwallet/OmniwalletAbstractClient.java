@@ -171,16 +171,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
         Address address = item.getAddress();
         OmniValue balance = toOmniValue(item.getBalance(), propertyType);
         OmniValue reserved = toOmniValue(item.getReservedBalance(), propertyType);
-        boolean isFrozen = item.isFrozen();
-
-        OmniValue frozen;
-
-        if (isFrozen) {
-            frozen = balance;
-            balance = OmniValue.of(0, propertyType);
-        } else {
-            frozen = OmniValue.of(0, propertyType);
-        }
+        OmniValue frozen = item.isFrozen() ? balance : OmniValue.of(0, propertyType);
 
         return new AddressBalanceEntry(address, balance, reserved, frozen);
     }
