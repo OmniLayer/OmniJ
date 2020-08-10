@@ -3,10 +3,26 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.5.13-SNAPSHOT
+== v0.5.13
 
-Released: Under development
+Released: 2020.08.10
 
+=== omnij-jsonrpc
+
+* Workaround for bitcoinj compareTo() issue where some addresses were missing from the `SortedMap`
+returned by `omniGetAllBalancesForId`
+* Added `omniGetAllBalancesForIdAsList` to return a `List` instead of a `SortedMap`
+* Fixes to how `frozen` is included in total balances
+
+=== omnij-netapi
+
+* Fixes to how `frozen` is read from Omniwallet API
+
+=== All modules
+
+* Add support for publishing JARs (and SNAPSHOT JARs) to Github Packages
+* JavaDoc cleanup and improvements
+* Project "site" (including JavaDoc) can now be published to Github Pages
 
 == v0.5.12
 

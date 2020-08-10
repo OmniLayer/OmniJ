@@ -35,6 +35,11 @@
 .. *Not* `README.adoc` -- it should match release version
 . Commit and push to master
 
+
+== Publish Snapshot release to Github Maven repo
+
+. `.gradlew clean buildCI regTest publish`
+
 == Install Snapshot to local maven repo
 
 . `./gradlew clean buildCI publishToMavenLocal`
