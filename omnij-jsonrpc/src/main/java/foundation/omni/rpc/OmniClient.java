@@ -2,8 +2,11 @@ package foundation.omni.rpc;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
+import com.google.common.primitives.UnsignedBytes;
 import com.msgilligan.bitcoinj.rpc.BitcoinExtendedClient;
 import foundation.omni.json.pojo.OmniPropertyInfo;
+import org.bitcoinj.core.LegacyAddress;
+import org.bitcoinj.core.SegwitAddress;
 import org.consensusj.jsonrpc.JsonRpcException;
 import com.msgilligan.bitcoinj.rpc.RpcConfig;
 import foundation.omni.CurrencyID;
@@ -25,6 +28,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 // TODO: add missing RPCs:
 // - omni_listtransactions
@@ -153,7 +157,7 @@ public class OmniClient extends BitcoinExtendedClient {
     }
 
     /**
-     * Returns a list of balances for a given identifier.
+     * Returns a sorted map of address-balances for a given identifier.
      *
      * @param currency The identifier of the token to look up
      * @return A Sorted Map indexed by addresses to available and reserved balances
@@ -162,7 +166,46 @@ public class OmniClient extends BitcoinExtendedClient {
      */
     public SortedMap<Address, BalanceEntry> omniGetAllBalancesForId(CurrencyID currency)
             throws JsonRpcException, IOException {
-        return send("omni_getallbalancesforid", AddressBalanceEntries.class, currency);
+        //return send("omni_getallbalancesforid", AddressBalanceEntries.class, currency);
+        return omniGetAllBalancesForIdAsList(currency).stream()
+                .collect(() -> new TreeMap<>(OmniClient::addressComparatorWorkaround),
+                        (map, abe) -> map.put(abe.getAddress(), new BalanceEntry(abe.balance, abe.reserved, abe.frozen)),
+                        TreeMap::putAll);
+    }
+
+    /**
+     * Workaround comparator for problem with {@code compareTo} in bitcoinj {@code LegacyAddress}
+     * @param a First address to compare
+     * @param b Second address to compare
+     * @return A comparision for sorting
+     */
+    private static int addressComparatorWorkaround(Address a, Address b) {
+        // First compare netParams
+        int result = a.getParameters().getId().compareTo(b.getParameters().getId());
+        if (result != 0) return result;
+
+        // Then compare Legacy vs Segwit
+        if (b instanceof SegwitAddress) {
+            return -1;  // Legacy addresses (starting with 1 or 3) come before Segwit addresses.
+        }
+
+        // Next compare version byte and finally the {@code bytes} field itself
+        result = Integer.compare(((LegacyAddress)a).getVersion(), ((LegacyAddress) b).getVersion());
+        return result != 0 ? result : UnsignedBytes.lexicographicalComparator().compare(((LegacyAddress)a).getHash(), b.getHash());
+    }
+
+    /**
+     * Returns a list of address-balances for a given identifier.
+     *
+     * @param currency The identifier of the token to look up
+     * @return A list of address-balances
+     * @throws JsonRpcException JSON RPC error
+     * @throws IOException network error
+     */
+    public List<AddressBalanceEntry> omniGetAllBalancesForIdAsList(CurrencyID currency)
+            throws JsonRpcException, IOException {
+        JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, AddressBalanceEntry.class);
+        return send("omni_getallbalancesforid", resultType, currency);
     }
 
     /**
