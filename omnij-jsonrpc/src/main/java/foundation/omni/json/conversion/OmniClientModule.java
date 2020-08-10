@@ -17,6 +17,10 @@ import org.bitcoinj.core.NetworkParameters;
  */
 public class OmniClientModule extends SimpleModule {
     public OmniClientModule(NetworkParameters netParams) {
+        this();
+    }
+
+    public OmniClientModule() {
         super("OmniJMappingClient", new Version(1, 0, 0, null, null, null));
         this.addDeserializer(CurrencyID.class, new CurrencyIDDeserializer())
             .addDeserializer(AddressBalanceEntries.class, new AddressBalanceEntriesDeserializer())
