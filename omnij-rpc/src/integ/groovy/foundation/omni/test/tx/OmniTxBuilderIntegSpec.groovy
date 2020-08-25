@@ -6,6 +6,7 @@ import foundation.omni.tx.OmniTxBuilder
 import foundation.omni.tx.SimpleVariableFeeCalculator
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.TransactionOutput
+import spock.lang.Ignore
 
 import static foundation.omni.CurrencyID.OMNI
 
@@ -16,7 +17,7 @@ class OmniTxBuilderIntegSpec extends BaseRegTestSpec {
     static final Coin startBTC = 10.btc
     static final OmniDivisibleValue startOMNI = 1000.divisible
 
-
+    @Ignore("Incompatible with Omni Core in P2SH-wrapped SegWit mode")
     def "Can simple send amount OMNI from one address to another using OmniTxBuilder and sendraw RPC"() {
         given: "a fundedAddress with BTC/OMNI and a newly created toAddress"
         def omniTxBuilder = new OmniTxBuilder(netParams)
@@ -43,6 +44,7 @@ class OmniTxBuilderIntegSpec extends BaseRegTestSpec {
         endBalance == startBalance - amount.numberValue()
     }
 
+    @Ignore("Incompatible with Omni Core in P2SH-wrapped SegWit mode")
     def "Can simple send amount OMNI from one address to another using OmniTxBuilder and sendraw RPC with per KB fee"() {
         given: "a fundedAddress with BTC/OMNI and a newly created toAddress"
         def omniTxBuilder = new OmniTxBuilder(netParams, new SimpleVariableFeeCalculator())
