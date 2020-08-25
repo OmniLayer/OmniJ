@@ -21,6 +21,8 @@
 . Update Github https://github.com/OmniLayer/OmniJ/releases[OmniJ Releases] page.
 . Publish Github pages site including JavaDoc and GroovyDoc
 .. `./gradlew publishSite`
+. Publish to Github Packages
+.. `./gradlew publish`
 
 == Announcements
 
