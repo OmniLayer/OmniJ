@@ -35,5 +35,5 @@ jobs:
     - name: Upload omnij-consensus-tool as artifact
       uses: actions/upload-artifact@v2
       with:
-        name: omnij-cosensus-tool-${{ matrix.os }}
+        name: omnij-consensus-tool-${{ matrix.os }}
         path: omnij-cli/build/omnij-consensus-tool
