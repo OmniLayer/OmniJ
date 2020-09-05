@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
-        graalvm: [ '20.1.0.java11' ]
+        graalvm: [ '20.2.0.java11' ]
       fail-fast: false
     name: ${{ matrix.os }} JDK ${{ matrix.graalvm }}
     steps:
@@ -17,7 +17,7 @@ jobs:
     - name: Set up GraalVM
       uses: DeLaGuardo/setup-graalvm@3
       with:
-        graalvm-version: '20.1.0.java11'
+        graalvm-version: ${{ matrix.graalvm }}
     - name: Set GRAAL_HOME
       run: echo '::set-env name=GRAAL_HOME::${{env.JAVA_HOME}}'
     - name: Install native-image plugin
