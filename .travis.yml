@@ -1,6 +1,6 @@
 sudo: false
 os: linux
-dist: xenial
+dist: focal
 language: java
 
 cache:
