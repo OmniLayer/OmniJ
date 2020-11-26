@@ -73,10 +73,7 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
 
     @Override
     protected CompletableFuture<OmniwalletPropertiesListResponse> propertiesList() {
-        HttpRequest request = HttpRequest
-                .newBuilder(baseURI.resolve("/v1/properties/list"))
-                .header("Accept", "application/json")
-                .build();
+        HttpRequest request = buildGetRequest("/v1/properties/list");
 
         //log.debug("Send aysnc: {}", request);
         return client.sendAsync(request, BodyHandlers.ofString())
@@ -88,11 +85,8 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
 
     @Override
     public CompletableFuture<RevisionInfo> revisionInfo() {
-        HttpRequest request = HttpRequest
-                .newBuilder(baseURI.resolve("/v1/system/revision.json"))
-                .header("Accept", "application/json")
-                .build();
-
+        HttpRequest request = buildGetRequest("/v1/system/revision.json");
+        
         //log.debug("Send aysnc: {}", request);
         return client.sendAsync(request, BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
@@ -112,12 +106,7 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
         TypeReference<HashMap<Address, OmniwalletAddressBalance>> typeRef = new TypeReference<>() {};
         String addressesFormEnc = formEncodeAddressList(addresses);
         log.info("Addresses are: {}", addressesFormEnc);
-        HttpRequest request = null;
-        request = HttpRequest
-                .newBuilder(baseURI.resolve("/v2/address/addr/"))
-                .header("Accept", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(addressesFormEnc))
-                .build();
+        HttpRequest request = buildPostRequest("/v2/address/addr/", addressesFormEnc);
 
         //log.debug("Send aysnc: {}", request);
         return client.sendAsync(request, BodyHandlers.ofString())
@@ -130,16 +119,28 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
     protected CompletableFuture<List<AddressVerifyInfo>> verifyAddresses(CurrencyID currencyID) {
         JavaType resultType = objectMapper.getTypeFactory().constructCollectionType(List.class, AddressVerifyInfo.class);
 
-        HttpRequest request = HttpRequest
-                .newBuilder(baseURI.resolve("/v1/mastercoin_verify/addresses?currency_id=" + currencyID.toString()))
-                .header("Accept", "application/json")
-                .build();
+        HttpRequest request = buildGetRequest("/v1/mastercoin_verify/addresses?currency_id=" + currencyID.toString());
 
         //log.debug("Send aysnc: {}", request);
         return client.sendAsync(request, BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
                 //.whenComplete(OmniwalletModernJDKClient::log)
                 .thenApply(s -> objectMapper.readValue(s, resultType));
+    }
+
+    private HttpRequest buildGetRequest(String uriPath) {
+        return HttpRequest
+                .newBuilder(baseURI.resolve(uriPath))
+                .header("Accept", "application/json")
+                .build();
+    }
+
+    private HttpRequest buildPostRequest(String uriPath, String postData) {
+        return HttpRequest
+                .newBuilder(baseURI.resolve(uriPath))
+                .header("Accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(postData))
+                .build();
     }
 
     /**
