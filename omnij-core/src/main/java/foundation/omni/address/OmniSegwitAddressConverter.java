@@ -33,36 +33,36 @@ public class OmniSegwitAddressConverter {
         Networks.register(defaultOmniNetworks);
     }
 
-    static SegwitAddress btcToOmni(SegwitAddress btcAddress) {
+    public static SegwitAddress btcToOmni(SegwitAddress btcAddress) {
         NetworkParameters omniParams = btcParamsToOmniParams(btcAddress.getParameters());
         Bech32.Bech32Data btcBech32Data = Bech32.decode(btcAddress.toBech32());
         String omniAddressString = Bech32.encode(omniParams.getSegwitAddressHrp(), btcBech32Data.data);
         return SegwitAddress.fromBech32(omniParams, omniAddressString);
     }
 
-    static SegwitAddress btcToOmni(String btcAddressString) {
+    public static SegwitAddress btcToOmni(String btcAddressString) {
         SegwitAddress btcAddress = SegwitAddress.fromBech32(null, btcAddressString);
         return btcToOmni(btcAddress);
     }
 
-    static SegwitAddress btcToOmni(NetworkParameters btcParams, String btcAddressString) {
+    public static SegwitAddress btcToOmni(NetworkParameters btcParams, String btcAddressString) {
         SegwitAddress btcAddress = SegwitAddress.fromBech32(btcParams, btcAddressString);
         return btcToOmni(btcAddress);
     }
 
-    static SegwitAddress omniToBtc(SegwitAddress omniAddress) {
+    public static SegwitAddress omniToBtc(SegwitAddress omniAddress) {
         NetworkParameters btcParams = omniParamsToBtcParams(omniAddress.getParameters());
         Bech32.Bech32Data btcBech32Data = Bech32.decode(omniAddress.toBech32());
         String btcAddressString = Bech32.encode(btcParams.getSegwitAddressHrp(), btcBech32Data.data);
         return SegwitAddress.fromBech32(btcParams, btcAddressString);
     }
 
-    static SegwitAddress omniToBtc(String omniAddressString) {
+    public static SegwitAddress omniToBtc(String omniAddressString) {
         SegwitAddress btcAddress = SegwitAddress.fromBech32(null, omniAddressString);
         return omniToBtc(btcAddress);
     }
 
-    static SegwitAddress omniToBtc(NetworkParameters btcParams, String btcAddressString) {
+    public static SegwitAddress omniToBtc(NetworkParameters btcParams, String btcAddressString) {
         SegwitAddress btcAddress = SegwitAddress.fromBech32(btcParams, btcAddressString);
         return omniToBtc(btcAddress);
     }
