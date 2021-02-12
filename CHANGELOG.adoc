@@ -7,6 +7,12 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: in development
 
+=== Dependency Updates
+
+* bitcoinj 0.15.9
+* Groovy 3.0.7
+* Spock 2.0-M4-groovy-3.0
+
 == v0.5.13
 
 Released: 2020.08.10
