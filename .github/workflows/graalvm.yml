@@ -15,7 +15,7 @@ jobs:
     - name: Git checkout
       uses: actions/checkout@v1
     - name: Set up GraalVM
-      uses: DeLaGuardo/setup-graalvm@3
+      uses: DeLaGuardo/setup-graalvm@3.1
       with:
         graalvm-version: ${{ matrix.graalvm }}
     - name: Set GRAAL_HOME
