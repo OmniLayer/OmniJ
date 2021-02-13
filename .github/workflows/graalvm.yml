@@ -18,8 +18,6 @@ jobs:
       uses: DeLaGuardo/setup-graalvm@3.1
       with:
         graalvm-version: ${{ matrix.graalvm }}
-    - name: Set GRAAL_HOME
-      run: echo '::set-env name=GRAAL_HOME::${{env.JAVA_HOME}}'
     - name: Install native-image plugin
       run: gu install native-image
     - name: Verify Gradle Wrapper
