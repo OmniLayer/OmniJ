@@ -11,7 +11,12 @@ Released: in development
 
 * bitcoinj 0.15.9
 * Groovy 3.0.7
+
+=== Build/Test Updates
+
+* Gradle 6.8.2
 * Spock 2.0-M4-groovy-3.0
+* Replace `jcenter()` with `mavenCentral()` in `build.gradle`
 
 == v0.5.13
 
