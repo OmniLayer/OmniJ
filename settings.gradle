@@ -16,6 +16,7 @@ if (JavaVersion.current().isJava11Compatible()) {
     //include 'omnij-rest-client-micronaut'  // Micronaut HttpClient Omni REST client
     include 'omnij-rest-client-mjdk'       // Modern JDK Omni REST client (using java.net.http)
     include 'omnij-rpc'                    // Omni JSON-RPC + Groovy + Integration tests
+    include 'omnij-analytics'
 } else {
     System.err.println "Skipping JDK 11 client(s), requires Java 11+, currently running Java ${JavaVersion.current()}"
 }

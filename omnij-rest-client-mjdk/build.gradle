@@ -10,11 +10,11 @@ dependencies {
     api project(':omnij-core')
     implementation project(':omnij-jsonrpc')
     
-    testImplementation "org.codehaus.groovy:groovy:3.0.1:indy"
-    testImplementation ("org.codehaus.groovy:groovy-json:3.0.1:indy")  {
+    testImplementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+    testImplementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
         transitive = false
     }
-    testImplementation("org.spockframework:spock-core:2.0-M2-groovy-3.0") {
+    testImplementation("org.spockframework:spock-core:${spockVersion}") {
         exclude module: "groovy-all"
     }
 

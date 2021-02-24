@@ -10,6 +10,7 @@ Released: in development
 === Dependency Updates
 
 * bitcoinj 0.15.9
+* ConsensusJ 0.5.5
 * Groovy 3.0.7
 
 === Build/Test Updates

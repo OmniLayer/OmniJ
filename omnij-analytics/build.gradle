@@ -1,0 +1,18 @@
+plugins {
+    id 'java-library'
+}
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+dependencies {
+    implementation "foundation.omni:omnij-net-api:${omnijVersion}"
+    api "${consensusjGroup}:consensusj-analytics:${consensusjVersion}"
+    api "io.reactivex.rxjava3:rxjava:3.0.10"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+    testImplementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+        transitive = false
+    }
+}
