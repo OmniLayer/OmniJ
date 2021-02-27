@@ -49,7 +49,7 @@ class RPCSmokeTestSpec extends BaseMainNetSpec {
         OmniPropertyInfo info = omniGetProperty(OMNI)
 
         then:
-        info.totalTokens > 1000
+        info.totaltokens > 1000
     }
 
 }

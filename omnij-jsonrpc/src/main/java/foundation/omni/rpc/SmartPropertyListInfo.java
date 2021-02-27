@@ -45,7 +45,7 @@ public class SmartPropertyListInfo {
         return category;
     }
 
-    public String getSubcategory() {
+    public String getSubCategory() {
         return subcategory;
     }
 

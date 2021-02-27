@@ -23,9 +23,9 @@ class ConsensusServiceSpec extends Specification {
         properties.size() >= 1314
 
         and: "number of various categories of properties hasn't decreased"
-        properties.stream().filter({p -> p.fixedIssuance }).count() >= 981
-        properties.stream().filter({p -> p.managedIssuance }).count() >= 73
-        properties.stream().filter({p -> p.freezingEnabled }).count() >= 2
+        properties.stream().filter({p -> p.fixedissuance }).count() >= 981
+        properties.stream().filter({p -> p.managedissuance }).count() >= 73
+        properties.stream().filter({p -> p.freezingenabled }).count() >= 2
     }
 
     def setup() {

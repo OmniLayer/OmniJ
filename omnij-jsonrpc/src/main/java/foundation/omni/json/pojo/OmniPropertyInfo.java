@@ -20,11 +20,11 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
     static private final Address defaultIssuerAddress =  OmniMainNetParams.get().getExodusAddress();
 
     private final Address issuer;
-    private final Sha256Hash creationTxId;
-    private final boolean fixedIssuance;
-    private final boolean managedIssuance;
-    private final boolean freezingEnabled;
-    private final OmniValue totalTokens;
+    private final Sha256Hash creationtxid;
+    private final boolean fixedissuance;
+    private final boolean managedissuance;
+    private final boolean freezingenabled;
+    private final OmniValue totaltokens;
 
     @JsonCreator
     public OmniPropertyInfo(@JsonProperty("propertyid") CurrencyID propertyid,
@@ -39,7 +39,7 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
                             @JsonProperty("fixedissuance") boolean fixedIssuance,
                             @JsonProperty("managedissuance") boolean managedIssuance,
                             @JsonProperty("freezingenabled") boolean freezingEnabled,
-                            @JsonProperty("totaltokens") String totalTokensString) {
+                            @JsonProperty("totaltokens") String totaltokensString) {
         this(propertyid,
                 name,
                 category,
@@ -52,7 +52,7 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
                 fixedIssuance,
                 managedIssuance,
                 freezingEnabled,
-                OmniValue.of(new BigDecimal(totalTokensString), divisible));
+                OmniValue.of(new BigDecimal(totaltokensString), divisible));
     }
 
     public OmniPropertyInfo(CurrencyID propertyid,
@@ -70,11 +70,11 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
                             OmniValue totalTokens) {
         super(propertyid, name, category, subCategory, data, url, divisible);
         this.issuer = issuer;
-        this.creationTxId = creationTxId;
-        this.fixedIssuance = fixedIssuance;
-        this.managedIssuance = managedIssuance;
-        this.freezingEnabled = freezingEnabled;
-        this.totalTokens = totalTokens;
+        this.creationtxid = creationTxId;
+        this.fixedissuance = fixedIssuance;
+        this.managedissuance = managedIssuance;
+        this.freezingenabled = freezingEnabled;
+        this.totaltokens = totalTokens;
     }
 
     /**
@@ -90,39 +90,39 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
         super(sptListInfo.getPropertyid(),
                 sptListInfo.getName(),
                 sptListInfo.getCategory(),
-                sptListInfo.getSubcategory(),
+                sptListInfo.getSubCategory(),
                 sptListInfo.getData(),
                 sptListInfo.getUrl(),
                 sptListInfo.getDivisible());
         this.issuer = defaultIssuerAddress;         // Use the Exodus address for now
-        this.creationTxId = Sha256Hash.ZERO_HASH;
-        this.fixedIssuance = true;
-        this.managedIssuance = false;
-        this.freezingEnabled = false;
-        this.totalTokens = OmniValue.ofWilletts(0, sptListInfo.getDivisible());
+        this.creationtxid = Sha256Hash.ZERO_HASH;
+        this.fixedissuance = true;
+        this.managedissuance = false;
+        this.freezingenabled = false;
+        this.totaltokens = OmniValue.ofWilletts(0, sptListInfo.getDivisible());
     }
 
     public Address getIssuer() {
         return issuer;
     }
 
-    public Sha256Hash getCreationTxId() {
-        return creationTxId;
+    public Sha256Hash getCreationtxid() {
+        return creationtxid;
     }
 
-    public boolean isFixedIssuance() {
-        return fixedIssuance;
+    public boolean isFixedissuance() {
+        return fixedissuance;
     }
 
-    public boolean isManagedIssuance() {
-        return managedIssuance;
+    public boolean isManagedissuance() {
+        return managedissuance;
     }
 
-    public boolean isFreezingEnabled() {
-        return freezingEnabled;
+    public boolean isFreezingenabled() {
+        return freezingenabled;
     }
 
-    public OmniValue getTotalTokens() {
-        return totalTokens;
+    public OmniValue getTotaltokens() {
+        return totaltokens;
     }
 }

@@ -35,7 +35,7 @@ env.waitForBlocks(1)
 OmniPropertyInfo sptInfo = client.omniGetProperty(currencyID)
 def managerSPT = client.omniGetBalance(managerAddress, currencyID).balance
 def otherSPT = client.omniGetBalance(otherAddress, currencyID).balance
-println "Manager has ${managerSPT} SPT, Other has ${otherSPT}, total = ${sptInfo.totalTokens}"
-assert sptInfo.totalTokens == 100.0
+println "Manager has ${managerSPT} SPT, Other has ${otherSPT}, total = ${sptInfo.totaltokens}"
+assert sptInfo.totaltokens == 100.0
 assert managerSPT == 99.0
 assert otherSPT == 1.0

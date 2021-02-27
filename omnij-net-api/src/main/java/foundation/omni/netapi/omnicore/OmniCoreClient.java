@@ -45,46 +45,19 @@ public class OmniCoreClient implements ConsensusService {
     
     @Override
     public CompletableFuture<Integer> currentBlockHeightAsync() {
-        final CompletableFuture<Integer> future = new CompletableFuture<>();
-        CompletableFuture.runAsync(() -> {
-            try {
-                future.complete(client.getBlockCount());
-            } catch (IOException e) {
-                future.completeExceptionally(e);
-            }
-        });
-        return future;
+        return client.supplyAsync(client::getBlockCount);
     }
 
     @Override
     public CompletableFuture<List<OmniPropertyInfo>> listSmartProperties() {
-        final CompletableFuture<List<OmniPropertyInfo>> future = new CompletableFuture<>();
-        CompletableFuture.runAsync(() -> {
-            try {
-                List<OmniPropertyInfo> smartPropertyInfoList = client.omniListProperties().stream()
-                        .map(OmniPropertyInfo::new)
-                        .collect(Collectors.toList());
-                future.complete(smartPropertyInfoList);
-            } catch (IOException e) {
-                future.completeExceptionally(e);
-            }
-        });
-        return future;
+        return client.supplyAsync(() -> client.omniListProperties().stream()
+                .map(OmniPropertyInfo::new)
+                .collect(Collectors.toList()));
     }
 
     @Override
     public CompletableFuture<SortedMap<Address, BalanceEntry>> getConsensusForCurrencyAsync(CurrencyID currencyID) {
-        final CompletableFuture<SortedMap<Address, BalanceEntry>> future = new CompletableFuture<>();
-        CompletableFuture.runAsync(() -> {
-            try {
-                // TODO: Filter out empty address strings or 0 balances?
-                SortedMap<Address, BalanceEntry> consensus = client.omniGetAllBalancesForId(currencyID);
-                future.complete(consensus);
-            } catch (IOException e) {
-                future.completeExceptionally(e);
-            }
-        });
-        return future;
+        return client.supplyAsync(() -> client.omniGetAllBalancesForId(currencyID));
     }
 
 
@@ -101,15 +74,7 @@ public class OmniCoreClient implements ConsensusService {
     @Override
     public CompletableFuture<OmniJBalances> balancesForAddressesAsync(List<Address> addresses) {
         // TODO: Implement with parallel requests to balancesForAddressAsync
-        final CompletableFuture<OmniJBalances> future = new CompletableFuture<>();
-        CompletableFuture.runAsync(() -> {
-            try {
-                future.complete(balancesForAddresses(addresses));
-            } catch (IOException e) {
-                future.completeExceptionally(e);
-            }
-        });
-        return future;
+        return client.supplyAsync(() -> balancesForAddresses(addresses));
     }
     
 
@@ -137,15 +102,7 @@ public class OmniCoreClient implements ConsensusService {
 
 
     public CompletableFuture<WalletAddressBalance> balancesForAddressAsync(Address address) {
-        final CompletableFuture<WalletAddressBalance> future = new CompletableFuture<>();
-        CompletableFuture.runAsync(() -> {
-            try {
-                future.complete(balancesForAddress(address));
-            } catch (IOException e) {
-                future.completeExceptionally(e);
-            }
-        });
-        return future;
+        return client.supplyAsync(() -> balancesForAddress(address));
     }
 
     /**
