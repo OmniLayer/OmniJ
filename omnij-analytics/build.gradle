@@ -6,7 +6,7 @@ sourceCompatibility = 11
 targetCompatibility = 11
 
 dependencies {
-    implementation "foundation.omni:omnij-net-api:${omnijVersion}"
+    api project(':omnij-net-api')
     api "${consensusjGroup}:consensusj-analytics:${consensusjVersion}"
     api "io.reactivex.rxjava3:rxjava:3.0.10"
 
