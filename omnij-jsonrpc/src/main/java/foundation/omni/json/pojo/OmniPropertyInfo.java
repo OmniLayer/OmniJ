@@ -90,7 +90,7 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
         super(sptListInfo.getPropertyid(),
                 sptListInfo.getName(),
                 sptListInfo.getCategory(),
-                sptListInfo.getSubCategory(),
+                sptListInfo.getSubcategory(),
                 sptListInfo.getData(),
                 sptListInfo.getUrl(),
                 sptListInfo.getDivisible());

@@ -62,7 +62,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         propertyInfo.divisible == false
         propertyInfo.name == "ManagedTokens"
         propertyInfo.category == "Test Category"
-        propertyInfo.subCategory == "Test Subcategory"
+        propertyInfo.subcategory == "Test Subcategory"
         propertyInfo.url == "http://www.omnilayer.org"
         propertyInfo.data == "This is a test for managed properties"
     }
