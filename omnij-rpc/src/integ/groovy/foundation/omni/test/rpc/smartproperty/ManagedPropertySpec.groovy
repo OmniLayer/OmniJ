@@ -72,7 +72,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         def propertyInfo = omniGetProperty(currencyID)
 
         then:
-        !propertyInfo.isFixedIssuance()
+        !propertyInfo.isFixedissuance()
         propertyInfo.totaltokens == 0
 
         when:
