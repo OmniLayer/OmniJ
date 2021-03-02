@@ -3,9 +3,13 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.5.15-SNAPSHOT
+== v0.5.15
 
-Released: 2020.02.??
+Released: 2020.02.02
+
+=== omnij-jsonrpc
+
+* Add `OmniServerModule` for server-side Omni POJO to JSON serialization
 
 == v0.5.14
 
