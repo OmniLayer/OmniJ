@@ -23,8 +23,6 @@ import org.bitcoinj.core.Sha256Hash;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -45,7 +43,6 @@ import java.util.TreeMap;
 public class OmniClient extends BitcoinExtendedClient {
 
     public static Sha256Hash zeroHash = Sha256Hash.wrap("0000000000000000000000000000000000000000000000000000000000000000");
-    private DecimalFormat jsonDecimalFormat;
 
     public OmniClient(RpcConfig config) throws IOException {
         this(config.getNetParams(), config.getURI(), config.getUsername(), config.getPassword());
@@ -55,13 +52,6 @@ public class OmniClient extends BitcoinExtendedClient {
         super(netParams, server, rpcuser, rpcpassword);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.registerModule(new OmniClientModule(getNetParams()));
-        // Create a DecimalFormat that fits our requirements
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-        symbols.setGroupingSeparator(',');
-        symbols.setDecimalSeparator('.');
-        String pattern = "#,##0.0#";
-        jsonDecimalFormat = new DecimalFormat(pattern, symbols);
-        jsonDecimalFormat.setParseBigDecimal(true);
     }
 
     public OmniNetworkParameters getOmniNetParams() {
