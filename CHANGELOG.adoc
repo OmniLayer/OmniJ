@@ -3,9 +3,26 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.5.14-SNAPSHOT
+== v0.5.14
 
-Released: in development
+Released: 2020.02.02
+
+=== new omnij-analytics module
+
+* Omni RichList support (incubating)
+
+=== omnij-core
+
+* Bech32 address conversion methods are now public
+* Refactoring in `OmniTxBuilder` towards Class C and P2SH
+
+=== omnij-jsonrpc
+
+* Fix case issues when serializing `OmniPropertyInfo` POJO
+
+=== omnij-rest-client-mjdk
+
+* Refactoring/cleanup
 
 === Dependency Updates
 
@@ -15,9 +32,14 @@ Released: in development
 
 === Build/Test Updates
 
+* Make `OmniTestClient` a singleton (so `regTestMiningAddress` doesn't change)
+* Github Actions build with JDK 11/15 instead of JDK 11/14
+* GraalVM build uses 21.0.0.java11
+* Replace `jcenter()` with `mavenCentral()`
 * Gradle 6.8.2
 * Spock 2.0-M4-groovy-3.0
 * Replace `jcenter()` with `mavenCentral()` in `build.gradle`
+
 
 == v0.5.13
 

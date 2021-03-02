@@ -1,8 +1,8 @@
 = OmniJ Project
 Sean Gilligan <https://github.com/msgilligan>
-v0.5.13
+v0.5.14
 :description: OmniJ README document.
-:omnij-version: 0.5.13
+:omnij-version: 0.5.14
 
 [WARNING]
 This software is EXPERIMENTAL software for **REGTEST and TESTNET TRANSACTIONS** only. *USE ON MAINNET AT YOUR OWN RISK.*
@@ -22,6 +22,11 @@ There are currently nine active subprojects of OmniJ. Each of which builds a JAR
 [options="header",frame="all"]
 |===
 | module | Description | JDK | Notes
+
+| omnij-analytics
+| Omni implementation of ConsensusJ `RichListService` interface.
+| 11
+| new "incubating" module
 
 | omnij-cli
 | Omni consensus-checking command-line tool.
