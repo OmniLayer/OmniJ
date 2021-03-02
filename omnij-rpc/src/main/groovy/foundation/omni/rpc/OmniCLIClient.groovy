@@ -42,17 +42,6 @@ class OmniCLIClient extends OmniClient {
     }
 
     /**
-     * Enable or disable hashing to attempt to find the next block
-     *
-     * @param generate to enable generation, true; to disable, false.
-     * @param genproclimit (optional) the number of logical processors to use. Defaults to 1; use -1 to use all available processors.
-     * @return A list containing the block header hashes of the generated blocks or null if no blocks were generated
-     */
-    List<Sha256Hash> setgenerate(Boolean generate, Long genproclimit = null) {
-        return setGenerate(generate, genproclimit);
-    }
-
-    /**
      * Returns a new Bitcoin address for receiving payments.
      * <p>
      * @param account (optional) If account is specified, payments received with the address will be credited to that account.
@@ -173,15 +162,5 @@ class OmniCLIClient extends OmniClient {
      */
     Sha256Hash sendmany(String account, Map<Address, Coin> amounts) {
         return sendMany(account, amounts)
-    }
-
-    /**
-     * Get various information about the node and the network.
-     * Warning: getinfo will be removed in a later version of Bitcoin Core. Use getblockchaininfo, getnetworkinfo, or getwalletinfo instead.
-     *
-     * @return A Map (JSON object) containing the information.
-     */
-    ServerInfo getinfo() {
-        return getInfo()
     }
 }
