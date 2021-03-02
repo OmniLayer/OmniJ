@@ -8,8 +8,6 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.script.ScriptException;
-import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
@@ -45,7 +43,7 @@ public class OmniTxBuilder {
     }
 
     /**
-     * <p>Create unsigned Omni transaction in a bitcoinj Transaction object</p>
+     * <p>Create unsigned Class B Omni transaction (P2PKH) in a bitcoinj Transaction object</p>
      *
      * <p>TODO: Exact output amounts.</p>
      *
@@ -55,7 +53,20 @@ public class OmniTxBuilder {
      * @return Incomplete Transaction, no inputs or change output
      */
     public Transaction createOmniTransaction(ECKey redeemingKey, Address refAddress, byte[] payload) {
-        Address redeemingAddress = Address.fromKey(netParams, redeemingKey, Script.ScriptType.P2PKH);
+        return createClassBTransaction(redeemingKey, Script.ScriptType.P2PKH, refAddress, payload);
+    }
+
+    /**
+     * Create unsigned Class B Omni transaction in a bitcoinj Transaction object
+     *
+     * @param redeemingKey Public key used for creating redeemable multisig data outputs
+     * @param scriptType (P2PKH or other single-key script type)
+     * @param refAddress (optional) Omni reference address (for the reference output) or null
+     * @param payload Omni transaction payload as a raw byte array
+     * @return Incomplete Transaction, no inputs or change output
+     */
+    public Transaction createClassBTransaction(ECKey redeemingKey, Script.ScriptType scriptType, Address refAddress, byte[] payload) {
+        Address redeemingAddress = Address.fromKey(netParams, redeemingKey, scriptType);
 
         // Encode the Omni Protocol Payload as a Class B transaction
         Transaction tx = transactionEncoder.encodeObfuscated(redeemingKey, payload, redeemingAddress.toString());
@@ -69,7 +80,7 @@ public class OmniTxBuilder {
     }
 
     /**
-     * Create a signed Omni transaction in a bitcoinj Transaction object
+     * Create a signed Omni Class B (from a single P2PKH address) transaction in a bitcoinj Transaction object
      *
      * @param fromKey Private key/address to send from and receive change to
      * @param unspentOutputs A collection of unspent outputs for funding the transaction
@@ -80,7 +91,24 @@ public class OmniTxBuilder {
      */
     public Transaction createSignedOmniTransaction(ECKey fromKey, Collection<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
-        Address fromAddress = Address.fromKey(netParams, fromKey, Script.ScriptType.P2PKH);
+        return createSignedClassBTransaction(fromKey, Script.ScriptType.P2PKH, unspentOutputs, refAddress, payload);
+    }
+
+    /**
+     * Create a signed Omni Class B (from a single address) transaction in a bitcoinj Transaction object
+     *
+     * @param fromKey Private key/address to send from and receive change to
+     * @param scriptType Script Type to use (alternatively we could take an address??)
+     * @param unspentOutputs A collection of unspent outputs for funding the transaction
+     * @param refAddress The Omni reference address (for the reference output)
+     * @param payload Omni transaction payload as a raw byte array
+     * @throws InsufficientMoneyException Not enough bitcoin for fees
+     * @return Signed and ready-to-send Transaction
+     * @throws InsufficientMoneyException if unspentOutputs contain insufficient funds for the transaction
+     */
+    public Transaction createSignedClassBTransaction(ECKey fromKey, Script.ScriptType scriptType, Collection<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload)
+            throws InsufficientMoneyException {
+        Address fromAddress = Address.fromKey(netParams, fromKey, scriptType);
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 
@@ -96,10 +124,15 @@ public class OmniTxBuilder {
             TransactionInput input = tx.getInput(i);
             Script scriptPubKey = input.getConnectedOutput().getScriptPubKey();
             TransactionSignature signature = tx.calculateSignature(i, fromKey, scriptPubKey, Transaction.SigHash.ALL, false);
+            // ScriptPattern should match scriptType or error
             if (ScriptPattern.isP2PK(scriptPubKey))
                 input.setScriptSig(ScriptBuilder.createInputScript(signature));
             else if (ScriptPattern.isP2PKH(scriptPubKey))
                 input.setScriptSig(ScriptBuilder.createInputScript(signature, fromKey));
+            else if (ScriptPattern.isP2SH(scriptPubKey))
+                // TODO: Support signing P2SH(P2WPKH) here
+                // (since this method takes a single ECKey we don't need multisig support in this method)
+                throw new RuntimeException("Don't know how to sign for P2SH scriptPubKey yet: " + scriptPubKey);
             else
                 throw new RuntimeException("Don't know how to sign for this kind of scriptPubKey: " + scriptPubKey);
 
@@ -133,9 +166,9 @@ public class OmniTxBuilder {
     }
 
     /**
-     * Create a signed simple send Transaction
+     * Create a signed Class B (from a single P2PKH address) simple send Transaction
      *
-     * @param fromKey Private key/address to send from
+     * @param fromKey Private key (P2PKH address) to send from
      * @param unspentOutputs A collection of unspent outputs for funding the transaction
      * @param toAddress The Omni reference address (for the reference output, destination address in this case)
      * @param currencyID The Omni currency ID
