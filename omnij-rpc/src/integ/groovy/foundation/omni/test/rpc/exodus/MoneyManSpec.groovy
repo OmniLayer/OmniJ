@@ -6,6 +6,7 @@ import org.bitcoinj.core.Address
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.rpc.OmniClient
 import org.bitcoinj.core.Coin
+import org.bitcoinj.core.Sha256Hash
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -72,7 +73,7 @@ class MoneyManSpec extends BaseRegTestSpec {
         def tx = client.getTransaction(txid)
 
         then: "we got a non-zero transaction id"
-        txid != OmniClient.zeroHash
+        txid != Sha256Hash.ZERO_HASH
         tx
 
         when: "a block is generated"
@@ -93,7 +94,7 @@ class MoneyManSpec extends BaseRegTestSpec {
         def txid = omniSend(faucetAddress, faucetAddress, OMNI, 10.12345678.divisible)
 
         then: "we got a non-zero transaction id"
-        txid != OmniClient.zeroHash
+        txid != Sha256Hash.ZERO_HASH
 
         when: "a block is generated"
         generateBlocks(1)

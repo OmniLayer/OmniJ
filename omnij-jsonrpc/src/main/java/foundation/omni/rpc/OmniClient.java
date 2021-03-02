@@ -42,8 +42,6 @@ import java.util.TreeMap;
  */
 public class OmniClient extends BitcoinExtendedClient {
 
-    public static Sha256Hash zeroHash = Sha256Hash.wrap("0000000000000000000000000000000000000000000000000000000000000000");
-
     public OmniClient(RpcConfig config) throws IOException {
         this(config.getNetParams(), config.getURI(), config.getUsername(), config.getPassword());
     }
