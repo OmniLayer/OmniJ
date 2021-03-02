@@ -1,9 +1,8 @@
 package foundation.omni.rest.omniwallet.mjdk;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import foundation.omni.CurrencyID;
 import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient;
 import foundation.omni.netapi.omniwallet.json.AddressVerifyInfo;
@@ -25,11 +24,11 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
 public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
     private static final Logger log = LoggerFactory.getLogger(OmniwalletModernJDKClient.class);
     final HttpClient client;
-    private final UncheckedObjectMapper objectMapper;
+    private final JsonMapper objectMapper = new JsonMapper();
 
     public OmniwalletModernJDKClient(URI baseURI) {
         this(baseURI, true, false, null);
@@ -57,44 +56,21 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
         this.client = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofMinutes(2))
                 .build();
-        objectMapper = new UncheckedObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.registerModule(new OmniwalletClientModule(netParams));
     }
 
-//    private static void log(String s, Throwable t) {
-//        if ((s != null)) {
-//            log.debug(s.substring(0 ,Math.min(100, s.length())));
-//        } else {
-//            log.error("exception: ", t);
-//        }
-//    }
-
-
     @Override
     protected CompletableFuture<OmniwalletPropertiesListResponse> propertiesList() {
         HttpRequest request = buildGetRequest("/v1/properties/list");
-
-        //log.debug("Send aysnc: {}", request);
-        return client.sendAsync(request, BodyHandlers.ofString())
-                .thenApply(HttpResponse::body)
-                //.whenComplete(OmniwalletModernJDKClient::log)
-                .thenApply(s -> objectMapper.readValue(s, OmniwalletPropertiesListResponse.class));
-
+        return sendAsync(request, OmniwalletPropertiesListResponse.class);
     }
 
     @Override
     public CompletableFuture<RevisionInfo> revisionInfo() {
         HttpRequest request = buildGetRequest("/v1/system/revision.json");
-        
-        //log.debug("Send aysnc: {}", request);
-        return client.sendAsync(request, BodyHandlers.ofString())
-                .thenApply(HttpResponse::body)
-                //.whenComplete(OmniwalletModernJDKClient::log)
-                .thenApply(s -> objectMapper.readValue(s, RevisionInfo.class));
-
+        return sendAsync(request, RevisionInfo.class);
     }
-
 
     @Override
     protected CompletableFuture<Map<Address, OmniwalletAddressBalance>> balanceMapForAddress(Address address) {
@@ -103,29 +79,45 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
 
     @Override
     protected CompletableFuture<Map<Address, OmniwalletAddressBalance>> balanceMapForAddresses(List<Address> addresses) {
-        TypeReference<HashMap<Address, OmniwalletAddressBalance>> typeRef = new TypeReference<>() {};
+        TypeReference<Map<Address, OmniwalletAddressBalance>> typeRef = new TypeReference<>() {};
         String addressesFormEnc = formEncodeAddressList(addresses);
         log.info("Addresses are: {}", addressesFormEnc);
         HttpRequest request = buildPostRequest("/v2/address/addr/", addressesFormEnc);
-
-        //log.debug("Send aysnc: {}", request);
-        return client.sendAsync(request, BodyHandlers.ofString())
-                .thenApply(HttpResponse::body)
-                //.whenComplete((s,e) -> log.info(s))
-                .thenApply(s -> objectMapper.readValue(s, typeRef));
+        return sendAsync(request, typeRef);
     }
 
     @Override
     protected CompletableFuture<List<AddressVerifyInfo>> verifyAddresses(CurrencyID currencyID) {
-        JavaType resultType = objectMapper.getTypeFactory().constructCollectionType(List.class, AddressVerifyInfo.class);
-
+        TypeReference<List<AddressVerifyInfo>> typeRef = new TypeReference<>() {};
         HttpRequest request = buildGetRequest("/v1/mastercoin_verify/addresses?currency_id=" + currencyID.toString());
+        return sendAsync(request, typeRef);
+    }
 
-        //log.debug("Send aysnc: {}", request);
+    private <R> CompletableFuture<R> sendAsync(HttpRequest request, Class<R> clazz) {
+        log.debug("Send aysnc: {}", request);
+        return sendAsyncCommon(request)
+                .thenApply(mappingFunc(clazz));
+    }
+
+    private <R> CompletableFuture<R> sendAsync(HttpRequest request, TypeReference<R> typeReference) {
+        log.debug("Send aysnc: {}", request);
+        return sendAsyncCommon(request)
+                .thenApply(mappingFunc(typeReference));
+    }
+
+    private CompletableFuture<String> sendAsyncCommon(HttpRequest request) {
+        log.debug("Send aysnc: {}", request);
         return client.sendAsync(request, BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
-                //.whenComplete(OmniwalletModernJDKClient::log)
-                .thenApply(s -> objectMapper.readValue(s, resultType));
+                .whenComplete(OmniwalletModernJDKClient::log);
+    }
+
+    private <R> MappingFunction<R> mappingFunc(Class<R> clazz) {
+        return s -> objectMapper.readValue(s, clazz);
+    }
+
+    private <R> MappingFunction<R> mappingFunc(TypeReference<R> typeReference) {
+        return s -> objectMapper.readValue(s, typeReference);
     }
 
     private HttpRequest buildGetRequest(String uriPath) {
@@ -156,49 +148,39 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
                 .collect(Collectors.joining("&"));
     }
 
-    class UncheckedObjectMapper extends com.fasterxml.jackson.databind.ObjectMapper {
-//        /**
-//         * Parses the given JSON string into a Map.
-//         */
-//        Map<String, String> readValue(String content) {
-//            return this.readValue(content, new TypeReference<>() {
-//            });
-//        }
+    private static void log(String s, Throwable t) {
+        if ((s != null)) {
+            log.debug(s.substring(0 ,Math.min(100, s.length())));
+        } else {
+            log.error("exception: ", t);
+        }
+    }
+
+    @FunctionalInterface
+    interface MappingFunction<R> extends ThrowingFunction<String, R> {}
+
+    @FunctionalInterface
+    interface ThrowingFunction<T,R> extends Function<T, R> {
+
         /**
-         * Parses the given JSON string into a Class.
+         * Gets a result wrapping checked Exceptions with {@link RuntimeException}
+         * @return a result
          */
         @Override
-        public <T> T readValue(String content, Class<T> clazz) {
+        default R apply(T t) {
             try {
-                return super.readValue(content, clazz);
-            } catch (JsonProcessingException e) {
+                return applyThrows(t);
+            } catch (final Exception e) {
                 throw new CompletionException(e);
             }
         }
 
         /**
-         * Parses the given JSON string into a JavaType.
+         * Gets a result.
+         *
+         * @return a result
+         * @throws Exception Any checked Exception
          */
-        @Override
-        public <T> T readValue(String content, JavaType javaType) {
-            try {
-                return super.readValue(content, javaType);
-            } catch (JsonProcessingException e) {
-                throw new CompletionException(e);
-            }
-        }
-
-        /**
-         * Parses the given JSON string into a JavaType.
-         */
-        @Override
-        public <T> T readValue(String content, TypeReference<T> type) {
-            try {
-                return super.readValue(content, type);
-            } catch (JsonProcessingException e) {
-                throw new CompletionException(e);
-            }
-        }
-
+        R applyThrows(T t) throws Exception;
     }
 }
