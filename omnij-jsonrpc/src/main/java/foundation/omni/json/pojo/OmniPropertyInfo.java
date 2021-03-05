@@ -17,8 +17,6 @@ import java.math.BigDecimal;
  * because it is a superset of that information.
  */
 public class OmniPropertyInfo extends SmartPropertyListInfo {
-    static private final Address defaultIssuerAddress =  OmniMainNetParams.get().getExodusAddress();
-
     private final Address issuer;
     private final Sha256Hash creationtxid;
     private final boolean fixedissuance;
@@ -82,6 +80,8 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
      * Since there is no way to fetch OmniPropertyInfo for all properties with a
      * single request, this converter can be used to create a OmniPropertyInfo
      * from a SmartPropertyListInfo with default values for the extra fields.
+     * TODO: Address the fact that (in this case) we really don't have all the info and the default
+     *       values we are using are potentially incorrect
      * TODO: Figure out a way of efficiently getting OmniPropertyInfo for all properties.
      *
      * @param sptListInfo record to adapt
@@ -94,11 +94,11 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
                 sptListInfo.getData(),
                 sptListInfo.getUrl(),
                 sptListInfo.getDivisible());
-        this.issuer = defaultIssuerAddress;         // Use the Exodus address for now
-        this.creationtxid = Sha256Hash.ZERO_HASH;
-        this.fixedissuance = true;
-        this.managedissuance = false;
-        this.freezingenabled = false;
+        this.issuer = null;                             // Issuer unknown
+        this.creationtxid = null;                       // Creation Tx unknown
+        this.fixedissuance = false;                     // Not nullable so use `false`
+        this.managedissuance = false;                   // Not nullable so use `false`
+        this.freezingenabled = false;                   // Not nullable so use `false`
         this.totaltokens = OmniValue.ofWilletts(0, sptListInfo.getDivisible());
     }
 
