@@ -50,33 +50,7 @@ class OmniCLIClient extends OmniClient {
     Address getnewaddress(String account = null) {
         return getNewAddress(account)
     }
-
-    /**
-     * Returns the current Bitcoin address for receiving payments to this account.
-     * <p>
-     * If the account doesn’t exist, it creates both the account and a new address for receiving payment.
-     *
-     * @param account
-     * @return A Bitcoin Address
-     */
-    Address getaccountaddress(String account) {
-        return getAccountAddress(account)
-    }
-
-    /**
-     * Move a specified amount from one account in your wallet to another.
-     *
-     * @param fromaccount the name of the account from which to move the funds. Use “” for the default account.
-     * @param toaccount the name of the account to which the funds should be moved. Use “” for the default account.
-     * @param amount the amount to move in decimal bitcoins.
-     * @param minconf (optional) the minimum number of confirmations
-     * @param comment (optional) a comment to associate with this transaction.
-     * @return
-     */
-    Boolean move(Address fromaccount, Address toaccount, Coin amount, Integer minconf=null, String comment=null) {
-        return moveFunds(fromaccount, toaccount, amount, minconf, comment)
-    }
-
+    
     /**
      * Get detailed information about an in-wallet transaction.
      *
