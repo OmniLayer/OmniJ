@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.omni.json.pojo.OmniPropertyInfo;
 import foundation.omni.netapi.omniwallet.json.OmniwalletClientModule;
 import foundation.omni.netapi.omniwallet.json.OmniwalletPropertiesListResponse;
-import org.bitcoinj.params.MainNetParams;
 
 import java.io.BufferedReader;
 import java.io.IOException;

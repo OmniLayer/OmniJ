@@ -82,6 +82,9 @@ class MetaDExFeesActivationSpec extends BaseActivationSpec {
         activatedFeature.minimumversion == minClientVersion
     }
 
+    /**
+     * Note: this test can only be run once without resetting the RegTest
+     */
     def "Omni token holders are qualified to receive a share of trading fees"() {
         setup:
         def actorA = createFundedAddress(startBTC, 50.divisible)
