@@ -7,6 +7,15 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: 2020.03.??
 
+=== omnij-jsonrpc
+
+* Don’t default issuer/creationtxid in OmniPropertyInfo, use `null` instead
+
+=== Dependency Updates
+
+* ConsensusJ 0.5.6
+* JUnit Jupiter 5.7.1
+
 == v0.5.15
 
 Released: 2020.03.02
