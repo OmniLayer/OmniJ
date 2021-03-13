@@ -26,7 +26,7 @@ reverse link com.msgilligan.bitcoinj.rpc.BitcoinClient to com.msgilligan.bitcoin
 reverse link com.msgilligan.bitcoinj.rpc.BitcoinExtendedClient to foundation.omni.rpc.OmniClient--><path d="M352.4,479.64 C368.47,484.61 384.96,490.41 400,497 C427.11,508.88 455.87,527.1 474.76,539.94 " fill="none" id="com.msgilligan.bitcoinj.rpc.BitcoinExtendedClient&lt;-foundation.omni.rpc.OmniClient" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="350.38,486.34,333.15,474.01,354.31,472.91,350.38,486.34" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[712d09cdfca12c61479cd39230d1d78c]
 reverse link foundation.omni.rpc.OmniClient to foundation.omni.rpc.OmniScriptingClient--><path d="M539.08,582.53 C566.94,599.04 602.52,620.13 627.48,634.91 " fill="none" id="foundation.omni.rpc.OmniClient&lt;-foundation.omni.rpc.OmniScriptingClient" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="535.31,588.43,521.67,572.21,542.44,576.39,535.31,588.43" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[f5f00378c6e607bc587bc08ad1ef7f89]
 reverse link com.msgilligan.bitcoinj.rpc.DynamicRpcMethodFallback to foundation.omni.rpc.OmniScriptingClient--><path d="M329.63,292.89 C386.76,334.32 489.27,413.57 561,497 C599.88,542.22 633.72,604.62 649.13,634.97 " fill="none" id="com.msgilligan.bitcoinj.rpc.DynamicRpcMethodFallback&lt;-foundation.omni.rpc.OmniScriptingClient" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="none" points="325.29,298.39,313.11,281.05,333.44,287.01,325.29,298.39" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[df93e3825946b30710caaa80af6ba9c5]
-reverse link foundation.omni.rpc.OmniClient to foundation.omni.rpc.OmniCLIClient--><path d="M496,592.65 C496,607.07 496,623.09 496,635 " fill="none" id="foundation.omni.rpc.OmniClient&lt;-foundation.omni.rpc.OmniCLIClient" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="489,592.42,496,572.42,503,592.42,489,592.42" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[81b22849b9d3fd1d27235667060ccfcd]
+reverse link foundation.omni.rpc.OmniClient to foundation.omni.rpc.OmniCLIClient--><path d="M496,592.65 C496,607.07 496,623.09 496,635 " fill="none" id="foundation.omni.rpc.OmniClient&lt;-foundation.omni.rpc.OmniCLIClient" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="489,592.42,496,572.42,503,592.42,489,592.42" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[6bbec06f28f2bc5f499647830a2c5d22]
 @startuml
 skinparam packageStyle Rect
 skinparam shadowing false
@@ -79,7 +79,7 @@ PlantUML version 1.2019.12(Sun Nov 03 02:24:54 PST 2019)
 (APACHE source distribution)
 Java Runtime: OpenJDK Runtime Environment
 JVM: OpenJDK 64-Bit Server VM
-Java Version: 11.0.10+9
+Java Version: 15.0.2+7
 Operating System: Mac OS X
 Default Encoding: UTF-8
 Language: en
