@@ -3,13 +3,13 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.5.16-SNAPSHOT
+== v0.5.16
 
-Released: 2020.03.??
+Released: 2020.03.12
 
 === omnij-jsonrpc
 
-* Don’t default issuer/creationtxid in OmniPropertyInfo, use `null` instead
+* Don’t use default values issuer/creationtxid in OmniPropertyInfo, use `null` instead
 
 === Dependency Updates
 
