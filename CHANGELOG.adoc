@@ -3,9 +3,17 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
+== v0.5.17-SNAPSHOT
+
+Released: 2021.xx.yy (not yet)
+
+=== Dependency Updates
+
+* ConsensusJ 0.5.7
+
 == v0.5.16
 
-Released: 2020.03.12
+Released: 2021.03.12
 
 === omnij-jsonrpc
 
@@ -18,7 +26,7 @@ Released: 2020.03.12
 
 == v0.5.15
 
-Released: 2020.03.02
+Released: 2021.03.02
 
 === omnij-jsonrpc
 
@@ -26,7 +34,7 @@ Released: 2020.03.02
 
 == v0.5.14
 
-Released: 2020.02.02
+Released: 2021.02.02
 
 === new omnij-analytics module
 
