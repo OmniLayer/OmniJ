@@ -27,7 +27,6 @@ abstract class BaseRegTestSpec extends Specification implements OmniTestClientDe
     {
         client = getClientInstance()
         fundingSource = new RegTestFundingSource(client)
-        ((RegTestFundingSource) fundingSource).checkForLegacyBitcoinCore() // Remove once we're using Bitcoin Core 0.19+
     }
 
 

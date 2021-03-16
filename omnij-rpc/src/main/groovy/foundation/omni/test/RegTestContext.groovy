@@ -10,17 +10,9 @@ import org.bitcoinj.params.RegTestParams
  */
 class RegTestContext {
     static setup(String user, String pass) {
-        // If Bitcoin Core 0.16.0 or greater, rpc port for RegTest has changed. ConsensusJ 0.5.0
-        // reflects this change, but some tests are still testing an old Omni Core.
-        // Previously Bitcoin Core (and Omni Core) used the same port as TESTNET for REGTEST
-        // This recentBitcoinCore hack allows those tests to pass until we update `travis.yml`
-        // and any other test configuration/infrastructure, etc.
-        def recentBitcoinCore = true;
-        URI regTestRpcUri = recentBitcoinCore ? RpcURI.defaultRegTestURI : RpcURI.defaultTestNetURI
-        def client = new OmniTestClient(RegTestParams.get(), regTestRpcUri, user, pass)
+        def client = new OmniTestClient(RegTestParams.get(), RpcURI.defaultRegTestURI, user, pass)
         def env = new RegTestEnvironment(client)
         def funder = new RegTestOmniFundingSource(client)
-        funder.checkForLegacyBitcoinCore() // Remove this line after we're based on Bitcoin Core 0.19+
         return [client, env, funder]
     }
 }
