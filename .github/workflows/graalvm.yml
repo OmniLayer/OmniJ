@@ -8,16 +8,17 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
-        graalvm: [ '21.0.0.java11' ]
+        graalvm: [ '21.0.0.2' ]
       fail-fast: false
     name: ${{ matrix.os }} JDK ${{ matrix.graalvm }}
     steps:
     - name: Git checkout
       uses: actions/checkout@v1
     - name: Set up GraalVM
-      uses: DeLaGuardo/setup-graalvm@3.1
+      uses: DeLaGuardo/setup-graalvm@4.0
       with:
-        graalvm-version: ${{ matrix.graalvm }}
+        graalvm: ${{ matrix.graalvm }}
+        java: 'java11'
     - name: Install native-image plugin
       run: gu install native-image
     - name: Verify Gradle Wrapper
