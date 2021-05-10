@@ -9,7 +9,16 @@ Released: 2021.xx.yy (not yet)
 
 === Dependency Updates
 
-* ConsensusJ 0.5.7
+* ConsensusJ 0.5.8-SNAPSHOT
+* Groovy 3.0.8
+
+=== Build/Test Updates
+
+* CI builds with JDK 16 (and JDK 11 as before)
+* GraalVM CI build with 21.0.0.2
+* Get ConsensusJ from Gitlab Maven repo, now that Bintray is gone
+* Gradle 7.0
+* Spock 2.0-M5
 
 == v0.5.16
 

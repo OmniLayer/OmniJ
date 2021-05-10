@@ -34,7 +34,7 @@ allprojects {
     repositories {
         mavenCentral()
         // mavenLocal()   // Uncomment to work with local snapshots
-        maven { url 'https://dl.bintray.com/msgilligan/maven' } // ConsensusJ (RPC client)
+        maven { url 'https://gitlab.com/api/v4/projects/8482916/packages/maven' } // ConsensusJ (RPC client)
     }
 
 //    tasks.withType(FindBugs) {
