@@ -8,7 +8,7 @@ import java.util.Random;
 /**
  * <p>Convert a stream of bytes to a list of ECKeys</p>
  *
- * <p>Currently Assumes steam length is a whole number multiple of EncodingClassB.chunkSize</p>
+ * <p>Currently Assumes stream length is a whole number multiple of EncodingClassB.chunkSize</p>
  *
  * @author msgilligan
  * @author dexX7
@@ -18,7 +18,7 @@ public class PubKeyConversion {
     private static Random rand = new Random(randSeed);     // TODO: Better generator?
 
     public static ArrayList<ECKey> convert(byte[] message) {
-        ArrayList<ECKey> list = new ArrayList<ECKey>();
+        ArrayList<ECKey> list = new ArrayList<>();
         byte[] chunk = new byte[EncodingClassB.chunkSize];
         int pos = 0;
         int bytesLeft = message.length;
@@ -36,8 +36,8 @@ public class PubKeyConversion {
     /**
      * Convert a 31-byte byte array to a valid public key
      *
-     * @param input
-     * @return
+     * @param input A 31-byte array to be encoded as an ECKey
+     * @return A valid ECKey containing the input data
      */
     private static ECKey createPubKey(byte[] input) {
         if (input.length != EncodingClassB.chunkSize) {
@@ -49,15 +49,14 @@ public class PubKeyConversion {
         pub[0] = (byte) 0x03;        // prefix
         System.arraycopy(input, 0, pub, 1, EncodingClassB.chunkSize);   // Data
 
-        ECKey key = findValidKey(pub);
-        return key;
+        return findValidKey(pub);
     }
 
     /**
      * Try nonce values for the last byte until a valid ECKey is found
      *
      * @param pub A candidate public key with the last byte not set
-     * @return
+     * @return A valid public key
      */
     private static ECKey findValidKey(byte[] pub) {
         ECKey key;
@@ -75,7 +74,7 @@ public class PubKeyConversion {
                 valid = false;
                 key = null;
             }
-        } while (valid == false && nonce < 256);
+        } while (!valid && nonce < 256);
 
         if (nonce >= 256) {
             throw new RuntimeException("couldn't create valid key");
