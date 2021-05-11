@@ -9,7 +9,7 @@ Released: 2021.xx.yy (not yet)
 
 === Dependency Updates
 
-* ConsensusJ 0.5.8-SNAPSHOT
+* ConsensusJ 0.5.8
 * Groovy 3.0.8
 
 === Build/Test Updates
