@@ -359,7 +359,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         if (propertyName == "OMNI" || propertyName == "TOMNI") {
             if (numberOfTokens > 0) {
                 assert numberOfTokens.propertyType == PropertyType.DIVISIBLE
-                requestMSC(actorAddress, (OmniDivisibleValue) numberOfTokens)
+                requestOmni(actorAddress, (OmniDivisibleValue) numberOfTokens)
                 generateBlocks(1)
             }
             return CurrencyID.valueOf(propertyName)

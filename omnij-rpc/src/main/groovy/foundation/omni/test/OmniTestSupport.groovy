@@ -32,8 +32,8 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
         sleep(120_000)
     }
 
-    Sha256Hash requestMSC(Address toAddress, OmniDivisibleValue requestedOmni) {
-        return requestMSC(toAddress, requestedOmni, true)
+    Sha256Hash requestOmni(Address toAddress, OmniDivisibleValue requestedOmni) {
+        return requestOmni(toAddress, requestedOmni, true)
     }
 
     /**
@@ -41,25 +41,25 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
      *
      * TODO: Convert parameters and math to use OmniValue/Long
      * @param toAddress Address requesting OMNI/Omni
-     * @param requestedMSC Amount requested
+     * @param requestedOmni Amount requested
      * @param allowIntermediate allow intermediate receiver
      * @return txid
      */
-    Sha256Hash requestMSC(Address toAddress, OmniDivisibleValue requestedMSC, Boolean allowIntermediate) {
+    Sha256Hash requestOmni(Address toAddress, OmniDivisibleValue requestedOmni, Boolean allowIntermediate) {
         // For 1.0 BTC an amount of 100.0 OMNI is generated, resulting in a minimal purchase amount of
         // 0.00000100 OMNI for 0.00000001 BTC
-        Coin btcForMSC = (requestedMSC.willetts / 100).setScale(0, BigDecimal.ROUND_UP).satoshi
-        OmniDivisibleValue actualMSC = OmniDivisibleValue.ofWilletts(btcForMSC.value * 100)
+        Coin btcForOmni = (requestedOmni.willetts / 100).setScale(0, BigDecimal.ROUND_UP).satoshi
+        OmniDivisibleValue actualOmni = OmniDivisibleValue.ofWilletts(btcForOmni.value * 100)
 
         if (!allowIntermediate) {
-            assert actualMSC == requestedMSC
+            assert actualOmni == requestedOmni
         }
 
-        requestBitcoin(toAddress, btcForMSC + stdTxFee)
-        def txid = sendBitcoin(toAddress, omniNetParams.moneyManAddress, btcForMSC)
+        requestBitcoin(toAddress, btcForOmni + stdTxFee)
+        def txid = sendBitcoin(toAddress, omniNetParams.moneyManAddress, btcForOmni)
 
-        if (actualMSC.willetts != requestedMSC.willetts) {
-            def excessiveMSC = actualMSC - requestedMSC
+        if (actualOmni.willetts != requestedOmni.willetts) {
+            def excessiveOmni = actualOmni - requestedOmni
 
             // TODO: avoid magic numbers for dust calculation
             // TODO: convert calculations to Coin type or integer
@@ -72,31 +72,31 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
             // transaction fee, have to be paid twice
             BigDecimal additionalRequiredDecimal = (dustForExodus + dustForReference + dustForPayload + stdTxFee.value) * 2
             Coin additionalRequired = additionalRequiredDecimal.satoshi
-            log.debug "requestMSC: requesting ${additionalRequired} additional bitcoin"
+            log.debug "requestOmni: requesting ${additionalRequired} additional bitcoin"
             requestBitcoin(toAddress, additionalRequired)
 
             // The excessive amount of OMNI is sent to a new address to get rid of it
             def junkAddress = newAddress
 
             // TODO: can we always get away with not generating a block inbetween?
-            def extraTxidMSC = omniSend(toAddress, junkAddress, CurrencyID.OMNI, excessiveMSC)
-            def extraTxidTMSC = omniSend(toAddress, junkAddress, CurrencyID.TOMNI, excessiveMSC)
+            def extraTxidOmni = omniSend(toAddress, junkAddress, CurrencyID.OMNI, excessiveOmni)
+            def extraTxidTOmni = omniSend(toAddress, junkAddress, CurrencyID.TOMNI, excessiveOmni)
         }
 
         // TODO: when using an intermediate receiver, this txid doesn't reflect the whole picture
         return txid
     }
 
-    Address createFundedAddress(Coin requestedBTC, OmniValue requestedMSC) {
-        return createFundedAddress(requestedBTC, requestedMSC, true)
+    Address createFundedAddress(Coin requestedBTC, OmniValue requestedOmni) {
+        return createFundedAddress(requestedBTC, requestedOmni, true)
     }
 
-    Address createFundedAddress(Coin requestedBTC, OmniValue requestedMSC, Boolean confirmTransactions) {
-        log.debug "createFundedAddress: requestedBTC: {}, requestedMSC: {}, confirm: {}", requestedBTC.toFriendlyString(), requestedMSC, confirmTransactions
+    Address createFundedAddress(Coin requestedBTC, OmniValue requestedOmni, Boolean confirmTransactions) {
+        log.debug "createFundedAddress: requestedBTC: {}, requestedOmni: {}, confirm: {}", requestedBTC.toFriendlyString(), requestedOmni, confirmTransactions
         def fundedAddress = newAddress
 
-        if (requestedMSC.willetts > 0) {
-            def txidMSC = requestMSC(fundedAddress, (OmniDivisibleValue) requestedMSC)
+        if (requestedOmni.willetts > 0) {
+            def txidOmni = requestOmni(fundedAddress, (OmniDivisibleValue) requestedOmni)
         }
 
         if (requestedBTC.value > 0) {
@@ -111,8 +111,8 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
         Boolean check = true
         if (check && confirmTransactions) {
             assert getBitcoinBalance(fundedAddress).value >= requestedBTC.value
-            assert omniGetBalance(fundedAddress, CurrencyID.OMNI).balance >= requestedMSC.numberValue()
-            log.debug "balances verified, fundedAddress has {} and {} Omni", requestedBTC.toFriendlyString(), requestedMSC
+            assert omniGetBalance(fundedAddress, CurrencyID.OMNI).balance >= requestedOmni.numberValue()
+            log.debug "balances verified, fundedAddress has {} and {} Omni", requestedBTC.toFriendlyString(), requestedOmni
         }
 
         return fundedAddress
