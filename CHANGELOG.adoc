@@ -3,17 +3,19 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.5.17-SNAPSHOT
+== v0.5.17
 
-Released: 2021.xx.yy (not yet)
+Released: 2021.05.11
 
 === Dependency Updates
 
+* bitcoinj 0.15.10
 * ConsensusJ 0.5.8
 * Groovy 3.0.8
 
 === Build/Test Updates
 
+* RegTest with Omni Core 0.10.0
 * CI builds with JDK 16 (and JDK 11 as before)
 * GraalVM CI build with 21.0.0.2
 * Get ConsensusJ from Gitlab Maven repo, now that Bintray is gone
