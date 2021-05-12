@@ -92,9 +92,33 @@ A Bitcoin JSON-RPC client (base class), and other components used by OmniJ are i
 
 === OmniJ Maven Artifacts
 
-Available on https://gitlab.com/ConsensusJ/consensusj/-/packages[Gitlab.com].
-
 WARNING: These binaries have not been audited. Use only on TestNet or RegTest.
+
+Although the API is changing, binary packages are available on https://gitlab.com/OmniLayer/OmniJ/-/packages[Gitlab.com]. You can download JARs or use the provided Maven coordinates to link to them directly from your `pom.xml` or `build.gradle`.
+
+==== Maven
+
+Add the following to your `pom.xml`:
+
+[source]
+----
+<repositories>
+  <repository>
+    <id>omnij-gitlab-maven</id>
+    <url>https://gitlab.com/api/v4/projects/26583853/packages/maven</url>
+  </repository>
+</repositories>
+----
+
+==== Gradle
+
+Add the following to the `repositories` section of your `build.gradle`:
+
+[source]
+----
+    maven { url 'https://gitlab.com/api/v4/projects/26583853/packages/maven' }
+----
+
 
 === Building OmniJ
 
