@@ -440,7 +440,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>OmniJ Release Process</h1>
 <div class="details">
-<span id="revnumber">version 0.5.16</span>
+<span id="revnumber">version 0.5.17</span>
 </div>
 </div>
 <div id="content">
@@ -498,20 +498,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Push: <code>git push --tags origin master</code></p>
 </li>
 <li>
-<p>Publish to Bintray:</p>
+<p>Publish to Gitlab Maven repo:</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p><code>./gradlew bintrayUpload</code></p>
-</li>
-<li>
-<p>Confirm publish of artifacts in Bintray Web UI.</p>
+<p><code>./gradlew publish</code></p>
 </li>
 </ol>
 </div>
-</li>
-<li>
-<p>Update Github <a href="https://github.com/OmniLayer/OmniJ/releases">OmniJ Releases</a> page.</p>
 </li>
 <li>
 <p>Publish Github pages site including JavaDoc and GroovyDoc</p>
@@ -524,14 +518,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </li>
 <li>
-<p>Publish to Github Packages</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p><code>./gradlew publish</code></p>
-</li>
-</ol>
-</div>
+<p>Update Github <a href="https://github.com/OmniLayer/OmniJ/releases">OmniJ Releases</a> page.</p>
 </li>
 </ol>
 </div>
@@ -607,8 +594,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.5.16<br>
-Last updated 2021-03-02 02:48:05 -0800
+Version 0.5.17<br>
+Last updated 2021-05-11 18:30:39 -0700
 </div>
 </div>
 </body>
