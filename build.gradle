@@ -6,7 +6,6 @@ buildscript {
 
 plugins {
     id 'org.asciidoctor.jvm.convert' version '3.2.0'
-    id 'com.jfrog.bintray'           version '1.8.4' apply false
     id 'org.ajoberstar.git-publish'  version '2.1.3'
 }
 

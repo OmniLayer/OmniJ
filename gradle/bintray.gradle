@@ -1,10 +1,21 @@
-// Handles publication of distributions to Bintray (and now Github Packages, too)
+// Handles publication of binary packages to GitLab (and Github Packages, too)
 subprojects {
-    apply plugin: 'com.jfrog.bintray'
     apply plugin: 'maven-publish'
     
     publishing {
         repositories {
+            def omniJGitlabProjectId = "26583853"
+            maven {
+                url "https://gitlab.com/api/v4/projects/${omniJGitlabProjectId}/packages/maven"
+                name "GitLab"
+                credentials(HttpHeaderCredentials) {
+                    name = 'Private-Token'
+                    value = project.findProperty("gitLabMavenToken")
+                }
+                authentication {
+                    header(HttpHeaderAuthentication)
+                }
+            }
             maven {
                 name = "OmniJGitHubPackages"
                 url = "https://maven.pkg.github.com/OmniLayer/OmniJ"
@@ -17,30 +28,6 @@ subprojects {
         publications {
             jar(MavenPublication) {
                 from components.java
-            }
-        }
-    }
-
-    bintray {
-        user = project.hasProperty("binTrayAPIUser") ? binTrayAPIUser : 'please set binTrayAPIUser'
-        key = project.hasProperty("binTrayAPIKey") ? binTrayAPIKey : 'please set binTrayAPIKey'
-        dryRun = false // whether to run this as dry-run, without deploying
-        publications = ['jar'] // When uploading Maven-based publication files
-        pkg {
-            repo = 'maven'
-            userOrg = 'omni'
-            name = 'omnij'
-            desc = 'OmniJ - Omni Layer for Java and the JVM'
-            websiteUrl = 'https://github.com/OmniLayer/OmniJ'
-            issueTrackerUrl = 'https://github.com/OmniLayer/OmniJ/issues'
-            vcsUrl = 'https://github.com/OmniLayer/OmniJ.git'
-            licenses = ['Apache-2.0']
-            labels = ['bitcoin', 'omni', 'json-rpc']
-            version {
-                name = project.version
-                desc = 'Dangerously preliminary release.'
-                released  = new Date()
-                vcsTag = 'none'
             }
         }
     }
