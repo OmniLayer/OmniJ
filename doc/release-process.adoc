@@ -15,13 +15,10 @@
 .. `./gradlew clean buildCI regTest`
 . Tag: `git tag -a v0.x.y -m "Release 0.x.y"`
 . Push: `git push --tags origin master`
-. Publish to Bintray:
-.. `./gradlew bintrayUpload`
-.. Confirm publish of artifacts in Bintray Web UI.
+. Publish to Gitlab Maven repo:
+.. `./gradlew publish`
 . Publish Github pages site including JavaDoc and GroovyDoc
 .. `./gradlew publishSite`
-. Publish to Github Packages
-.. `./gradlew publish`
 . Update Github https://github.com/OmniLayer/OmniJ/releases[OmniJ Releases] page.
 
 == Announcements
