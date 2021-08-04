@@ -16,14 +16,14 @@ subprojects {
                     header(HttpHeaderAuthentication)
                 }
             }
-            maven {
-                name = "OmniJGitHubPackages"
-                url = "https://maven.pkg.github.com/OmniLayer/OmniJ"
-                credentials {
-                    username = project.findProperty("omnij.github.user") ?: System.getenv("GITHUB_ACTOR")
-                    password = project.findProperty("omnij.github.key") ?: System.getenv("GITHUB_TOKEN")
-                }
-            }
+//            maven {
+//                name = "OmniJGitHubPackages"
+//                url = "https://maven.pkg.github.com/OmniLayer/OmniJ"
+//                credentials {
+//                    username = project.findProperty("omnij.github.user") ?: System.getenv("GITHUB_ACTOR")
+//                    password = project.findProperty("omnij.github.key") ?: System.getenv("GITHUB_TOKEN")
+//                }
+//            }
         }
         publications {
             jar(MavenPublication) {
