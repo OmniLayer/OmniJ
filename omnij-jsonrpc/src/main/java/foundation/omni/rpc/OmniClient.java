@@ -20,6 +20,7 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -44,6 +45,12 @@ public class OmniClient extends BitcoinExtendedClient {
 
     public OmniClient(RpcConfig config) throws IOException {
         this(config.getNetParams(), config.getURI(), config.getUsername(), config.getPassword());
+    }
+
+    public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
+        super(sslSocketFactory, netParams, server, rpcuser, rpcpassword);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.registerModule(new OmniClientModule(getNetParams()));
     }
 
     public OmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {

@@ -14,6 +14,7 @@ import foundation.omni.rpc.BalanceEntry;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.NetworkParameters;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -37,6 +38,10 @@ public class OmniCoreClient implements ConsensusService {
     public OmniCoreClient(OmniClient client)
     {
         this.client = client;
+    }
+
+    public OmniCoreClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI coreURI, String user, String pass) {
+        client = new OmniClient(sslSocketFactory, netParams, coreURI, user, pass);
     }
 
     public OmniCoreClient(NetworkParameters netParams, URI coreURI, String user, String pass) {
