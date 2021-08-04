@@ -7,6 +7,15 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: work-in-progress
 
+=== Dependency Updates
+
+* ConsensusJ 0.5.9
+* SLF4J 1.7.32
+
+=== Build/Test Updates
+
+* Spock 2.0-groovy-3.0 (release version)
+
 == v0.5.17
 
 Released: 2021.05.11
