@@ -1,8 +1,8 @@
 = OmniJ Project
 Sean Gilligan <https://github.com/msgilligan>
-v0.5.17
+v0.5.18
 :description: OmniJ README document.
-:omnij-version: 0.5.17
+:omnij-version: 0.5.18
 
 [WARNING]
 This software is EXPERIMENTAL software for **REGTEST and TESTNET TRANSACTIONS** only. *USE ON MAINNET AT YOUR OWN RISK.*

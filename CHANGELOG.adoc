@@ -7,6 +7,10 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: work-in-progress
 
+=== JSON-RPC clients
+
+* Add support for additional/alternate TLS/SSL Trust Stores using ConsensusJ 0.5.9.
+
 === Dependency Updates
 
 * ConsensusJ 0.5.9

@@ -4,7 +4,7 @@
 
 
 . Official builds are now done with JDK 16. (Although most release JARs are JDK 8-compatible)
-.. `sdk use java 16.0.1.hs-adpt`
+.. `sdk use java 16.0.2-tem`
 . Update `CHANGELOG.adoc`
 . Set versions
 .. `gradle.properties`
