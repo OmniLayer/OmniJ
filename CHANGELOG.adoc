@@ -13,6 +13,7 @@ Released: (under development)
 
 === Build/Test Updates
 
+* Gradle 7.2
 * Asciidoctor Gradle Plugin 3.3.2
 
 == v0.5.18
