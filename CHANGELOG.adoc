@@ -7,6 +7,10 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: (under development)
 
+=== Dependency Updates
+
+* Groovy 3.0.9
+
 == v0.5.18
 
 Released: 2021.08.03
