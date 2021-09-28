@@ -16,6 +16,7 @@ Released: (under development)
 * Gradle 7.2
 * Github Actions: Switch to Temurin JDK
 * Github Actions: Replace JDK 16 with JDK 17 in the matrix
+* Github Actions: Update GraalVM build to GraalVM 21.2.0 (java11)
 * Asciidoctor Gradle Plugin 3.3.2
 
 == v0.5.18
