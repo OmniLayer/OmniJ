@@ -3,9 +3,13 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.5.18-SNAPSHOT
+== v0.5.19-SNAPSHOT
 
-Released: work-in-progress
+Released: (under development)
+
+== v0.5.18
+
+Released: 2021.08.03
 
 === JSON-RPC clients
 
