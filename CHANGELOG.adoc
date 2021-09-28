@@ -11,6 +11,10 @@ Released: (under development)
 
 * Groovy 3.0.9
 
+=== Build/Test Updates
+
+* Asciidoctor Gradle Plugin 3.3.2
+
 == v0.5.18
 
 Released: 2021.08.03
