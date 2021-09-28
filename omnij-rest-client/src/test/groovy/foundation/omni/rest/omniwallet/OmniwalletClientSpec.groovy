@@ -57,6 +57,16 @@ class OmniwalletClientSpec extends Specification {
         balances[USDT].balance.numberValue() >= 0
     }
 
+    def "load balances of address with single address asynchronously"() {
+        when:
+        WalletAddressBalance balances = client.balancesForAddressAsync(testAddr).get()
+
+        then:
+        balances != null
+        balances[BTC].balance.numberValue() >= 0
+        balances[USDT].balance.numberValue() >= 0
+    }
+
     def "load balances of addresses with single address"() {
         when:
         OmniJBalances balances = client.balancesForAddresses([testAddr])

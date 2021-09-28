@@ -7,6 +7,10 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: (under development)
 
+=== omnij-net-api
+
+* Add `balancesForAddressAsync()` to `OmniBalanceService` (common API for Omni Core JSON-RPC and Omniwallet)
+
 === Dependency Updates
 
 * Groovy 3.0.9

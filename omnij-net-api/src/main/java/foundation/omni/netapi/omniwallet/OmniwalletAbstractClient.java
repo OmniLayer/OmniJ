@@ -144,14 +144,18 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
 
     @Override
     public WalletAddressBalance balancesForAddress(Address address) throws InterruptedException, IOException {
-        Map<Address, OmniwalletAddressBalance> resultMap;
         try {
-            resultMap = balanceMapForAddress(address).get();
+            return balancesForAddressAsync(address).get();
         } catch (ExecutionException e) {
             throw new IOException(e);
         }
-        OmniwalletAddressBalance result = resultMap.get(address);
-        return balanceEntryMapper(result);
+    }
+
+    @Override
+    public CompletableFuture<WalletAddressBalance> balancesForAddressAsync(Address address) {
+        return balanceMapForAddress(address)
+                .thenApply(map -> map.get(address))
+                .thenApply(this::balanceEntryMapper);
     }
 
     @Override

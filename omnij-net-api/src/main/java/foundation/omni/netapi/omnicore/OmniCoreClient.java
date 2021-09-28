@@ -105,7 +105,7 @@ public class OmniCoreClient implements ConsensusService {
         return new ConsensusSnapshot(id,blockHeight, "Omni Core", client.getServerURI(), entries);
     }
 
-
+    @Override
     public CompletableFuture<WalletAddressBalance> balancesForAddressAsync(Address address) {
         return client.supplyAsync(() -> balancesForAddress(address));
     }
