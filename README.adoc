@@ -103,6 +103,10 @@ Add the following to the `<repositories>` section of your `pom.xml`:
 [source, xml]
 ----
   <repository>
+    <id>consensusj-gitlab-maven</id>
+    <url>https://gitlab.com/api/v4/projects/8482916/packages/maven</url>
+  </repository>
+  <repository>
     <id>omnij-gitlab-maven</id>
     <url>https://gitlab.com/api/v4/projects/26583853/packages/maven</url>
   </repository>
@@ -137,7 +141,8 @@ Add the following to the `repositories` section of your `build.gradle`:
 
 [source, groovy]
 ----
-    maven { url 'https://gitlab.com/api/v4/projects/26583853/packages/maven' }
+    maven { url 'https://gitlab.com/api/v4/projects/8482916/packages/maven' }  // ConsensusJ
+    maven { url 'https://gitlab.com/api/v4/projects/26583853/packages/maven' } // OmniJ
 ----
 
 In the `dependencies` section of your `build.gradle` add an `implementation` configuration that references the OmniJ JAR that you need. For example if you are using classes from `omnij-core` add the following `implementation` configuration:
