@@ -20,7 +20,7 @@ image:https://github.com/OmniLayer/OmniJ/workflows/Gradle%20Build/badge.svg["Bui
 
 A Java/JVM implementation of the http://www.omnilayer.org[Omni Layer], an open-source, fully decentralized asset creation platform built on the Bitcoin blockchain.
 
-There are currently nine active subprojects of OmniJ. Each of which builds a JAR artifact. All JARs require JDK 8 or later, except where noted.
+There are currently ten active subprojects of OmniJ. Each of which builds a JAR artifact. Most JARs require JDK 8 or later, and others require JDK 11 or later.
 
 [options="header",frame="all"]
 |===
@@ -90,39 +90,73 @@ A Bitcoin JSON-RPC client (base class), and other components used by OmniJ are i
 * OmniJ https://www.omnilayer.org/OmniJ/groovydoc/[GroovyDoc]
 * OmniJ https://ci.omni.foundation/job/OmniJ/[Unit Test Results] (currently unavailable)
 
-=== OmniJ Maven Artifacts
+=== Including the OmniJ Maven Artifacts (JARs) in your build
 
 WARNING: These binaries have not been audited. Use only on TestNet or RegTest.
 
-Although the API is changing, binary packages are available on https://gitlab.com/OmniLayer/OmniJ/-/packages[Gitlab.com]. You can download JARs or use the provided Maven coordinates to link to them directly from your `pom.xml` or `build.gradle`.
+Although the API is changing, binary releases are available on https://gitlab.com/OmniLayer/OmniJ/-/packages[Gitlab.com]. You can download JARs or use the provided Maven coordinates to link to them directly from your `pom.xml` or `build.gradle`.
 
 ==== Maven
 
-Add the following to your `pom.xml`:
+Add the following to the `<repositories>` section of your `pom.xml`:
 
-[source]
+[source, xml]
 ----
-<repositories>
   <repository>
     <id>omnij-gitlab-maven</id>
     <url>https://gitlab.com/api/v4/projects/26583853/packages/maven</url>
   </repository>
-</repositories>
 ----
+
+In the `<dependencies>` section of your `pom.xml` add a `<dependency>` element that references the OmniJ JAR that you need. For example if you are using classes from `omnij-core` add the following `<dependency>` configuration:
+
+[source, xml, subs="attributes+"]
+----
+    <dependency>
+      <groupId>foundation.omni</groupId>
+      <artifactId>omnij-core</artifactId>
+      <version>{omnij-version}</version>
+    </dependency>
+----
+
+If you are using the `omnij-jsonrpc` JAR, add the following:
+
+[source, xml, subs="attributes+"]
+----
+    <dependency>
+      <groupId>foundation.omni</groupId>
+      <artifactId>omnij-jsonrpc</artifactId>
+      <version>{omnij-version}</version>
+    </dependency>
+----
+
 
 ==== Gradle
 
 Add the following to the `repositories` section of your `build.gradle`:
 
-[source]
+[source, groovy]
 ----
     maven { url 'https://gitlab.com/api/v4/projects/26583853/packages/maven' }
 ----
 
+In the `dependencies` section of your `build.gradle` add an `implementation` configuration that references the OmniJ JAR that you need. For example if you are using classes from `omnij-core` add the following `implementation` configuration:
+
+[source, groovy, subs="attributes"]
+----
+    implementation "foundation.omni:omnij-core:{omnij-version}"
+----
+
+If you are using the `omnij-jsonrpc` JAR, add the following:
+
+[source, groovy, subs="attributes"]
+----
+    implementation "foundation.omni:omnij-jsonrpc:{omnij-version}"
+----
 
 === Building OmniJ
 
-The only prerequisite for building OmniJ is having Java JDK 8 or later installed. All other prerequisites are downloaded automatically by the http://gradle.org/docs/current/userguide/gradle_wrapper.html[Gradle Wrapper] script.
+The only prerequisite for building OmniJ is having Java JDK 11 or later installed. All other prerequisites are downloaded automatically by the http://gradle.org/docs/current/userguide/gradle_wrapper.html[Gradle Wrapper] script.
 
 . Check out this project using Git
 
@@ -134,11 +168,11 @@ The only prerequisite for building OmniJ is having Java JDK 8 or later installed
 
 . Build and test with the provided Gradle wrapper scripts. For Unix/Mac:
 
-    ./gradlew build :omnij-cli:shadowJar
+    ./gradlew build
 +
 or for Windows:
 
-    ./gradlew.bat build :omnij-cli:shadowJar
+    ./gradlew.bat build
 
 After a successful build, each `omnij-_module_` JAR can be found in a standard location:
 
@@ -162,20 +196,20 @@ Omni RegTest Tests::
 Test Bitcoin and Omni Core RPC calls against an instance of `omnicored` running in RegTest mode.
 
 Omni Consensus Tests::
-Use the `getallbalancesforid_MP` RPC to get balances for multiple Omni Protocol currencies and compare them against balance information from several well-known public Omni Protocol servers with consensus-checking Web APIs.
+Use the `omni_getallbalancesforid` RPC to get balances for multiple Omni Protocol currencies and compare them against balance information from several well-known public Omni Protocol servers with consensus-checking Web APIs.
 
 === In ConsensusJ
 
 Bitcoin RegTest Tests::
 Test Bitcoin RPC calls against an instance of `bitcoind` running in RegTest mode.
 
-== Installing pre-requisites
+=== Installing pre-requisites
 
-The only prerequisite for running these tests is an installed Java Runtime Environment. Either an Oracle or OpenJDK VM will work. Java 8 or later is required.
+The only prerequisite for running these tests is an installed Java Runtime Environment. Either an Oracle or OpenJDK VM will work. Java 11 or later is required.
 
 All other dependencies are automatically downloaded and cached by the test startup script.
 
-== Running the tests manually
+=== Running the tests manually
 
 . Check out this project using Git
 
@@ -200,7 +234,7 @@ or for Windows:
 +
 The above examples are for the Consensus Test, to run the other test suites replace the `:omnij-rpc:consensusTest` Gradle target with `:omnij-rpc:regTest` for the Omni RegTests or with `:bitcoin-rpc:regTest` for the Bitcoin RegTests.
 
-== Running the tests from Jenkins
+=== Running the tests from Jenkins
 
 To run the test from Jenkins we are using the following (UNIX) shell scripts:
 
@@ -210,7 +244,7 @@ Runs Omni Core RPC regtest test against a built executable of `omnicored` in `co
 test-omni-consensus-mainnet.sh::
 Runs consensus tests against a built executable of `omnicored` in `copied-artifacts/src` directory.
 
-=== In ConsensusJ project
+==== In ConsensusJ project
 
 bitcoinj-rpcclient/run-bitcoind-regtest.sh::
 Runs BTC RPC RegTest tests against a built executable of `bitcoind` in `copied-artifacts/src` directory.
@@ -219,7 +253,7 @@ Runs BTC RPC RegTest tests against a built executable of `bitcoind` in `copied-a
 [CAUTION]
 Read the scripts carefully to make sure you understand how they work. Take special care to notice the `rm -rf` commands.
 
-== Sample Spock Integration Tests
+=== Sample Spock Integration Tests
 
 These sample Spock "feature tests" are from the file https://github.com/OmniLayer/OmniJ/blob/master/omnij-rpc/src/integ/groovy/foundation/omni/test/rpc/smartproperty/ManagedPropertySpec.groovy[ManagedPropertySpec.groovy].
 
@@ -269,7 +303,7 @@ These sample Spock "feature tests" are from the file https://github.com/OmniLaye
 
 == OmniJ Command-line Consensus tool
 
-The command-line consensus tool, `omnij-consensus-tool` can be built into a native, self-contained, executable using https://www.graalvm.org[GraalVM]. You'll need a Java 11 (or later) version of GraalVM, we currently recommend version 20.1.0 (java11).
+The command-line consensus tool, `omnij-consensus-tool` can be built into a native, self-contained, executable using https://www.graalvm.org[GraalVM]. You'll need a Java 11 (or later) version of GraalVM, we currently recommend version 21.2.0 (java11).
 
 === Building
 
