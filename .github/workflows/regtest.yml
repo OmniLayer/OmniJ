@@ -8,7 +8,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        java: [ '11', '16' ]
+        java: [ '11', '17' ]
+        distribution: ['temurin']
       fail-fast: false
     name: ${{ matrix.os }} JDK ${{ matrix.java }}
     steps:
@@ -16,9 +17,9 @@ jobs:
     - name: Download Omni Core
       run: ./test-download-omnicore-ubuntu.sh
     - name: Set up JDK
-      uses: actions/setup-java@v2-preview
+      uses: actions/setup-java@v2.2.0
       with:
-        distribution: 'adopt'
+        distribution: ${{ matrix.distribution }}
         java-version: ${{ matrix.java }}
     - name: Verify Gradle Wrapper
       uses: gradle/wrapper-validation-action@v1
