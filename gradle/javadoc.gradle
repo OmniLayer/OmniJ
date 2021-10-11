@@ -1,10 +1,19 @@
 ext.javadocSpec = {
-    options.links(  'https://docs.oracle.com/en/java/javase/11/docs/api/',
-            "https://bitcoinj.org/javadoc/${bitcoinjVersion}/",
+    def javaDocLinks = [
+            'https://docs.oracle.com/en/java/javase/11/docs/api/',
             "https://consensusj.github.io/consensusj/apidoc/",
             "https://javadoc.io/doc/javax.money/money-api-bp/1.0.4/",
-            "https://fasterxml.github.io/jackson-core/javadoc/2.10/",
-            "https://fasterxml.github.io/jackson-databind/javadoc/2.10/")
+            "https://fasterxml.github.io/jackson-core/javadoc/2.12/",
+            "https://fasterxml.github.io/jackson-databind/javadoc/2.12/"
+    ]
+
+    if (!bitcoinjVersion.contains("beta")) {
+        javaDocLinks.add("https://bitcoinj.org/javadoc/${bitcoinjVersion}/".toString())
+    }
+
+    String[] linksArray = javaDocLinks.toArray(new String[]{})
+
+    options.links(linksArray)
 }
 
 allprojects {
