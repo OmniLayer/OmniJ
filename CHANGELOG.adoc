@@ -13,11 +13,14 @@ Released: (under development)
 
 === Dependency Updates
 
+* RxJava 3.1.2 (used in `omnij-analytics`)
+* JavaMoney moneta-bp 1.4.1 (used in `omnij-money`)
 * Groovy 3.0.9
 
 === Build/Test Updates
 
 * Gradle 7.2
+* JUnit Jupiter 5.8.1
 * Github Actions: Switch to Temurin JDK
 * Github Actions: Replace JDK 16 with JDK 17 in the matrix
 * Github Actions: Update GraalVM build to GraalVM 21.2.0 (java11)
