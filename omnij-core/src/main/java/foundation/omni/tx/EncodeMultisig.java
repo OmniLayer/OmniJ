@@ -31,7 +31,7 @@ public class EncodeMultisig {
     /**
      * Encode data into transaction outputs
      *
-     * @param redeemingKey key that can be used redeem transaction output (1 of n multisig)
+     * @param redeemingKey key that can be used to redeem transaction output (1 of n multisig)
      * @param data Data bytes to encode into multisig output
      * @return Incomplete transaction with TransactionOutputs
      */
