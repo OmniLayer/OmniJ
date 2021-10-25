@@ -17,6 +17,7 @@ import org.javamoney.moneta.spi.DefaultNumberValue;
  * Note that on real-world exchanges USDT can fluctuate in price relative to USD.
  * Based on Moneta Identity provider.
  */
+@Deprecated
 public class TetherUSDIdentityProvider extends AbstractRateProvider {
 
     /**
