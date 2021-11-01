@@ -13,7 +13,7 @@ configurations {
 dependencies {
     api project(':omnij-core')
     api project(':omnij-jsonrpc')
-    api project(':omnij-rest-client-mjdk')    // For OmniwalletModernJDKClient
+    api project(':omnij-rest-client-jdk')    // For OmniwalletModernJDKClient
 
     api "${consensusjGroup}:${consensusjBtcJsonRpcGvyArtifact}:${consensusjVersion}"
 

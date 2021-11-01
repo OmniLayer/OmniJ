@@ -61,12 +61,12 @@ There are currently ten active subprojects of OmniJ. Each of which builds a JAR 
 | 8
 |
 
-| omnij-rest-client
+| omnij-rest-client-retrofit
 | Omniwallet REST client using Retrofit library
 | 8
 | Android-compatible
 
-| omnij-rest-client-mjdk
+| omnij-rest-client-jdk
 | Omniwallet REST client using JDK 11+ `java.net.http`
 | 11
 |
