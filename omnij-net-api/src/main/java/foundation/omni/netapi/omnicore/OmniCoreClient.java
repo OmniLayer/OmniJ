@@ -96,7 +96,7 @@ public class OmniCoreClient implements ConsensusService {
         }
         
         WalletAddressBalance result = new WalletAddressBalance();
-        entries.forEach(result::put);
+        result.putAll(entries);
         return result;
     }
 
