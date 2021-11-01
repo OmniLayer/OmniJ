@@ -7,8 +7,6 @@ dependencies {
     api project(':omnij-core')
     api project(':omnij-jsonrpc')
 
-    implementation 'com.google.code.findbugs:jsr305:3.0.2'
-
     testImplementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
     testImplementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
         transitive = false
