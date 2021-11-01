@@ -1,6 +1,6 @@
 package foundation.omni.test;
 
-import com.msgilligan.bitcoinj.test.RegTestFundingSource;
+import org.consensusj.bitcoin.test.RegTestFundingSource;
 import foundation.omni.rpc.test.OmniTestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

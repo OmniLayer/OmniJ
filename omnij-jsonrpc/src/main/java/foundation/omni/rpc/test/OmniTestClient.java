@@ -1,7 +1,7 @@
 package foundation.omni.rpc.test;
 
 import org.consensusj.jsonrpc.JsonRpcException;
-import com.msgilligan.bitcoinj.rpc.RpcConfig;
+import org.consensusj.bitcoin.rpc.RpcConfig;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
 import foundation.omni.OmniDivisibleValue;

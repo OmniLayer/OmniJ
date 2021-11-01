@@ -1,7 +1,7 @@
 package foundation.omni.rpc
 
-import com.msgilligan.bitcoinj.json.pojo.ServerInfo
-import com.msgilligan.bitcoinj.json.pojo.WalletTransactionInfo
+import org.consensusj.bitcoin.json.pojo.ServerInfo
+import org.consensusj.bitcoin.json.pojo.WalletTransactionInfo
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.NetworkParameters

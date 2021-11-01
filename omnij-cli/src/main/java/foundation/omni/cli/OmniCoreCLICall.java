@@ -1,6 +1,6 @@
 package foundation.omni.cli;
 
-import com.msgilligan.bitcoinj.rpc.RpcConfig;
+import org.consensusj.bitcoin.rpc.RpcConfig;
 import foundation.omni.rpc.OmniClient;
 import org.consensusj.bitcoin.cli.BitcoinCLITool;
 

@@ -1,6 +1,6 @@
 package foundation.omni.rpc.test;
 
-import com.msgilligan.bitcoinj.rpc.RpcURI;
+import org.consensusj.bitcoin.rpc.RpcURI;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 /**
  * Test Server Connection Data
  */
-public class TestServers extends com.msgilligan.bitcoinj.rpc.test.TestServers {
+public class TestServers extends org.consensusj.bitcoin.rpc.test.TestServers {
     private static final TestServers INSTANCE = new TestServers();
 
     private final String stableOmniRpcHost = System.getProperty("omni.test.stableOmniRpcHost");

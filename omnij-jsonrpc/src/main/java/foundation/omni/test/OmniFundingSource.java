@@ -1,6 +1,6 @@
 package foundation.omni.test;
 
-import com.msgilligan.bitcoinj.test.FundingSource;
+import org.consensusj.bitcoin.test.FundingSource;
 import foundation.omni.OmniDivisibleValue;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;

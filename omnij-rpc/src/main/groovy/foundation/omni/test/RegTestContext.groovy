@@ -1,7 +1,7 @@
 package foundation.omni.test
 
-import com.msgilligan.bitcoinj.rpc.RpcURI
-import com.msgilligan.bitcoinj.test.RegTestEnvironment
+import org.consensusj.bitcoin.rpc.RpcURI
+import org.consensusj.bitcoin.test.RegTestEnvironment
 import foundation.omni.rpc.test.OmniTestClient
 import org.bitcoinj.params.RegTestParams
 

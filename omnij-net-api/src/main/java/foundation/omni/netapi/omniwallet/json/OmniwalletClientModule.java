@@ -2,11 +2,11 @@ package foundation.omni.netapi.omniwallet.json;
 
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.msgilligan.bitcoinj.json.conversion.AddressDeserializer;
-import com.msgilligan.bitcoinj.json.conversion.AddressKeyDeserializer;
-import com.msgilligan.bitcoinj.json.conversion.AddressSerializer;
-import com.msgilligan.bitcoinj.json.conversion.Sha256HashDeserializer;
-import com.msgilligan.bitcoinj.json.conversion.Sha256HashSerializer;
+import org.consensusj.bitcoin.json.conversion.AddressDeserializer;
+import org.consensusj.bitcoin.json.conversion.AddressKeyDeserializer;
+import org.consensusj.bitcoin.json.conversion.AddressSerializer;
+import org.consensusj.bitcoin.json.conversion.Sha256HashDeserializer;
+import org.consensusj.bitcoin.json.conversion.Sha256HashSerializer;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
 import foundation.omni.OmniValue;

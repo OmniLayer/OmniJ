@@ -1,6 +1,6 @@
 package foundation.omni.consensus;
 
-import com.msgilligan.bitcoinj.rpc.RpcURI;
+import org.consensusj.bitcoin.rpc.RpcURI;
 import foundation.omni.netapi.omnicore.OmniCoreClient;
 import foundation.omni.rpc.OmniClient;
 import foundation.omni.rpc.test.TestServers;

@@ -2,7 +2,7 @@ package foundation.omni.json.conversion;
 
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.msgilligan.bitcoinj.json.conversion.AddressDeserializer;
+import org.consensusj.bitcoin.json.conversion.AddressDeserializer;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
 import foundation.omni.OmniValue;

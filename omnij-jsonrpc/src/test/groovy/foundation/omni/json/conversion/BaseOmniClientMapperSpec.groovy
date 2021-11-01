@@ -3,7 +3,7 @@ package foundation.omni.json.conversion
 import com.fasterxml.jackson.core.Version
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.msgilligan.bitcoinj.json.conversion.RpcClientModule
+import org.consensusj.bitcoin.json.conversion.RpcClientModule
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniIndivisibleValue
 import org.bitcoinj.core.NetworkParameters

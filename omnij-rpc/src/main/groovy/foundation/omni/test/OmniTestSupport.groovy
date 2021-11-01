@@ -1,6 +1,6 @@
 package foundation.omni.test
 
-import com.msgilligan.bitcoinj.test.BTCTestSupport
+import org.consensusj.bitcoin.test.BTCTestSupport
 import foundation.omni.Ecosystem
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniValue

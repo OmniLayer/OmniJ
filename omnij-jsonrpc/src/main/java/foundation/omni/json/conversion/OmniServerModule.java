@@ -1,11 +1,11 @@
 package foundation.omni.json.conversion;
 
-import com.msgilligan.bitcoinj.json.conversion.AddressSerializer;
-import com.msgilligan.bitcoinj.json.conversion.CoinSerializer;
-import com.msgilligan.bitcoinj.json.conversion.ECKeySerializer;
-import com.msgilligan.bitcoinj.json.conversion.PeerSerializer;
-import com.msgilligan.bitcoinj.json.conversion.Sha256HashSerializer;
-import com.msgilligan.bitcoinj.json.conversion.TransactionSerializer;
+import org.consensusj.bitcoin.json.conversion.AddressSerializer;
+import org.consensusj.bitcoin.json.conversion.CoinSerializer;
+import org.consensusj.bitcoin.json.conversion.ECKeySerializer;
+import org.consensusj.bitcoin.json.conversion.PeerSerializer;
+import org.consensusj.bitcoin.json.conversion.Sha256HashSerializer;
+import org.consensusj.bitcoin.json.conversion.TransactionSerializer;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;

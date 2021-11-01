@@ -1,6 +1,6 @@
 package foundation.omni.netapi.omnicore
 
-import com.msgilligan.bitcoinj.rpc.RpcURI
+import org.consensusj.bitcoin.rpc.RpcURI
 import foundation.omni.netapi.omnicore.OmniCoreClient;
 import org.bitcoinj.params.MainNetParams
 import spock.lang.Ignore;
