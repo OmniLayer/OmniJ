@@ -3,6 +3,8 @@ plugins {
     id 'application'
 }
 
+ext.moduleName = 'foundation.omni.cli'
+
 sourceCompatibility = 11
 targetCompatibility = 11
 
@@ -41,8 +43,10 @@ run {
 }
 
 jar {
+    inputs.property("moduleName", moduleName)
     manifest {
         attributes 'Implementation-Title': 'BTC/OMNI Status',
+                'Automatic-Module-Name': moduleName,
                 'Implementation-Version': archiveVersion.get(),
                 'Main-Class': application.mainClass
     }

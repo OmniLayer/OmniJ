@@ -2,6 +2,8 @@ plugins {
     id 'java-library'
 }
 
+ext.moduleName = 'foundation.omni.analytics'
+
 sourceCompatibility = 11
 targetCompatibility = 11
 
@@ -14,5 +16,14 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
     testImplementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
         transitive = false
+    }
+}
+
+jar {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes  'Implementation-Title': 'OmniJ analytics library',
+                'Automatic-Module-Name': moduleName,
+                'Implementation-Version': archiveVersion.get()
     }
 }

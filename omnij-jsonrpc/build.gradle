@@ -2,6 +2,8 @@ plugins {
     id 'java-library'
 }
 
+ext.moduleName = 'foundation.omni.jsonrpc'
+
 dependencies {
     api project(':omnij-core')
     api "${consensusjGroup}:${consensusjBtcJsonRpcArtifact}:${consensusjVersion}"
@@ -12,6 +14,15 @@ dependencies {
     }
 
     testImplementation project(':omnij-dsl')
+}
+
+jar {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes  'Implementation-Title': 'OmniJ json-rpc library',
+                'Automatic-Module-Name': moduleName,
+                'Implementation-Version': archiveVersion.get()
+    }
 }
 
 test {

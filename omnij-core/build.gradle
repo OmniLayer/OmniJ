@@ -2,9 +2,20 @@ plugins {
     id 'java-library'
 }
 
+ext.moduleName = 'foundation.omni'
+
 dependencies {
     api "${bitcoinjGroup}:${bitcoinjArtifact}:${bitcoinjVersion}"
     api 'javax.money:money-api:1.1'
-    implementation 'com.google.guava:guava:28.2-android'
 }
+
+jar {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes  'Implementation-Title': 'OmniJ core library',
+                'Automatic-Module-Name': moduleName,
+                'Implementation-Version': archiveVersion.get()
+    }
+}
+
 

@@ -2,8 +2,18 @@ plugins {
     id 'java-library'
 }
 
+ext.moduleName = 'foundation.omni.dsl.groovy'
+
 dependencies {
     api project(':omnij-core')
     implementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
 }
 
+jar {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes  'Implementation-Title': 'OmniJ Groovy DSL library',
+                'Automatic-Module-Name': moduleName,
+                'Implementation-Version': archiveVersion.get()
+    }
+}

@@ -2,6 +2,7 @@ plugins {
     id 'java-library'
 }
 
+ext.moduleName = 'foundation.omni.omniwallet.retrofit'
 
 dependencies {
     api project(':omnij-core')
@@ -22,6 +23,15 @@ dependencies {
     }
 
     testImplementation project(':omnij-dsl')
+}
+
+jar {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes  'Implementation-Title': 'OmniJ omniwallet retrofit client library',
+                'Automatic-Module-Name': moduleName,
+                'Implementation-Version': archiveVersion.get()
+    }
 }
 
 idea {

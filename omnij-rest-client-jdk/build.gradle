@@ -5,6 +5,8 @@ plugins {
 sourceCompatibility = 11
 targetCompatibility = 11
 
+ext.moduleName = 'foundation.omni.omniwallet.jdk'
+
 dependencies {
     api project(':omnij-net-api')
     api project(':omnij-core')
@@ -20,3 +22,13 @@ dependencies {
 
     testImplementation project(':omnij-dsl')
 }
+
+jar {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes  'Implementation-Title': 'OmniJ omniwallet jdk client (java.net.http) library',
+                'Automatic-Module-Name': moduleName,
+                'Implementation-Version': archiveVersion.get()
+    }
+}
+

@@ -2,6 +2,7 @@ plugins {
     id 'java-library'
 }
 
+ext.moduleName = 'foundation.omni.netapi'
 
 dependencies {
     api project(':omnij-core')
@@ -13,6 +14,15 @@ dependencies {
     }
 
     testImplementation project(':omnij-dsl')
+}
+
+jar {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes  'Implementation-Title': 'OmniJ netapi library',
+                'Automatic-Module-Name': moduleName,
+                'Implementation-Version': archiveVersion.get()
+    }
 }
 
 idea {

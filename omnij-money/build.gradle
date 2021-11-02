@@ -2,8 +2,19 @@ plugins {
     id 'java-library'
 }
 
+ext.moduleName = 'foundation.omni.money'
+
 dependencies {
     api project(':omnij-core')
 
     implementation 'org.javamoney.moneta:moneta-core:1.4.2'
+}
+
+jar {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes  'Implementation-Title': 'OmniJ money library',
+                'Automatic-Module-Name': moduleName,
+                'Implementation-Version': archiveVersion.get()
+    }
 }
