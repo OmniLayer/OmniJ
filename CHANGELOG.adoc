@@ -13,8 +13,10 @@ Released: (under development)
 
 === Dependency Updates
 
+* bitcoinj-0.16-rc1
 * RxJava 3.1.2 (used in `omnij-analytics`)
-* JavaMoney moneta-bp 1.4.1 (used in `omnij-money`)
+* JavaMoney API 1.1 (non-backport, modular version)
+* JavaMoney Moneta 1.4.2 (non-backport, modular version)
 * Groovy 3.0.9
 
 === Build/Test Updates
