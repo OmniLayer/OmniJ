@@ -3,8 +3,8 @@
 == Main Release Process
 
 
-. Official builds are now done with JDK 16. (Although most release JARs are JDK 8-compatible)
-.. `sdk use java 16.0.2-tem`
+. Official builds are now done with JDK 17. (Although most release JARs are JDK 8-compatible)
+.. `sdk use java 17.0.1-tem`
 . Update `CHANGELOG.adoc`
 . Set versions
 .. `gradle.properties`
