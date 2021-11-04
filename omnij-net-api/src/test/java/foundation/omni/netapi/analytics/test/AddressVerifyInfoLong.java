@@ -1,4 +1,4 @@
-package foundation.omni.analytics.test;
+package foundation.omni.netapi.analytics.test;
 
 import org.bitcoinj.core.Address;
 

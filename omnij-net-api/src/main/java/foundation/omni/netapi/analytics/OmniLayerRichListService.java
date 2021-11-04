@@ -1,4 +1,4 @@
-package foundation.omni.analytics;
+package foundation.omni.netapi.analytics;
 
 import org.consensusj.bitcoin.json.pojo.ChainTip;
 import foundation.omni.CurrencyID;

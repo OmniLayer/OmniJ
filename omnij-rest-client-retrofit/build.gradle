@@ -4,6 +4,9 @@ plugins {
 
 ext.moduleName = 'foundation.omni.omniwallet.retrofit'
 
+sourceCompatibility = 11
+targetCompatibility = 11
+
 dependencies {
     api project(':omnij-core')
     api project(':omnij-jsonrpc')

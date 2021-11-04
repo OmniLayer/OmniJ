@@ -4,9 +4,14 @@ plugins {
 
 ext.moduleName = 'foundation.omni.netapi'
 
+sourceCompatibility = 11
+targetCompatibility = 11
+
 dependencies {
     api project(':omnij-core')
     api project(':omnij-jsonrpc')
+    api "${consensusjGroup}:consensusj-analytics:${consensusjVersion}"
+    api "io.reactivex.rxjava3:rxjava:3.1.2"
 
     testImplementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
     testImplementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
@@ -14,6 +19,12 @@ dependencies {
     }
 
     testImplementation project(':omnij-dsl')
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+    testImplementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+        transitive = false
+    }
 }
 
 jar {

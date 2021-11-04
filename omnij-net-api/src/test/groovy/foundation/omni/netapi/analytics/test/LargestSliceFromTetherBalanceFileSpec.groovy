@@ -1,4 +1,4 @@
-package foundation.omni.analytics.test
+package foundation.omni.netapi.analytics.test
 
 import foundation.omni.OmniValue
 import groovy.json.JsonSlurper
@@ -22,7 +22,7 @@ class LargestSliceFromTetherBalanceFileSpec extends Specification {
     static final long richTotal = 1000518068.95603298G.movePointRight(8).longValueExact()
     static final long otherTotal = 334478836.71429362G.movePointRight(8).longValueExact()
     static final long grandTotal = 1334996905.67032660G.movePointRight(8).longValueExact()
-    static final filename = 'src/test/java/foundation/omni/analytics/test/USDT_mastercoin_verify.json'
+    static final filename = 'src/test/java/foundation/omni/netapi/analytics/test/USDT_mastercoin_verify.json'
     static final  file = new File(filename)
 
     @Shared

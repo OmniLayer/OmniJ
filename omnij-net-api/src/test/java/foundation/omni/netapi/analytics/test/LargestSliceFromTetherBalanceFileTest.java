@@ -1,4 +1,4 @@
-package foundation.omni.analytics.test;
+package foundation.omni.netapi.analytics.test;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * JUnit so we can have a pure Java test and performance measurements
  */
 public class LargestSliceFromTetherBalanceFileTest {
-    static final String filename = "src/test/java/foundation/omni/analytics/test/USDT_mastercoin_verify.json";
+    static final String filename = "src/test/java/foundation/omni/netapi/analytics/test/USDT_mastercoin_verify.json";
     static final File file = new File(filename);
     static final int numSlices = 100;
     static final BigDecimal richTotalDecimal = new BigDecimal("1000518068.95603298");
