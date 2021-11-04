@@ -1,16 +1,13 @@
 package foundation.omni
 
+import foundation.omni.netapi.omnicore.RxOmniTestClient
 import org.consensusj.bitcoin.json.pojo.NetworkInfo
 import org.consensusj.jsonrpc.groovy.Loggable
 import org.consensusj.bitcoin.rpc.RpcURI
 import org.consensusj.bitcoin.test.RegTestFundingSource
-import foundation.omni.rpc.OmniCLIClient
-import foundation.omni.rpc.OmniClientDelegate
-import foundation.omni.rpc.test.OmniTestClient
 import foundation.omni.rpc.test.TestServers
 import foundation.omni.test.OmniTestClientDelegate
 import foundation.omni.test.OmniTestSupport
-import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.params.RegTestParams
 import spock.lang.Specification
 
@@ -30,12 +27,12 @@ abstract class BaseRegTestSpec extends Specification implements OmniTestClientDe
     }
 
 
-    private static OmniTestClient INSTANCE;
+    private static RxOmniTestClient INSTANCE;
 
-    static synchronized OmniTestClient getClientInstance() {
+    static synchronized RxOmniTestClient getClientInstance() {
         // We use a shared client for RegTest integration tests, because we want a single value for regTestMiningAddress
         if (INSTANCE == null) {
-            INSTANCE = new OmniTestClient(RegTestParams.get(), RpcURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
+            INSTANCE = new RxOmniTestClient(RegTestParams.get(), RpcURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
         }
         return INSTANCE;
     }

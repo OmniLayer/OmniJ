@@ -41,7 +41,7 @@ import java.util.TreeMap;
  *
  * @see <a href="https://github.com/OmniLayer/omnicore/blob/master/src/omnicore/doc/rpc-api.md#json-rpc-api">Omni Core JSON RPC API documentation on GitHub</a>
  */
-public class OmniClient extends BitcoinExtendedClient {
+public class OmniClient extends BitcoinExtendedClient implements OmniClientRawTxSupport {
 
     public OmniClient(RpcConfig config) throws IOException {
         this(config.getNetParams(), config.getURI(), config.getUsername(), config.getPassword());
@@ -226,6 +226,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
+    @Override
     public Sha256Hash omniSendRawTx(Address fromAddress, String rawTxHex) throws JsonRpcException, IOException {
         return omniSendRawTx(fromAddress, rawTxHex, null);
     }
@@ -240,6 +241,7 @@ public class OmniClient extends BitcoinExtendedClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
+    @Override
     public Sha256Hash omniSendRawTx(Address fromAddress, String rawTxHex, Address referenceAddress)
             throws JsonRpcException, IOException {
         return send("omni_sendrawtx", Sha256Hash.class, fromAddress, rawTxHex, referenceAddress);

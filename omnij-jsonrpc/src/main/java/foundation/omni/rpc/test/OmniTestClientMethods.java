@@ -1,40 +1,26 @@
 package foundation.omni.rpc.test;
 
+import foundation.omni.rpc.OmniClientRawTxSupport;
 import org.consensusj.jsonrpc.JsonRpcException;
-import org.consensusj.bitcoin.rpc.RpcConfig;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
 import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
-import foundation.omni.rpc.OmniClient;
 import foundation.omni.tx.RawTxBuilder;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 
 import java.io.IOException;
-import java.net.URI;
 
 /**
- * OmniClient subclass that adds methods to create raw Omni transactions and send them
+ * OmniClient methods that create raw Omni transactions and send them
  * using {@code "omniSendRawTx"}. This avoids error-checking on the RPCs and allows us to test
  * the effect of sending raw transactions that would be disallowed by this checking.
- *
- * It is essentially a clone of the deprecated OmniExtendedClient with a name and package that indicates
- * it is for testing purposes.
  */
-public class OmniTestClient extends OmniClient {
-    RawTxBuilder builder = new RawTxBuilder();
-
-    public OmniTestClient(RpcConfig config) throws IOException {
-        super(config);
-    }
-
-    public OmniTestClient(NetworkParameters netParms, URI server, String rpcuser, String rpcpassword) throws IOException {
-        super(netParms, server, rpcuser, rpcpassword);
-    }
+public interface OmniTestClientMethods extends OmniClientRawTxSupport {
+    RawTxBuilder omniRawTxBuilder = new RawTxBuilder();
 
     /**
      * Creates and broadcasts a "send to owners" transaction.
@@ -46,9 +32,9 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash sendToOwners(Address address, CurrencyID currencyId, OmniValue amount) throws JsonRpcException, IOException {
+    default Sha256Hash sendToOwners(Address address, CurrencyID currencyId, OmniValue amount) throws JsonRpcException, IOException {
         //  ... but it doesn't matter since  createSendToOwnersHex just converts back to willetts.
-        String rawTxHex = builder.createSendToOwnersHex(currencyId, amount);
+        String rawTxHex = omniRawTxBuilder.createSendToOwnersHex(currencyId, amount);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -67,10 +53,10 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, OmniDivisibleValue amountForSale,
+    default Sha256Hash createDexSellOffer(Address address, CurrencyID currencyId, OmniDivisibleValue amountForSale,
                                          Coin amountDesired, Byte paymentWindow, Coin commitmentFee,
                                          Byte action) throws JsonRpcException, IOException {
-        String rawTxHex = builder.createDexSellOfferHex(
+        String rawTxHex = omniRawTxBuilder.createDexSellOfferHex(
                 currencyId, amountForSale, amountDesired, paymentWindow, commitmentFee, action);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
@@ -87,9 +73,9 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash acceptDexOffer(Address fromAddress, CurrencyID currencyId, OmniDivisibleValue amount, Address toAddress)
+    default Sha256Hash acceptDexOffer(Address fromAddress, CurrencyID currencyId, OmniDivisibleValue amount, Address toAddress)
             throws JsonRpcException, IOException {
-        String rawTxHex = builder.createAcceptDexOfferHex(currencyId, amount);
+        String rawTxHex = omniRawTxBuilder.createAcceptDexOfferHex(currencyId, amount);
         Sha256Hash txid = omniSendRawTx(fromAddress, rawTxHex, toAddress);
         return txid;
     }
@@ -110,10 +96,10 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash createMetaDexSellOffer(Address address, CurrencyID currencyForSale, OmniDivisibleValue amountForSale,
+    default Sha256Hash createMetaDexSellOffer(Address address, CurrencyID currencyForSale, OmniDivisibleValue amountForSale,
                                              CurrencyID currencyDesired, OmniDivisibleValue amountDesired,
                                              Byte action) throws JsonRpcException, IOException {
-        String rawTxHex = builder.createMetaDexSellOfferHex(
+        String rawTxHex = omniRawTxBuilder.createMetaDexSellOfferHex(
                 currencyForSale, amountForSale, currencyDesired, amountDesired, action);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
@@ -134,11 +120,11 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash createCrowdsale(Address address, Ecosystem ecosystem, PropertyType propertyType,
+    default Sha256Hash createCrowdsale(Address address, Ecosystem ecosystem, PropertyType propertyType,
                                       CurrencyID propertyDesired, Long tokensPerUnit, Long deadline,
                                       Byte earlyBirdBonus, Byte issuerBonus)
             throws JsonRpcException, IOException {
-        String rawTxHex = builder.createCrowdsaleHex(ecosystem, propertyType, 0L, "", "", "CS", "", "", propertyDesired,
+        String rawTxHex = omniRawTxBuilder.createCrowdsaleHex(ecosystem, propertyType, 0L, "", "", "CS", "", "", propertyDesired,
                 tokensPerUnit, deadline, earlyBirdBonus, issuerBonus);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
@@ -154,7 +140,7 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value)
+    default Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value)
             throws JsonRpcException, IOException {
         return createProperty(address, ecosystem, value, "SP");
     }
@@ -170,9 +156,9 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value, String label)
+    default Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value, String label)
             throws JsonRpcException, IOException {
-        String rawTxHex = builder.createPropertyHex(ecosystem, value.getPropertyType(), 0L, "", "", label, "", "", value);
+        String rawTxHex = omniRawTxBuilder.createPropertyHex(ecosystem, value.getPropertyType(), 0L, "", "", label, "", "", value);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -192,7 +178,7 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value,
+    default Sha256Hash createProperty(Address address, Ecosystem ecosystem, OmniValue value,
                                      Long previousPropertyId,
                                      String category,
                                      String subCategory,
@@ -200,7 +186,7 @@ public class OmniTestClient extends OmniClient {
                                      String website,
                                      String info)
             throws JsonRpcException, IOException {
-        String rawTxHex = builder.createPropertyHex(ecosystem,
+        String rawTxHex = omniRawTxBuilder.createPropertyHex(ecosystem,
                 value.getPropertyType(),
                 previousPropertyId,
                 category, subCategory, label, website, info, value);
@@ -217,8 +203,8 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash closeCrowdsale(Address address, CurrencyID currencyID) throws JsonRpcException, IOException {
-        String rawTxHex = builder.createCloseCrowdsaleHex(currencyID);
+    default Sha256Hash closeCrowdsale(Address address, CurrencyID currencyID) throws JsonRpcException, IOException {
+        String rawTxHex = omniRawTxBuilder.createCloseCrowdsaleHex(currencyID);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -238,10 +224,10 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash createManagedProperty(Address address, Ecosystem ecosystem, PropertyType type, String category,
+    default Sha256Hash createManagedProperty(Address address, Ecosystem ecosystem, PropertyType type, String category,
                                             String subCategory, String label, String website, String info)
             throws JsonRpcException, IOException {
-        String rawTxHex = builder.createManagedPropertyHex(ecosystem, type, 0L, category, subCategory, label, website,
+        String rawTxHex = omniRawTxBuilder.createManagedPropertyHex(ecosystem, type, 0L, category, subCategory, label, website,
                 info);
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
@@ -257,9 +243,9 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash grantTokens(Address address, CurrencyID currencyID, OmniValue amount)
+    default Sha256Hash grantTokens(Address address, CurrencyID currencyID, OmniValue amount)
             throws JsonRpcException, IOException {
-        String rawTxHex = builder.createGrantTokensHex(currencyID, amount, "");
+        String rawTxHex = omniRawTxBuilder.createGrantTokensHex(currencyID, amount, "");
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -274,9 +260,9 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash revokeTokens(Address address, CurrencyID currencyID, OmniValue amount)
+    default Sha256Hash revokeTokens(Address address, CurrencyID currencyID, OmniValue amount)
             throws JsonRpcException, IOException {
-        String rawTxHex = builder.createRevokeTokensHex(currencyID, amount, "");
+        String rawTxHex = omniRawTxBuilder.createRevokeTokensHex(currencyID, amount, "");
         Sha256Hash txid = omniSendRawTx(address, rawTxHex);
         return txid;
     }
@@ -291,9 +277,9 @@ public class OmniTestClient extends OmniClient {
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Sha256Hash changeIssuer(Address fromAddress, CurrencyID currencyID, Address toAddress)
+    default Sha256Hash changeIssuer(Address fromAddress, CurrencyID currencyID, Address toAddress)
             throws JsonRpcException, IOException {
-        String rawTxHex = builder.createChangePropertyManagerHex(currencyID);
+        String rawTxHex = omniRawTxBuilder.createChangePropertyManagerHex(currencyID);
         Sha256Hash txid = omniSendRawTx(fromAddress, rawTxHex, toAddress);
         return txid;
     }

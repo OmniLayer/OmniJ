@@ -5,6 +5,7 @@ import foundation.omni.consensus.ConsensusToolOutput;
 import foundation.omni.consensus.MultiPropertyComparison;
 import foundation.omni.consensus.OmniCoreConsensusTool;
 import foundation.omni.consensus.OmniwalletConsensusTool;
+import foundation.omni.netapi.omnicore.RxOmniClient;
 import foundation.omni.rpc.ConsensusFetcher;
 import foundation.omni.rpc.ConsensusSnapshot;
 import foundation.omni.rpc.OmniClient;
@@ -106,7 +107,7 @@ public class ConsensusCLI extends BitcoinCLITool {
         URI uri1;
         URI uri2 = null;
         uri1 = call.rpcClient().getServerURI();
-        tool1 = new OmniCoreConsensusTool((OmniClient) call.rpcClient());
+        tool1 = new OmniCoreConsensusTool((RxOmniClient) call.rpcClient());
         if (line.hasOption("omnicore-url")) {
             uri2 = URI.create(line.getOptionValue("omnicore-url"));
             tool2 = new OmniCoreConsensusTool(call.getRPCConfig().getNetParams(), uri2);

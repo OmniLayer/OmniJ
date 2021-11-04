@@ -1,6 +1,7 @@
 package foundation.omni.netapi;
 
 import org.bitcoinj.core.Address;
+import org.consensusj.bitcoin.json.pojo.ChainTip;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,4 +42,11 @@ public interface OmniBalanceService {
      * @return a future for a map of currency IDs to balances
      */
     CompletableFuture<WalletAddressBalance>balancesForAddressAsync(Address address);
+
+    /**
+     * Return current ChainTip
+     * Note: Omniwallet currently only returns block height with a dummy block hash.
+     * @return full or partial chain tip information
+     */
+    CompletableFuture<ChainTip> getActiveChainTip();
 }

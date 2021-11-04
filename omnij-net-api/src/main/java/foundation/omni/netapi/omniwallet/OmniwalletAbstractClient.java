@@ -19,11 +19,27 @@ import foundation.omni.rpc.AddressBalanceEntry;
 import foundation.omni.rpc.BalanceEntry;
 import foundation.omni.rpc.ConsensusSnapshot;
 import foundation.omni.rpc.SmartPropertyListInfo;
+import io.reactivex.rxjava3.core.BackpressureStrategy;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.operators.observable.ObservableInterval;
+import io.reactivex.rxjava3.processors.BehaviorProcessor;
+import io.reactivex.rxjava3.processors.FlowableProcessor;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
+import org.consensusj.bitcoin.json.pojo.ChainTip;
+import org.consensusj.bitcoin.rx.jsonrpc.PollingChainTipService;
+import org.consensusj.bitcoin.rx.jsonrpc.RxJsonChainTipClient;
+import org.consensusj.jsonrpc.AsyncSupport;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOError;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -35,6 +51,7 @@ import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -43,7 +60,7 @@ import java.util.stream.Collectors;
  * a RawOmniwallet interface and inject an implementation of
  * that into the constructor of an OmniwalletConsensusService type.
  */
-public abstract class OmniwalletAbstractClient implements ConsensusService {
+public abstract class OmniwalletAbstractClient implements ConsensusService, RxOmniWalletClient {
     private static final Logger log = LoggerFactory.getLogger(OmniwalletAbstractClient.class);
     public static final URI omniwalletBase =  URI.create("https://www.omniwallet.org");
     public static final URI omniwalletApiBase =  URI.create("https://api.omniwallet.org");
@@ -59,6 +76,10 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
      * netParams, if non-null, is used for validating addresses during deserialization
      */
     protected final NetworkParameters netParams;
+    private final Observable<Long> chainTipPollingInterval;
+    private final Flowable<ChainTip> chainTipSource;
+    private Disposable chainTipSubscription;
+    private final FlowableProcessor<ChainTip> chainTipProcessor = BehaviorProcessor.create();
 
     protected final Map<CurrencyID, PropertyType> cachedPropertyTypes = new ConcurrentHashMap<>();
 
@@ -71,6 +92,14 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
         this.debug = debug;
         this.strictMode = strictMode;
         this.netParams = netParams;
+        chainTipPollingInterval = ObservableInterval.interval(2,60, TimeUnit.SECONDS);
+        chainTipSource = pollForDistinctChainTip();
+    }
+
+    public synchronized void start() {
+        if (chainTipSubscription == null) {
+            chainTipSubscription = chainTipSource.subscribe(chainTipProcessor::onNext, chainTipProcessor::onError, chainTipProcessor::onComplete);
+        }
     }
 
     @Override
@@ -159,10 +188,52 @@ public abstract class OmniwalletAbstractClient implements ConsensusService {
     }
 
     @Override
+    public CompletableFuture<ChainTip> getActiveChainTip() {
+        return revisionInfo()
+                .thenApply(this::revisionInfoToChainTip);
+    }
+
+    @Override
     public ConsensusSnapshot createSnapshot(CurrencyID id, int blockHeight, SortedMap<Address, BalanceEntry> entries) {
         return new ConsensusSnapshot(id,blockHeight, "Omniwallet", baseURI, entries);
     }
 
+    @Override
+    public Publisher<ChainTip> chainTipPublisher() {
+        return chainTipProcessor;
+    }
+
+    private ChainTip revisionInfoToChainTip(RevisionInfo info) {
+        return new ChainTip(info.getLastBlock(), Sha256Hash.ZERO_HASH, 0, "active");
+    }
+
+    /**
+     * Using a polling interval provided by {@link PollingChainTipService#getPollingInterval()} provide a
+     * stream of distinct {@link ChainTip}s.
+     *
+     * @return A stream of distinct {@code ChainTip}s.
+     */
+    private Flowable<ChainTip> pollForDistinctChainTip() {
+        return chainTipPollingInterval
+                .doOnNext(t -> log.debug("got interval"))
+                .flatMapMaybe(t -> this.currentChainTipMaybe())
+                .doOnNext(tip -> log.debug("blockheight, blockhash = {}, {}", tip.getHeight(), tip.getHash()))
+                //.distinctUntilChanged(ChainTip::getHash) // Omni Core looks for a hash change (because hash includes height)
+                .distinctUntilChanged(ChainTip::getHeight) // Since hash isn't (YET!) included on Omniwallet, we'll just look for a new height
+                .doOnNext(tip -> log.info("** NEW ** blockheight, blockhash = {}, {}", tip.getHeight(), tip.getHash()))
+                // ERROR backpressure strategy is compatible with BehaviorProcessor since it subscribes to MAX items
+                .toFlowable(BackpressureStrategy.ERROR);
+    }
+
+    @Override
+    public void logSuccess(ChainTip result) {
+        log.debug("RPC call returned: {}", result);
+    }
+
+    @Override
+    public void logError(Throwable throwable) {
+        log.error("Exception in RPCCall", throwable);
+    }
 
     protected abstract CompletableFuture<Map<Address, OmniwalletAddressBalance>> balanceMapForAddress(Address address);
     protected abstract CompletableFuture<Map<Address, OmniwalletAddressBalance>> balanceMapForAddresses(List<Address> addresses);

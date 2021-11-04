@@ -1,5 +1,6 @@
 package foundation.omni.consensus;
 
+import foundation.omni.netapi.omnicore.RxOmniClient;
 import org.consensusj.bitcoin.rpc.RpcURI;
 import foundation.omni.netapi.omnicore.OmniCoreClient;
 import foundation.omni.rpc.OmniClient;
@@ -31,12 +32,12 @@ public class OmniCoreConsensusTool extends OmniCoreClient implements ConsensusTo
      *
      * @param client An existing client instance
      */
-    public OmniCoreConsensusTool(OmniClient client) {
+    public OmniCoreConsensusTool(RxOmniClient client) {
         super(client);
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        OmniClient client = new OmniClient(MainNetParams.get(), RpcURI.getDefaultMainNetURI(), TestServers.getInstance().getRpcTestUser(), TestServers.getInstance().getRpcTestPassword());
+        RxOmniClient client = new RxOmniClient(MainNetParams.get(), RpcURI.getDefaultMainNetURI(), TestServers.getInstance().getRpcTestUser(), TestServers.getInstance().getRpcTestPassword());
         OmniCoreConsensusTool tool = new OmniCoreConsensusTool(client);
         tool.run(DefaultGroovyMethods.toList(args));
     }
