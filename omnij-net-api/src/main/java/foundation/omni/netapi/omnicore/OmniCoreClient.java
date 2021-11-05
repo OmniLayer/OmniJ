@@ -172,14 +172,6 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
     }
 
     /**
-     * @deprecated use ChainTip#getActiveChainTip in ConsensusJ 0.5.11
-     */
-    @Deprecated
-    private static Optional<ChainTip> getActiveChainTip(List<ChainTip> chainTips) {
-        return chainTips.stream().filter(tip -> tip.getStatus().equals("active")).findFirst();
-    }
-
-    /**
      * Get all addresses in a wallet
      * Requires wallet support to be active
      * @return A list of addresses
