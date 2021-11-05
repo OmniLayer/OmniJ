@@ -53,33 +53,33 @@ public class LargestSliceFromTetherBalanceFileTest {
 
     @Test
     void calcRichListStringWithParallelStream() {
-        var stopwatch = Stopwatch.createStarted();
+        Stopwatch stopwatch = Stopwatch.createStarted();
         LargestSliceList<AddressVerifyInfo, Long> richList = addressVerifyListStrings.parallelStream().collect(collectorStrings);
-        var timeMicros = stopwatch.elapsed(MICROSECONDS);
+        long timeMicros = stopwatch.elapsed(MICROSECONDS);
         verifyRichListString(richList, timeMicros);
     }
 
     @Test
     void calcRichListStringWithRegularStream() {
-        var stopwatch = Stopwatch.createStarted();
+        Stopwatch stopwatch = Stopwatch.createStarted();
         LargestSliceList<AddressVerifyInfo, Long>  richList = addressVerifyListStrings.stream().collect(collectorStrings);
-        var timeMicros = stopwatch.elapsed(MICROSECONDS);
+        long timeMicros = stopwatch.elapsed(MICROSECONDS);
         verifyRichListString(richList, timeMicros);
     }
 
     @Test
     void calcRichListLongWithParallelStream() {
-        var stopwatch = Stopwatch.createStarted();
+        Stopwatch stopwatch = Stopwatch.createStarted();
         LargestSliceList<AddressVerifyInfoLong, Long>  richList = addressVerifyList.parallelStream().collect(collector);
-        var timeMicros = stopwatch.elapsed(MICROSECONDS);
+        long timeMicros = stopwatch.elapsed(MICROSECONDS);
         verifyRichListLong(richList, timeMicros);
     }
 
     @Test
     void calcRichListLongWithRegularStream() {
-        var stopwatch = Stopwatch.createStarted();
+        Stopwatch stopwatch = Stopwatch.createStarted();
         LargestSliceList<AddressVerifyInfoLong, Long>  richList = addressVerifyList.stream().collect(collector);
-        var timeMicros = stopwatch.elapsed(MICROSECONDS);
+        long timeMicros = stopwatch.elapsed(MICROSECONDS);
         verifyRichListLong(richList, timeMicros);
     }
 
@@ -137,10 +137,10 @@ public class LargestSliceFromTetherBalanceFileTest {
     }
 
     private static void warmupJit() {
-        var r1 = addressVerifyListStrings.stream().collect(collectorStrings);
-        var r2 = addressVerifyListStrings.parallelStream().collect(collectorStrings);
-        var r3 = addressVerifyList.stream().collect(collector);
-        var r4 = addressVerifyList.parallelStream().collect(collector);
+        Object r1 = addressVerifyListStrings.stream().collect(collectorStrings);
+        Object r2 = addressVerifyListStrings.parallelStream().collect(collectorStrings);
+        Object r3 = addressVerifyList.stream().collect(collector);
+        Object r4 = addressVerifyList.parallelStream().collect(collector);
     }
 
     private static long stringBalanceExtractor(AddressVerifyInfo info) {
