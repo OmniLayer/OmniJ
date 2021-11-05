@@ -13,6 +13,7 @@ Released: (under development)
 
 === Dependency Updates
 
+* ConsensusJ 0.5.11
 * bitcoinj-0.16-rc1
 * RxJava 3.1.2 (used in `omnij-analytics`)
 * JavaMoney API 1.1 (non-backport, modular version)
