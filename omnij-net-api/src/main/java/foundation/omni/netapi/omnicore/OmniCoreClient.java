@@ -125,8 +125,8 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
     @Override
     public CompletableFuture<ChainTip> getActiveChainTip() {
         return client.supplyAsync(client::getChainTips)
-                .thenApply(OmniCoreClient::getActiveChainTip)
-                .thenApply(Optional::orElseThrow);
+                .thenApply(ChainTip::getActiveChainTip)
+                .thenApply(opt -> opt.orElseThrow(() -> new RuntimeException("No active ChainTip")));
     }
 
     // TODO: Figure out how to detect and conditionally use OmniProxy
