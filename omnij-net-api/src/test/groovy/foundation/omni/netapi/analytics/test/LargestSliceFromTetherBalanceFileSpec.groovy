@@ -19,9 +19,9 @@ class LargestSliceFromTetherBalanceFileSpec extends Specification {
     static final boolean printResults = true
     static final int numSlices = 100;
     // Correct values for current dataset file with numSlices = 100
-    static final long richTotal = 1000518068.95603298G.movePointRight(8).longValueExact()
-    static final long otherTotal = 334478836.71429362G.movePointRight(8).longValueExact()
-    static final long grandTotal = 1334996905.67032660G.movePointRight(8).longValueExact()
+    static final long richTotal  = 1000518068.95603298G.movePointRight(8).longValueExact()
+    static final long otherTotal =  334481931.04396702G.movePointRight(8).longValueExact()
+    static final long grandTotal = 1335000000.00000000G.movePointRight(8).longValueExact()
     static final filename = 'src/test/java/foundation/omni/netapi/analytics/test/USDT_mastercoin_verify.json'
     static final  file = new File(filename)
 
@@ -94,7 +94,7 @@ class LargestSliceFromTetherBalanceFileSpec extends Specification {
         def jsonSlurper = new JsonSlurper()
         List<Object> object = (List<Object>) jsonSlurper.parse(file)
         addressVerifyList = object.stream()
-                .map(obj -> new AddressVerifyInfoLong(Address.fromString(null, obj.address), obj.balance, obj.reservedBalance ?: "0"))
+                .map(obj -> new AddressVerifyInfoLong(Address.fromString(null, obj.address), obj.balance, obj.reserved ?: "0"))
                 .collect(Collectors.toList());
         collector = new LargestSliceCollector<AddressVerifyInfoLong, Long>(numSlices, AddressVerifyInfoLong::balanceExtractor, 0L, Long::sum)
         println "List size = ${addressVerifyList.size()}"
