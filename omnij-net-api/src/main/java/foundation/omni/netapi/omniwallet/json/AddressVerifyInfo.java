@@ -13,7 +13,7 @@ public class AddressVerifyInfo {
     private final boolean isFrozen;
 
     public AddressVerifyInfo(@JsonProperty("balance") String balance,
-                             @JsonProperty("reserved_balance") String reservedBalance,     // For api.omniexplorer this is "reserved"
+                             @JsonProperty("reserved") String reservedBalance, // For deprecated www.omniexplorer.org endpoint this was "reserved_balance"
                              @JsonProperty("address") Address address,
                              @JsonProperty("frozen") Boolean frozen) {
         this.balance = balance;

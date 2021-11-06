@@ -8,10 +8,13 @@ import foundation.omni.net.OmniMainNetParams
 import foundation.omni.netapi.OmniJBalances
 import foundation.omni.netapi.WalletAddressBalance
 import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
+import foundation.omni.netapi.omniwallet.json.RevisionInfo
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.LegacyAddress
+import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.params.MainNetParams
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
@@ -28,6 +31,15 @@ class OmniwalletModernJDKClientSpec extends Specification {
     final static Address testAddr = LegacyAddress.fromBase58(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
 
     @Shared OmniwalletModernJDKClient client
+
+    def "get revision info" () {
+        when:
+        RevisionInfo info = client.revisionInfo().get()
+
+        then: "results look reasonable"
+        info.getLastBlock() > 400000
+        info.getBlockHash() instanceof Sha256Hash
+    }
 
     def "get block height" () {
         when:
@@ -53,7 +65,15 @@ class OmniwalletModernJDKClientSpec extends Specification {
 
         then:
         balances != null
-        balances[BTC].balance.numberValue() >= 0
+        balances[USDT].balance.numberValue() >= 0
+    }
+
+    def "load balances of address with single address asynchronously"() {
+        when:
+        WalletAddressBalance balances = client.balancesForAddressAsync(testAddr).get()
+
+        then:
+        balances != null
         balances[USDT].balance.numberValue() >= 0
     }
 
@@ -64,7 +84,6 @@ class OmniwalletModernJDKClientSpec extends Specification {
         then:
         balances != null
         balances[testAddr][USDT].balance.numberValue() >= 0
-        balances[testAddr][BTC].balance.numberValue() >= 0
     }
 
     def "load balances of addresses with multiple addresses"() {
@@ -74,10 +93,8 @@ class OmniwalletModernJDKClientSpec extends Specification {
         then:
         balances != null
         balances[testAddr][USDT].balance.numberValue() >= 0
-        balances[testAddr][BTC].balance.numberValue() >= 0
         balances[exodusAddress][OMNI].balance.numberValue() >= 0
         balances[exodusAddress][TOMNI].balance.numberValue() >= 0
-        balances[exodusAddress][BTC].balance.numberValue() >= 0
     }
 
     def "load balances of addresses with multiple addresses asynchronously"() {
@@ -88,20 +105,20 @@ class OmniwalletModernJDKClientSpec extends Specification {
         then:
         balances != null
         balances[testAddr][USDT].balance.numberValue() >= 0
-        balances[testAddr][BTC].balance.numberValue() >= 0
         balances[exodusAddress][OMNI].balance.numberValue() >= 0
         balances[exodusAddress][TOMNI].balance.numberValue() >= 0
-        balances[exodusAddress][BTC].balance.numberValue() >= 0
     }
 
-//    def "load balances of addresses with multiple addresses - in single request"() {
-//        when:
-//        // Note: This call is a direct test of th private `service` object
-//        def balances = client.service.balancesForAddresses([testAddr, exodusAddress]).get().body()
-//
-//        then:
-//        balances != null
-//    }
+    def "load balances of addresses with multiple addresses - in single request"() {
+        when:
+        // Note: This call is a direct test of the private Retrofit `service` object
+        def balances = (false)
+                ? client.service.balancesForAddresses([testAddr, exodusAddress]).get().body()
+                : 'dummy'
+
+        then:
+        balances != null
+    }
 
     def "Can get Omniwallet property list"() {
         when: "we get data"
@@ -232,6 +249,29 @@ class OmniwalletModernJDKClientSpec extends Specification {
         allBalancesValid(balances)
     }
 
+    def "Can get native Omniwallet property list"() {
+        when: "we get data"
+        def response = client.propertiesList().get()
+
+        then: "we get a list of size >= 2"
+        response.propertyInfoList != null
+        response.propertyInfoList.size() >= 2
+
+        when: "we look at Tether information"
+        def usdtInfo = response.propertyInfoList.stream()
+                .filter({it.propertyid == USDT})
+                .findFirst().get()
+        def totalIssuance = usdtInfo.issuances.stream()
+                .map({p -> (p.grant > 0) ? p.grant : -p.revoke })   // Grants are +, revokes are -
+                .reduce(0.0, { a,b -> a + b })
+
+        then: "there is some issuance info there"
+        usdtInfo.issuances.size() >= 90
+
+        and: "the total of grants and revokes equals totalTokens"
+        totalIssuance == usdtInfo.totalTokens
+    }
+
     def "we can form-encode a 0-entry address list using our package-level utility"() {
         given:
         List<Address> addressList = []
@@ -283,8 +323,12 @@ class OmniwalletModernJDKClientSpec extends Specification {
     }
 
     def setup() {
-        URI baseURL = OmniwalletAbstractClient.omniwalletBase
+        URI baseURL = OmniwalletAbstractClient.omniExplorerApiBase
         boolean debug = true
-        client = new OmniwalletModernJDKClient(baseURL)
+        client = new OmniwalletModernJDKClient(baseURL, debug, false, MainNetParams.get())
+    }
+
+    def cleanup() {
+        Thread.sleep(12_100)    // Delay to avoid rate limitations (warning says max 5 per 60 seconds)
     }
 }

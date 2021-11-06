@@ -62,6 +62,10 @@ import java.util.stream.Collectors;
  */
 public abstract class OmniwalletAbstractClient implements ConsensusService, RxOmniWalletClient {
     private static final Logger log = LoggerFactory.getLogger(OmniwalletAbstractClient.class);
+    /**
+     * This endpoint has an older (and now slightly incompatible) API
+     */
+    @Deprecated
     public static final URI omniwalletBase =  URI.create("https://www.omniwallet.org");
     public static final URI omniwalletApiBase =  URI.create("https://api.omniwallet.org");
     public static final URI omniExplorerApiBase =  URI.create("https://api.omniexplorer.info");

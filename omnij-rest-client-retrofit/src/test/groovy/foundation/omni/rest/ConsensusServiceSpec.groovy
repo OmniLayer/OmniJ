@@ -29,7 +29,7 @@ class ConsensusServiceSpec extends Specification {
     }
 
     def setup() {
-        URI baseURL = OmniwalletAbstractClient.omniwalletBase
+        URI baseURL = OmniwalletAbstractClient.omniExplorerApiBase
         boolean debug = true
         client = new OmniwalletClient(baseURL, debug)
     }

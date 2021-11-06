@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class OmniwalletConsensusTool extends OmniwalletModernJDKClient implements ConsensusTool {
     public OmniwalletConsensusTool() {
-        super(omniwalletBase, true, true, MainNetParams.get());
+        super(omniExplorerApiBase, true, true, MainNetParams.get());
     }
 
     public OmniwalletConsensusTool(URI hostURI) {

@@ -133,6 +133,6 @@ class OmniwalletServerSpec extends Specification {
     }
 
     private static OmniwalletAbstractClient getOmniwalletClient() {
-        return new OmniwalletModernJDKClient(OmniwalletAbstractClient.omniwalletBase, false, true, MainNetParams.get())
+        return new OmniwalletModernJDKClient(OmniwalletAbstractClient.omniExplorerApiBase, false, true, MainNetParams.get())
     }
 }

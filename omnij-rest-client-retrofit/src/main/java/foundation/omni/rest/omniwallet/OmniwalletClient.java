@@ -63,7 +63,7 @@ public class OmniwalletClient extends OmniwalletAbstractClient {
      * Default constructor
      */
     public OmniwalletClient() {
-        this(omniwalletBase, false);
+        this(omniExplorerApiBase, false);
     }
 
     public OmniwalletClient(URI baseURI, boolean debug) {
