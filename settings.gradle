@@ -17,7 +17,6 @@ if (JavaVersion.current().isJava11Compatible()) {
     include 'omnij-cli'
     include 'omnij-rest-client-jdk'        // JDK Omni REST client (using java.net.http)
     include 'omnij-rpc'                    // Omni JSON-RPC + Groovy + Integration tests
-    include 'omnij-analytics'
 } else {
     System.err.println "Skipping JDK 11 subprojects, requires Java 11+, currently running Java ${JavaVersion.current()}"
 }
