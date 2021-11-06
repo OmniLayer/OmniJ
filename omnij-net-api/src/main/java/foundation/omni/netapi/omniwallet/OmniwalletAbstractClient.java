@@ -208,7 +208,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
     }
 
     private ChainTip revisionInfoToChainTip(RevisionInfo info) {
-        return new ChainTip(info.getLastBlock(), Sha256Hash.ZERO_HASH, 0, "active");
+        return new ChainTip(info.getLastBlock(), info.getBlockHash(), 0, "active");
     }
 
     /**
