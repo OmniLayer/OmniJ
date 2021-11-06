@@ -84,7 +84,7 @@ public class LargestSliceFromTetherBalanceFileTest {
     }
 
     private void verifyRichListString(LargestSliceList<AddressVerifyInfo, Long> richList, long timeMicros) {
-        if (verbose) System.out.println("Ellapsed time: " + (double) timeMicros / 1000.0 + " ms");
+        if (verbose) System.out.println("Elapsed time: " + (double) timeMicros / 1000.0 + " ms");
         long actualRichTotal = richList.getSliceList().stream().mapToLong(LargestSliceFromTetherBalanceFileTest::stringBalanceExtractor).sum();
 
         assertEquals(numSlices, richList.getSliceList().size());
@@ -98,7 +98,7 @@ public class LargestSliceFromTetherBalanceFileTest {
     }
 
     private void verifyRichListLong(LargestSliceList<AddressVerifyInfoLong, Long> richList, long timeMicros) {
-        if (verbose) System.out.println("Ellapsed time: " + (double) timeMicros / 1000.0 + " ms");
+        if (verbose) System.out.println("Elapsed time: " + (double) timeMicros / 1000.0 + " ms");
         long actualRichTotal = richList.getSliceList().stream().mapToLong(AddressVerifyInfoLong::balanceExtractor).sum();
 
         assertEquals(numSlices, richList.getSliceList().size());
