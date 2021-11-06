@@ -1,7 +1,6 @@
 package foundation.omni.netapi.omnicore;
 
 import foundation.omni.OmniValue;
-import foundation.omni.rpc.SmartPropertyListInfo;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import org.consensusj.analytics.service.RichListService;
@@ -150,7 +149,7 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
 
     @Override
     public Single<TokenRichList<OmniValue, CurrencyID>> richList(CurrencyID id, int n) {
-        return Single.defer(() -> Single.fromCompletionStage(((RxOmniClient)client).omniProxyGetRichList(id, n)));
+        return Single.defer(() -> Single.fromCompletionStage(client.omniProxyGetRichList(id, n)));
     }
 
     @Override
@@ -176,13 +175,11 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
      * @throws IOException Exception at lower-level
      */
     public List<Address> getWalletAddresses() throws JsonRpcStatusException, IOException {
-        // Get a list of every address
-        List<Address> addresses = new ArrayList<>();
-        List<List<AddressGroupingItem>> addressItems = client.listAddressGroupings();
-        addressItems.forEach(group -> group.forEach( item -> {
-            addresses.add(item.getAddress());
-        }));
-        return addresses;
+        // Produce a list of every address in every group
+        return client.listAddressGroupings()
+                .stream()
+                .flatMap( g -> g.stream().map(AddressGroupingItem::getAddress))
+                .collect(Collectors.toList());
     }
 
     /**
