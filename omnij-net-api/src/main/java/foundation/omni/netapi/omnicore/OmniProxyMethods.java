@@ -9,9 +9,7 @@ import foundation.omni.OmniIndivisibleValue;
 import foundation.omni.OmniValue;
 import foundation.omni.json.pojo.OmniPropertyInfo;
 import org.bitcoinj.core.Address;
-import org.bitcoinj.core.LegacyAddress;
 import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.params.MainNetParams;
 import org.consensusj.analytics.service.TokenRichList;
 import org.consensusj.jsonrpc.JacksonRpcClient;
 import org.consensusj.jsonrpc.JsonRpcException;
@@ -25,12 +23,21 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Interface with default methods implementing omniproxy RPCs
+ * Interface with default methods implementing omniproxy RPCs.
  */
 public interface OmniProxyMethods extends JacksonRpcClient {
     Logger log = LoggerFactory.getLogger(OmniProxyMethods.class);
 
-    default CompletableFuture<List<OmniPropertyInfo>> omniProxyListProperties()  {
+    /**
+     * Determine at run-time if remote server is an OmniProxy server.
+     * Implementations must override this method if they can detect an OmniProxy server.
+     * @return true if server is OmniProxy
+     */
+    default boolean isOmniProxyServer() {
+        return false;
+    }
+
+    private CompletableFuture<List<OmniPropertyInfo>> omniProxyListPropertiesAsync()  {
         return supplyAsync(this::omniProxyListPropertiesSync);
     }
 
@@ -39,29 +46,14 @@ public interface OmniProxyMethods extends JacksonRpcClient {
         return send("omniproxy.listproperties", javaType);
     }
 
-    default CompletableFuture<List<OmniPropertyInfo>> omniProxyListPropertiesAddBitcoin()  {
-        return omniProxyListProperties().thenApply(result -> {
+    default CompletableFuture<List<OmniPropertyInfo>> omniProxyListProperties()  {
+        return omniProxyListPropertiesAsync().thenApply(result -> {
+            // Add Bitcoin (for now, until server is updated to include it)
             List<OmniPropertyInfo> smartPropertyList = new ArrayList<>();
-            smartPropertyList.add(bitcoinInfo());   // Add "fake" Bitcoin info
-            smartPropertyList.addAll(result);       // Add the list of Omni Properties
+            smartPropertyList.add(OmniPropertyInfo.mockBitcoinPropertyInfo());   // Add "static" Bitcoin info
+            smartPropertyList.addAll(result);                                   // Add the list of Omni Properties
             return smartPropertyList;
         });
-    }
-
-    private OmniPropertyInfo bitcoinInfo() {
-        return new OmniPropertyInfo(CurrencyID.BTC,
-                "Bitcoin",
-                "n/a",
-                "n/a",
-                "n/a",
-                "n/a",
-                true,
-                LegacyAddress.fromBase58(MainNetParams.get(), "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"),
-                Sha256Hash.ZERO_HASH,
-                false,
-                false,
-                false,
-                "20975046.05472019");  // TODO: Get correct current amount+
     }
 
     default CompletableFuture<TokenRichList<OmniValue, CurrencyID>> omniProxyGetRichList(CurrencyID id, int size) {

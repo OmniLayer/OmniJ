@@ -7,7 +7,9 @@ import foundation.omni.OmniValue;
 import foundation.omni.net.OmniMainNetParams;
 import foundation.omni.rpc.SmartPropertyListInfo;
 import org.bitcoinj.core.Address;
+import org.bitcoinj.core.LegacyAddress;
 import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.params.MainNetParams;
 
 import java.math.BigDecimal;
 
@@ -124,5 +126,30 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
 
     public OmniValue getTotaltokens() {
         return totaltokens;
+    }
+
+    /**
+     * Return a <i>mock</i> {@code OmniPropertyInfo} for Bitcoin. Many of the fields are "n/a" and
+     * we give the final, total number of tokens, not the current, dynamic value. This is useful
+     * in cases where we need Bitcoin in the list of tokens, but don't have access to current
+     * Bitcoin data. OmniProxy is able to provide accurate, dynamic information so does not
+     * use this mock value.
+     *
+     * @return static (mock) info for Bitcoin
+     */
+    public static OmniPropertyInfo mockBitcoinPropertyInfo() {
+        return new OmniPropertyInfo(CurrencyID.BTC,
+                "Bitcoin",
+                "n/a",
+                "n/a",
+                "n/a",
+                "n/a",
+                true,
+                LegacyAddress.fromBase58(MainNetParams.get(), "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"),
+                Sha256Hash.ZERO_HASH,
+                false,
+                false,
+                false,
+                "21000000.00000000");
     }
 }

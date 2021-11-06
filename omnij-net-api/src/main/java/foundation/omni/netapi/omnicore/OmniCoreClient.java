@@ -1,6 +1,7 @@
 package foundation.omni.netapi.omnicore;
 
 import foundation.omni.OmniValue;
+import foundation.omni.rpc.SmartPropertyListInfo;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import org.consensusj.analytics.service.RichListService;
@@ -30,13 +31,14 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Omni Core "REST" client that implements same interfaces as Omniwallet REST client
  */
 public class OmniCoreClient implements ConsensusService, RichListService<OmniValue, CurrencyID>, AutoCloseable {
     protected final RxOmniClient client;
-    
+
     /**
      * Constructor that takes an existing RxOmniClient
      *
@@ -64,11 +66,16 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
         return client.supplyAsync(client::getBlockCount);
     }
 
+    /**
+     * @return List of OmniPropertyInfo including an entry for Bitcoin
+     */
     @Override
     public CompletableFuture<List<OmniPropertyInfo>> listSmartProperties() {
-        return client.supplyAsync(() -> client.omniListProperties().stream()
-                .map(OmniPropertyInfo::new)
-                .collect(Collectors.toList()));
+        if (client.isOmniProxyServer()) {
+            return client.omniProxyListProperties();
+        } else {
+            return listSmartPropertiesInternal();
+        }
     }
 
     @Override
@@ -128,15 +135,6 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
                 .thenApply(opt -> opt.orElseThrow(() -> new RuntimeException("No active ChainTip")));
     }
 
-    // TODO: Figure out how to detect and conditionally use OmniProxy
-//    /**
-//     * Override to call omni.proxy
-//     * @return the list
-//     */
-//    @Override
-//    public CompletableFuture<List<OmniPropertyInfo>> listSmartProperties() {
-//        return ((OmniProxyClient)client).omniProxyListPropertiesAddBitcoin();
-//    }
 
     /**
      * @deprecated use getRxOmniClient
@@ -185,6 +183,28 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
             addresses.add(item.getAddress());
         }));
         return addresses;
+    }
+
+    /**
+     * Fetch Omni Core style list of SmartPropertyListInfo (not including Bitcoin) and
+     * convert to list of OmniPropertyInfo.
+     * @return Omniwallet/OmniProxy style list of OmniPropertyInfo (including Bitcoin)
+     */
+    private CompletableFuture<List<OmniPropertyInfo>> listSmartPropertiesInternal() {
+        return client.supplyAsync(client::omniListProperties)
+                .thenApply(list -> {
+                    // Convert SmartPropertyListInfo to OmniPropertyInfo (with "mock" data for some fields)
+                    Stream<OmniPropertyInfo> stream = list.stream()
+                            .map(OmniPropertyInfo::new);
+                    // Prepend a "mock" Bitcoin entry
+                    return streamPrepend(OmniPropertyInfo.mockBitcoinPropertyInfo(), stream)
+                            .collect(Collectors.toList());
+                });
+    }
+
+    /* Prepend an element to a steam */
+    private <E> Stream<E> streamPrepend(E newFirst, Stream<E> stream) {
+        return Stream.concat(Stream.of(newFirst), stream);
     }
 }
 
