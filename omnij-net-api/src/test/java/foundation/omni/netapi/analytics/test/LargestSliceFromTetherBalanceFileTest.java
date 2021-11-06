@@ -29,8 +29,8 @@ public class LargestSliceFromTetherBalanceFileTest {
     static final File file = new File(filename);
     static final int numSlices = 100;
     static final BigDecimal richTotalDecimal = new BigDecimal("1000518068.95603298");
-    static final BigDecimal otherTotalDecimal = new BigDecimal("334478836.71429362");
-    static final BigDecimal grandTotalDecimal = new BigDecimal("1334996905.67032660");
+    static final BigDecimal otherTotalDecimal = new BigDecimal("334481931.04396702");
+    static final BigDecimal grandTotalDecimal = new BigDecimal("1335000000.00000000");
     static final long richTotal = richTotalDecimal.movePointRight(8).longValueExact();
     static final long otherTotal = otherTotalDecimal.movePointRight(8).longValueExact();
     static final long grandTotal = grandTotalDecimal.movePointRight(8).longValueExact();
