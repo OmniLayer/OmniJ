@@ -130,6 +130,7 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
     private HttpRequest buildPostRequest(String uriPath, String postData) {
         return HttpRequest
                 .newBuilder(baseURI.resolve(uriPath))
+                .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(postData))
                 .build();
