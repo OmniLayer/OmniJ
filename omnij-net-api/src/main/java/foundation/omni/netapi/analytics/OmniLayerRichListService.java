@@ -1,5 +1,6 @@
 package foundation.omni.netapi.analytics;
 
+import io.reactivex.rxjava3.core.Flowable;
 import org.consensusj.bitcoin.json.pojo.ChainTip;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniDivisibleValue;
@@ -33,13 +34,13 @@ import java.util.stream.Collectors;
 public class OmniLayerRichListService<N extends Number & Comparable<? super N>, ID> implements RichListService<N, ID> {
     private static final Logger log = LoggerFactory.getLogger(OmniLayerRichListService.class);
     private final ConsensusService consensusService;
-    private final Observable<ChainTip> chainTipObservable;
+    private final Flowable<ChainTip> chainTipFlowable;
     private final N smartZero = (N) OmniDivisibleValue.ofWilletts(0);
-    private final ChainTip fakeChainTip = new ChainTip(0, Sha256Hash.ZERO_HASH, 0, "");
+    private final ChainTip fakeChainTip = new ChainTip(0, Sha256Hash.ZERO_HASH, 0, "mock");
 
-    public OmniLayerRichListService(ConsensusService consensusService, Observable<ChainTip> chainTipService) {
+    public OmniLayerRichListService(ConsensusService consensusService) {
         this.consensusService = consensusService;
-        this.chainTipObservable = chainTipService;
+        this.chainTipFlowable = Flowable.fromPublisher(consensusService.chainTipPublisher());
     }
 
     /**
@@ -70,7 +71,7 @@ public class OmniLayerRichListService<N extends Number & Comparable<? super N>, 
         boolean usingOmniwalletClient = false;
 
         if (!usingOmniwalletClient || !currencyID.equals(CurrencyID.USDT)) {
-            return chainTipObservable.flatMap(t -> this.richList(currencyID, numEntries).toObservable());
+            return chainTipFlowable.flatMapSingle(t -> this.richList(currencyID, numEntries)).toObservable();
         } else {
             // Disable USDT for now, since it times out
             return Observable.error(new RuntimeException("USDT rich list not supported on Omniwallet"));

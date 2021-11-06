@@ -92,11 +92,7 @@ class OmniLayerRichListServiceSpec extends Specification {
     }
 
     def setup() {
-        consensusService = new OmniCoreClient(MainNetParams.get(),
-                RpcURI.DEFAULT_MAINNET_URI,
-        "bitcoinrpc","pass")
-        Observable<ChainTip> chainTipObservable = Observable.interval(0, 5, TimeUnit.SECONDS)
-                    .map(t -> new ChainTip(t.intValue(), Sha256Hash.ZERO_HASH, 0, "active"));
-        omniLayerRichListService = new OmniLayerRichListService(consensusService, chainTipObservable);
+        consensusService = new OmniCoreClient(MainNetParams.get(), RpcURI.DEFAULT_MAINNET_URI, "bitcoinrpc","pass")
+        omniLayerRichListService = new OmniLayerRichListService(consensusService);
     }
 }
