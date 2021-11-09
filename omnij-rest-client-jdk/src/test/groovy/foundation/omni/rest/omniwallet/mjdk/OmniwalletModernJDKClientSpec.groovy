@@ -75,6 +75,9 @@ class OmniwalletModernJDKClientSpec extends Specification {
         then:
         balances != null
         balances[USDT].balance.numberValue() >= 0
+
+        cleanup:
+        Thread.sleep(12_100)    // Don't exceed 5 requests per 60 seconds for this endpoint
     }
 
     def "load balances of addresses with single address"() {
@@ -84,6 +87,9 @@ class OmniwalletModernJDKClientSpec extends Specification {
         then:
         balances != null
         balances[testAddr][USDT].balance.numberValue() >= 0
+
+        cleanup:
+        Thread.sleep(12_100)    // Don't exceed 5 requests per 60 seconds for this endpoint
     }
 
     def "load balances of addresses with multiple addresses"() {
@@ -95,6 +101,9 @@ class OmniwalletModernJDKClientSpec extends Specification {
         balances[testAddr][USDT].balance.numberValue() >= 0
         balances[exodusAddress][OMNI].balance.numberValue() >= 0
         balances[exodusAddress][TOMNI].balance.numberValue() >= 0
+
+        cleanup:
+        Thread.sleep(12_100)    // Don't exceed 5 requests per 60 seconds for this endpoint
     }
 
     def "load balances of addresses with multiple addresses asynchronously"() {
@@ -107,6 +116,10 @@ class OmniwalletModernJDKClientSpec extends Specification {
         balances[testAddr][USDT].balance.numberValue() >= 0
         balances[exodusAddress][OMNI].balance.numberValue() >= 0
         balances[exodusAddress][TOMNI].balance.numberValue() >= 0
+
+
+        cleanup:
+        Thread.sleep(12_100)    // Don't exceed 5 requests per 60 seconds for this endpoint
     }
 
     def "load balances of addresses with multiple addresses - in single request"() {
@@ -118,6 +131,9 @@ class OmniwalletModernJDKClientSpec extends Specification {
 
         then:
         balances != null
+
+        cleanup:
+        Thread.sleep(12_100)    // Don't exceed 5 requests per 60 seconds for this endpoint
     }
 
     def "Can get Omniwallet property list"() {
@@ -329,6 +345,5 @@ class OmniwalletModernJDKClientSpec extends Specification {
     }
 
     def cleanup() {
-        Thread.sleep(12_100)    // Delay to avoid rate limitations (warning says max 5 per 60 seconds)
     }
 }
