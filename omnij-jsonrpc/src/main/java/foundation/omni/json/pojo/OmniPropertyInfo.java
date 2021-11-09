@@ -3,10 +3,12 @@ package foundation.omni.json.pojo;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import foundation.omni.CurrencyID;
+import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniValue;
 import foundation.omni.net.OmniMainNetParams;
 import foundation.omni.rpc.SmartPropertyListInfo;
 import org.bitcoinj.core.Address;
+import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.LegacyAddress;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.params.MainNetParams;
@@ -138,6 +140,17 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
      * @return static (mock) info for Bitcoin
      */
     public static OmniPropertyInfo mockBitcoinPropertyInfo() {
+        return bitcoinPropertyInfo(Coin.COIN.multiply(21_000_000));
+    }
+
+    /**
+     * Return {@code OmniPropertyInfo} for Bitcoin. Many of the fields are "n/a" but
+     * we give current, dynamic count of bitcoins. This method is used
+     * by <b>OmniProxy</b> with the current count of coins from {@link org.consensusj.bitcoin.json.pojo.TxOutSetInfo}.
+     *
+     * @return info for Bitcoin with current number of coins
+     */
+    public static OmniPropertyInfo bitcoinPropertyInfo(Coin bitcoinSupply) {
         return new OmniPropertyInfo(CurrencyID.BTC,
                 "Bitcoin",
                 "n/a",
@@ -150,6 +163,6 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
                 false,
                 false,
                 false,
-                "21000000.00000000");
+                OmniDivisibleValue.ofWilletts(bitcoinSupply.getValue()));
     }
 }
