@@ -229,16 +229,6 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
                 .toFlowable(BackpressureStrategy.ERROR);
     }
 
-    @Override
-    public void logSuccess(ChainTip result) {
-        log.debug("RPC call returned: {}", result);
-    }
-
-    @Override
-    public void logError(Throwable throwable) {
-        log.error("Exception in RPCCall", throwable);
-    }
-
     protected abstract CompletableFuture<Map<Address, OmniwalletAddressBalance>> balanceMapForAddress(Address address);
     protected abstract CompletableFuture<Map<Address, OmniwalletAddressBalance>> balanceMapForAddresses(List<Address> addresses);
 

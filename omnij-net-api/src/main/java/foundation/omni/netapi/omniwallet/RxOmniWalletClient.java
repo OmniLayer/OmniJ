@@ -9,6 +9,8 @@ import io.reactivex.rxjava3.core.Single;
 import org.bitcoinj.core.Sha256Hash;
 import org.consensusj.bitcoin.json.pojo.ChainTip;
 import org.consensusj.bitcoin.rx.jsonrpc.PollingChainTipService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOError;
 
@@ -16,6 +18,7 @@ import java.io.IOError;
  *
  */
 public interface RxOmniWalletClient extends OmniBalanceService {
+    /* private */ Logger log = LoggerFactory.getLogger(RxOmniWalletClient.class);
 
     /**
      * Get the active chain tip if there is one (useful for polling clients)
@@ -45,9 +48,13 @@ public interface RxOmniWalletClient extends OmniBalanceService {
                 .onErrorComplete(this::isTransientError);    // Empty completion if IOError
     }
 
-    void logError(Throwable throwable);
+    private void logSuccess(Object result) {
+        log.debug("RPC call returned: {}", result);
+    }
 
-    void logSuccess(ChainTip chainTip);
+    private void logError(Throwable throwable) {
+        log.error("Exception in RPCCall", throwable);
+    }
 
     /**
      * Determine if error is transient and should be ignored
