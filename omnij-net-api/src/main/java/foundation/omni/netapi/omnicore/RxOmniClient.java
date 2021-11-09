@@ -31,8 +31,10 @@ public class RxOmniClient extends OmniClient implements RxJsonChainTipClient, Om
         if (useZmq) {
             chainTipService = new RxBitcoinZmqService(this);
         } else {
-            // TODO: Set polling  interval and disable polling
-            chainTipService = new PollingChainTipServiceImpl(this);
+            // TODO: Add ability to Set polling interval and/or enable/disable polling
+            PollingChainTipServiceImpl pollingChainTipService = new PollingChainTipServiceImpl(this);
+            pollingChainTipService.start();
+            chainTipService = pollingChainTipService;
         }
     }
 
