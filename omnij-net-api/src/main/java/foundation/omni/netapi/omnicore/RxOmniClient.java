@@ -17,17 +17,19 @@ import java.net.URI;
  */
 public class RxOmniClient extends OmniClient implements RxJsonChainTipClient, OmniProxyMethods {
     ChainTipService chainTipService;
+    private final boolean isOmniProxy;
 
     public RxOmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
-        this(netParams, server, rpcuser, rpcpassword, true);
+        this(netParams, server, rpcuser, rpcpassword, true, false);
     }
 
-    public RxOmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq) {
-        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams, server, rpcuser, rpcpassword, useZmq);
+    public RxOmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
+        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams, server, rpcuser, rpcpassword, useZmq, isOmniProxy);
     }
 
-    public RxOmniClient(SSLSocketFactory sslSocketFactory,  NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq) {
+    public RxOmniClient(SSLSocketFactory sslSocketFactory,  NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
         super(sslSocketFactory, netParams, server, rpcuser, rpcpassword);
+        this.isOmniProxy = isOmniProxy;
         if (useZmq) {
             chainTipService = new RxBitcoinZmqService(this);
         } else {
@@ -41,5 +43,10 @@ public class RxOmniClient extends OmniClient implements RxJsonChainTipClient, Om
     @Override
     public Flowable<ChainTip> chainTipPublisher() {
         return Flowable.fromPublisher(chainTipService.chainTipPublisher());
+    }
+
+    @Override
+    public boolean isOmniProxyServer() {
+        return this.isOmniProxy;
     }
 }

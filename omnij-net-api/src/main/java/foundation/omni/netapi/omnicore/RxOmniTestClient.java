@@ -10,6 +10,6 @@ import java.net.URI;
  */
 public class RxOmniTestClient extends RxOmniClient implements OmniTestClientMethods {
     public RxOmniTestClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
-        super(netParams, server, rpcuser, rpcpassword, false);
+        super(netParams, server, rpcuser, rpcpassword, false, false);
     }
 }

@@ -48,12 +48,12 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
         this.client = client;
     }
 
-    public OmniCoreClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI coreURI, String user, String pass, boolean useZmq) {
-        client = new RxOmniClient(sslSocketFactory, netParams, coreURI, user, pass, useZmq);
+    public OmniCoreClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI coreURI, String user, String pass, boolean useZmq, boolean isOmniProxy) {
+        client = new RxOmniClient(sslSocketFactory, netParams, coreURI, user, pass, useZmq, isOmniProxy);
     }
 
     public OmniCoreClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI coreURI, String user, String pass) {
-        this(sslSocketFactory, netParams, coreURI, user, pass, false);
+        this(sslSocketFactory, netParams, coreURI, user, pass, false, false);
     }
 
     public OmniCoreClient(NetworkParameters netParams, URI coreURI, String user, String pass) {
