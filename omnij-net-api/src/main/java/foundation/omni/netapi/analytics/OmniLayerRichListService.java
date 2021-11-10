@@ -67,14 +67,14 @@ public class OmniLayerRichListService<N extends Number & Comparable<? super N>, 
      * @return An {@code Observable} to subscribe to for a stream of rich list updates
      */
     @Override
-    public Observable<TokenRichList<N, ID>> richListUpdates(ID currencyID, int numEntries) {
+    public Flowable<TokenRichList<N, ID>> richListUpdates(ID currencyID, int numEntries) {
         boolean usingOmniwalletClient = false;
 
         if (!usingOmniwalletClient || !currencyID.equals(CurrencyID.USDT)) {
-            return chainTipFlowable.flatMapSingle(t -> this.richList(currencyID, numEntries)).toObservable();
+            return chainTipFlowable.flatMapSingle(t -> this.richList(currencyID, numEntries));
         } else {
             // Disable USDT for now, since it times out
-            return Observable.error(new RuntimeException("USDT rich list not supported on Omniwallet"));
+            return Flowable.error(new RuntimeException("USDT rich list not supported on Omniwallet"));
         }
     }
 

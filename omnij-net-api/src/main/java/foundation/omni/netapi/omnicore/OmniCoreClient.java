@@ -1,7 +1,7 @@
 package foundation.omni.netapi.omnicore;
 
 import foundation.omni.OmniValue;
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import org.consensusj.analytics.service.RichListService;
 import org.consensusj.analytics.service.TokenRichList;
@@ -153,8 +153,8 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
     }
 
     @Override
-    public Observable<TokenRichList<OmniValue, CurrencyID>> richListUpdates(CurrencyID id, int n) {
-        return client.pollOnNewBlock(() -> client.omniProxyGetRichListSync(id, n)).toObservable();
+    public Flowable<TokenRichList<OmniValue, CurrencyID>> richListUpdates(CurrencyID id, int n) {
+        return client.pollOnNewBlock(() -> client.omniProxyGetRichListSync(id, n));
     }
 
     @Override
