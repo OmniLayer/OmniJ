@@ -11,14 +11,23 @@ import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
 import foundation.omni.netapi.omniwallet.json.RevisionInfo
 import foundation.omni.rpc.BalanceEntry
 import foundation.omni.rpc.SmartPropertyListInfo
+import io.reactivex.rxjava3.core.Flowable
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.LegacyAddress
 import org.bitcoinj.core.Sha256Hash
 import org.bitcoinj.params.MainNetParams
+import org.consensusj.bitcoin.json.pojo.ChainTip
+import org.reactivestreams.Subscriber
+import org.reactivestreams.Subscription
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
+
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 import static foundation.omni.CurrencyID.*
 
@@ -27,10 +36,33 @@ import static foundation.omni.CurrencyID.*
  */
 @Ignore("This is really an integration test")
 class OmniwalletModernJDKClientSpec extends Specification {
+    private static final Logger log = LoggerFactory.getLogger(OmniwalletModernJDKClientSpec.class);
+
     final static Address exodusAddress = OmniMainNetParams.get().exodusAddress;
     final static Address testAddr = LegacyAddress.fromBase58(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
+    final static int balanceQueryRateLimitDelay = 12_100; // milliseconds
 
     @Shared OmniwalletModernJDKClient client
+
+    def "can subscribe to chain tips"() {
+        setup:
+        def subscriber = new TestRxSubscriber<ChainTip>(new CountDownLatch(1))
+
+        when:
+        Flowable<ChainTip> flow = Flowable.fromPublisher(client.chainTipPublisher())
+
+        then:
+        flow != null
+
+        when:
+        flow.subscribe(subscriber);
+        subscriber.countDownLatch.await(1, TimeUnit.MINUTES);
+
+        then:
+        subscriber.countDownLatch.count == 0
+        subscriber.lastElement.height > 0
+        subscriber.lastElement.status == "active"
+    }
 
     def "get revision info" () {
         when:
@@ -77,7 +109,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
         balances[USDT].balance.numberValue() >= 0
 
         cleanup:
-        Thread.sleep(12_100)    // Don't exceed 5 requests per 60 seconds for this endpoint
+        Thread.sleep(balanceQueryRateLimitDelay)    // Don't exceed 5 requests per 60 seconds for this endpoint
     }
 
     def "load balances of addresses with single address"() {
@@ -89,7 +121,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
         balances[testAddr][USDT].balance.numberValue() >= 0
 
         cleanup:
-        Thread.sleep(12_100)    // Don't exceed 5 requests per 60 seconds for this endpoint
+        Thread.sleep(balanceQueryRateLimitDelay)    // Don't exceed 5 requests per 60 seconds for this endpoint
     }
 
     def "load balances of addresses with multiple addresses"() {
@@ -103,7 +135,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
         balances[exodusAddress][TOMNI].balance.numberValue() >= 0
 
         cleanup:
-        Thread.sleep(12_100)    // Don't exceed 5 requests per 60 seconds for this endpoint
+        Thread.sleep(balanceQueryRateLimitDelay)    // Don't exceed 5 requests per 60 seconds for this endpoint
     }
 
     def "load balances of addresses with multiple addresses asynchronously"() {
@@ -119,7 +151,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
 
 
         cleanup:
-        Thread.sleep(12_100)    // Don't exceed 5 requests per 60 seconds for this endpoint
+        Thread.sleep(balanceQueryRateLimitDelay)    // Don't exceed 5 requests per 60 seconds for this endpoint
     }
 
     def "load balances of addresses with multiple addresses - in single request"() {
@@ -133,7 +165,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
         balances != null
 
         cleanup:
-        Thread.sleep(12_100)    // Don't exceed 5 requests per 60 seconds for this endpoint
+        Thread.sleep(balanceQueryRateLimitDelay)    // Don't exceed 5 requests per 60 seconds for this endpoint
     }
 
     def "Can get Omniwallet property list"() {
@@ -338,12 +370,46 @@ class OmniwalletModernJDKClientSpec extends Specification {
             }
     }
 
+    static class TestRxSubscriber<T> implements Subscriber<T> {
+        final CountDownLatch countDownLatch;
+        public T lastElement;
+
+        TestRxSubscriber(CountDownLatch latch) {
+            countDownLatch = latch;
+        }
+
+        @Override
+        void onSubscribe(Subscription s) {
+            log.info("Subscribed")
+            s.request(Integer.MAX_VALUE)
+        }
+
+        @Override
+        void onNext(T element) {
+            log.info("onNext element: {}", element)
+            countDownLatch.countDown()
+            lastElement = element
+        }
+
+        @Override
+        void onError(Throwable t) {
+            log.error("error: ", t)
+        }
+
+        @Override
+        void onComplete() {
+            log.info("subscribed")
+        }
+    }
+
     def setup() {
         URI baseURL = OmniwalletAbstractClient.omniExplorerApiBase
         boolean debug = true
         client = new OmniwalletModernJDKClient(baseURL, debug, false, MainNetParams.get())
+        client.start()
     }
 
     def cleanup() {
+        client.close()
     }
 }
