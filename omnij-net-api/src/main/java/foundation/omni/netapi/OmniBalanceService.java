@@ -45,8 +45,7 @@ public interface OmniBalanceService {
 
     /**
      * Return current ChainTip
-     * Note: Omniwallet currently only returns block height with a dummy block hash.
-     * @return full or partial chain tip information
+     * @return "active" ChainTip
      */
     CompletableFuture<ChainTip> getActiveChainTip();
 }
