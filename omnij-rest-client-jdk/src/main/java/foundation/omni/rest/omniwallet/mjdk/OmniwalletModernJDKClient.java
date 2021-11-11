@@ -108,8 +108,19 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
     private CompletableFuture<String> sendAsyncCommon(HttpRequest request) {
         log.debug("Send aysnc: {}", request);
         return client.sendAsync(request, BodyHandlers.ofString())
+                .thenComposeAsync(this::handleStatusError)
                 .thenApply(HttpResponse::body)
                 .whenComplete(OmniwalletModernJDKClient::log);
+    }
+
+    private CompletableFuture<HttpResponse<String>> handleStatusError(HttpResponse<String> response) {
+        if (response.statusCode() != 200) {
+            String errorResponse = response.body();
+            log.error("Bad status code: {}: {}", response.statusCode(), errorResponse);
+            return CompletableFuture.failedFuture(new RuntimeException(response.statusCode() + " : " + errorResponse));
+        } else {
+            return CompletableFuture.completedFuture(response);
+        }
     }
 
     private <R> MappingFunction<R> mappingFunc(Class<R> clazz) {
