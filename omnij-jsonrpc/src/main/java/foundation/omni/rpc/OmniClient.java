@@ -7,6 +7,7 @@ import org.consensusj.bitcoin.rpc.BitcoinExtendedClient;
 import foundation.omni.json.pojo.OmniPropertyInfo;
 import org.bitcoinj.core.LegacyAddress;
 import org.bitcoinj.core.SegwitAddress;
+import org.consensusj.bitcoin.rx.jsonrpc.RxBitcoinClient;
 import org.consensusj.jsonrpc.JsonRpcException;
 import org.consensusj.bitcoin.rpc.RpcConfig;
 import foundation.omni.CurrencyID;
@@ -41,22 +42,24 @@ import java.util.TreeMap;
  *
  * @see <a href="https://github.com/OmniLayer/omnicore/blob/master/src/omnicore/doc/rpc-api.md#json-rpc-api">Omni Core JSON RPC API documentation on GitHub</a>
  */
-public class OmniClient extends BitcoinExtendedClient implements OmniClientRawTxSupport {
+public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSupport {
 
     public OmniClient(RpcConfig config) throws IOException {
         this(config.getNetParams(), config.getURI(), config.getUsername(), config.getPassword());
     }
 
-    public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
-        super(sslSocketFactory, netParams, server, rpcuser, rpcpassword);
+    public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq) {
+        super(sslSocketFactory, netParams, server, rpcuser, rpcpassword, useZmq);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.registerModule(new OmniClientModule(getNetParams()));
     }
 
+    public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
+        this(sslSocketFactory, netParams, server, rpcuser, rpcpassword, false);
+    }
+
     public OmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
-        super(netParams, server, rpcuser, rpcpassword);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.registerModule(new OmniClientModule(getNetParams()));
+        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams, server, rpcuser, rpcpassword);
     }
 
     public OmniNetworkParameters getOmniNetParams() {

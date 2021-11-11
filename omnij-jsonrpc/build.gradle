@@ -4,9 +4,13 @@ plugins {
 
 ext.moduleName = 'foundation.omni.jsonrpc'
 
+sourceCompatibility = 9
+targetCompatibility = 9
+
 dependencies {
     api project(':omnij-core')
     api "${consensusjGroup}:${consensusjBtcJsonRpcArtifact}:${consensusjVersion}"
+    api "${consensusjGroup}:cj-btc-rx-jsonrpc:${consensusjVersion}"
 
     testImplementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
     testImplementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
