@@ -21,6 +21,7 @@ import java.math.BigDecimal;
  * because it is a superset of that information.
  */
 public class OmniPropertyInfo extends SmartPropertyListInfo {
+    private static final Address bitcoinIssuer = LegacyAddress.fromBase58(MainNetParams.get(), "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa");
     private final Address issuer;
     private final Sha256Hash creationtxid;
     private final boolean fixedissuance;
@@ -98,8 +99,8 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
                 sptListInfo.getData(),
                 sptListInfo.getUrl(),
                 sptListInfo.getDivisible());
-        this.issuer = null;                             // Issuer unknown
-        this.creationtxid = null;                       // Creation Tx unknown
+        this.issuer = bitcoinIssuer;                    // Issuer unknown
+        this.creationtxid = Sha256Hash.ZERO_HASH;       // Creation Tx unknown
         this.fixedissuance = false;                     // Not nullable so use `false`
         this.managedissuance = false;                   // Not nullable so use `false`
         this.freezingenabled = false;                   // Not nullable so use `false`
@@ -158,7 +159,7 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
                 "n/a",
                 "n/a",
                 true,
-                LegacyAddress.fromBase58(MainNetParams.get(), "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"),
+                bitcoinIssuer,
                 Sha256Hash.ZERO_HASH,
                 false,
                 false,
