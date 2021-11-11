@@ -13,7 +13,7 @@ Released: (under development)
 
 === Dependency Updates
 
-* ConsensusJ 0.5.11
+* ConsensusJ 0.5.12
 * bitcoinj-0.16-rc1
 * RxJava 3.1.2 (used in `omnij-analytics`)
 * JavaMoney API 1.1 (non-backport, modular version)
@@ -22,7 +22,7 @@ Released: (under development)
 
 === Build/Test Updates
 
-* Gradle 7.2
+* Gradle 7.3
 * JUnit Jupiter 5.8.1
 * Github Actions: Switch to Temurin JDK
 * Github Actions: Replace JDK 16 with JDK 17 in the matrix
