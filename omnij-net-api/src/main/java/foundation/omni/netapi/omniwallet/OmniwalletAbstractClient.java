@@ -25,7 +25,6 @@ import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.internal.operators.observable.ObservableInterval;
 import io.reactivex.rxjava3.processors.BehaviorProcessor;
 import io.reactivex.rxjava3.processors.FlowableProcessor;
 import org.bitcoinj.core.Address;
@@ -39,6 +38,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
 import java.io.IOError;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -60,7 +60,7 @@ import java.util.stream.Collectors;
  * a RawOmniwallet interface and inject an implementation of
  * that into the constructor of an OmniwalletConsensusService type.
  */
-public abstract class OmniwalletAbstractClient implements ConsensusService, RxOmniWalletClient {
+public abstract class OmniwalletAbstractClient implements ConsensusService, RxOmniWalletClient, Closeable {
     private static final Logger log = LoggerFactory.getLogger(OmniwalletAbstractClient.class);
     /**
      * This endpoint has an older (and now slightly incompatible) API
@@ -74,13 +74,13 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
     static public final int CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
     static public final int READ_TIMEOUT_MILLIS = 120 * 1000; // 120s (long enough to load USDT rich list)
     protected final URI baseURI;
-    private boolean debug;
+    protected boolean debug;
     protected boolean strictMode;
     /**
      * netParams, if non-null, is used for validating addresses during deserialization
      */
     protected final NetworkParameters netParams;
-    private final Observable<Long> chainTipPollingInterval;
+    private final Flowable<Long> chainTipPollingInterval;
     private final Flowable<ChainTip> chainTipSource;
     private Disposable chainTipSubscription;
     private final FlowableProcessor<ChainTip> chainTipProcessor = BehaviorProcessor.create();
@@ -96,7 +96,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
         this.debug = debug;
         this.strictMode = strictMode;
         this.netParams = netParams;
-        chainTipPollingInterval = ObservableInterval.interval(2,60, TimeUnit.SECONDS);
+        chainTipPollingInterval = Flowable.interval(2,60, TimeUnit.SECONDS);
         chainTipSource = pollForDistinctChainTip();
     }
 
@@ -104,6 +104,12 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
         if (chainTipSubscription == null) {
             chainTipSubscription = chainTipSource.subscribe(chainTipProcessor::onNext, chainTipProcessor::onError, chainTipProcessor::onComplete);
         }
+    }
+
+    @Override
+    public void close() {
+        chainTipProcessor.onComplete();
+        chainTipSubscription.dispose();
     }
 
     @Override
@@ -204,6 +210,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
 
     @Override
     public Publisher<ChainTip> chainTipPublisher() {
+        start();
         return chainTipProcessor;
     }
 
@@ -224,9 +231,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
                 .doOnNext(tip -> log.debug("blockheight, blockhash = {}, {}", tip.getHeight(), tip.getHash()))
                 //.distinctUntilChanged(ChainTip::getHash) // Omni Core looks for a hash change (because hash includes height)
                 .distinctUntilChanged(ChainTip::getHeight) // Since hash isn't (YET!) included on Omniwallet, we'll just look for a new height
-                .doOnNext(tip -> log.info("** NEW ** blockheight, blockhash = {}, {}", tip.getHeight(), tip.getHash()))
-                // ERROR backpressure strategy is compatible with BehaviorProcessor since it subscribes to MAX items
-                .toFlowable(BackpressureStrategy.ERROR);
+                .doOnNext(tip -> log.info("** NEW ** blockheight, blockhash = {}, {}", tip.getHeight(), tip.getHash()));
     }
 
     protected abstract CompletableFuture<Map<Address, OmniwalletAddressBalance>> balanceMapForAddress(Address address);
