@@ -1,6 +1,5 @@
 foundation.omni
 foundation.omni.address
-foundation.omni.analytics
 foundation.omni.cli
 foundation.omni.consensus
 foundation.omni.json.conversion
@@ -8,6 +7,7 @@ foundation.omni.json.pojo
 foundation.omni.money
 foundation.omni.net
 foundation.omni.netapi
+foundation.omni.netapi.analytics
 foundation.omni.netapi.omnicore
 foundation.omni.netapi.omniwallet
 foundation.omni.netapi.omniwallet.json
