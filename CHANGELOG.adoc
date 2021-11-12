@@ -3,13 +3,35 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.5.19-SNAPSHOT
+== v0.5.19
 
-Released: (under development)
+Released: 2021-11-11
+
+=== All modules
+
+* All modules now have `Automatic-Module-Name` in their manifest.
+
+=== Removed module: omnij-analytics
+
+* Merged into `omnij-net-api`
 
 === omnij-net-api
 
+* `omnij-net-api` now includes Reactive Streams and RxJava support
+* Omniwallet clients now support and require the https://api.omniexplorer.info and https://api.omniwallet.org versions
+* Omniwallet clients now return best block hash in ChainTip
+* Now contains `omnij-analytics`
 * Add `balancesForAddressAsync()` to `OmniBalanceService` (common API for Omni Core JSON-RPC and Omniwallet)
+
+=== omnij-jsonrpc
+
+* `OmniClient` now extends on `RxBitcoinClient` from ConsensusJ `cj-btc-rx-jsonrpc` (add JDK 9 dependency)
+* `OmniPropertyInfo` created from `SmartPropertyListInfo` now has placeholders instead of null
+
+=== omnij-rest-client-jdk
+
+* OmniwalletModernJDKClient: better handling of HTTP status code errors
+
 
 === Dependency Updates
 
@@ -22,6 +44,7 @@ Released: (under development)
 
 === Build/Test Updates
 
+* Builds with JDK 17
 * Gradle 7.3
 * JUnit Jupiter 5.8.1
 * Github Actions: Switch to Temurin JDK

@@ -1,8 +1,8 @@
 = OmniJ Project
 Sean Gilligan <https://github.com/msgilligan>
-v0.5.18
+v0.5.19
 :description: OmniJ README document.
-:omnij-version: 0.5.18
+:omnij-version: 0.5.19
 
 [WARNING]
 This software is EXPERIMENTAL software for **REGTEST and TESTNET TRANSACTIONS** only. *USE ON MAINNET AT YOUR OWN RISK.*
@@ -25,11 +25,6 @@ There are currently ten active subprojects of OmniJ. Each of which builds a JAR 
 [options="header",frame="all"]
 |===
 | module | Description | JDK | Notes
-
-| omnij-analytics
-| Omni implementation of ConsensusJ `RichListService` interface.
-| 11
-| new "incubating" module
 
 | omnij-cli
 | Omni consensus-checking command-line tool.
@@ -58,12 +53,12 @@ There are currently ten active subprojects of OmniJ. Each of which builds a JAR 
 
 | omnij-net-api
 | Http interfaces and objects for Omniwallet & Omni Core with a common interface.
-| 8
+| 9
 |
 
 | omnij-rest-client-retrofit
 | Omniwallet REST client using Retrofit library
-| 8
+| 9
 | Android-compatible
 
 | omnij-rest-client-jdk
@@ -161,7 +156,7 @@ If you are using the `omnij-jsonrpc` JAR, add the following:
 
 === Building OmniJ
 
-The only prerequisite for building OmniJ is having Java JDK 11 or later installed. All other prerequisites are downloaded automatically by the http://gradle.org/docs/current/userguide/gradle_wrapper.html[Gradle Wrapper] script.
+The only prerequisite for building OmniJ is having Java JDK 11 or later installed (JDK 17 is recommended.) All other prerequisites are downloaded automatically by the http://gradle.org/docs/current/userguide/gradle_wrapper.html[Gradle Wrapper] script.
 
 . Check out this project using Git
 
@@ -308,7 +303,7 @@ These sample Spock "feature tests" are from the file https://github.com/OmniLaye
 
 == OmniJ Command-line Consensus tool
 
-The command-line consensus tool, `omnij-consensus-tool` can be built into a native, self-contained, executable using https://www.graalvm.org[GraalVM]. You'll need a Java 11 (or later) version of GraalVM, we currently recommend version 21.2.0 (java11).
+The command-line consensus tool, `omnij-consensus-tool` can be built into a native, self-contained, executable using https://www.graalvm.org[GraalVM]. You'll need a Java 11 (or later) version of GraalVM, we currently recommend version 21.3.0 (java11).
 
 === Building
 
