@@ -3,6 +3,10 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
+== v0.5.20-SNAPSHOT
+
+Released: Under development
+
 == v0.5.19
 
 Released: 2021-11-11
