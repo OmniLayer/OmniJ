@@ -24,11 +24,13 @@ import org.reactivestreams.Publisher;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -85,36 +87,34 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
 
     @Override
     public OmniJBalances balancesForAddresses(List<Address> addresses) throws IOException {
-        OmniJBalances balances = new OmniJBalances();
-        for (Address address : addresses) {
-            WalletAddressBalance bal = balancesForAddress(address);
-            balances.put(address, bal);
+        try {
+            return balancesForAddressesAsync(addresses).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IOException(e);
         }
-        return balances;
     }
 
     @Override
     public CompletableFuture<OmniJBalances> balancesForAddressesAsync(List<Address> addresses) {
-        // TODO: Implement with parallel requests to balancesForAddressAsync
-        return client.supplyAsync(() -> balancesForAddresses(addresses));
+        OmniJBalances balances = new OmniJBalances();
+        // TODO: Limit total number of parallel requests?
+        CompletableFuture[] futures = addresses.parallelStream()
+                .map(address -> this.balancesForAddressAsync(address)
+                        .thenAccept(wab -> balances.put(address, wab)))
+                .toArray(CompletableFuture[]::new);
+
+        return CompletableFuture
+                .allOf(futures)
+                .thenApply(v -> balances);
     }
-    
 
     @Override
-    public WalletAddressBalance balancesForAddress(Address address)throws IOException {
-        SortedMap<CurrencyID, BalanceEntry> entries = new TreeMap<>();
+    public WalletAddressBalance balancesForAddress(Address address) throws IOException {
         try {
-            entries = client.omniGetAllBalancesForAddress(address);
-        } catch (JsonRpcException e) {
-            if (!e.getMessage().equals("Address not found")) {
-                throw e;
-            }
-            // Address not found, so return empty entries map
+            return balancesForAddressAsync(address).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IOException(e);
         }
-        
-        WalletAddressBalance result = new WalletAddressBalance();
-        result.putAll(entries);
-        return result;
     }
 
     @Override
@@ -124,7 +124,44 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
 
     @Override
     public CompletableFuture<WalletAddressBalance> balancesForAddressAsync(Address address) {
-        return client.supplyAsync(() -> balancesForAddress(address));
+        return omniGetAllBalancesForAddressAsync(address)
+                .handle(this::ignoreAddressNotFound)
+                .thenCompose(Function.identity())
+                .thenApply(WalletAddressBalance::new);
+    }
+
+    private CompletableFuture<SortedMap<CurrencyID, BalanceEntry>> omniGetAllBalancesForAddressAsync(Address address) {
+        return client.supplyAsync(() -> client.omniGetAllBalancesForAddress(address));
+    }
+
+    /**
+     * Map a (result, throwable) to a new CompletionStage such that:
+     * <ul>
+     *     <li>Successful results are passed through unchanged</li>
+     *     <li>"Address not found" JsonRpcExceptions are replaced with successful result with an empty map</li>
+     *     <li>Other Throwables are passed through unchanged</li>
+     * </ul>
+     * <p>
+     * In JDK 11 and earlier, this will typically be called as
+     * {@code
+     *                 .handle(this::ignoreAddressNotFound)
+     *                 .thenCompose(Function.identity())
+     * }
+     * In JDK 12 and later this method could be simplified and called with {@code CompletionStage.exceptionallyCompose()}
+     * @param result result
+     * @param t throwable
+     * @return new completion stage with "Address not found" exception replaced with empty map
+     */
+    private CompletionStage<SortedMap<CurrencyID, BalanceEntry>> ignoreAddressNotFound(SortedMap<CurrencyID, BalanceEntry> result, Throwable t) {
+        if (result != null) {
+            return CompletableFuture.completedFuture(result);
+        } else if (t instanceof JsonRpcException && t.getMessage().equals("Address not found")) {
+            /* Address not found: return empty map */
+            return CompletableFuture.completedFuture(new TreeMap<>());
+        } else {
+            /* Other failure, pass it through */
+            return CompletableFuture.failedFuture(t);
+        }
     }
 
     @Override

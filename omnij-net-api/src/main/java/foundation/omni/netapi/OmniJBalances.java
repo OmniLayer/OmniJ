@@ -5,12 +5,12 @@ import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
 import org.bitcoinj.core.Address;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Balances for all currencies for a list of addresses
  */
-public class OmniJBalances extends HashMap<Address, WalletAddressBalance> {
+public class OmniJBalances extends ConcurrentHashMap<Address, WalletAddressBalance> {
 
     /**
      * @param propertyID propertyId to count
