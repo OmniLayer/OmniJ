@@ -8,6 +8,8 @@ import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniIndivisibleValue;
 import foundation.omni.OmniValue;
 import foundation.omni.json.pojo.OmniPropertyInfo;
+import foundation.omni.netapi.OmniJBalances;
+import foundation.omni.netapi.WalletAddressBalance;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Sha256Hash;
 import org.consensusj.analytics.service.TokenRichList;
@@ -84,6 +86,16 @@ public interface OmniProxyMethods extends JacksonRpcClient {
                 listOnly,
                 parseOmniValue(node.get("otherBalanceTotal").asText())
         );
+    }
+
+    default WalletAddressBalance omniProxyGetBalance(Address address) throws IOException {
+        JavaType javaType = getMapper().getTypeFactory().constructCollectionType(List.class, OmniPropertyInfo.class);
+        return send("omniproxy.getbalance", WalletAddressBalance.class, address);
+    }
+
+    default OmniJBalances omniProxyGetBalances(List<Address> addresses) throws IOException {
+        JavaType javaType = getMapper().getTypeFactory().constructCollectionType(List.class, OmniPropertyInfo.class);
+        return send("omniproxy.getbalances", OmniJBalances.class, addresses.toArray());
     }
 
     private TokenRichList.TokenBalancePair<OmniValue> nodeToBalancePair(JsonNode node) {

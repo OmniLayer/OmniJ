@@ -1,15 +1,18 @@
 package foundation.omni.netapi;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
 import org.bitcoinj.core.Address;
+import org.consensusj.bitcoin.json.conversion.AddressKeyDeserializer;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Balances for all currencies for a list of addresses
  */
+@JsonDeserialize(keyUsing = AddressKeyDeserializer.class)
 public class OmniJBalances extends ConcurrentHashMap<Address, WalletAddressBalance> {
 
     /**
