@@ -182,7 +182,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     }
 
     /**
-     * Returns a list of all token balances for a given address.
+     * Returns a sorted map of all token balances for a given address.
      *
      * @param address The address to look up
      * @return A Sorted Map indexed by currency/propertyid to available and reserved balances
@@ -192,6 +192,20 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     public SortedMap<CurrencyID, BalanceEntry> omniGetAllBalancesForAddress(Address address)
             throws JsonRpcException, IOException {
         return send("omni_getallbalancesforaddress", PropertyBalanceEntries.class, address);
+    }
+
+    /**
+     * Returns a list of all token balances for a given address.
+
+     * @param address The address to look up
+     * @return A List of {@link PropertyBalanceEntry}
+     * @throws JsonRpcException JSON RPC error
+     * @throws IOException network error
+     */
+    public List<PropertyBalanceEntry> omniGetAllBalancesForAddressAsList(Address address)
+            throws JsonRpcException, IOException {
+        JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, PropertyBalanceEntry.class);
+        return send("omni_getallbalancesforaddress", resultType, address);
     }
 
     /**
