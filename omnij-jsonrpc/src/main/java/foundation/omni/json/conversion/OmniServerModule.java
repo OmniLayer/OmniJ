@@ -1,5 +1,6 @@
 package foundation.omni.json.conversion;
 
+import foundation.omni.CurrencyID;
 import org.consensusj.bitcoin.json.conversion.AddressSerializer;
 import org.consensusj.bitcoin.json.conversion.CoinSerializer;
 import org.consensusj.bitcoin.json.conversion.ECKeySerializer;
@@ -20,6 +21,7 @@ public class OmniServerModule extends OmniClientModule {
     public OmniServerModule() {
         super();
         this.addSerializer(Address.class, new AddressSerializer())
+                .addSerializer(CurrencyID.class, new CurrencyIDSerializer())
                 .addSerializer(Coin.class, new CoinSerializer())
                 .addSerializer(ECKey.class, new ECKeySerializer())
                 .addSerializer(Peer.class, new PeerSerializer())

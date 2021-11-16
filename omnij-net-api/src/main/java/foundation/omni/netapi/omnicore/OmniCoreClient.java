@@ -1,5 +1,6 @@
 package foundation.omni.netapi.omnicore;
 
+import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniValue;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
@@ -10,6 +11,7 @@ import foundation.omni.json.pojo.OmniPropertyInfo;
 import foundation.omni.rpc.ConsensusSnapshot;
 import foundation.omni.rpc.OmniClient;
 import org.consensusj.bitcoin.json.pojo.ChainTip;
+import org.consensusj.bitcoin.json.pojo.bitcore.AddressBalanceInfo;
 import org.consensusj.jsonrpc.JsonRpcException;
 import org.consensusj.jsonrpc.JsonRpcStatusException;
 import foundation.omni.CurrencyID;
@@ -20,6 +22,8 @@ import foundation.omni.rpc.BalanceEntry;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.NetworkParameters;
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
@@ -38,6 +42,7 @@ import java.util.stream.Stream;
  * Omni Core "REST" client that implements same interfaces as Omniwallet REST client
  */
 public class OmniCoreClient implements ConsensusService, RichListService<OmniValue, CurrencyID>, AutoCloseable {
+    Logger log = LoggerFactory.getLogger(OmniCoreClient.class);
     protected final RxOmniClient client;
 
     /**
@@ -124,14 +129,66 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
 
     @Override
     public CompletableFuture<WalletAddressBalance> balancesForAddressAsync(Address address) {
-        return omniGetAllBalancesForAddressAsync(address)
-                .handle(this::ignoreAddressNotFound)
-                .thenCompose(Function.identity())
-                .thenApply(WalletAddressBalance::new);
+        boolean serverHasAddressIndex = checkAddressIndex();
+        if (hasAddressIndex) {
+            // Server has address index (for Bitcoin addresses), combine Omni & Bitcoin balances
+            WalletAddressBalance wab = new WalletAddressBalance();
+            return omniGetAllBalancesForAddressAsync(address)
+                    .handle(this::ignoreAddressNotFound)
+                    .thenCompose(Function.identity())
+                    .thenAccept(wab::putAll)
+                    // combine separate query of Bitcoin balance
+                    .thenCombine(getAddressBalanceAsync(address).thenAccept(balanceInfo -> wab.put(CurrencyID.BTC, btcBalanceInfoToOmniBalanceEntry(balanceInfo))),
+                                    (Void v1, Void v2) -> wab);
+        } else {
+            // No address index (for Bitcoin addresses), just return Omni property balances
+            return omniGetAllBalancesForAddressAsync(address)
+                    .handle(this::ignoreAddressNotFound)
+                    .thenCompose(Function.identity())
+                    .thenApply(WalletAddressBalance::new);
+        }
+    }
+
+    private Boolean hasAddressIndex;
+
+    // This is needed because isAddressIndexEnabled() can throw checked exceptions
+    private synchronized boolean checkAddressIndex() {
+        if (hasAddressIndex == null) {
+            try {
+                hasAddressIndex = getRxOmniClient().isAddressIndexEnabled();
+            } catch (IOException e) {
+                // ignore checked exception and just mark hasAddressIndex as `false`
+                // maybe we should throw a runtime exception?
+                log.error("error checking for getaddressbalance", e);
+                hasAddressIndex = false;
+            }
+        }
+        return hasAddressIndex;
     }
 
     private CompletableFuture<SortedMap<CurrencyID, BalanceEntry>> omniGetAllBalancesForAddressAsync(Address address) {
         return client.supplyAsync(() -> client.omniGetAllBalancesForAddress(address));
+    }
+
+    /**
+     * Convert a Bitcoin {@link AddressBalanceInfo} to an Omni {@link BalanceEntry}
+     * <ul>
+     *     <li>For {@link CurrencyID#BTC} 1 willett equals 1 satoshi</li>
+     *     <li>We will treat "immature" (newly mined) coins as "reserved"</li>
+     * </ul>
+     * </p>
+     * @param info Bitcoin balance in Bitcoin/BitCore format
+     * @return Bitcoin balance in Omni format
+     */
+    private BalanceEntry btcBalanceInfoToOmniBalanceEntry(AddressBalanceInfo info) {
+        return new BalanceEntry(OmniDivisibleValue.ofWilletts(info.getBalance().value - info.getImmature().value),  // balance
+                OmniDivisibleValue.ofWilletts(info.getImmature().value),  // reserved
+                OmniDivisibleValue.ZERO);  // Bitcoins can't be frozen!
+    }
+
+    // Async wrapper call to getAddressBalance()
+    private CompletableFuture<AddressBalanceInfo> getAddressBalanceAsync(Address address) {
+        return client.supplyAsync(() -> client.getAddressBalance(address));
     }
 
     /**
