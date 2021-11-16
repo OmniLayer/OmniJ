@@ -33,7 +33,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -89,36 +88,23 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
         return client.supplyAsync(() -> client.omniGetAllBalancesForId(currencyID));
     }
 
-
-    @Override
-    public OmniJBalances balancesForAddresses(List<Address> addresses) throws IOException {
-        try {
-            return balancesForAddressesAsync(addresses).get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new IOException(e);
-        }
-    }
-
     @Override
     public CompletableFuture<OmniJBalances> balancesForAddressesAsync(List<Address> addresses) {
-        OmniJBalances balances = new OmniJBalances();
-        // TODO: Limit total number of parallel requests?
-        CompletableFuture[] futures = addresses.parallelStream()
-                .map(address -> this.balancesForAddressAsync(address)
-                        .thenAccept(wab -> balances.put(address, wab)))
-                .toArray(CompletableFuture[]::new);
+        if (client.isOmniProxyServer()) {
+            // Use a single call to OmniProxy to get entire response
+            return omniProxyGetBalancesAsync(addresses);
+        } else {
+            // Build the response from multiple requests (this is what OmniProxy does internally)
+            OmniJBalances balances = new OmniJBalances();
+            // TODO: Limit total number of parallel requests?
+            CompletableFuture[] futures = addresses.parallelStream()
+                    .map(address -> this.balancesForAddressAsync(address)
+                            .thenAccept(wab -> balances.put(address, wab)))
+                    .toArray(CompletableFuture[]::new);
 
-        return CompletableFuture
-                .allOf(futures)
-                .thenApply(v -> balances);
-    }
-
-    @Override
-    public WalletAddressBalance balancesForAddress(Address address) throws IOException {
-        try {
-            return balancesForAddressAsync(address).get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new IOException(e);
+            return CompletableFuture
+                    .allOf(futures)
+                    .thenApply(v -> balances);
         }
     }
 
@@ -129,8 +115,9 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
 
     @Override
     public CompletableFuture<WalletAddressBalance> balancesForAddressAsync(Address address) {
-        boolean serverHasAddressIndex = checkAddressIndex();
-        if (hasAddressIndex) {
+        if (client.isOmniProxyServer()) {
+            return omniProxyGetBalanceAsync(address);
+        } else if (checkAddressIndex()) {
             // Server has address index (for Bitcoin addresses), combine Omni & Bitcoin balances
             WalletAddressBalance wab = new WalletAddressBalance();
             return omniGetAllBalancesForAddressAsync(address)
@@ -138,7 +125,7 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
                     .thenCompose(Function.identity())
                     .thenAccept(wab::putAll)
                     // combine separate query of Bitcoin balance
-                    .thenCombine(getAddressBalanceAsync(address).thenAccept(balanceInfo -> wab.put(CurrencyID.BTC, btcBalanceInfoToOmniBalanceEntry(balanceInfo))),
+                    .thenCombine(getAddressBalanceAsync(address).thenAccept(info -> addBalanceInfoToWab(wab, info)),
                                     (Void v1, Void v2) -> wab);
         } else {
             // No address index (for Bitcoin addresses), just return Omni property balances
@@ -146,6 +133,12 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
                     .handle(this::ignoreAddressNotFound)
                     .thenCompose(Function.identity())
                     .thenApply(WalletAddressBalance::new);
+        }
+    }
+
+    private void addBalanceInfoToWab(WalletAddressBalance wab, AddressBalanceInfo info) {
+        if (info.getBalance().value > 0 || info.getReceived().value > 0 || info.getImmature().value > 0) {
+            wab.put(CurrencyID.BTC, btcBalanceInfoToOmniBalanceEntry(info));
         }
     }
 
@@ -168,6 +161,14 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
 
     private CompletableFuture<SortedMap<CurrencyID, BalanceEntry>> omniGetAllBalancesForAddressAsync(Address address) {
         return client.supplyAsync(() -> client.omniGetAllBalancesForAddress(address));
+    }
+
+    private CompletableFuture<OmniJBalances> omniProxyGetBalancesAsync(List<Address> addresses) {
+        return client.supplyAsync(() -> client.omniProxyGetBalances(addresses));
+    }
+
+    private CompletableFuture<WalletAddressBalance> omniProxyGetBalanceAsync(Address address) {
+        return client.supplyAsync(() -> client.omniProxyGetBalance(address));
     }
 
     /**

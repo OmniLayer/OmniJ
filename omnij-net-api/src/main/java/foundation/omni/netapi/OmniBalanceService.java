@@ -6,6 +6,7 @@ import org.consensusj.bitcoin.json.pojo.ChainTip;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Common interface for Omni Core JSON-RPC and Omniwallet for fetching balances for addresses
@@ -16,9 +17,17 @@ public interface OmniBalanceService {
      * @param addresses List of addresses to query
      * @return A map of maps containing each property balance for each address
      * @throws InterruptedException something went wrong
-     * @throws IOException an I/O exception or API transport error occured
+     * @throws IOException an I/O exception or API transport error occurred
+     * @deprecated Use {@link OmniBalanceService#balancesForAddressesAsync(List)}
      */
-    OmniJBalances balancesForAddresses(List<Address> addresses) throws InterruptedException, IOException;
+    @Deprecated
+    default OmniJBalances balancesForAddresses(List<Address> addresses) throws InterruptedException, IOException {
+        try {
+            return balancesForAddressesAsync(addresses).get();
+        } catch (ExecutionException e) {
+            throw new IOException(e);
+        }
+    }
 
     /**
      * Get balances for multiple addresses asynchronously
@@ -32,9 +41,17 @@ public interface OmniBalanceService {
      * @param address Single address to query
      * @return a map of currency IDs to balances
      * @throws InterruptedException something went wrong
-     * @throws IOException an I/O exception or API transport error occured
+     * @throws IOException an I/O exception or API transport error occurred
+     * @deprecated Use {@link OmniBalanceService#balancesForAddressAsync(Address)}
      */
-    WalletAddressBalance balancesForAddress(Address address) throws InterruptedException, IOException;
+    @Deprecated
+    default WalletAddressBalance balancesForAddress(Address address) throws InterruptedException, IOException {
+        try {
+            return balancesForAddressAsync(address).get();
+        } catch (ExecutionException e) {
+            throw new IOException(e);
+        }
+    }
 
     /**
      * Get balances for a single addresses asynchronously

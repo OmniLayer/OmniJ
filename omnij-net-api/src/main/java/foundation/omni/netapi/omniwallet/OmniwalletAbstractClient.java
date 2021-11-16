@@ -158,16 +158,6 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
                         ));
     }
 
-
-    @Override
-    public OmniJBalances balancesForAddresses(List<Address> addresses) throws InterruptedException, IOException {
-        try {
-            return balancesForAddressesAsync(addresses).get();
-        } catch (ExecutionException e) {
-            throw new IOException(e);
-        }
-    }
-
     @Override
     public CompletableFuture<OmniJBalances> balancesForAddressesAsync(List<Address> addresses) {
         if (addresses.size() > BALANCES_FOR_ADDRESSES_MAX_ADDR) {
@@ -179,15 +169,6 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
                     balances.put(address, balanceEntryMapper(owb)));
             return balances;
         });
-    }
-
-    @Override
-    public WalletAddressBalance balancesForAddress(Address address) throws InterruptedException, IOException {
-        try {
-            return balancesForAddressAsync(address).get();
-        } catch (ExecutionException e) {
-            throw new IOException(e);
-        }
     }
 
     @Override
