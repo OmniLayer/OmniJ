@@ -52,7 +52,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         //log.debug "Creating startOmni from: {} + {}", mscAvailable, mscReserved
         def startMSC = OmniDivisibleValue.of(mscAvailable + mscReserved)
         def actorAddress = createFundedAddress(startBTC, startMSC, false)
-        def currencyMSC = new CurrencyID(ecosystem.getValue())
+        def currencyMSC = new CurrencyID(ecosystem.value())
         def currencySPT = getStoProperty(actorAddress, data)
 
         // Create a DEx offer to reserve an amount
@@ -104,8 +104,8 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         where:
         data << testdata
         description = new String(data.Description)
-        ecosystem = new Ecosystem(Short.valueOf(data.Ecosystem))
-        propertyType = new PropertyType(Integer.valueOf(data.PropertyType))
+        ecosystem = Ecosystem.valueOf(Short.valueOf(data.Ecosystem))
+        propertyType = PropertyType.valueOf(Integer.valueOf(data.PropertyType))
         propertyName = new String(data.PropertyName)
         sptAvailable = new BigDecimal(data.AmountAvailable)
         sptReserved = new BigDecimal(data.AmountReserved)
@@ -134,7 +134,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def expectedValidity = false
 
         def actorAddress = createFundedAddress(startBTC, startMSC)
-        def currencyMSC = new CurrencyID(ecosystem.getValue())
+        def currencyMSC = new CurrencyID(ecosystem.value())
         def currencySPT = new CurrencyID(4294967295L) // does not exist
 
         given: "the actor starts with #startOmni #currencyMSC"
@@ -163,7 +163,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         OmniDivisibleValue startMSC = 2.0.divisible
         def expectException = true
         def expectedValidity = false
-        def currencyMSC = new CurrencyID(ecosystem.value)
+        def currencyMSC = new CurrencyID(ecosystem.value())
 
         when: "there is a well funded actor and two owners with bitcoin"
         def actorAddress = createFundedAddress(btcAvailable, startMSC)
@@ -203,7 +203,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def startMSC = OmniDivisibleValue.of(1.0)
         def expectException = false
         def expectedValidity = false
-        def currencyMSC = new CurrencyID(ecosystem.getValue())
+        def currencyMSC = new CurrencyID(ecosystem.value())
 
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def ownerA = createFundedAddress(startBTC, startMSC)
@@ -273,7 +273,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def reservedOwnerC = 0.divisible
         def expectException = false
         def expectedValidity = true
-        def currencyOMNI = new CurrencyID(ecosystem.getValue())
+        def currencyOMNI = new CurrencyID(ecosystem.value())
 
         /*
             TODO: Implement this check correctly according ot the original intention
@@ -345,10 +345,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
      * Parses the property identifier and creates a new property, if it's neither OMNI or TOMNI.
      */
     CurrencyID getStoProperty(Address actorAddress, def data) {
-        def propertyType = new PropertyType(Integer.valueOf(data.PropertyType))
+        def propertyType = PropertyType.valueOf(Integer.valueOf(data.PropertyType))
         def amountAvailableOwners = Eval.me(data.AmountAvailableOwners) as List<BigDecimal>
         def amountAvailable = OmniValue.of(new BigDecimal(data.AmountAvailable), propertyType)
-        def ecosystem = new Ecosystem(Short.valueOf(data.Ecosystem))
+        def ecosystem = Ecosystem.valueOf(Short.valueOf(data.Ecosystem))
         def propertyName = new String(data.PropertyName)
         def numberOfTokens = OmniValue.of(0, propertyType)
 

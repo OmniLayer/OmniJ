@@ -2,17 +2,23 @@ package foundation.omni;
 
 /**
  * Omni Protocol Property Type.
- *
- * TODO: Should PropertyType be made an enum?
  */
-public class PropertyType {
+public enum PropertyType {
+    INDIVISIBLE(1),
+    DIVISIBLE(2);
+
     private final int value;
 
+    /**
+     * @deprecated Use {@link PropertyType#value()}
+     */
+    @Deprecated
     public static final int INDIVISIBLE_VALUE = 1;
+    /**
+     * @deprecated Use {@link PropertyType#value()}
+     */
+    @Deprecated
     public static final int DIVISIBLE_VALUE = 2;
-
-    public static final PropertyType INDIVISIBLE = new PropertyType(INDIVISIBLE_VALUE);
-    public static final PropertyType DIVISIBLE = new PropertyType(DIVISIBLE_VALUE);
 
     /**
      * PropertyType from `isDivisible` boolean
@@ -24,41 +30,43 @@ public class PropertyType {
         return isDivisible ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
     }
 
-    private PropertyType(int value) {
-        if (!(value == INDIVISIBLE_VALUE ||
-              value == DIVISIBLE_VALUE)) {
-            throw new NumberFormatException();
-        }
+    PropertyType(int value) {
         this.value = value;
     }
 
+    /**
+     * @return PropertyType int value
+     */
+    public int value() {
+        return value;
+    }
+
+    public static PropertyType valueOf(int i) {
+        return i == INDIVISIBLE.value() ? INDIVISIBLE : DIVISIBLE;
+    }
+
+    /**
+     * @return true if {@code DIVISIBLE}
+     */
+    public boolean divisible() {
+        return value == DIVISIBLE.value();
+    }
+    
+    /**
+     * @return PropertyType int value
+     * @deprecated Use {@link PropertyType#value()}
+     */
+    @Deprecated
     public int getValue() {
         return value;
     }
 
+    /**
+     * @return true if {@code DIVISIBLE}
+     * @deprecated Use {@link PropertyType#divisible()}
+     */
+    @Deprecated
     public boolean isDivisible() {
-        return value == DIVISIBLE_VALUE;
+        return value == DIVISIBLE.value();
     }
-
-    @Override
-    public int hashCode() {
-        return Integer.valueOf(value).hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof PropertyType)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        return this.value == ((PropertyType)obj).value;
-    }
-
-    @Override
-    public String toString() {
-        return "PropertyType:" + Integer.toString(value);
-    }
-
 }

@@ -15,6 +15,6 @@ import java.io.IOException;
 public class EcosystemSerializer extends JsonSerializer<Ecosystem> {
     @Override
     public void serialize(Ecosystem eco, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
-        gen.writeNumber(eco.getValue());
+        gen.writeNumber(eco.value());
     }
 }

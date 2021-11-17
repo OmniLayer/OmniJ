@@ -15,6 +15,6 @@ import java.io.IOException;
 public class PropertyTypeSerializer extends JsonSerializer<PropertyType> {
     @Override
     public void serialize(PropertyType prop, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
-        gen.writeNumber(prop.getValue());
+        gen.writeNumber(prop.value());
     }
 }

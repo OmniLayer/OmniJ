@@ -9,7 +9,9 @@ Released: Under development
 
 === omnij-core
 
+* Convert `Ecosystem` to `enum`
 * Remove deprecated `Ecosystem` constants (`MSC`/`TMSC`)
+* Convert `PropertyType` to `enum`
 
 === omnij-net-api
 

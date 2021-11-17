@@ -114,8 +114,8 @@ public class RawTxBuilder {
                                     String category, String subCategory, String label, String website, String info,
                                     OmniValue amount) {
         String rawTxHex = String.format("00000032%02x%04x%08x%s00%s00%s00%s00%s00%016x",
-                ecosystem.getValue(),
-                propertyType.getValue(),
+                ecosystem.value(),
+                propertyType.value(),
                 previousPropertyId,
                 toHexString(category),
                 toHexString(subCategory),
@@ -148,8 +148,8 @@ public class RawTxBuilder {
                                      CurrencyID propertyDesired, Long tokensPerUnit, Long deadline, Byte earlyBirdBonus,
                                      Byte issuerBonus) {
         String rawTxHex = String.format("00000033%02x%04x%08x%s00%s00%s00%s00%s00%08x%016x%016x%02x%02x",
-                ecosystem.getValue(),
-                propertyType.getValue(),
+                ecosystem.value(),
+                propertyType.value(),
                 previousPropertyId,
                 toHexString(category),
                 toHexString(subCategory),
@@ -190,8 +190,8 @@ public class RawTxBuilder {
                                            String category, String subCategory, String label, String website,
                                            String info) {
         String rawTxHex = String.format("00000036%02x%04x%08x%s00%s00%s00%s00%s00",
-                ecosystem.getValue(),
-                propertyType.getValue(),
+                ecosystem.value(),
+                propertyType.value(),
                 previousPropertyId,
                 toHexString(category),
                 toHexString(subCategory),

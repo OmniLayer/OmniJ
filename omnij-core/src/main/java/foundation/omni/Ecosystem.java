@@ -1,54 +1,34 @@
 package foundation.omni;
 
 /**
- * Type to represent Omni Protocol Ecosystem
- *
- * TODO: Should Ecosystem be made an enum?
+ * Omni Protocol Ecosystem
  */
-public class Ecosystem {
+public enum Ecosystem {
+    OMNI((short)1),
+    TOMNI((short)2);
+
     private final short value;
 
-    public static final short   MIN_VALUE = 1;
-    public static final short   MAX_VALUE = 2;
-
-    public static final short   OMNI_VALUE = 1;
-    public static final short   TOMNI_VALUE = 2;
-
-    public static final Ecosystem OMNI = new Ecosystem(OMNI_VALUE);
-    public static final Ecosystem TOMNI = new Ecosystem(TOMNI_VALUE);
-
-    private Ecosystem(short value) {
-        if (value < MIN_VALUE) {
-            throw new NumberFormatException();
-        }
-        if (value > MAX_VALUE) {
-            throw new NumberFormatException();
-        }
-        this.value = value;
+    Ecosystem(short s) {
+        value = s;
     }
 
-    public short getValue() {
+    /**
+     * @return numeric value of Ecosystem
+     */
+    public short value() {
         return value;
     }
 
-    @Override
-    public int hashCode() {
-        return Short.valueOf(value).hashCode();
+    public static Ecosystem valueOf(short s) {
+        return s == OMNI.value() ? OMNI : TOMNI;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Ecosystem)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        return this.value == ((Ecosystem)obj).value;
-    }
-
-    @Override
-    public String toString() {
-        return "Ecosystem:" + Short.toString(value);
+    /**
+     * @deprecated Use {@link Ecosystem#value()}
+     */
+    @Deprecated
+    public short getValue() {
+        return value;
     }
 }

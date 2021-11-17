@@ -322,7 +322,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
         if (strictMode) {
             /* Validate string */
         }
-        return type.isDivisible() ?
+        return type.divisible() ?
                 toOmniDivisibleValue(input) : toOmniIndivisibleValue(input);
     }
 
