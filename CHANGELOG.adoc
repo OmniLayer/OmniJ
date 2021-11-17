@@ -7,6 +7,10 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: Under development
 
+=== omnij-core
+
+* Remove deprecated `Ecosystem` constants (`MSC`/`TMSC`)
+
 === omnij-net-api
 
 * OmniCoreClient: Improved implementations of `balancesForAddress*`: notably `balancesForAddressesAsync` now uses parallel requests to fetch balances.
