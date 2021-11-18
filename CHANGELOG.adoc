@@ -3,9 +3,21 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.5.21-SNAPSHOT
+== v0.5.21
 
-Released: Not yet
+Released: 2021-11-17
+
+=== omnij-core
+
+* `OmniPropertyInfo` Improvements
+** Make sure Issuer `Address` is for the correct network (`NetworkParameters`)
+** Constructor and factory method changes to require `NetworkParameters`
+** For Bitcoin values, use creation TxID from genesis block
+** For Bitcoin info add URL and set `managedissuance` to `true`
+
+=== omnij-net-api
+
+* `OmniProxyMethods::omniProxyListProperties` now expects *OmniProxy* server will add an `OmniPropertyInfo` for Bitcoin
 
 == v0.5.20
 
