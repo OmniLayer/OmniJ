@@ -3,24 +3,33 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.5.20-SNAPSHOT
+== v0.5.20
 
-Released: Under development
+Released: 2021-11-17
 
 === omnij-core
 
 * Convert `Ecosystem` to `enum`
-* Remove deprecated `Ecosystem` constants (`MSC`/`TMSC`)
 * Convert `PropertyType` to `enum`
+* Remove deprecated `Ecosystem` constants (`MSC`/`TMSC`)
+
+=== omnij-jsonrpc
+
+* Add `OmniClient::getAllBalancesForAddressAsList`
 
 === omnij-net-api
 
-* OmniCoreClient: Improved implementations of `balancesForAddress*`: notably `balancesForAddressesAsync` now uses parallel requests to fetch balances.
+* OmniCoreClient: Use OmniProxy if available
+* OmniCoreClient: Improved implementations of `balancesForAddress*`: notably `balancesForAddressesAsync` now uses parallel requests to fetch balances and can merge in BTC balances when Address Index or OmniProxy is available.
 
 === Dependency Updates
 
 * bitcoinj 0.16
 * ConsensusJ 0.5.13
+
+=== Build/Test Updates
+
+* Github Actions `graalvm.yml` workflow: Use GraalVM 21.3.0
 
 == v0.5.19
 
