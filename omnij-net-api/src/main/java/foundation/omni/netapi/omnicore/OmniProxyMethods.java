@@ -39,23 +39,13 @@ public interface OmniProxyMethods extends JacksonRpcClient {
         return false;
     }
 
-    private CompletableFuture<List<OmniPropertyInfo>> omniProxyListPropertiesAsync()  {
-        return supplyAsync(this::omniProxyListPropertiesSync);
-    }
-
     private List<OmniPropertyInfo> omniProxyListPropertiesSync() throws IOException {
         JavaType javaType = getMapper().getTypeFactory().constructCollectionType(List.class, OmniPropertyInfo.class);
         return send("omniproxy.listproperties", javaType);
     }
 
     default CompletableFuture<List<OmniPropertyInfo>> omniProxyListProperties()  {
-        return omniProxyListPropertiesAsync().thenApply(result -> {
-            // Add Bitcoin (for now, until server is updated to include it)
-            List<OmniPropertyInfo> smartPropertyList = new ArrayList<>();
-            smartPropertyList.add(OmniPropertyInfo.mockBitcoinPropertyInfo());   // Add "static" Bitcoin info
-            smartPropertyList.addAll(result);                                   // Add the list of Omni Properties
-            return smartPropertyList;
-        });
+        return supplyAsync(this::omniProxyListPropertiesSync);
     }
 
     default CompletableFuture<TokenRichList<OmniValue, CurrencyID>> omniProxyGetRichList(CurrencyID id, int size) {

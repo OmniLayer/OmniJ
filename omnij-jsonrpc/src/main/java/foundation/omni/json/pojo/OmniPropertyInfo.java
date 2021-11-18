@@ -2,16 +2,18 @@ package foundation.omni.json.pojo;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.tools.javac.Main;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniValue;
-import foundation.omni.net.OmniMainNetParams;
 import foundation.omni.rpc.SmartPropertyListInfo;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.LegacyAddress;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.params.MainNetParams;
+import org.bitcoinj.params.TestNet3Params;
 
 import java.math.BigDecimal;
 
@@ -21,7 +23,9 @@ import java.math.BigDecimal;
  * because it is a superset of that information.
  */
 public class OmniPropertyInfo extends SmartPropertyListInfo {
-    private static final Address bitcoinIssuer = LegacyAddress.fromBase58(MainNetParams.get(), "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa");
+    private static final Address bitcoinMainNetIssuer = LegacyAddress.fromBase58(MainNetParams.get(), "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa");
+    private static final Address bitcoinTestNetIssuer = LegacyAddress.fromBase58(TestNet3Params.get(), "mpXwg4jMtRhuSpVq4xS3HFHmCmWp9NyGKt");
+    private static final Sha256Hash genesisCoinbaseTxId = Sha256Hash.wrap("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     private final Address issuer;
     private final Sha256Hash creationtxid;
     private final boolean fixedissuance;
@@ -91,7 +95,7 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
      *
      * @param sptListInfo record to adapt
      */
-    public OmniPropertyInfo(SmartPropertyListInfo sptListInfo) {
+    public OmniPropertyInfo(NetworkParameters networkParameters, SmartPropertyListInfo sptListInfo) {
         super(sptListInfo.getPropertyid(),
                 sptListInfo.getName(),
                 sptListInfo.getCategory(),
@@ -99,12 +103,24 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
                 sptListInfo.getData(),
                 sptListInfo.getUrl(),
                 sptListInfo.getDivisible());
-        this.issuer = bitcoinIssuer;                    // Issuer unknown
+        this.issuer = defaultIssuer(networkParameters); // Issuer unknown
         this.creationtxid = Sha256Hash.ZERO_HASH;       // Creation Tx unknown
         this.fixedissuance = false;                     // Not nullable so use `false`
         this.managedissuance = false;                   // Not nullable so use `false`
         this.freezingenabled = false;                   // Not nullable so use `false`
         this.totaltokens = OmniValue.ofWilletts(0, sptListInfo.getDivisible());
+    }
+
+    /**
+     * Produces OmniPropertyInfo with a MainNet default issuer Address. This can result in invalid Address
+     * exceptions when used on TestNet or RegTest. <b>This constructor will be removed in the next release.</b>
+     *
+     * @param sptListInfo record to adapt
+     * @deprecated Use {@link OmniPropertyInfo#OmniPropertyInfo(NetworkParameters, SmartPropertyListInfo)}
+     */
+    @Deprecated
+    public OmniPropertyInfo(SmartPropertyListInfo sptListInfo) {
+        this(MainNetParams.get(), sptListInfo);
     }
 
     public Address getIssuer() {
@@ -140,8 +156,8 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
      *
      * @return static (mock) info for Bitcoin
      */
-    public static OmniPropertyInfo mockBitcoinPropertyInfo() {
-        return bitcoinPropertyInfo(Coin.COIN.multiply(21_000_000));
+    public static OmniPropertyInfo mockBitcoinPropertyInfo(NetworkParameters networkParameters) {
+        return bitcoinPropertyInfo(networkParameters, Coin.COIN.multiply(21_000_000));
     }
 
     /**
@@ -151,19 +167,23 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
      *
      * @return info for Bitcoin with current number of coins
      */
-    public static OmniPropertyInfo bitcoinPropertyInfo(Coin bitcoinSupply) {
+    public static OmniPropertyInfo bitcoinPropertyInfo(NetworkParameters networkParameters, Coin bitcoinSupply) {
         return new OmniPropertyInfo(CurrencyID.BTC,
                 "Bitcoin",
                 "n/a",
                 "n/a",
                 "n/a",
-                "n/a",
+                "https://bitcoin.org",
                 true,
-                bitcoinIssuer,
-                Sha256Hash.ZERO_HASH,
+                defaultIssuer(networkParameters),
+                genesisCoinbaseTxId,
                 false,
-                false,
+                true,
                 false,
                 OmniDivisibleValue.ofWilletts(bitcoinSupply.getValue()));
+    }
+
+    private static Address defaultIssuer(NetworkParameters networkParameters) {
+        return networkParameters.getId().equals(MainNetParams.ID_MAINNET) ? bitcoinMainNetIssuer : bitcoinTestNetIssuer;
     }
 }

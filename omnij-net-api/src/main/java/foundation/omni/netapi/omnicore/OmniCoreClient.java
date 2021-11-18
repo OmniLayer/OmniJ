@@ -286,9 +286,9 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
                 .thenApply(list -> {
                     // Convert SmartPropertyListInfo to OmniPropertyInfo (with "mock" data for some fields)
                     Stream<OmniPropertyInfo> stream = list.stream()
-                            .map(OmniPropertyInfo::new);
+                            .map(spl -> new OmniPropertyInfo(client.getNetParams(), spl));
                     // Prepend a "mock" Bitcoin entry
-                    return streamPrepend(OmniPropertyInfo.mockBitcoinPropertyInfo(), stream)
+                    return streamPrepend(OmniPropertyInfo.mockBitcoinPropertyInfo(client.getNetParams()), stream)
                             .collect(Collectors.toList());
                 });
     }
