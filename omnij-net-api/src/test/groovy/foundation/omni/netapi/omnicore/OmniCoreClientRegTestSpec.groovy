@@ -5,11 +5,14 @@ import foundation.omni.net.OmniRegTestParams
 import foundation.omni.netapi.OmniJBalances
 import foundation.omni.netapi.WalletAddressBalance
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.LegacyAddress
 import org.bitcoinj.params.RegTestParams
 import org.consensusj.bitcoin.rpc.RpcURI
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
+
+import java.util.stream.Collectors
 
 /**
  *
@@ -30,6 +33,7 @@ class OmniCoreClientRegTestSpec extends Specification  {
         wab != null
     }
 
+    @Ignore
     def "can get mocked up combined btc/omni balances for regTestMiningAddress"() {
         given:
         Address address = client.getRxOmniClient().getRegTestMiningAddress()
@@ -41,6 +45,7 @@ class OmniCoreClientRegTestSpec extends Specification  {
         wab != null
     }
 
+    @Ignore
     def "can get balances for a list of addresses"() {
         given:
         List<Address> addresses = client.getWalletAddresses()
@@ -50,22 +55,46 @@ class OmniCoreClientRegTestSpec extends Specification  {
 
         then:
         balances != null
+    }
 
-        cleanup:
-        balances.forEach((address, wab) -> {
-            def btc = wab.get(CurrencyID.BTC)
-            if (btc != null && (btc.balance.willetts > 0 || btc.reserved.willetts > 0)) {
-               wab.forEach((id, entry) -> {
-                    println("$id: $entry")
-               })
-            }
-        })
+    @Ignore
+    def "can use OmniProxy to get mocked up combined btc/omni balances for regTestMiningAddress"() {
+        given:
+        Address address = client.getRxOmniClient().getRegTestMiningAddress()
+
+        when:
+        WalletAddressBalance wab = client.getRxOmniClient().omniProxyGetBalance(address);
+
+        then:
+        wab != null
+    }
+
+    @Ignore
+    def "can use OmniProxy to get mocked up combined btc/omni balances for multiple addresses"() {
+        given:
+        def addresses = ['miwk3gsiqDuGZdCzm6W5mibc3SSkAz6QbB', 'mzG1g5CUCfS6hPoH63Gt7y98RWDnHqTYTe'].stream()
+                .map(str -> LegacyAddress.fromBase58(null, str))
+                .collect(Collectors.toList())
+
+        when:
+        OmniJBalances ojb = client.getRxOmniClient().omniProxyGetBalances(addresses);
+
+        then:
+        ojb != null
     }
 
     def setup() {
+        boolean testOmniProxy = false
+        if (testOmniProxy) {
         client = new OmniCoreClient(RegTestParams.get(),
-                RpcURI.getDefaultRegTestURI(),
-                "bitcoinrpc",
-                "pass")
+                URI.create("http://localhost:8080"),
+                "",
+                "")
+        } else {
+            client = new OmniCoreClient(RegTestParams.get(),
+                    RpcURI.getDefaultRegTestURI(),
+                    "bitcoinrpc",
+                    "pass")
+        }
     }
 }
