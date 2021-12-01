@@ -8,4 +8,8 @@ asciidoctorj {
 asciidoctor {
     sourceDir file('doc')
     outputDir file("$buildDir/doc")
+    forkOptions {
+        // Fix warning with JDK16+
+        jvmArgs("--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", "--add-opens", "java.base/java.io=ALL-UNNAMED")
+    }
 }
