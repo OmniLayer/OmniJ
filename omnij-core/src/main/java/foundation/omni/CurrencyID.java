@@ -7,9 +7,9 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     private final long value;
 
     public static final long   MIN_VALUE = 0;
-    public static final long   MAX_VALUE = 4294967295L;
+    public static final long   MAX_VALUE = 4_294_967_295L;
 
-    public static final long   MAX_REAL_ECOSYSTEM_VALUE = 2147483647;
+    public static final long   MAX_REAL_ECOSYSTEM_VALUE = 2_147_483_647;
     public static final long   MAX_TEST_ECOSYSTEM_VALUE = MAX_VALUE;
 
     public static final long    BTC_VALUE = 0;
