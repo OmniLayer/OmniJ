@@ -36,7 +36,7 @@ public class OmniSegwitAddressConverter {
     public static SegwitAddress btcToOmni(SegwitAddress btcAddress) {
         NetworkParameters omniParams = btcParamsToOmniParams(btcAddress.getParameters());
         Bech32.Bech32Data btcBech32Data = Bech32.decode(btcAddress.toBech32());
-        String omniAddressString = Bech32.encode(omniParams.getSegwitAddressHrp(), btcBech32Data.data);
+        String omniAddressString = Bech32.encode(Bech32.Encoding.BECH32, omniParams.getSegwitAddressHrp(), btcBech32Data.data);
         return SegwitAddress.fromBech32(omniParams, omniAddressString);
     }
 
@@ -53,7 +53,7 @@ public class OmniSegwitAddressConverter {
     public static SegwitAddress omniToBtc(SegwitAddress omniAddress) {
         NetworkParameters btcParams = omniParamsToBtcParams(omniAddress.getParameters());
         Bech32.Bech32Data btcBech32Data = Bech32.decode(omniAddress.toBech32());
-        String btcAddressString = Bech32.encode(btcParams.getSegwitAddressHrp(), btcBech32Data.data);
+        String btcAddressString = Bech32.encode(Bech32.Encoding.BECH32, btcParams.getSegwitAddressHrp(), btcBech32Data.data);
         return SegwitAddress.fromBech32(btcParams, btcAddressString);
     }
 

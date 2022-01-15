@@ -7,6 +7,10 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: Not yet
 
+=== omnij-core
+
+* Fix bitcoinj deprecation warnings
+
 === Dependency Updates
 
 * bitcoinj 0.16.1
