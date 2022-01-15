@@ -25,6 +25,7 @@ public enum Ecosystem {
     }
 
     /**
+     * @return the value
      * @deprecated Use {@link Ecosystem#value()}
      */
     @Deprecated

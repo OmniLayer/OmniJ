@@ -52,6 +52,7 @@ public class DevOmni {
     }
 
     /**
+     * @param time Timestamp
      * @return APPROXIMATE percent vested (possibly different from Omni Core calculations due to rounding)
      */
     public static BigDecimal percentVested(Instant time) {
@@ -59,6 +60,7 @@ public class DevOmni {
     }
 
     /**
+     * @param time Timestamp
      * @return APPROXIMATE percent unvested (possibly different from Omni Core calculations due to rounding)
      */
     public static BigDecimal percentUnvested(Instant time) {
@@ -89,6 +91,7 @@ public class DevOmni {
     }
 
     /**
+     * @param time Timestamp
      * @return APPROXIMATE total OMNI tokens at a given block time
      */
     public static OmniDivisibleValue totalOmniTokens(Instant time) {
