@@ -72,11 +72,21 @@ public class OmniTxBuilder {
         Transaction tx = transactionEncoder.encodeObfuscated(redeemingKey, payload, redeemingAddress.toString());
 
         // Add outputs to the transaction
-        tx.addOutput(Transaction.MIN_NONDUST_OUTPUT, omniParams.getExodusAddress());    // Add correct Exodus Output
+        addDustOutput(tx, omniParams.getExodusAddress());   // Add Exodus Output for this chain
         if (refAddress != null) {
-            tx.addOutput(Transaction.MIN_NONDUST_OUTPUT, refAddress);                   // Reference (destination) address output
+            addDustOutput(tx, refAddress);                  // Add reference (aka destination) address output
         }
         return tx;
+    }
+
+    /**
+     * Add a transaction output with the minimum non-dust output value
+     * @param tx Parent transaction to add the output to
+     * @param address destination address
+     */
+    private void addDustOutput(Transaction tx, Address address) {
+        TransactionOutput output = tx.addOutput(Coin.ZERO, address);    // Add Output with zero amount
+        output.setValue(output.getMinNonDustValue());                   // Adjust to minimum non-dust value
     }
 
     /**
