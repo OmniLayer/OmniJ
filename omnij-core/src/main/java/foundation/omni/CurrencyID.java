@@ -3,7 +3,7 @@ package foundation.omni;
 /**
  * Omni Protocol Currency ID
  */
-public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
+public final class CurrencyID implements Comparable<CurrencyID> {
     private final long value;
 
     public static final long   MIN_VALUE = 0;
@@ -141,13 +141,5 @@ public final class CurrencyID implements Cloneable, Comparable<CurrencyID> {
     @Override
     public int compareTo(CurrencyID o) {
         return Long.compare(this.value, o.value);
-    }
-
-    /**
-     * Make a clone of this object (also used by Groovy's @Immutable annotation)
-     * @return a clone
-     */
-    public CurrencyID clone() {
-        return new CurrencyID(this.value);
     }
 }
