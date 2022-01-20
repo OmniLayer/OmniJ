@@ -10,6 +10,7 @@ Released: Not yet
 === omnij-core
 
 * Fix bitcoinj deprecation warnings
+* CurrencyID: remove `Cloneable` and `clone()`
 
 === Dependency Updates
 
