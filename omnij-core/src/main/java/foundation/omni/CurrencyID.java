@@ -1,10 +1,19 @@
 package foundation.omni;
 
 /**
- * Omni Protocol Currency ID
+ * Omni Protocol Currency Identifier
+ * <p>
+ * According to the OmniLayer Specification, Currency Identifier is an unsigned 32-bit value.
+ * For storage efficiency reasons we are using a Java primitive (signed) {@code int} for storing
+ * the value. To implement this correctly we internally use {@link Integer#toUnsignedLong(int)} when
+ * converting to a (signed) {@code long}. When converting from a valid currency id in a (signed) {@code long} simply
+ * using a cast operator produces the correct {@code int} result.
+ * <p>
+ * All public interfaces use {@code long} except {@link CurrencyID#ofUnsigned(int)} and {@link CurrencyID#unsignedIntValue()}
+ * which should be used with caution. Internal conversion to {@code long} uses {@link CurrencyID#value()}.
  */
 public final class CurrencyID implements Comparable<CurrencyID> {
-    private final long value;
+    private final int value;
 
     public static final long   MIN_VALUE = 0;
     public static final long   MAX_VALUE = 4_294_967_295L;
@@ -63,13 +72,26 @@ public final class CurrencyID implements Comparable<CurrencyID> {
         return new CurrencyID(idValue);
     }
 
+    public static CurrencyID ofUnsigned(int unsignedIntValue) {
+        return new CurrencyID(unsignedIntValue);
+    }
+
+    /**
+     * Construct from a valid {@code long} value.
+     *
+     * @param value An valid currency id value (32-bit unsigned)
+     * @throws IllegalArgumentException if value is out-out-range
+     */
     public CurrencyID(long value) {
-        if (value < MIN_VALUE) {
-            throw new IllegalArgumentException("below min");
-        }
-        if (value > MAX_VALUE) {
-            throw new IllegalArgumentException("above max");
-        }
+        this(validateAndConvert(value));
+    }
+
+    /**
+     * Private constructor that takes an unsigned {@code int} value.
+     *
+     * @param value An unsigned int representing a currency id value
+     */
+    private CurrencyID(int value) {
         this.value = value;
     }
 
@@ -78,7 +100,7 @@ public final class CurrencyID implements Comparable<CurrencyID> {
             return Ecosystem.OMNI;
         } else if (value == TOMNI_VALUE) {
             return Ecosystem.TOMNI;
-        } else if (value <= MAX_REAL_ECOSYSTEM_VALUE) {
+        } else if (value() <= MAX_REAL_ECOSYSTEM_VALUE) {
             return Ecosystem.OMNI;
         } else {
             return Ecosystem.TOMNI;
@@ -92,6 +114,16 @@ public final class CurrencyID implements Comparable<CurrencyID> {
      */
     public static boolean isValid(long value) {
         return (value >= MIN_VALUE) && (value <= MAX_VALUE);
+    }
+
+    private static int validateAndConvert(long value) throws IllegalArgumentException {
+        if (value < MIN_VALUE) {
+            throw new IllegalArgumentException("below min");
+        }
+        if (value > MAX_VALUE) {
+            throw new IllegalArgumentException("above max");
+        }
+        return (int) value;
     }
 
     /**
@@ -113,13 +145,36 @@ public final class CurrencyID implements Comparable<CurrencyID> {
         return (value == TOMNI_VALUE) || (value > MAX_REAL_ECOSYSTEM_VALUE) && (value <= MAX_VALUE);
     }
 
+    /**
+     * Return the 32-bit unsigned value in a Java {@code long}.
+     * <p>
+     * Uses {@link Integer#toUnsignedLong(int)} to do a bitwise <i>and</i> operation
+     * to prevent sign extension.
+     *
+     * @return CurrencyID value as a {@code long}
+     */
     public long getValue() {
+        return value();
+    }
+
+    public long value() {
+        return Integer.toUnsignedLong(value);
+    }
+
+    /**
+     * Return the 32-bit unsigned value in a Java {@code int}.
+     * <p>
+     * Use this method with caution as Java treats {@code int}s as signed.
+     *
+     * @return CurrencyID value as a {@code int}
+     */
+    public int unsignedIntValue() {
         return value;
     }
 
     @Override
     public int hashCode() {
-        return Long.valueOf(value).hashCode();
+        return Integer.valueOf(value).hashCode();
     }
 
     @Override
@@ -135,11 +190,11 @@ public final class CurrencyID implements Comparable<CurrencyID> {
 
     @Override
     public String toString() {
-        return "CurrencyID:" + value;
+        return "CurrencyID:" + value();
     }
 
     @Override
     public int compareTo(CurrencyID o) {
-        return Long.compare(this.value, o.value);
+        return Long.compare(this.value(), o.value());
     }
 }

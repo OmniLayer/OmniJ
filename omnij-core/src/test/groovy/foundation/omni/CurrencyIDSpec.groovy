@@ -64,6 +64,15 @@ class CurrencyIDSpec extends Specification {
         4294967295 | Ecosystem.TOMNI
     }
 
+    def "CurrencyID is implemented as an unsigned 32-bit value"() {
+        expect:
+        CurrencyID.MAX_REAL_ECOSYSTEM_VALUE == Integer.MAX_VALUE
+        (new CurrencyID(CurrencyID.MAX_REAL_ECOSYSTEM_VALUE)).getValue() == CurrencyID.MAX_REAL_ECOSYSTEM_VALUE
+        (new CurrencyID(CurrencyID.MAX_REAL_ECOSYSTEM_VALUE + 1)).getValue() == CurrencyID.MAX_REAL_ECOSYSTEM_VALUE + 1
+        (new CurrencyID(CurrencyID.MAX_VALUE)).getValue() == CurrencyID.MAX_VALUE
+        CurrencyID.ofUnsigned((int) CurrencyID.MAX_REAL_ECOSYSTEM_VALUE)
+    }
+
     @Unroll
     def "constructor will allow a variety of integer types (#id)"() {
         when: "we try to create a CurrencyID using a valid numeric type"
@@ -127,7 +136,6 @@ class CurrencyIDSpec extends Specification {
         1.1F | Float.class
         1.0D | Double.class
         1.1D | Double.class
-        1G   | BigInteger.class
         1.0  | BigDecimal.class
         1.1  | BigDecimal.class
         1.0G | BigDecimal.class
@@ -135,7 +143,7 @@ class CurrencyIDSpec extends Specification {
     }
 
     @Unroll
-    def "We can't create an CurrencyID with an invalid value (#id)"() {
+    def "We can't create an CurrencyID with an invalid value (#id)"(long id) {
         when: "we try to create a CurrencyID with an invalid value"
         CurrencyID currencyID = new CurrencyID(id)
 
