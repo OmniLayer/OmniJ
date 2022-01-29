@@ -1,0 +1,20 @@
+plugins {
+    id 'java-library'
+}
+
+ext.moduleName = 'foundation.omni.txrecords'
+
+dependencies {
+    api project(':omnij-core')
+}
+
+jar {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes  'Implementation-Title': 'OmniJ Transaction Records library',
+                'Automatic-Module-Name': moduleName,
+                'Implementation-Version': archiveVersion.get()
+    }
+}
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
