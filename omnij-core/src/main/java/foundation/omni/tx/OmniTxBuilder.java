@@ -17,6 +17,7 @@ import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.script.ScriptPattern;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Builds Omni transactions in bitcoinj Transaction objects
@@ -26,6 +27,7 @@ public class OmniTxBuilder {
     private final OmniNetworkParameters omniParams;
     private final RawTxBuilder builder = new RawTxBuilder();
     private final EncodeMultisig transactionEncoder;
+    private final ClassCEncoder classCEncoder;
     private final FeeCalculator feeCalculator;
 
     /**
@@ -39,28 +41,51 @@ public class OmniTxBuilder {
         this.netParams = netParams;
         this.omniParams = OmniNetworkParameters.fromBitcoinParms(netParams);
         this.transactionEncoder = new EncodeMultisig(netParams);
+        this.classCEncoder = new ClassCEncoder(netParams);
         this.feeCalculator = feeCalculator;
     }
 
     /**
-     * <p>Create unsigned Class B Omni transaction (P2PKH) in a bitcoinj Transaction object</p>
+     * <p>Create unsigned Omni transaction (P2PKH) in a bitcoinj Transaction object</p>
      *
      * <p>TODO: Exact output amounts.</p>
      *
-     * @param redeemingKey Public key used for creating redeemable multisig data outputs
+     * @param redeemingKey Public key used for creating redeemable multisig data outputs (for Class B)
      * @param refAddress (optional) Omni reference address (for the reference output) or null
      * @param payload Omni transaction payload as a raw byte array
      * @return Incomplete Transaction, no inputs or change output
      */
     public Transaction createOmniTransaction(ECKey redeemingKey, Address refAddress, byte[] payload) {
-        return createClassBTransaction(redeemingKey, Script.ScriptType.P2PKH, refAddress, payload);
+        if (payload.length < ClassCEncoder.MAX_CLASS_C_PAYLOAD) {
+            return createClassCTransaction(refAddress, payload);
+        } else {
+            return createClassBTransaction(redeemingKey, Script.ScriptType.P2PKH, refAddress, payload);
+        }
+    }
+
+    /**
+     * Create unsigned Class C Omni transaction in a bitcoinj Transaction object
+     *
+     * @param refAddress (optional) Omni reference address (for the reference output) or null
+     * @param payload Omni transaction payload as a raw byte array
+     * @return Incomplete Transaction, no inputs or change output
+     */
+    public Transaction createClassCTransaction(Address refAddress, byte[] payload) {
+        // Encode the Omni Protocol Payload as a Class C transaction
+        Transaction tx = classCEncoder.encode(refAddress, payload);
+
+        // Add outputs to the transaction
+        if (refAddress != null) {
+            addDustOutput(tx, refAddress);                  // Add reference (aka destination) address output
+        }
+        return tx;
     }
 
     /**
      * Create unsigned Class B Omni transaction in a bitcoinj Transaction object
      *
      * @param redeemingKey Public key used for creating redeemable multisig data outputs
-     * @param scriptType (P2PKH or other single-key script type)
+     * @param scriptType script type for redeemingKey address - P2PKH or other single-key script type
      * @param refAddress (optional) Omni reference address (for the reference output) or null
      * @param payload Omni transaction payload as a raw byte array
      * @return Incomplete Transaction, no inputs or change output
@@ -84,7 +109,7 @@ public class OmniTxBuilder {
      * @param tx Parent transaction to add the output to
      * @param address destination address
      */
-    private void addDustOutput(Transaction tx, Address address) {
+    static void addDustOutput(Transaction tx, Address address) {
         TransactionOutput output = tx.addOutput(Coin.ZERO, address);    // Add Output with zero amount
         output.setValue(output.getMinNonDustValue());                   // Adjust to minimum non-dust value
     }
@@ -99,11 +124,11 @@ public class OmniTxBuilder {
      * @throws InsufficientMoneyException Not enough bitcoin for fees
      * @return Signed and ready-to-send Transaction
      */
-    public Transaction createSignedOmniTransaction(ECKey fromKey, Collection<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload)
+    public Transaction createSignedOmniTransaction(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
         return createSignedClassBTransaction(fromKey, Script.ScriptType.P2PKH, unspentOutputs, refAddress, payload);
     }
-
+    
     /**
      * Create a signed Omni Class B (from a single address) transaction in a bitcoinj Transaction object
      *
@@ -160,7 +185,7 @@ public class OmniTxBuilder {
      * @return Unsigned OmniTransaction Transaction
      * @throws InsufficientMoneyException Not enough bitcoin for fees
      */
-    public Transaction createUnsignedOmniTransaction(ECKey fromKey, Collection<TransactionInput> inputs, Address refAddress, byte[] payload)
+    public Transaction createUnsignedOmniTransaction(ECKey fromKey, List<TransactionInput> inputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
         Address fromAddress = Address.fromKey(netParams, fromKey, Script.ScriptType.P2PKH);
 
@@ -186,10 +211,9 @@ public class OmniTxBuilder {
      * @throws InsufficientMoneyException Not enough bitcoin for fees
      * @return Signed and ready-to-send Transaction
      */
-    public Transaction createSignedSimpleSend(ECKey fromKey, Collection<TransactionOutput> unspentOutputs, Address toAddress, CurrencyID currencyID, OmniValue amount)
+    public Transaction createSignedSimpleSend(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address toAddress, CurrencyID currencyID, OmniValue amount)
             throws InsufficientMoneyException {
-        String txHex = builder.createSimpleSendHex(currencyID, amount);
-        byte[] payload = RawTxBuilder.hexToBinary(txHex);
+        byte[] payload = builder.createSimpleSend(currencyID, amount);
         return createSignedOmniTransaction(fromKey, unspentOutputs, toAddress, payload);
     }
 
@@ -204,10 +228,9 @@ public class OmniTxBuilder {
      * @return unsigned transaction
      * @throws InsufficientMoneyException Not enough bitcoin for fees
      */
-    public Transaction createUnsignedSimpleSend(ECKey fromKey, Collection<TransactionInput> inputs, Address toAddress, CurrencyID currencyID, OmniValue amount)
+    public Transaction createUnsignedSimpleSend(ECKey fromKey, List<TransactionInput> inputs, Address toAddress, CurrencyID currencyID, OmniValue amount)
             throws InsufficientMoneyException {
-        String txHex = builder.createSimpleSendHex(currencyID, amount);
-        byte[] payload = RawTxBuilder.hexToBinary(txHex);
+        byte[] payload = builder.createSimpleSend(currencyID, amount);
         return createUnsignedOmniTransaction(fromKey, inputs, toAddress, payload);
     }
 
@@ -246,11 +269,9 @@ public class OmniTxBuilder {
      * @return total value in satoshis
      */
     private long sum(Collection<TransactionOutput> outputs) {
-        long sum = 0;
-        for (TransactionOutput output : outputs) {
-            sum += output.getValue().value;
-        }
-        return sum;
+        return outputs.stream()
+                .mapToLong(output -> output.getValue().toSat())
+                .sum();
     }
 
     /**
@@ -260,10 +281,8 @@ public class OmniTxBuilder {
      * @return total value in satoshis
      */
     private long sumInputs(Collection<TransactionInput> inputs) {
-        long sum = 0;
-        for (TransactionInput input : inputs) {
-            sum += input.getValue().value;
-        }
-        return sum;
+        return inputs.stream()
+                .mapToLong(input -> input.getValue().toSat())
+                .sum();
     }
 }

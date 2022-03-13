@@ -8,6 +8,9 @@ import foundation.omni.PropertyType;
 import org.bitcoinj.core.Coin;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+
+import static foundation.omni.tx.Transactions.TransactionType.SIMPLE_SEND;
 
 /**
  * Build hex-encoded raw Omni transactions
@@ -17,16 +20,30 @@ import java.io.UnsupportedEncodingException;
  */
 public class RawTxBuilder {
 
+    private static final int SIZE_VERSIONTYPE = 4;
+    private static final int SIZE_32 = 4;
+    private static final int SIZE_64 = 8;
+
     /**
      * Creates a hex-encoded raw transaction of type 0: "simple send".
      * @param currencyId currency ID to send
      * @param amount amount to send
      * @return Hex encoded string for the transaction
      */
+    @Deprecated
     public String createSimpleSendHex(CurrencyID currencyId, OmniValue amount) {
-        String rawTxHex = String.format("00000000%08x%016x", currencyId.getValue(), amount.getWilletts());
-        return rawTxHex;
+        return toHexString(createSimpleSend(currencyId, amount));
     }
+
+    public byte[] createSimpleSend(CurrencyID currencyId, OmniValue amount) {
+        return ByteBuffer
+                .allocate(SIZE_VERSIONTYPE + SIZE_32 + SIZE_64)
+                .putInt(SIMPLE_SEND.versionType())                         // Version + Type
+                .putInt(currencyId.unsignedIntValue())
+                .putLong(amount.getWilletts())
+                .array();
+    }
+
 
     /**
      * Creates a hex-encoded raw transaction of type 3: "send to owners".

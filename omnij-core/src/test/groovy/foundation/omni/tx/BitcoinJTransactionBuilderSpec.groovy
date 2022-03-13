@@ -31,8 +31,7 @@ class BitcoinJTransactionBuilderSpec extends BaseTxSpec {
 
         when:
         def toAddress = senderAddr
-        def txHex = builder.createSimpleSendHex(OMNI, OmniDivisibleValue.of(1))
-        def payload = hex(txHex)
+        def payload = builder.createSimpleSend(OMNI, OmniDivisibleValue.of(1))
         Transaction tx = encoder.encodeObfuscated(senderKey, payload, senderAddr.toString())
         tx.addOutput(Coin.MILLICOIN, omniParams.exodusAddress)
         tx.addOutput(Coin.CENT, toAddress)
