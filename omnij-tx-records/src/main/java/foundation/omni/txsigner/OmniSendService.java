@@ -4,6 +4,7 @@ import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
 import foundation.omni.netapi.omnicore.RxOmniClient;
 import foundation.omni.txrecords.TransactionRecords;
+import foundation.omni.txrecords.UnsignedTxSimpleSend;
 import org.bitcoinj.core.*;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
@@ -20,9 +21,6 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * A service to sign and send Omni Transactions (similar to functionality in Omni Core)
- * TODO: To support an equivalent API to the Omni Core send functions, the ability to find
- * UTXOs for specified addresses is needed.
- * and to send transactions we need either a P2P client (e.g. PeerGroup) or server API.
  */
 public class OmniSendService {
     private static final Logger log = LoggerFactory.getLogger(OmniSendService.class);
@@ -35,23 +33,35 @@ public class OmniSendService {
         this.signingService = signingService;
     }
 
+    /**
+     * Find inputs, Sign and Send an Omni Simple Send transaction
+     * <p>
+     * This method is compatible with the Omni Core {@code omni_send} JSON-RPC method and if made available from a JSON-RPC server should work equivalently.
+     * (The last two, optional arguments are not currently implemented.)
+     *
+     * @param fromAddress Omni address sending funds
+     * @param toAddress Omni address receiving funds
+     * @param currency Currency type
+     * @param amount amount
+     * @return A future for the transaction hash
+     * @throws IOException A failure occurred fetching inputs or broadcasting the transaction
+     */
     public CompletableFuture<Sha256Hash> omniSend(Address fromAddress, Address toAddress, CurrencyID currency, OmniValue amount) throws IOException {
-        List<AddressUtxoInfo> utxoInfos = rxOmniClient.getAddressUtxos(fromAddress);
-        List<? super TransactionInputData> utxos = utxoInfos.stream().map(this::mapUtxo).toList();
-        TransactionRecords.SimpleSend sendTx = new TransactionRecords.SimpleSend(toAddress, currency, amount);
-        Transaction tx = signingService.omniSignTx(fromAddress, utxos, sendTx, fromAddress).join();
+        UnsignedTxSimpleSend sendTx = assembleSimpleSend(fromAddress, toAddress, currency, amount);
+        return omniSend(sendTx);
+    }
+
+    /**
+     * Sign and Send an Omni Simple Send transaction
+     *
+     * @param simpleSend An object holding all the parameters (including UTXO inputs) for a simple send transaction
+     * @return A future for the transaction hash
+     * @throws IOException A failure occurred fetching broadcasting the transaction
+     */
+    public CompletableFuture<Sha256Hash> omniSend(UnsignedTxSimpleSend simpleSend) throws IOException {
+        Transaction tx = signingService.omniSignTx(simpleSend.fromAddress(), simpleSend.inputs(), simpleSend.payload(), simpleSend.changeAddress()).join();
 
 
-        tx.verify();
-
-        Script scriptPubKey = ScriptBuilder.createOutputScript(fromAddress);
-        TransactionInput input = tx.getInputs().get(0);
-        input.getScriptSig()
-                .correctlySpends(tx, 0, null, input.getValue(), scriptPubKey, Script.ALL_VERIFY_FLAGS);
-
-        byte[] serializedTx = tx.bitcoinSerialize();
-
-        Transaction deserializedTx = new Transaction(rxOmniClient.getNetParams(), serializedTx);
 
 
         CompletableFuture<Sha256Hash> sendFuture = this.sendRawTx(tx);
@@ -61,6 +71,34 @@ public class OmniSendService {
 //        return signingService
 //                .omniSignTx(fromAddress, (List<TransactionInputData>) utxos, sendTx, fromAddress)
 //                .thenCompose(this::sendRawTx);
+    }
+
+    /**
+     * Build a complete, unsigned SimpleSend ("signing request") transaction.
+     * Fetches the transaction inputs, assembles the payload, etc.
+     * 
+     * @param fromAddress Omni address sending funds
+     * @param toAddress Omni address receiving funds
+     * @param currency Currency type
+     * @param amount amount
+     * @return A record containing all necessary data for signing
+     * @throws IOException if an error occurred fetching inputs
+     */
+    public UnsignedTxSimpleSend assembleSimpleSend(Address fromAddress, Address toAddress, CurrencyID currency, OmniValue amount) throws IOException {
+        List<TransactionInputData> utxos = getInputsFor(fromAddress);
+        TransactionRecords.SimpleSend sendTx = new TransactionRecords.SimpleSend(toAddress, currency, amount);
+        return new UnsignedTxSimpleSend(fromAddress, utxos, sendTx, toAddress);
+    }
+
+    /**
+     * Fetch inputs for an address
+     * @param fromAddress Address with zero or more UTXOs
+     * @return a list of all UTXOs for this address
+     * @throws IOException if an error occurred fetching inputs
+     */
+    public List<TransactionInputData> getInputsFor(Address fromAddress) throws IOException {
+        List<AddressUtxoInfo> utxoInfos = rxOmniClient.getAddressUtxos(fromAddress);
+        return utxoInfos.stream().map(this::mapUtxo).toList();
     }
 
     private TransactionInputData mapUtxo(AddressUtxoInfo info) {

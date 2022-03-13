@@ -1,5 +1,6 @@
 package foundation.omni.txsigner;
 
+import foundation.omni.txrecords.UnsignedTxSimpleSend;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
@@ -66,6 +67,9 @@ public class OmniSigningService {
         return signingWalletKeyChain.signTransaction(signingRequest);
     }
 
+    public CompletableFuture<Transaction> omniSignTx(UnsignedTxSimpleSend unsignedTx) {
+        return omniSignTx(unsignedTx.fromAddress(), unsignedTx.inputs(), unsignedTx.payload(), unsignedTx.changeAddress());
+    }
 
     public SigningRequest createOmniClassCSigningRequest(Address fromAddress, List<? super TransactionInputData> inputUtxos, OmniTx omniTx, Address changeAddress) {
         // Create a signing request with just the OP_RETURN output

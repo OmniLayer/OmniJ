@@ -29,7 +29,7 @@ import java.util.concurrent.CompletableFuture;
 public class SendTool {
     public static final String mnemonicString = "panda diary marriage suffer basic glare surge auto scissors describe sell unique";
     public static final Instant creationInstant = LocalDate.of(2019, 4, 10).atStartOfDay().toInstant(ZoneOffset.UTC);
-    private OmniSigningService signingService;
+    private final OmniSigningService signingService;
     private final OmniSendService sendService;
 
     public static void main(String[] args) throws IOException {
