@@ -24,8 +24,8 @@ allprojects {
 
     dependencies {
         documentation 'com.github.javaparser:javaparser-core:3.15.14'
-        documentation "org.codehaus.groovy:groovy-ant:${groovyVersion}"
-        documentation "org.codehaus.groovy:groovy-templates:${groovyVersion}"
+        documentation "org.apache.groovy:groovy-ant:${groovyVersion}"
+        documentation "org.apache.groovy:groovy-templates:${groovyVersion}"
     }
 
     groovydoc groovydocSpec
