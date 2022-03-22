@@ -15,7 +15,6 @@ configurations {
 
 dependencies {
     implementation (project(':omnij-rpc'), {
-        // These exclusions can be removed when ConsensusJ upgrades to Groovy 4.0
         exclude group: 'org.apache.groovy', module: 'groovy'
         exclude group: 'org.apache.groovy', module: 'groovy-json'
     })
