@@ -14,7 +14,12 @@ configurations {
 }
 
 dependencies {
-    implementation project(':omnij-rpc')
+    implementation (project(':omnij-rpc'), {
+        // These exclusions can be removed when ConsensusJ upgrades to Groovy 4.0
+        exclude group: 'org.apache.groovy', module: 'groovy'
+        exclude group: 'org.apache.groovy', module: 'groovy-json'
+    })
+
     implementation "${consensusjGroup}:${consensusjBtcCliArtifact}:${consensusjVersion}"
 
     runtimeOnly "org.slf4j:slf4j-jdk14:${slf4jVersion}"
