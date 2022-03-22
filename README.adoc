@@ -316,7 +316,7 @@ On Ubuntu you might need to do: `sudo apt install gcc g++ binutils`. Similar ins
 
 The OmniJ Command-line Consensus tool can be built with the following command:
 
-    ./gradlew :omnij-cli:nativeImage
+    ./gradlew :omnij-cli:nativeCompile
 
 This will produce a self-contained, executable jar in `omnij-cli/build/omnij-consensus-tool`.
 

@@ -30,7 +30,7 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
         restore-keys: ${{ runner.os }}-gradle
     - name: Build with Gradle
-      run: ./gradlew :omnij-cli:nativeImage --scan --info --stacktrace
+      run: ./gradlew :omnij-cli:nativeCompile --scan --info --stacktrace
     - name: Upload omnij-consensus-tool as artifact
       uses: actions/upload-artifact@v2
       with:
