@@ -2,24 +2,17 @@ package foundation.omni.rpc;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
-import com.google.common.primitives.UnsignedBytes;
-import org.consensusj.bitcoin.rpc.BitcoinExtendedClient;
-import foundation.omni.json.pojo.OmniPropertyInfo;
-import org.bitcoinj.core.LegacyAddress;
-import org.bitcoinj.core.SegwitAddress;
-import org.consensusj.bitcoin.rx.jsonrpc.RxBitcoinClient;
-import org.consensusj.jsonrpc.JsonRpcException;
-import org.consensusj.bitcoin.rpc.RpcConfig;
-import foundation.omni.CurrencyID;
-import foundation.omni.Ecosystem;
-import foundation.omni.OmniValue;
-import foundation.omni.PropertyType;
+import foundation.omni.*;
 import foundation.omni.json.conversion.OmniClientModule;
+import foundation.omni.json.pojo.OmniPropertyInfo;
 import foundation.omni.net.OmniNetworkParameters;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
+import org.consensusj.bitcoin.rpc.RpcConfig;
+import org.consensusj.bitcoin.rx.jsonrpc.RxBitcoinClient;
+import org.consensusj.jsonrpc.JsonRpcException;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
@@ -28,7 +21,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 // TODO: add missing RPCs:
 // - omni_listtransactions
@@ -309,6 +301,22 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     public Sha256Hash omniSendAll(Address fromAddress, Address toAddress, Ecosystem ecosystem)
             throws JsonRpcException, IOException {
         return send("omni_sendall", Sha256Hash.class, fromAddress, toAddress, ecosystem);
+    }
+
+    /**
+     * Creates and broadcasts a "send to many" transaction.
+     *
+     * @param fromAddress The address to spent from
+     * @param currency    The identifier of the token to distribute
+     * @param mapping     The receiving addresses and amounts as list of OmniOutput
+     * @return The hash of the transaction
+     * @throws JsonRpcException JSON RPC error
+     * @throws IOException network error
+     * @since Omni Core 0.0.12
+     */
+    public Sha256Hash omniSendToMany(Address fromAddress, CurrencyID currency, List<OmniOutput> mapping)
+            throws JsonRpcException, IOException {
+        return send("omni_sendtomany", Sha256Hash.class, fromAddress, currency, mapping);
     }
 
     /**
