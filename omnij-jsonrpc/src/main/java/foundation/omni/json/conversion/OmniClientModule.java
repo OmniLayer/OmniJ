@@ -2,6 +2,7 @@ package foundation.omni.json.conversion;
 
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import foundation.omni.OmniOutput;
 import org.consensusj.bitcoin.json.conversion.AddressDeserializer;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
@@ -25,10 +26,12 @@ public class OmniClientModule extends SimpleModule {
         this.addDeserializer(CurrencyID.class, new CurrencyIDDeserializer())
             .addDeserializer(AddressBalanceEntries.class, new AddressBalanceEntriesDeserializer())
             .addDeserializer(OmniValue.class, new OmniValueDeserializer())
+            .addDeserializer(OmniOutput.class, new OmniOutputDeserializer())
             .addDeserializer(PropertyBalanceEntries.class, new PropertyBalanceEntriesDeserializer())
             .addSerializer(CurrencyID.class, new CurrencyIDSerializer())
             .addSerializer(Ecosystem.class, new EcosystemSerializer())
             .addSerializer(PropertyType.class, new PropertyTypeSerializer())
-            .addSerializer(OmniValue.class, new OmniValueSerializer());
+            .addSerializer(OmniValue.class, new OmniValueSerializer())
+            .addSerializer(OmniOutput.class, new OmniOutputSerializer());
     }
 }
