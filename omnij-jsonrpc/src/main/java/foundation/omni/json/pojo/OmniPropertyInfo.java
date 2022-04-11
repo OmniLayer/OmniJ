@@ -59,7 +59,7 @@ public class OmniPropertyInfo extends SmartPropertyListInfo {
                 fixedIssuance,
                 managedIssuance,
                 freezingEnabled,
-                OmniValue.of(new BigDecimal(totaltokensString), divisible));
+                OmniValue.of(totaltokensString, divisible));
     }
 
     public OmniPropertyInfo(CurrencyID propertyid,

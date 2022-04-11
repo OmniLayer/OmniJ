@@ -62,7 +62,7 @@ public class OmniwalletPropertyInfo {
         this.name = name;
         this.propertyid = propertyid;
         this.subcategory = subcategory;
-        this.totalTokens = OmniValue.of(new BigDecimal(totalTokensString), divisible);
+        this.totalTokens = OmniValue.of(totalTokensString, divisible);
         this.url = url;
     }
 

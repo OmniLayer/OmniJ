@@ -231,15 +231,6 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
         return new AddressBalanceEntry(address, balance, reserved, frozen);
     }
 
-    protected static OmniValue stringToOmniValue(String valueString) {
-        boolean divisible = valueString.contains(".");  // Divisible amounts always contain a decimal point
-        if (divisible) {
-            return OmniValue.of(new BigDecimal(valueString), PropertyType.DIVISIBLE);
-        } else {
-            return OmniValue.of(Long.parseLong(valueString), PropertyType.INDIVISIBLE);
-        }
-    }
-
     protected SmartPropertyListInfo mapToSmartPropertyListInfo(OmniwalletPropertyInfo property) {
         return new SmartPropertyListInfo(property.getPropertyid(),
                     property.getName(),

@@ -10,6 +10,34 @@ import spock.lang.Unroll
 class OmniValueSpec extends Specification {
 
     @Unroll
+    def "of(String) parses #string to the #expectedSubclass subclass and #expectedValue"(String string, Class<?> expectedSubclass, OmniValue expectedValue) {
+        when:
+        var val = OmniValue.of(string)
+
+        then:
+        val.getClass() == expectedSubclass
+        val == expectedValue
+
+        where:
+        string          | expectedSubclass              | expectedValue
+        "0"             | OmniIndivisibleValue.class    | OmniIndivisibleValue.of(0)
+        "0.0"           | OmniDivisibleValue.class      | OmniDivisibleValue.of(0)
+        "0.00000001"    | OmniDivisibleValue.class      | OmniDivisibleValue.ofWilletts(1)
+    }
+
+    @Unroll
+    def "of(String) throws NumberFormatException for invalid string: #string"(String string) {
+        when:
+        var val = OmniValue.of(string)
+
+        then:
+        thrown(NumberFormatException)
+
+        where:
+        string << ["yak", "@!%#"]
+    }
+
+    @Unroll
     def "checkValue does not throw exception for valid long value: #val" (long val) {
         when: "we check the value"
         OmniValue.checkWillettValue(val)
