@@ -239,15 +239,15 @@ public abstract class OmniValue extends NumberValue {
     abstract public String toPlainString();
 
     /**
-     * Convert to {@link String}. The recommended format for OmniValues in JSON. For {@link OmniDivisibleValue} there is always at least one
+     * Convert to {@link String}. The required format for OmniValues in JSON. For {@link OmniDivisibleValue} there is always at least one
      * place after the decimal point (e.g. {@code "0.0"}). This allows humans and parsers to easily tell {@link OmniDivisibleValue}s
-     * from {@link OmniIndivisibleValue}s.
+     * from {@link OmniIndivisibleValue}s. Note: The {@code '.'} separator is always used regardless of the current {@link java.util.Locale}.
      * @return Number as a string
      */
     abstract public String toJsonFormattedString();
 
     /**
-     * Convert to {@link String}. A more human-readable format using comma place-separators.
+     * Convert to {@link String}. A human-readable format using locale-specific place-separators.
      * @return Number as a string
      */
     abstract public String toFormattedString();

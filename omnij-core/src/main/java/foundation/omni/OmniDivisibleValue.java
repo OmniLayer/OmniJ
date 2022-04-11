@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  * Numeric Value of Divisible Omni Token
@@ -23,7 +25,9 @@ public final class OmniDivisibleValue extends OmniValue {
     public static  OmniDivisibleValue ZERO = OmniDivisibleValue.ofWilletts(0);
     public static  OmniDivisibleValue MIN = OmniDivisibleValue.ofWilletts(OmniValue.MIN_WILLETTS);
     public static  OmniDivisibleValue MAX = OmniDivisibleValue.ofWilletts(OmniValue.MAX_WILLETTS);
-    private static final DecimalFormat jsonFormatter = new DecimalFormat("###########0.0#######");
+    private static final Locale locale = new Locale("en", "US");
+    private static final DecimalFormatSymbols jsonDecimalFormatSymbols = new DecimalFormatSymbols(locale);
+    private static final DecimalFormat jsonFormatter = new DecimalFormat("###########0.0#######", jsonDecimalFormatSymbols);
     private static final DecimalFormat numberFormatter = new DecimalFormat("###,###,###,##0.0#######");
 
     /**
