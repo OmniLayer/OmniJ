@@ -22,12 +22,7 @@ public class OmniValueDeserializer extends JsonDeserializer<OmniValue> {
         switch (token) {
             case VALUE_STRING:
                 String val = p.getValueAsString();
-                boolean divisible = val.contains(".");  // Divisible amounts always contain a decimal point
-                if (divisible) {
-                    return OmniValue.of(new BigDecimal(val), PropertyType.DIVISIBLE);
-                } else {
-                    return OmniValue.of(p.getValueAsLong(), PropertyType.INDIVISIBLE);
-                }
+                return OmniValue.of(val);
             default:
                 ctxt.handleUnexpectedToken(Sha256Hash.class, p);
                 return null;

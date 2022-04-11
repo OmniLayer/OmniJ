@@ -65,6 +65,35 @@ public abstract class OmniValue extends NumberValue {
         return divisible ? OmniDivisibleValue.of(amount) : OmniIndivisibleValue.of(amount);
     }
 
+    /**
+     * Parse a {@code String} (which should be in OmniValue JSON format) to get an {@code OmniValue}
+     * <p>
+     * WARNING: This method requires that all amounts for {@link OmniDivisibleValue} <b>must contain a decimal point</b>
+     * to be properly parsed into an {@code OmniDivisibleValue} representation. See {@link OmniValue#toJsonFormattedString()} for
+     * details.
+     * @param omniValueJsonFormattedString A string representation of an OmniValue in OmniValue JSON format
+     * @return An {@link OmniDivisibleValue} if the string contains a {@code '.'}, otherwise an {@link OmniIndivisibleValue}
+     * @throws NumberFormatException if the string is not parseable.
+     */
+    public static OmniValue of(String omniValueJsonFormattedString) {
+        if (omniValueJsonFormattedString.contains(".")) {
+            return OmniValue.of(new BigDecimal(omniValueJsonFormattedString), PropertyType.DIVISIBLE);
+        } else {
+            return OmniValue.of(Long.parseLong(omniValueJsonFormattedString), PropertyType.INDIVISIBLE);
+        }
+    }
+
+    /**
+     * Parse a numeric {@code String} to get an {@code OmniValue}
+     * @param string A string that should be parseable to a {@link BigDecimal}
+     * @param divisible whether this string represents a divisible value, false otherwise
+     * @return An {@link OmniDivisibleValue} or {@link OmniIndivisibleValue} depending upon the {@code divisible} parameter
+     * @throws NumberFormatException if the string is not parseable.
+     */
+    public static OmniValue of(String string, boolean divisible) {
+        return OmniValue.of(new BigDecimal(string), divisible);
+    }
+
     public static OmniValue ofWilletts(long amount, PropertyType type) {
         return ofWilletts(amount, type.equals(PropertyType.DIVISIBLE));
     }
