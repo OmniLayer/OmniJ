@@ -64,13 +64,37 @@ public class OmniSigningService {
 
     public CompletableFuture<Transaction> omniSignTx(Address fromAddress, List<? super TransactionInputData> inputUtxos,  OmniTx omniTx, Address changeAddress) {
         SigningRequest signingRequest = createOmniClassCSigningRequest(fromAddress, inputUtxos, omniTx, changeAddress);
-        return signingWalletKeyChain.signTransaction(signingRequest);
+        return signTx(signingRequest);
     }
 
     public CompletableFuture<Transaction> omniSignTx(UnsignedTxSimpleSend unsignedTx) {
         return omniSignTx(unsignedTx.fromAddress(), unsignedTx.inputs(), unsignedTx.payload(), unsignedTx.changeAddress());
     }
 
+    /**
+     * Sign a Bitcoin transaction (possibly with an embedded Omni Class C or Class B transaction)
+     *
+     * @param signingRequest a ConsensusJ signing request
+     * @return a signed bitcoinj transaction
+     */
+    public CompletableFuture<Transaction> signTx(SigningRequest signingRequest) {
+        return signingWalletKeyChain.signTransaction(signingRequest);
+    }
+
+    /**
+     * Build a {@link SigningRequest} for an Omni transaction. Performs the following:
+     * <ol>
+     *     <li>Includes all inputs in the transaction (TBD: choose minimal/optional subset)</li>
+     *     <li>Creates an OP_RETURN output with the payload</li>
+     *     <li>Creates a reference address output if necessary</li>
+     *     <li>Adds a change address (if there's change)</li>
+     * </ol>
+     * @param fromAddress The sending/signing address
+     * @param inputUtxos List of UTXOs for funding the transaction
+     * @param omniTx The Omni transaction payload to send
+     * @param changeAddress Address to return bitcoin change to
+     * @return A ConsensusJ SigningRequest for the transaction
+     */
     public SigningRequest createOmniClassCSigningRequest(Address fromAddress, List<? super TransactionInputData> inputUtxos, OmniTx omniTx, Address changeAddress) {
         // Create a signing request with just the OP_RETURN output
         SigningRequest request = new DefaultSigningRequest(netParams, (List<TransactionInputData>) inputUtxos, List.of(createOpReturn(omniTx)));

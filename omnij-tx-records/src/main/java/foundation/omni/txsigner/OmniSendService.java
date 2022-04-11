@@ -60,14 +60,8 @@ public class OmniSendService {
      */
     public CompletableFuture<Sha256Hash> omniSend(UnsignedTxSimpleSend simpleSend) throws IOException {
         Transaction tx = signingService.omniSignTx(simpleSend.fromAddress(), simpleSend.inputs(), simpleSend.payload(), simpleSend.changeAddress()).join();
-
-
-
-
         CompletableFuture<Sha256Hash> sendFuture = this.sendRawTx(tx);
-
         return sendFuture;
-        //return CompletableFuture.completedFuture(tx.getTxId());
 //        return signingService
 //                .omniSignTx(fromAddress, (List<TransactionInputData>) utxos, sendTx, fromAddress)
 //                .thenCompose(this::sendRawTx);
@@ -111,6 +105,7 @@ public class OmniSendService {
 
 
     CompletableFuture<Sha256Hash> sendRawTx(Transaction tx) {
+        log.info("OmniSendService: preparing to send: {}", tx);
         return rxOmniClient.supplyAsync(() -> {
                String hexTx = HexUtil.bytesToHexString(tx.bitcoinSerialize());
                log.warn("OmniSendService: About to send tx: {}", hexTx);
