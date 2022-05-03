@@ -10,14 +10,12 @@ import org.consensusj.bitcoin.signing.FeeCalculator;
 import org.consensusj.bitcoin.signing.SigningRequest;
 import org.consensusj.bitcoin.signing.SigningUtils;
 import org.consensusj.bitcoin.signing.HDKeychainSigner;
-import org.consensusj.bitcoin.signing.TestnetFeeCalculator;
 import org.consensusj.bitcoin.signing.TransactionInputData;
 import org.consensusj.bitcoin.signing.TransactionOutputData;
 import org.consensusj.bitcoin.signing.TransactionOutputOpReturn;
 import org.consensusj.bitcoinj.wallet.BipStandardDeterministicKeyChain;
 import foundation.omni.tx.ClassCEncoder;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -29,6 +27,7 @@ import static foundation.omni.tx.Transactions.OmniRefTx;
  */
 public class OmniSigningService {
     private final NetworkParameters netParams;
+    private final BipStandardDeterministicKeyChain keyChain;
     private final HDKeychainSigner signingWalletKeyChain;
     private final FeeCalculator feeCalculator;
 
@@ -42,8 +41,13 @@ public class OmniSigningService {
 
     public OmniSigningService(NetworkParameters netParams, BipStandardDeterministicKeyChain deterministicKeyChain) {
         this.netParams = netParams;
+        this.keyChain = deterministicKeyChain;
         this.signingWalletKeyChain = new HDKeychainSigner(deterministicKeyChain);
         feeCalculator = new HackedFeeCalculator();
+    }
+
+    /* package */ BipStandardDeterministicKeyChain getKeychain() {
+        return keyChain;
     }
 
 //    public CompletableFuture<Transaction> omniSignTx(List<TransactionOutput> utxos, Address fromAddress, OmniTx omniTx) throws InsufficientMoneyException {

@@ -6,12 +6,16 @@ import foundation.omni.netapi.omnicore.RxOmniClient;
 import foundation.omni.txrecords.TransactionRecords;
 import foundation.omni.txrecords.UnsignedTxSimpleSend;
 import org.bitcoinj.core.*;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.script.ScriptBuilder;
 import org.consensusj.bitcoin.json.conversion.HexUtil;
 import org.consensusj.bitcoin.json.pojo.bitcore.AddressUtxoInfo;
+import org.consensusj.bitcoin.signing.DefaultSigningRequest;
+import org.consensusj.bitcoin.signing.FeeCalculator;
+import org.consensusj.bitcoin.signing.SigningRequest;
+import org.consensusj.bitcoin.signing.SigningUtils;
 import org.consensusj.bitcoin.signing.TransactionInputData;
 import org.consensusj.bitcoin.signing.TransactionInputDataImpl;
+import org.consensusj.bitcoin.signing.TransactionOutputAddress;
+import org.consensusj.bitcoin.signing.TransactionOutputData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,10 +31,36 @@ public class OmniSendService {
 
     private final RxOmniClient rxOmniClient;
     private final OmniSigningService signingService;
+    private final FeeCalculator feeCalculator;
 
     public OmniSendService(RxOmniClient client, OmniSigningService signingService) {
         this.rxOmniClient = client;
         this.signingService = signingService;
+        feeCalculator = new HackedFeeCalculator();
+    }
+
+    // Simple Bitcoin send, from receive address 0 with change to sending address
+    // This is for testing (e.g. for sending TBTC to the moneyman address)
+    public CompletableFuture<Sha256Hash> bitcoinSend(Address toAddress, Coin amount) throws IOException {
+        Address fromAddress = signingService.getKeychain().receivingAddr(0);    // Hardcode to receive address 0
+        List<TransactionInputData> utxos = getInputsFor(fromAddress);
+        TransactionOutputData outputData = new TransactionOutputAddress(amount, toAddress);
+        SigningRequest bitcoinSendReq = createBitcoinSigningRequest(fromAddress, utxos, List.of(outputData), fromAddress);
+        CompletableFuture<Transaction> futureTransaction = signingService.signTx(bitcoinSendReq);
+        return futureTransaction.thenApply(Transaction::getTxId);
+    }
+
+    public SigningRequest createBitcoinSigningRequest(Address fromAddress, List<? super TransactionInputData> inputUtxos, List<TransactionOutputData> outputs, Address changeAddress) {
+        // Create a signing request with just the OP_RETURN output
+        SigningRequest request = new DefaultSigningRequest(fromAddress.getParameters(), (List<TransactionInputData>) inputUtxos, outputs);
+        return SigningUtils.addChange(request, changeAddress, feeCalculator);
+    }
+
+    static class HackedFeeCalculator implements FeeCalculator {
+        @Override
+        public Coin calculateFee(SigningRequest signingRequest) {
+            return Coin.ofSat(257);
+        }
     }
 
     /**
