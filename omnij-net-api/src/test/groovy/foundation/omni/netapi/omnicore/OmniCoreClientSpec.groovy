@@ -6,7 +6,7 @@ import foundation.omni.netapi.WalletAddressBalance
 import foundation.omni.netapi.omniwallet.WalletBackupFile
 import org.bitcoinj.core.Address
 import org.bitcoinj.utils.AppDataDirectory
-import org.consensusj.bitcoin.rpc.RpcURI
+import org.consensusj.bitcoin.jsonrpc.RpcURI
 import foundation.omni.netapi.omnicore.OmniCoreClient;
 import org.bitcoinj.params.MainNetParams
 import spock.lang.Ignore

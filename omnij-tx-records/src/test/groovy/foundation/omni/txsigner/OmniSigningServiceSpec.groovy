@@ -15,7 +15,7 @@ import org.bitcoinj.script.ScriptBuilder
 import org.bitcoinj.wallet.DeterministicSeed
 import org.bitcoinj.wallet.KeyChain
 import org.bitcoinj.wallet.UnreadableWalletException
-import org.consensusj.bitcoin.rpc.RpcConfig
+import org.consensusj.bitcoin.jsonrpc.RpcConfig
 import org.consensusj.bitcoinj.wallet.BipStandardDeterministicKeyChain
 import spock.lang.Ignore
 import spock.lang.Specification

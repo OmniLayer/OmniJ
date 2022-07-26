@@ -10,7 +10,7 @@ import org.bitcoinj.core.Sha256Hash
 import org.bitcoinj.params.MainNetParams
 import org.consensusj.analytics.service.TokenRichList
 import org.consensusj.bitcoin.json.pojo.ChainTip
-import org.consensusj.bitcoin.rpc.RpcURI
+import org.consensusj.bitcoin.jsonrpc.RpcURI
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification

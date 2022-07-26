@@ -1,7 +1,7 @@
 package foundation.omni.rpc;
 
 import org.consensusj.jsonrpc.groovy.DynamicRpcMethodFallback;
-import org.consensusj.bitcoin.rpc.bitcoind.BitcoinConfFile;
+import org.consensusj.bitcoin.jsonrpc.bitcoind.BitcoinConfFile;
 
 import java.io.IOException;
 

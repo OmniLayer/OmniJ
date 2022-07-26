@@ -12,8 +12,8 @@ dependencies {
     api "${consensusjGroup}:${consensusjBtcJsonRpcArtifact}:${consensusjVersion}"
     api "${consensusjGroup}:cj-btc-rx-jsonrpc:${consensusjVersion}"
 
-    testImplementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
-    testImplementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+    testImplementation "org.apache.groovy:groovy:${groovyVersion}"
+    testImplementation ("org.apache.groovy:groovy-json:${groovyVersion}")  {
         transitive = false
     }
 

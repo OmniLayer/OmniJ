@@ -7,7 +7,7 @@ import foundation.omni.netapi.WalletAddressBalance
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.LegacyAddress
 import org.bitcoinj.params.RegTestParams
-import org.consensusj.bitcoin.rpc.RpcURI
+import org.consensusj.bitcoin.jsonrpc.RpcURI
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification

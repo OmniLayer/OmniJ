@@ -11,18 +11,12 @@ include 'omnij-core',
         'omnij-rest-client-retrofit',
         'omnij-money'
 
-
-if (JavaVersion.current().isJava11Compatible()) {
-    System.err.println "Including JDK 11 modules because Java ${JavaVersion.current()} is JDK 11+"
-    include 'omnij-cli'
-    include 'omnij-rest-client-jdk'        // JDK Omni REST client (using java.net.http)
-    include 'omnij-rpc'                    // Omni JSON-RPC + Groovy + Integration tests
-} else {
-    System.err.println "Skipping JDK 11 subprojects, requires Java 11+, currently running Java ${JavaVersion.current()}"
-}
+include 'omnij-rest-client-jdk'        // JDK Omni REST client (using java.net.http)
+include 'omnij-rpc'                    // Omni JSON-RPC + Groovy + Integration tests
 
 if (JavaVersion.current().compareTo(JavaVersion.VERSION_17) >= 0) {
     System.err.println "Including JDK 17 modules because Java ${JavaVersion.current()} is JDK 17+"
+    include 'omnij-cli'
     include 'omnij-tx-records'
 } else {
     System.err.println "Skipping JDK 17 subprojects, requires Java 17+, currently running Java ${JavaVersion.current()}"

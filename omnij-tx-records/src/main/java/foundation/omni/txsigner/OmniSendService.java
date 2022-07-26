@@ -8,14 +8,14 @@ import foundation.omni.txrecords.UnsignedTxSimpleSend;
 import org.bitcoinj.core.*;
 import org.consensusj.bitcoin.json.conversion.HexUtil;
 import org.consensusj.bitcoin.json.pojo.bitcore.AddressUtxoInfo;
-import org.consensusj.bitcoin.signing.DefaultSigningRequest;
-import org.consensusj.bitcoin.signing.FeeCalculator;
-import org.consensusj.bitcoin.signing.SigningRequest;
-import org.consensusj.bitcoin.signing.SigningUtils;
-import org.consensusj.bitcoin.signing.TransactionInputData;
-import org.consensusj.bitcoin.signing.TransactionInputDataImpl;
-import org.consensusj.bitcoin.signing.TransactionOutputAddress;
-import org.consensusj.bitcoin.signing.TransactionOutputData;
+import org.consensusj.bitcoinj.signing.DefaultSigningRequest;
+import org.consensusj.bitcoinj.signing.FeeCalculator;
+import org.consensusj.bitcoinj.signing.SigningRequest;
+import org.consensusj.bitcoinj.signing.SigningUtils;
+import org.consensusj.bitcoinj.signing.TransactionInputData;
+import org.consensusj.bitcoinj.signing.TransactionInputDataImpl;
+import org.consensusj.bitcoinj.signing.TransactionOutputAddress;
+import org.consensusj.bitcoinj.signing.TransactionOutputData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +53,11 @@ public class OmniSendService {
     public SigningRequest createBitcoinSigningRequest(Address fromAddress, List<? super TransactionInputData> inputUtxos, List<TransactionOutputData> outputs, Address changeAddress) {
         // Create a signing request with just the OP_RETURN output
         SigningRequest request = new DefaultSigningRequest(fromAddress.getParameters(), (List<TransactionInputData>) inputUtxos, outputs);
-        return SigningUtils.addChange(request, changeAddress, feeCalculator);
+        try {
+            return SigningUtils.addChange(request, changeAddress, feeCalculator);
+        } catch (InsufficientMoneyException ime) {
+            throw new RuntimeException(ime);
+        }
     }
 
     static class HackedFeeCalculator implements FeeCalculator {

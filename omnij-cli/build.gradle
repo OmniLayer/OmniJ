@@ -5,8 +5,8 @@ plugins {
 
 ext.moduleName = 'foundation.omni.cli'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 17
+targetCompatibility = 17
 
 configurations {
     integrationTestImplementation.extendsFrom testImplementation
@@ -14,7 +14,11 @@ configurations {
 }
 
 dependencies {
-    implementation project(':omnij-rpc')
+    implementation (project(':omnij-rpc'), {
+        exclude group: 'org.apache.groovy', module: 'groovy'
+        exclude group: 'org.apache.groovy', module: 'groovy-json'
+    })
+
     implementation "${consensusjGroup}:${consensusjBtcCliArtifact}:${consensusjVersion}"
 
     runtimeOnly "org.slf4j:slf4j-jdk14:${slf4jVersion}"

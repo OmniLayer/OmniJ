@@ -1,9 +1,9 @@
 package foundation.omni
 
-import org.consensusj.bitcoin.rpc.BlockchainDotInfoSyncing
+import org.consensusj.bitcoin.jsonrpc.groovy.BlockchainDotInfoSyncing
 import org.consensusj.jsonrpc.JsonRpcStatusException
 import org.consensusj.jsonrpc.groovy.Loggable
-import org.consensusj.bitcoin.rpc.RpcURI
+import org.consensusj.bitcoin.jsonrpc.RpcURI
 import foundation.omni.rpc.OmniCLIClient
 import foundation.omni.rpc.OmniClientDelegate
 import foundation.omni.rpc.test.TestServers

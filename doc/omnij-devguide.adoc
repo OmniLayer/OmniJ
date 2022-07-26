@@ -21,7 +21,7 @@ skinparam packageStyle Rect
 skinparam shadowing false
 hide empty members
 
-namespace org.consensusj.bitcoin.rpc {
+namespace org.consensusj.bitcoin.jsonrpc {
     interface UntypedRPCClient
     abstract class AbstractRPCClient
 
@@ -55,9 +55,9 @@ namespace foundation.omni.rpc {
     class OmniCLIClient << Groovy >>
 
 
-    org.consensusj.bitcoin.rpc.BitcoinExtendedClient <|-- OmniClient
+    org.consensusj.bitcoin.jsonrpc.BitcoinExtendedClient <|-- OmniClient
     OmniClient <|-- OmniScriptingClient
-    org.consensusj.bitcoin.rpc.DynamicRpcMethodFallback <|.. OmniScriptingClient
+    org.consensusj.bitcoin.jsonrpc.DynamicRpcMethodFallback <|.. OmniScriptingClient
     OmniClient <|-- OmniCLIClient
 }
 
