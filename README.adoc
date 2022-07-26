@@ -43,7 +43,7 @@ There are currently ten active subprojects of OmniJ. Each of which builds a JAR 
 
 | omnij-jsonrpc
 | `OmniClient` JSON-RPC client and JSON-RPC support.
-| 8
+| 9
 |
 
 | omnij-money
