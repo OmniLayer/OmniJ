@@ -11,14 +11,40 @@ Released: Not yet
 
 * Fix bitcoinj deprecation warnings
 * CurrencyID: remove `Cloneable` and `clone()`
+* `OmniOutput` `record`-like class to support `omni_sendtomany`
+* New `OmniValue.of()` convenience static constructors
+
+=== omnij-jsonrpc
+
+* Add `omniSendToMany()` (`omni_sendtomany`) method.
+
+== omnij-rest-client-retrofit
+
+* Set minimum required JDK back (down!) to Java 9.
+
+=== Work-in-progress
+
+* `omnij-core`
+** Class C transaction signing
+** `DevOmni`: Independent (and not thoroughly tested) implementation of DevOmni calculations
+* `omnij-txrecords`
+** Omni transaction building using Java `record` types
+** Class C transaction signing
+** `OmniSendService`
+** `OmniSigningService`
+
 
 === Dependency Updates
 
+* ConsensusJ 0.6.1
 * bitcoinj 0.16.1
 
 === Build/Test Updates
 
-* Gradle 7.3.1
+* Use `options.release` to set required bytecode and API for each module
+* Gradle 7.5
+* Spock 2.2-M3-groovy-4.0
+* GraalVM 22.1.0 (used on GitHub Actions)
 
 == v0.5.21
 
