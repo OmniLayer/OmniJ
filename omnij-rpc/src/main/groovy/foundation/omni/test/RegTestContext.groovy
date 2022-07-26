@@ -1,8 +1,8 @@
 package foundation.omni.test
 
 import foundation.omni.netapi.omnicore.RxOmniTestClient
-import org.consensusj.bitcoin.rpc.RpcURI
-import org.consensusj.bitcoin.test.RegTestEnvironment
+import org.consensusj.bitcoin.jsonrpc.RpcURI
+import org.consensusj.bitcoin.jsonrpc.test.RegTestEnvironment
 import org.bitcoinj.params.RegTestParams
 
 /**

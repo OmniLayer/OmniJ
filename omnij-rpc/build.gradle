@@ -16,17 +16,21 @@ dependencies {
     api project(':omnij-net-api')
     api project(':omnij-rest-client-jdk')    // For OmniwalletModernJDKClient
 
-    api "${consensusjGroup}:${consensusjBtcJsonRpcGvyArtifact}:${consensusjVersion}"
+    api ("${consensusjGroup}:${consensusjBtcJsonRpcGvyArtifact}:${consensusjVersion}", {
+        // These exclusions can be removed when ConsensusJ upgrades to Groovy 4.0
+        exclude group: 'org.codehaus.groovy', module: 'groovy'
+        exclude group: 'org.codehaus.groovy', module: 'groovy-json'
+    })
 
     // Prevent 'SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder"' during compile
     compileOnly "org.slf4j:slf4j-jdk14:${slf4jVersion}"
 
-    implementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
-    implementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+    implementation "org.apache.groovy:groovy:${groovyVersion}"
+    implementation ("org.apache.groovy:groovy-json:${groovyVersion}")  {
         transitive = false
     }
 
-    implementation ("org.codehaus.groovy:groovy-sql:${groovyVersion}:indy") {
+    implementation ("org.apache.groovy:groovy-sql:${groovyVersion}") {
         transitive = false
     }
     implementation 'org.postgresql:postgresql:9.3-1102-jdbc41'

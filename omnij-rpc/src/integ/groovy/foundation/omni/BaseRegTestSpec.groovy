@@ -3,8 +3,8 @@ package foundation.omni
 import foundation.omni.netapi.omnicore.RxOmniTestClient
 import org.consensusj.bitcoin.json.pojo.NetworkInfo
 import org.consensusj.jsonrpc.groovy.Loggable
-import org.consensusj.bitcoin.rpc.RpcURI
-import org.consensusj.bitcoin.test.RegTestFundingSource
+import org.consensusj.bitcoin.jsonrpc.RpcURI
+import org.consensusj.bitcoin.jsonrpc.test.RegTestFundingSource
 import foundation.omni.rpc.test.TestServers
 import foundation.omni.test.OmniTestClientDelegate
 import foundation.omni.test.OmniTestSupport

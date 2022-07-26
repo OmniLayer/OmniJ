@@ -14,8 +14,8 @@ dependencies {
     api "${consensusjGroup}:cj-btc-rx-jsonrpc:${consensusjVersion}"
     api "io.reactivex.rxjava3:rxjava:3.1.2"
 
-    testImplementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
-    testImplementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+    testImplementation "org.apache.groovy:groovy:${groovyVersion}"
+    testImplementation ("org.apache.groovy:groovy-json:${groovyVersion}")  {
         transitive = false
     }
 
@@ -23,7 +23,7 @@ dependencies {
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
-    testImplementation ("org.codehaus.groovy:groovy-json:${groovyVersion}:indy")  {
+    testImplementation ("org.apache.groovy:groovy-json:${groovyVersion}")  {
         transitive = false
     }
 }

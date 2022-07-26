@@ -1,7 +1,7 @@
 package foundation.omni.txrecords;
 
 import org.bitcoinj.core.Address;
-import org.consensusj.bitcoin.signing.TransactionInputData;
+import org.consensusj.bitcoinj.signing.TransactionInputData;
 
 import java.util.List;
 

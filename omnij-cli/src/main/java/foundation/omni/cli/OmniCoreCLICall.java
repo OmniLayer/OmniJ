@@ -1,7 +1,7 @@
 package foundation.omni.cli;
 
 import foundation.omni.netapi.omnicore.RxOmniClient;
-import org.consensusj.bitcoin.rpc.RpcConfig;
+import org.consensusj.bitcoin.jsonrpc.RpcConfig;
 import foundation.omni.rpc.OmniClient;
 import org.consensusj.bitcoin.cli.BitcoinCLITool;
 

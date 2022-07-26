@@ -1,7 +1,7 @@
 package foundation.omni.test
 
 import foundation.omni.netapi.omnicore.RxOmniTestClient;
-import org.consensusj.bitcoin.test.RegTestFundingSource;
+import org.consensusj.bitcoin.jsonrpc.test.RegTestFundingSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

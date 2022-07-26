@@ -3,16 +3,17 @@ package foundation.omni.txsigner;
 import foundation.omni.txrecords.UnsignedTxSimpleSend;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
-import org.consensusj.bitcoin.signing.DefaultSigningRequest;
-import org.consensusj.bitcoin.signing.FeeCalculator;
-import org.consensusj.bitcoin.signing.SigningRequest;
-import org.consensusj.bitcoin.signing.SigningUtils;
-import org.consensusj.bitcoin.signing.HDKeychainSigner;
-import org.consensusj.bitcoin.signing.TransactionInputData;
-import org.consensusj.bitcoin.signing.TransactionOutputData;
-import org.consensusj.bitcoin.signing.TransactionOutputOpReturn;
+import org.consensusj.bitcoinj.signing.DefaultSigningRequest;
+import org.consensusj.bitcoinj.signing.FeeCalculator;
+import org.consensusj.bitcoinj.signing.SigningRequest;
+import org.consensusj.bitcoinj.signing.SigningUtils;
+import org.consensusj.bitcoinj.signing.HDKeychainSigner;
+import org.consensusj.bitcoinj.signing.TransactionInputData;
+import org.consensusj.bitcoinj.signing.TransactionOutputData;
+import org.consensusj.bitcoinj.signing.TransactionOutputOpReturn;
 import org.consensusj.bitcoinj.wallet.BipStandardDeterministicKeyChain;
 import foundation.omni.tx.ClassCEncoder;
 
@@ -108,7 +109,11 @@ public class OmniSigningService {
         if (refAddress != null) {
             request = request.addDustOutput(refAddress);
         }
-        return SigningUtils.addChange(request, changeAddress, feeCalculator);
+        try {
+            return SigningUtils.addChange(request, changeAddress, feeCalculator);
+        } catch (InsufficientMoneyException ime) {
+            throw new RuntimeException(ime);
+        }
     }
 
     private TransactionOutputData createOpReturn(OmniTx omniTx) {

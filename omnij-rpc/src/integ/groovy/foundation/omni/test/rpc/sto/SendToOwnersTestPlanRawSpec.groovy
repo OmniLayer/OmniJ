@@ -1,6 +1,6 @@
 package foundation.omni.test.rpc.sto
 
-//import org.consensusj.bitcoin.rpc.conversion.BitcoinMath
+//import org.consensusj.bitcoin.jsonrpc.conversion.BitcoinMath
 import foundation.omni.CurrencyID
 import foundation.omni.OmniValue
 import org.bitcoinj.core.Address

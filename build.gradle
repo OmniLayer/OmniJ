@@ -53,8 +53,12 @@ subprojects {
     dependencies {
         implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
-        testImplementation "${consensusjGroup}:${consensusjBtcDslArtifact}:${consensusjVersion}"
-        testImplementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+        testImplementation ("${consensusjGroup}:${consensusjBtcDslArtifact}:${consensusjVersion}" , {
+            // These exclusions can be removed when ConsensusJ upgrades to Groovy 4.0
+            exclude group: 'org.codehaus.groovy', module: 'groovy'
+            exclude group: 'org.codehaus.groovy', module: 'groovy-json'
+        })
+        testImplementation "org.apache.groovy:groovy:${groovyVersion}"
         testImplementation("org.spockframework:spock-core:${spockVersion}") {
             exclude module: "groovy-all"
         }
@@ -64,6 +68,15 @@ subprojects {
         testRuntimeOnly "org.slf4j:slf4j-jdk14:${slf4jVersion}"     // Runtime implementation of slf4j for tests
     }
 
+    configurations.all {
+        // Ensure usage of Groovy 4.0 which has new Maven co-ordinates
+        resolutionStrategy.capabilitiesResolution.all {
+            if (capability.group.equals("org.codehaus.groovy")) {
+                selectHighestVersion()
+            }
+        }
+    }
+
     java {
         withJavadocJar()
         withSourcesJar()
@@ -71,10 +84,6 @@ subprojects {
 
     compileJava {
         options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
-    }
-
-    tasks.withType(GroovyCompile) {
-        groovyOptions.optimizationOptions.indy = true
     }
 
     tasks.withType(AbstractArchiveTask) {

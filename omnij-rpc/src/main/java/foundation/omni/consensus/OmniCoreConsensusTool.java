@@ -1,7 +1,7 @@
 package foundation.omni.consensus;
 
 import foundation.omni.netapi.omnicore.RxOmniClient;
-import org.consensusj.bitcoin.rpc.RpcURI;
+import org.consensusj.bitcoin.jsonrpc.RpcURI;
 import foundation.omni.netapi.omnicore.OmniCoreClient;
 import foundation.omni.rpc.OmniClient;
 import foundation.omni.rpc.test.TestServers;

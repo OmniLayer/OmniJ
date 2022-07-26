@@ -6,7 +6,7 @@ ext.moduleName = 'foundation.omni.dsl.groovy'
 
 dependencies {
     api project(':omnij-core')
-    implementation "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+    implementation "org.apache.groovy:groovy:${groovyVersion}"
 }
 
 jar {
