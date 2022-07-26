@@ -47,9 +47,6 @@ allprojects {
 }
 
 subprojects {
-    sourceCompatibility = 8
-    targetCompatibility = 8
-
     dependencies {
         implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
@@ -80,6 +77,10 @@ subprojects {
     java {
         withJavadocJar()
         withSourcesJar()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.release = 8
     }
 
     compileJava {

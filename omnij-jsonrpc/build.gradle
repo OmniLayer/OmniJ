@@ -4,8 +4,9 @@ plugins {
 
 ext.moduleName = 'foundation.omni.jsonrpc'
 
-sourceCompatibility = 9
-targetCompatibility = 9
+tasks.withType(JavaCompile) {
+    options.release = 9
+}
 
 dependencies {
     api project(':omnij-core')

@@ -5,8 +5,9 @@ plugins {
 
 ext.moduleName = 'foundation.omni.cli'
 
-sourceCompatibility = 17
-targetCompatibility = 17
+tasks.withType(JavaCompile) {
+    options.release = 17
+}
 
 configurations {
     integrationTestImplementation.extendsFrom testImplementation

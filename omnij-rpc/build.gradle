@@ -2,8 +2,9 @@ plugins {
     id 'java-library'
 }
 
-sourceCompatibility = 11
-targetCompatibility = 11
+tasks.withType(JavaCompile) {
+    options.release = 11
+}
 
 configurations {
     integrationTestImplementation.extendsFrom testImplementation
