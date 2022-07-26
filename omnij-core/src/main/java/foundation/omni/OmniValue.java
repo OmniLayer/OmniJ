@@ -175,6 +175,9 @@ public abstract class OmniValue extends NumberValue {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     abstract public Class<? extends Number> getNumberType();
 
@@ -184,16 +187,25 @@ public abstract class OmniValue extends NumberValue {
      */
     abstract public Number numberValue();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getPrecision() {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getScale() {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int intValueExact() {
         if (willetts > Integer.MAX_VALUE) {
@@ -202,34 +214,55 @@ public abstract class OmniValue extends NumberValue {
         return (int) willetts;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long longValueExact() {
         return willetts;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     abstract public double doubleValueExact();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T extends Number> T numberValue(Class<T> numberType) {
         return ConvertNumberValue.of(numberType, numberValue());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T extends Number> T numberValueExact(Class<T> numberType) {
         return ConvertNumberValue.ofExact(numberType, numberValue());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getAmountFractionNumerator() {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getAmountFractionDenominator() {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public byte byteValue() {
         if (willetts > Byte.MAX_VALUE) {
@@ -238,6 +271,9 @@ public abstract class OmniValue extends NumberValue {
         return (byte) willetts;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public short shortValue() {
         if (willetts > Short.MAX_VALUE) {
@@ -246,16 +282,25 @@ public abstract class OmniValue extends NumberValue {
         return (short) willetts;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int intValue() {
         return intValueExact();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long longValue() {
         return longValueExact();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public float floatValue() {
         throw new UnsupportedOperationException("Operation not supported");
@@ -271,14 +316,23 @@ public abstract class OmniValue extends NumberValue {
     @Override
     abstract public double doubleValue();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return Long.hashCode(willetts);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     abstract public boolean equals(Object obj);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int compareTo(NumberValue o) {
         if (o instanceof OmniValue) {

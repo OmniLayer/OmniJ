@@ -274,6 +274,9 @@ public final class OmniDivisibleValue extends OmniValue {
         return bigDecimalValue().doubleValue(); // Warning: Converting BigDecimal to Double can result in rounding
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BigDecimal bigDecimalValue() {
         return new BigDecimal(this.willetts).movePointLeft(Coin.SMALLEST_UNIT_EXPONENT);
