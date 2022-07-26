@@ -12,19 +12,30 @@ import org.bitcoinj.script.ScriptOpCodes;
 import java.nio.charset.StandardCharsets;
 
 /**
- *
+ * WIP Class-C Encoder
  */
 public class ClassCEncoder {
     private static final String OMNI_MARKER = "omni";
     private static final byte[] OMNI_MARKER_BYTES = OMNI_MARKER.getBytes(StandardCharsets.UTF_8);
     private static final int OMNI_MARKER_LENGTH = OMNI_MARKER.length();
+    /** Maximum Class C Payload length (not counting the 4-byte {@code 'omni'} marker) */
     public static final int MAX_CLASS_C_PAYLOAD = 80 - OMNI_MARKER_LENGTH;
     private final NetworkParameters netParams;
 
+    /**
+     * Construct an encoder for a network
+     * @param netParams The network this instance will encode transactions for
+     */
     public ClassCEncoder(NetworkParameters netParams) {
         this.netParams = netParams;
     }
 
+    /**
+     * Encode a bitcoinj {@code Transaction} with a reference output and an {@code OP_RETURN} output
+     * @param refAddress Reference address (or {@code null})
+     * @param payload Serialized Omni Payload
+     * @return A bitcoinj {@code Transaction} object
+     */
     public Transaction encode(Address refAddress, byte[] payload) {
         Transaction txClassC = new Transaction(netParams);
 
@@ -39,12 +50,20 @@ public class ClassCEncoder {
         return txClassC;
     }
 
+    /**
+     * @param payload Serialized Omni Payload
+     * @return A bitcoinj {@code TransactionOutput} object containing the {@code OP_RETURN}
+     */
     public TransactionOutput encodeOpReturnOutput(byte[] payload) {
         Script script = createOmniTxOpReturnScript(payload);
 
         return new TransactionOutput(netParams, null, Coin.ZERO, script.getProgram());
     }
 
+    /**
+     * @param payload Serialized Omni Payload
+     * @return A bitcoinj {@code Script} object for the Class-C {@code OP_RETURN}
+     */
     public static Script createOmniTxOpReturnScript(byte[] payload) {
         // Create OP_RETURN output with prefixedPayload
         return new ScriptBuilder()
@@ -53,6 +72,10 @@ public class ClassCEncoder {
                 .build();
     }
 
+    /**
+     * @param payload Serialized Omni Payload without a prefix
+     * @return new {@code byte[]} containing Serialized Omni Payload with a prefix
+     */
     public static byte[] addOmniPrefix(byte[] payload) {
         byte[] prefixedPayload = new byte[payload.length + OMNI_MARKER_LENGTH];
         System.arraycopy(OMNI_MARKER_BYTES, 0, prefixedPayload, 0, OMNI_MARKER_LENGTH);

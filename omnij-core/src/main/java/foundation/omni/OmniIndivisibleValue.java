@@ -71,6 +71,9 @@ public final class OmniIndivisibleValue extends OmniValue {
         super(willetts);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof OmniIndivisibleValue)) {
@@ -82,46 +85,73 @@ public final class OmniIndivisibleValue extends OmniValue {
         return this.willetts == ((OmniIndivisibleValue)obj).willetts;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return Long.toString(willetts);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toPlainString() {
         return toString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toJsonFormattedString() {
         return toString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toFormattedString() {
         return numberFormatter.format(willetts);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Class<Long> getNumberType() {
         return Long.class;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double doubleValueExact() {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double doubleValue() {
         return (double) willetts;   // Cast/conversion to double can result in rounding
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OmniIndivisibleValue round(MathContext mathContext) {
         return OmniIndivisibleValue.of(bigDecimalValue().round(mathContext).longValue());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long numberValue() {
         return willetts;
@@ -131,6 +161,9 @@ public final class OmniIndivisibleValue extends OmniValue {
         return new BigDecimal(willetts);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PropertyType getPropertyType() {
         return PropertyType.INDIVISIBLE;
@@ -143,5 +176,4 @@ public final class OmniIndivisibleValue extends OmniValue {
     public OmniIndivisibleValue minus(OmniIndivisibleValue right) {
         return OmniIndivisibleValue.of(this.willetts - right.willetts);
     }
-
 }

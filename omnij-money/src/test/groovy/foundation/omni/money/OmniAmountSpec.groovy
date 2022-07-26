@@ -1,5 +1,8 @@
-package foundation.omni
+package foundation.omni.money
 
+import foundation.omni.CurrencyID
+import foundation.omni.OmniDivisibleValue
+import foundation.omni.OmniValue
 import spock.lang.Specification
 
 

@@ -92,6 +92,9 @@ public final class OmniDivisibleValue extends OmniValue {
         super(value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof OmniDivisibleValue)) {
@@ -103,111 +106,175 @@ public final class OmniDivisibleValue extends OmniValue {
         return this.willetts == ((OmniDivisibleValue)obj).willetts;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return bigDecimalValue().toString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toPlainString() {
         return bigDecimalValue().toPlainString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toJsonFormattedString() {
         return jsonFormatter.format(bigDecimalValue());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toFormattedString() {
         return numberFormatter.format(bigDecimalValue());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PropertyType getPropertyType() {
         return PropertyType.DIVISIBLE;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Class<BigDecimal> getNumberType() {
         return BigDecimal.class;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BigDecimal numberValue() {
         return bigDecimalValue();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getPrecision() {
         return DEFAULT_CONTEXT.getPrecision();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getScale() {
         return DEFAULT_SCALE;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int intValueExact() {
         return numberValue().intValueExact();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long longValueExact() {
         return numberValue().longValueExact();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double doubleValueExact() {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OmniDivisibleValue round(MathContext mathContext) {
         return OmniDivisibleValue.of(numberValue().round(mathContext));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getAmountFractionNumerator() {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getAmountFractionDenominator() {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public byte byteValue() {
         return numberValue().byteValueExact();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public short shortValue() {
         return numberValue().shortValueExact();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int intValue() {
         return intValueExact();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long longValue() {
         return longValueExact();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public float floatValue() {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double doubleValue() {
         return bigDecimalValue().doubleValue(); // Warning: Converting BigDecimal to Double can result in rounding
     }
 
+    @Override
     public BigDecimal bigDecimalValue() {
         return new BigDecimal(this.willetts).movePointLeft(Coin.SMALLEST_UNIT_EXPONENT);
     }
@@ -235,6 +302,4 @@ public final class OmniDivisibleValue extends OmniValue {
     OmniDivisibleValue div(Long right) {
         return OmniDivisibleValue.ofWilletts(this.willetts / right);
     }
-
-
 }

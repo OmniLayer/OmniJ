@@ -24,6 +24,10 @@ public class EncodeMultisig {
 
     private final NetworkParameters netParams;
 
+    /**
+     * Construct an encoder for a network
+     * @param netParams network to encode for
+     */
     public EncodeMultisig(NetworkParameters netParams) {
         this.netParams = netParams;
     }
@@ -65,6 +69,13 @@ public class EncodeMultisig {
         return txClassB;
     }
 
+    /**
+     *
+     * @param redeemingKey key that can be used to redeem transaction output (1 of n multisig)
+     * @param data Data bytes to encode into multisig output
+     * @param seed Seed string usually (always?) generated from a Bitcoin address
+     * @return Incomplete transaction with TransactionOutputs
+     */
     public Transaction encodeObfuscated(ECKey redeemingKey, byte[] data, String seed) {
         byte[] sequenced = SequenceNumbers.add(data);
         byte[] obf = Obfuscation.obfuscate(sequenced, seed);

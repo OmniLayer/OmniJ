@@ -14,7 +14,6 @@ import foundation.omni.rpc.SmartPropertyListInfo
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.LegacyAddress
 import org.bitcoinj.core.Sha256Hash
-import org.bitcoinj.params.MainNetParams
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification

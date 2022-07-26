@@ -15,8 +15,14 @@ import java.util.Arrays;
 public class Obfuscation {
 
 
-    public static byte[] obfuscate(final byte[] input, Address address) {
-        return obfuscate(input, address.toString());
+    /**
+     * Obfuscate an message (Omni Transaction)
+     * @param input message to obfuscate
+     * @param seedAddress Bitcoin address used to create obfuscation seed string
+     * @return obfuscated message
+     */
+    public static byte[] obfuscate(final byte[] input, Address seedAddress) {
+        return obfuscate(input, seedAddress.toString());
     }
 
     /**

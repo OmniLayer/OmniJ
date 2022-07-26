@@ -49,18 +49,38 @@ public abstract class OmniValue extends NumberValue {
         this.willetts = willetts;
     }
 
+    /**
+     * @param amount amount
+     * @param type property type
+     * @return OmniDivisibleValue or OmniIndivisibleValue as appropriate
+     */
     public static OmniValue of(BigDecimal amount, PropertyType type) {
         return of(amount, type.equals(PropertyType.DIVISIBLE));
     }
 
+    /**
+     * @param amount amount
+     * @param type property type
+     * @return OmniDivisibleValue or OmniIndivisibleValue as appropriate
+     */
     public static OmniValue of(long amount, PropertyType type) {
         return of(amount, type.equals(PropertyType.DIVISIBLE));
     }
 
+    /**
+     * @param amount amount
+     * @param divisible true if divisible
+     * @return OmniDivisibleValue or OmniIndivisibleValue as appropriate
+     */
     public static OmniValue of(BigDecimal amount, boolean divisible) {
         return divisible ? OmniDivisibleValue.of(amount) : OmniIndivisibleValue.of(amount.longValueExact());
     }
 
+    /**
+     * @param amount amount
+     * @param divisible true if divisible
+     * @return OmniDivisibleValue or OmniIndivisibleValue as appropriate
+     */
     public static OmniValue of(long amount, boolean divisible) {
         return divisible ? OmniDivisibleValue.of(amount) : OmniIndivisibleValue.of(amount);
     }
@@ -94,18 +114,35 @@ public abstract class OmniValue extends NumberValue {
         return OmniValue.of(new BigDecimal(string), divisible);
     }
 
+    /**
+     * @param amount amount
+     * @param type property type
+     * @return OmniDivisibleValue or OmniIndivisibleValue as appropriate
+     */
     public static OmniValue ofWilletts(long amount, PropertyType type) {
         return ofWilletts(amount, type.equals(PropertyType.DIVISIBLE));
     }
 
+    /**
+     * @param amount amount
+     * @param divisible true if divisible
+     * @return OmniDivisibleValue or OmniIndivisibleValue as appropriate
+     */
     public static OmniValue ofWilletts(long amount, boolean divisible) {
         return divisible ? OmniDivisibleValue.ofWilletts(amount) : OmniIndivisibleValue.ofWilletts(amount);
     }
 
+    /**
+     * @return value in willetts
+     */
     public long getWilletts() {
         return willetts;
     }
 
+    /**
+     * 
+     * @return property type
+     */
     abstract public PropertyType getPropertyType();
 
     /**
@@ -281,8 +318,20 @@ public abstract class OmniValue extends NumberValue {
      */
     abstract public String toFormattedString();
 
+    /**
+     * Convert to a {@link BigDecimal} value. This will be lossless. For {@link OmniIndivisibleValue} the
+     * {@code BigDecimal} value will be an integer, of course.
+     * @return the value
+     */
     abstract public BigDecimal bigDecimalValue();
 
+    /**
+     * Create a new OmniValue by adding this value and another value.
+     * <p>
+     * The method-name {@code plus} supports Groovy operator overloading
+     * @param right value to add
+     * @return a new value with the result
+     */
     public OmniValue plus(OmniValue right) {
         if (this instanceof OmniDivisibleValue && right instanceof OmniDivisibleValue) {
             return OmniDivisibleValue.ofWilletts(this.willetts + right.willetts);
@@ -293,6 +342,13 @@ public abstract class OmniValue extends NumberValue {
         }
     }
 
+    /**
+     * Create a new OmniValue by subtracting another value from this value.
+     * <p>
+     * The method-name {@code minus} supports Groovy operator overloading
+     * @param right value to subtract
+     * @return a new value with the result
+     */
     public OmniValue minus(OmniValue right) {
         if (this instanceof OmniDivisibleValue && right instanceof OmniDivisibleValue) {
             return OmniDivisibleValue.of(this.willetts - right.willetts);
@@ -303,6 +359,13 @@ public abstract class OmniValue extends NumberValue {
         }
     }
 
+    /**
+     * Create a new OmniValue by multiplying this value and another value.
+     * <p>
+     * The method-name {@code multiply} supports Groovy operator overloading
+     * @param right value to add
+     * @return a new value with the result
+     */
     public OmniValue multiply(long right) {
         if (this instanceof OmniDivisibleValue) {
             return OmniDivisibleValue.of(this.willetts * right);

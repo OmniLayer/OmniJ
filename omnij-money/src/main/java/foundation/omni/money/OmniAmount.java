@@ -1,4 +1,7 @@
-package foundation.omni;
+package foundation.omni.money;
+
+import foundation.omni.CurrencyID;
+import foundation.omni.OmniValue;
 
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
@@ -6,7 +9,6 @@ import javax.money.MonetaryAmountFactory;
 import javax.money.MonetaryContext;
 import javax.money.MonetaryOperator;
 import javax.money.MonetaryQuery;
-import javax.money.NumberValue;
 
 /**
  * Omni Amount: A number of coins/tokens with a specified CurrencyID

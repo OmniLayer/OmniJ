@@ -8,7 +8,7 @@ import org.bitcoinj.params.MainNetParams;
  * If we go ahead with this approach we should merge `OmniAddressMainNetParams` with `OmniMainNetParams`
  */
 public class OmniAddressMainNetParams extends MainNetParams {
-    public OmniAddressMainNetParams() {
+    private OmniAddressMainNetParams() {
         super();
         addressHeader = 115;    // 'o' prefix for Base58 P2PKH (deprecated)
         p2shHeader = 58;        // 'Q' prefix for Base58 P2SH (deprecated)
@@ -17,6 +17,10 @@ public class OmniAddressMainNetParams extends MainNetParams {
 
 
     private static OmniAddressMainNetParams instance;
+
+    /**
+     * @return The singleton instance
+     */
     public static synchronized OmniAddressMainNetParams get() {
         if (instance == null) {
             instance = new OmniAddressMainNetParams();

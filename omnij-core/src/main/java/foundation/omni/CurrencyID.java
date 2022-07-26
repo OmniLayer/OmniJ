@@ -15,34 +15,62 @@ package foundation.omni;
 public final class CurrencyID implements Comparable<CurrencyID> {
     private final int value;
 
+    /** Minimum allowed value for an Omni CurrencyID */
     public static final long   MIN_VALUE = 0;
+    /** Maximum allowed value for an Omni CurrencyID */
     public static final long   MAX_VALUE = 4_294_967_295L;
 
+    /** Maximum allowed value for a "Real Ecosystem" (aka "Production") Omni CurrencyID */
     public static final long   MAX_REAL_ECOSYSTEM_VALUE = 2_147_483_647;
+    /** Maximum allowed value for a "Test Ecosystem" Omni CurrencyID */
     public static final long   MAX_TEST_ECOSYSTEM_VALUE = MAX_VALUE;
 
+    /** Numeric ID value for BTC */
     public static final long    BTC_VALUE = 0;
+    /** Numeric ID value for OMNI */
     public static final long    OMNI_VALUE = 1;
+    /** Numeric ID value for TOMNI */
     public static final long    TOMNI_VALUE = 2;
+    /** Numeric ID value for MAID */
     public static final long    MAID_VALUE = 3; // MaidSafeCoin
+    /** Numeric ID value for USDT */
     public static final long    USDT_VALUE = 31;
+    /** Numeric ID value for AMP */
     public static final long    AMP_VALUE = 39; // Synerio
+    /** Numeric ID value for EURT */
     public static final long    EURT_VALUE = 41;
+    /** Numeric ID value for SAFEX */
     public static final long    SAFEX_VALUE = 56; // SafeExchangeCoin
+    /** Numeric ID value for AGRS */
     public static final long    AGRS_VALUE = 58; // Agoras
+    /** Numeric ID value for PDC */
     public static final long    PDC_VALUE = 59; // Project Decorum Coin
 
+    /** CurrencyID for BTC */
     public static final CurrencyID  BTC = new CurrencyID(BTC_VALUE);
+    /** CurrencyID for OMNI */
     public static final CurrencyID  OMNI = new CurrencyID(OMNI_VALUE);
+    /** CurrencyID for TOMNI */
     public static final CurrencyID  TOMNI = new CurrencyID(TOMNI_VALUE);
+    /** CurrencyID for MAID */
     public static final CurrencyID  MAID = new CurrencyID(MAID_VALUE);
+    /** CurrencyID for USDT */
     public static final CurrencyID  USDT = new CurrencyID(USDT_VALUE);
+    /** CurrencyID for AMP */
     public static final CurrencyID  AMP = new CurrencyID(AMP_VALUE);
+    /** CurrencyID for EURT */
     public static final CurrencyID  EURT = new CurrencyID(EURT_VALUE);
+    /** CurrencyID for SAFEX */
     public static final CurrencyID  SAFEX = new CurrencyID(SAFEX_VALUE);
+    /** CurrencyID for AGRS */
     public static final CurrencyID  AGRS = new CurrencyID(AGRS_VALUE);
+    /** CurrencyID for PDC */
     public static final CurrencyID  PDC = new CurrencyID(PDC_VALUE);
 
+    /**
+     * @param s A currency string for one of the well-known Omni currency tickers
+     * @return the corresponding CurrencyID
+     */
     public static CurrencyID valueOf(String s) {
         switch (s) {
             case "BTC":
@@ -68,10 +96,18 @@ public final class CurrencyID implements Comparable<CurrencyID> {
         throw new IllegalArgumentException("unknown currency ticker string");
     }
 
+    /**
+     * @param idValue A currency id (aka property id) numeric value
+     * @return the corresponding CurrencyID
+     */
     public static CurrencyID of(long idValue) {
         return new CurrencyID(idValue);
     }
 
+    /**
+     * @param unsignedIntValue A currency id (aka property id) numeric value
+     * @return the corresponding CurrencyID
+     */
     public static CurrencyID ofUnsigned(int unsignedIntValue) {
         return new CurrencyID(unsignedIntValue);
     }
@@ -95,7 +131,10 @@ public final class CurrencyID implements Comparable<CurrencyID> {
         this.value = value;
     }
 
-    public Ecosystem getEcosystem() {
+    /**
+     * @return ecosystem for this currency ID
+     */
+    public Ecosystem ecosystem() {
         if (value == OMNI_VALUE) {
             return Ecosystem.OMNI;
         } else if (value == TOMNI_VALUE) {
@@ -105,6 +144,14 @@ public final class CurrencyID implements Comparable<CurrencyID> {
         } else {
             return Ecosystem.TOMNI;
         }
+    }
+
+    /**
+     * Getter-style access (for Groovy) to {@link #ecosystem()}
+     * @return ecosystem for this currency ID
+     */
+    public Ecosystem getEcosystem() {
+        return ecosystem();
     }
 
     /**
@@ -157,6 +204,9 @@ public final class CurrencyID implements Comparable<CurrencyID> {
         return value();
     }
 
+    /**
+     * @return the number value
+     */
     public long value() {
         return Integer.toUnsignedLong(value);
     }
@@ -172,11 +222,17 @@ public final class CurrencyID implements Comparable<CurrencyID> {
         return value;
     }
 
+    /**
+     ** {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return Integer.valueOf(value).hashCode();
     }
 
+    /**
+     ** {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof CurrencyID)) {
@@ -188,11 +244,17 @@ public final class CurrencyID implements Comparable<CurrencyID> {
         return this.value == ((CurrencyID)obj).value;
     }
 
+    /**
+     ** {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "CurrencyID:" + value();
     }
 
+    /**
+     ** {@inheritDoc}
+     */
     @Override
     public int compareTo(CurrencyID o) {
         return Long.compare(this.value(), o.value());

@@ -20,6 +20,10 @@ public enum PropertyType {
     @Deprecated
     public static final int DIVISIBLE_VALUE = 2;
 
+    PropertyType(int value) {
+        this.value = value;
+    }
+
     /**
      * PropertyType from `isDivisible` boolean
      *
@@ -30,8 +34,13 @@ public enum PropertyType {
         return isDivisible ? PropertyType.DIVISIBLE : PropertyType.INDIVISIBLE;
     }
 
-    PropertyType(int value) {
-        this.value = value;
+    /**
+     *
+     * @param i integer value for PropertyType
+     * @return The corresponding {@code enum}
+     */
+    public static PropertyType valueOf(int i) {
+        return i == INDIVISIBLE.value() ? INDIVISIBLE : DIVISIBLE;
     }
 
     /**
@@ -40,11 +49,7 @@ public enum PropertyType {
     public int value() {
         return value;
     }
-
-    public static PropertyType valueOf(int i) {
-        return i == INDIVISIBLE.value() ? INDIVISIBLE : DIVISIBLE;
-    }
-
+    
     /**
      * @return true if {@code DIVISIBLE}
      */

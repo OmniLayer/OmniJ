@@ -7,7 +7,7 @@ import org.bitcoinj.params.MainNetParams;
 /**
  * EXPERIMENTAL 2-way Conversion between MAINNET Omni and BTC Addresses
  */
-public class OmniBase58LegacyAddressConverter {
+class OmniBase58LegacyAddressConverter {
     static final OmniAddressMainNetParams omniParams = OmniAddressMainNetParams.get();
     static final MainNetParams btcParams = MainNetParams.get();
 

@@ -19,7 +19,7 @@ import java.util.Set;
  * Bitcoin: bc1xxxx
  * Omni: om1xxxx
  */
-public class OmniSegwitAddressConverter {
+class OmniSegwitAddressConverter {
     /**
      * Default set of Omni Networks for Omni Address parsing
      * (We don't include RegTest by default because RegTest and TestNet addresses use the same
