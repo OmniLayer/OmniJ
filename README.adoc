@@ -1,8 +1,8 @@
 = OmniJ Project
 Sean Gilligan <https://github.com/msgilligan>
-v0.5.21
+v0.6.0
 :description: OmniJ README document.
-:omnij-version: 0.5.21
+:omnij-version: 0.6.0
 
 [WARNING]
 This software is EXPERIMENTAL software for **REGTEST and TESTNET TRANSACTIONS** only. *USE ON MAINNET AT YOUR OWN RISK.*
@@ -15,12 +15,9 @@ This is pre-release software and APIs may change without notice.
 
 image:https://github.com/OmniLayer/OmniJ/workflows/Gradle%20Build/badge.svg["Build Status", link="https://github.com/OmniLayer/OmniJ/actions?query=workflow%3A%22Gradle+Build%22"] image:https://github.com/OmniLayer/OmniJ/workflows/Omni%20Core%20RegTest/badge.svg["Build Status", link="https://github.com/OmniLayer/OmniJ/actions?query=workflow%3A%22Omni+Core+RegTest%22"] image:https://github.com/OmniLayer/OmniJ/workflows/GraalVM%20Build/badge.svg["Build Status", link="https://github.com/OmniLayer/OmniJ/actions?query=workflow%3A%22GraalVM+Build%22"]
 
-// TODO: re-enable or replace TravisCI
-// image:https://travis-ci.com/OmniLayer/OmniJ.svg?branch=master["Build Status", link="https://travis-ci.com/github/OmniLayer/OmniJ"]
-
 A Java/JVM implementation of the http://www.omnilayer.org[Omni Layer], an open-source, fully decentralized asset creation platform built on the Bitcoin blockchain.
 
-There are currently ten active subprojects of OmniJ. Each of which builds a JAR artifact. Most JARs require JDK 8 or later, and others require JDK 11 or later.
+There are currently ten active subprojects of OmniJ. Each of which builds a JAR artifact. The core JARs require JDK 8 or JDK 9. Some optional JARs require later JDK versions.
 
 [options="header",frame="all"]
 |===
@@ -28,7 +25,7 @@ There are currently ten active subprojects of OmniJ. Each of which builds a JAR 
 
 | omnij-cli
 | Omni consensus-checking command-line tool.
-| 11
+| 17
 | Can be natively compiled with *GraalVM* `native-image`.
 
 | omnij-core
@@ -56,20 +53,25 @@ There are currently ten active subprojects of OmniJ. Each of which builds a JAR 
 | 9
 |
 
-| omnij-rest-client-retrofit
-| Omniwallet REST client using Retrofit library
-| 9
-| Android-compatible
-
 | omnij-rest-client-jdk
 | Omniwallet REST client using JDK 11+ `java.net.http`
 | 11
 |
 
+| omnij-rest-client-retrofit
+| Omniwallet REST client using Retrofit library
+| 9
+| Android-compatible
+
 | omnij-rpc
 | *Omni Core* *RegTest*/Integration Tests, Groovy JSON-RPC clients, command-line API/tools
 | 11
 | Uses the Apache Groovy Language
+
+| omnij-tx-records
+| Omni Transactions defined as Java records and services that use them.
+| 17
+|
 
 |===
 

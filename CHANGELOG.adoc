@@ -3,9 +3,9 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.6.0-SNAPSHOT
+== v0.6.0
 
-Released: Not yet
+Released: 2022-08-02
 
 === omnij-core
 
@@ -38,6 +38,7 @@ Released: Not yet
 
 * ConsensusJ 0.6.1
 * bitcoinj 0.16.1
+* Groovy 4.0.4
 
 === Build/Test Updates
 
