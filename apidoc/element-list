@@ -15,5 +15,8 @@ foundation.omni.rest.omniwallet
 foundation.omni.rest.omniwallet.mjdk
 foundation.omni.rpc
 foundation.omni.rpc.test
+foundation.omni.sendtool
 foundation.omni.test
 foundation.omni.tx
+foundation.omni.txrecords
+foundation.omni.txsigner
