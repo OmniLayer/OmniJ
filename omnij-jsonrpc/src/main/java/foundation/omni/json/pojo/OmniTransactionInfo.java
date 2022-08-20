@@ -2,7 +2,6 @@ package foundation.omni.json.pojo;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
@@ -15,6 +14,13 @@ import java.util.Map;
 
 /**
  * (Mostly) Immutable representation of OmniTransaction info JSON
+ * <p>
+ * It is not fully-immutable because of {@link #addOtherInfo(String, Object)} which should only be used by Jackson
+ * when deserializing. In the future we might use subclasses and polymorphism to define the properties for each type
+ * of Omni transaction.
+ * <p>
+ * This is returned by {@link foundation.omni.rpc.OmniClient#omniGetTransaction(Sha256Hash)},
+ * {@link foundation.omni.rpc.OmniClient#omniListTransactions()}, and {@link foundation.omni.rpc.OmniClient#omniListTransactions()}.
  */
 public class OmniTransactionInfo {
     private final Sha256Hash txId;
@@ -34,7 +40,7 @@ public class OmniTransactionInfo {
     private final CurrencyID propertyId;
     private final Sha256Hash blockHash;
     private final int block;
-    private Map<String, Object> otherInfo;
+    private final Map<String, Object> otherInfo;
 
     /* Add a map of additional properties or polymorphism, for now we're using @JsonIgnoreProperties */
 
@@ -73,13 +79,11 @@ public class OmniTransactionInfo {
         this.propertyId = propertyId;
         this.blockHash = blockHash;
         this.block = block;
+        this.otherInfo = new HashMap<>();
     }
 
     @JsonAnySetter
     public void addOtherInfo(String propertyKey, Object value) {
-        if (this.otherInfo == null) {
-            this.otherInfo = new HashMap<>();
-        }
         this.otherInfo.put(propertyKey, value);
     }
 
