@@ -37,17 +37,17 @@ class ManagedPropertySpec extends BaseRegTestSpec {
                                              "This is a test for managed properties")
         generateBlocks(1)
         def creationTx = omniGetTransaction(creationTxid)
-        currencyID = new CurrencyID(creationTx.propertyid as Long)
+        currencyID = creationTx.propertyId
 
         then: "the transaction is valid"
         creationTx.valid
 
         and: "it has the specified values"
-        creationTx.txid == creationTxid.toString()
-        creationTx.type_int == 54
+        creationTx.txId == creationTxid
+        creationTx.typeInt == 54
         creationTx.divisible == false
-        creationTx.propertyname == "ManagedTokens"
-        creationTx.amount as Integer == 0
+        creationTx.otherInfo.propertyname == "ManagedTokens"
+        creationTx.amount == 0
 
         and: "there is a new property"
         omniListProperties().size() == old(omniListProperties().size()) + 1
@@ -100,12 +100,12 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).txid == txid.toString()
+        omniGetTransaction(txid).txId == txid
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).type_int == 55
-        omniGetTransaction(txid).propertyid == currencyID.getValue()
-        omniGetTransaction(txid).divisible == false
-        omniGetTransaction(txid).amount as Integer == 100
+        omniGetTransaction(txid).typeInt == 55
+        omniGetTransaction(txid).propertyId == currencyID
+        !omniGetTransaction(txid).divisible
+        omniGetTransaction(txid).amount == 100
     }
 
     def "Granting tokens increases the total number of tokens"() {
@@ -131,12 +131,12 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).txid == txid.toString()
+        omniGetTransaction(txid).txId == txid
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).type_int == 55
-        omniGetTransaction(txid).propertyid == currencyID.getValue()
-        omniGetTransaction(txid).divisible == false
-        omniGetTransaction(txid).amount as Integer == 170
+        omniGetTransaction(txid).typeInt == 55
+        omniGetTransaction(txid).propertyId == currencyID
+        !omniGetTransaction(txid).divisible
+        omniGetTransaction(txid).amount == 170
 
         and:
         omniGetProperty(currencyID).totaltokens == 270
@@ -149,7 +149,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).valid == false
+        !omniGetTransaction(txid).valid
     }
 
     def "Granting tokens for a property with fixed supply is invalid"() {
@@ -158,7 +158,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).valid == false
+        !omniGetTransaction(txid).valid
 
         and:
         omniGetProperty(nonManagedID).totaltokens == old(omniGetProperty(nonManagedID)).totaltokens
@@ -171,7 +171,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).valid == false
+        !omniGetTransaction(txid).valid
 
         and:
         omniGetProperty(currencyID).totaltokens == 270
@@ -186,7 +186,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
         then:
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).amount as Long == 9223372036854775537L
+        omniGetTransaction(txid).amount.longValueExact() == 9223372036854775537L
 
         and:
         omniGetProperty(currencyID).totaltokens == 9223372036854775807L
@@ -200,7 +200,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).valid == false
+        !omniGetTransaction(txid).valid
 
         and:
         omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens
@@ -228,7 +228,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).valid == false
+        !omniGetTransaction(txid).valid
 
         and:
         omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens
@@ -242,12 +242,12 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).txid == txid.toString()
+        omniGetTransaction(txid).txId == txid
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).type_int == 56
-        omniGetTransaction(txid).propertyid == currencyID.getValue()
-        omniGetTransaction(txid).divisible == false
-        omniGetTransaction(txid).amount as Long == 9223372036854775805L
+        omniGetTransaction(txid).typeInt == 56
+        omniGetTransaction(txid).propertyId == currencyID
+        !omniGetTransaction(txid).divisible
+        omniGetTransaction(txid).amount.longValueExact() == 9223372036854775805L
     }
 
     def "Revoking tokens decreases the total number of tokens"() {
@@ -272,7 +272,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).valid == false
+        !omniGetTransaction(txid).valid
     }
 
     @Ignore
@@ -282,7 +282,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).valid == false
+        !omniGetTransaction(txid).valid
 
         and:
         omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens
@@ -296,7 +296,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).valid == false
+        !omniGetTransaction(txid).valid
 
         and:
         omniGetProperty(nonManagedID).totaltokens == old(omniGetProperty(nonManagedID)).totaltokens
@@ -309,7 +309,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).valid == false
+        !omniGetTransaction(txid).valid
 
         and:
         omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens

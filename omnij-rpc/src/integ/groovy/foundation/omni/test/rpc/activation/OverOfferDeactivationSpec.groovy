@@ -40,8 +40,8 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
 
         then:
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).amount as BigDecimal != orderAmountMSC.numberValue()
-        omniGetTransaction(txid).amount as BigDecimal == balanceAtStart.numberValue() // less than offered!
+        omniGetTransaction(txid).amount != orderAmountMSC
+        omniGetTransaction(txid).amount == balanceAtStart // less than offered!
 
         and:
         omniGetBalance(actorAddress, CurrencyID.OMNI).balance.numberValue() == 0.0
@@ -80,8 +80,8 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
 
         then:
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).amount as BigDecimal != orderAmountMSC.numberValue()
-        omniGetTransaction(txid).amount as BigDecimal == balanceAtStart.numberValue() // less than offered!
+        omniGetTransaction(txid).amount != orderAmountMSC
+        omniGetTransaction(txid).amount == balanceAtStart // less than offered!
 
         and:
         omniGetBalance(actorAddress, CurrencyID.OMNI).balance.numberValue() == 0.0
@@ -122,7 +122,7 @@ class OverOfferDeactivationSpec extends BaseActivationSpec {
 
         then:
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).amount as BigDecimal == orderAmountMSC.numberValue()
+        omniGetTransaction(txid).amount == orderAmountMSC
 
         and:
         omniGetBalance(actorAddress, CurrencyID.OMNI).balance.numberValue() == 0.0

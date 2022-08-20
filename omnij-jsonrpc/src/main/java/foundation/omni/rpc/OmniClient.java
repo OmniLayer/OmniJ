@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import foundation.omni.*;
 import foundation.omni.json.conversion.OmniClientModule;
 import foundation.omni.json.pojo.OmniPropertyInfo;
+import foundation.omni.json.pojo.OmniTransactionInfo;
 import foundation.omni.net.OmniNetworkParameters;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
@@ -23,7 +24,6 @@ import java.util.Map;
 import java.util.SortedMap;
 
 // TODO: add missing RPCs:
-// - omni_listtransactions
 // - omni_gettradehistoryforpair
 // - omni_gettradehistoryforaddress
 
@@ -203,14 +203,22 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     /**
      * Returns information about an Omni Layer transaction.
      *
-     * @param txid The hash of the transaction to look up
+     * @param txId The hash of the transaction to look up
      * @return Information about the transaction
      * @throws JsonRpcException JSON RPC error
      * @throws IOException network error
      */
-    public Map<String, Object> omniGetTransaction(Sha256Hash txid) throws JsonRpcException, IOException {
-        Map<String, Object> transaction = send("omni_gettransaction", txid);
-        return transaction;
+    public OmniTransactionInfo omniGetTransaction(Sha256Hash txId) throws JsonRpcException, IOException {
+        return send("omni_gettransaction", OmniTransactionInfo.class, txId);
+    }
+
+    public List<OmniTransactionInfo> omniListTransactions() throws JsonRpcException, IOException {
+        return omniListTransactions(null, null, null, null, null);
+    }
+
+    public List<OmniTransactionInfo> omniListTransactions(String addressFilter, Integer count, Integer skip, Integer startBlock, Integer endBlock) throws JsonRpcException, IOException {
+        JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, OmniTransactionInfo.class);
+        return send("omni_listtransactions", resultType, addressFilter, count, skip, startBlock, endBlock);
     }
 
     /**

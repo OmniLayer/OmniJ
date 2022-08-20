@@ -39,15 +39,15 @@ class SmartPropertySpec extends BaseRegTestSpec {
         transaction.confirmations == 1
 
         and: "it should be valid"
-        transaction.valid == true
+        transaction.isValid()
 
         and: "is in the main ecosystem"
-        def propertyId = new CurrencyID(transaction.propertyid)
+        def propertyId = transaction.propertyId
         propertyId.ecosystem == Ecosystem.OMNI
 
         and: "has 3.14159265 divisible units"
-        transaction.divisible == true
-        transaction.amount == "3.14159265"
+        transaction.divisible
+        transaction.amount == 3.14159265
 
         and: "this amount was credited to the issuer"
         def available = omniGetBalance(fundedAddress, propertyId)
@@ -66,15 +66,15 @@ class SmartPropertySpec extends BaseRegTestSpec {
         transaction.confirmations == 1
 
         and: "it should be valid"
-        transaction.valid == true
+        transaction.valid
 
         and: "is in the test ecosystem"
-        def propertyId = new CurrencyID(transaction.propertyid)
+        def propertyId = transaction.propertyId
         propertyId.ecosystem == Ecosystem.TOMNI
 
         and: "has 4815162342 indivisible units"
-        transaction.divisible == false
-        transaction.amount == "4815162342"
+        !transaction.divisible
+        transaction.amount == 4815162342
 
         and: "this amount was credited to the issuer"
         def available = omniGetBalance(fundedAddress, propertyId)

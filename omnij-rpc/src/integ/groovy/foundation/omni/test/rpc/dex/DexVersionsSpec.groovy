@@ -35,7 +35,7 @@ class DexVersionsSpec extends BaseRegTestSpec {
         def offerTx = omniGetTransaction(txid)
 
         then:
-        offerTx.action == "new" // implicit
+        offerTx.otherInfo.action == "new" // implicit
         offerTx.valid
     }
 
@@ -63,7 +63,7 @@ class DexVersionsSpec extends BaseRegTestSpec {
         def offerTx = omniGetTransaction(txid)
 
         then:
-        offerTx.action == "new" // explicit
+        offerTx.otherInfo.action == "new" // explicit
         offerTx.valid
     }
 

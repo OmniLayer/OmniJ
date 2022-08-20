@@ -33,15 +33,15 @@ class SendAllSpec extends BaseRegTestSpec {
         sendTx.valid
 
         and: "it has the specified values"
-        sendTx.txid == sendTxid.toString()
-        sendTx.sendingaddress == actorAddress.toString()
-        sendTx.referenceaddress == otherAddress.toString()
-        sendTx.type_int == 4
-        sendTx.ecosystem == ecosystemToString(ecosystem)
-        sendTx.containsKey('subsends')
+        sendTx.txId == sendTxid
+        sendTx.sendingAddress == actorAddress
+        sendTx.referenceAddress == otherAddress
+        sendTx.typeInt == 4
+        sendTx.otherInfo.ecosystem == ecosystemToString(ecosystem)
+        sendTx.otherInfo.containsKey('subsends')
 
         and:
-        List<Map<String, Object>> subSends = sendTx['subsends']
+        List<Map<String, Object>> subSends = sendTx.otherInfo['subsends']
         subSends.size() == 1
         subSends[0].propertyid == ecosystem.value()
         subSends[0].divisible

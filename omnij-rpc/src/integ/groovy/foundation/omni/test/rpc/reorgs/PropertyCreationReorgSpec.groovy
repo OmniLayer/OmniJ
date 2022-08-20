@@ -74,7 +74,7 @@ class PropertyCreationReorgSpec extends BaseReorgSpec {
 
         and: "the created property is in the correct ecosystem"
         def txCreation = omniGetTransaction(txid)
-        def currencyID = new CurrencyID(txCreation.propertyid as long)
+        def currencyID = txCreation.propertyId
         currencyID.ecosystem == ecosystem
 
         and: "it has the expected next currency identifier"

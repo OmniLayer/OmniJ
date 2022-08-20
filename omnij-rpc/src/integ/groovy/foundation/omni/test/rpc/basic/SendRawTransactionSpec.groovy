@@ -36,13 +36,13 @@ class SendRawTransactionSpec extends BaseRegTestSpec {
         transaction.confirmations == 1
 
         and: "the transaction should be valid"
-        transaction.valid == true
+        transaction.isValid()
 
         and: "we are the sender"
-        transaction.sendingaddress == activeAddress.toString()
+        transaction.sendingAddress == activeAddress
 
         and: "it has the reference address"
-        transaction.referenceaddress == passiveAddress.toString()
+        transaction.referenceAddress == passiveAddress
 
         where:
         rawTxHex << ["00000000000000010000000000000001", // Simple Send: transfer  0.00000001 MSC
@@ -61,10 +61,10 @@ class SendRawTransactionSpec extends BaseRegTestSpec {
         transaction.confirmations == 1
 
         and: "the transaction should be valid"
-        transaction.valid == true
+        transaction.isValid()
 
         and: "we are the sender"
-        transaction.sendingaddress == activeAddress.toString()
+        transaction.sendingAddress == activeAddress
 
         where:
         rawTxHex << [// Tx 20: Offer 1,0 MSC for 0.15 BTC on the distributed exchange

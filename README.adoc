@@ -272,17 +272,17 @@ These sample Spock "feature tests" are from the file https://github.com/OmniLaye
                           "This is a test for managed properties")
         generateBlocks(1)
         def creationTx = omniGetTransaction(creationTxid)
-        currencyID = new CurrencyID(creationTx.propertyid as Long)
+        currencyID = creationTx.propertyId
 
         then: "the transaction is valid"
         creationTx.valid
 
         and: "it has the specified values"
-        creationTx.txid == creationTxid.toString()
-        creationTx.type_int == 54
+        creationTx.txiId == creationTxid.toString()
+        creationTx.typeInt == 54
         creationTx.divisible == false
         creationTx.propertyname == "ManagedTokens"
-        creationTx.amount as Integer == 0
+        creationTx.amount == 0
 
         and: "there is a new property"
         omniListProperties().size() == old(omniListProperties().size()) + 1

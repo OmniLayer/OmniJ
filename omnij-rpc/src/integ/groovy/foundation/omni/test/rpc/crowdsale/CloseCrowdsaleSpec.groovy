@@ -26,7 +26,7 @@ class CloseCrowdsaleSpec extends BaseRegTestSpec {
         generateBlocks(1)
         def creationTx = omniGetTransaction(txid)
         assert (creationTx.valid)
-        currencyID = new CurrencyID(creationTx.propertyid as Long)
+        currencyID = creationTx.propertyId
         nonCrowdsaleID = fundNewProperty(actorAddress, 500.divisible, Ecosystem.TOMNI)
     }
 

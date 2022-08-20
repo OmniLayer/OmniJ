@@ -19,7 +19,7 @@ def creationTxId = client.createManagedProperty(managerAddress, Ecosystem.OMNI, 
         "This is a test for managed properties")
 env.waitForBlocks(1)
 def creationTx = client.omniGetTransaction(creationTxId)
-def currencyID = new CurrencyID(creationTx.propertyid as Long)
+def currencyID = creationTx.propertyId
 println "created currencyID ${currencyID}"
 
 // Can Issue Tokens

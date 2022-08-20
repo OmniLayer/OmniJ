@@ -221,9 +221,9 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def txidCreation = createProperty(ownerA, ecosystem, amountSTO)
         generateBlocks(1)
         def txCreation = omniGetTransaction(txidCreation)
-        assert txCreation.valid == true
+        assert txCreation.valid
         assert txCreation.confirmations == 1
-        def currencySPT = new CurrencyID(txCreation.propertyid)
+        def currencySPT = txCreation.propertyId
 
         // Owner A has the tokens
         assert omniGetBalance(actorAddress, currencySPT).balance == 0.0.divisible
@@ -375,11 +375,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         def transaction = omniGetTransaction(txid)
-        assert transaction.valid == true
+        assert transaction.valid
         assert transaction.confirmations == 1
 
-        def currencyID = new CurrencyID(transaction.propertyid)
-        return currencyID
+        return transaction.propertyId
     }
 
     /**
@@ -395,7 +394,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         def transaction = omniGetTransaction(txid)
-        assert transaction.valid == true
+        assert transaction.valid
         assert transaction.confirmations == 1
     }
 

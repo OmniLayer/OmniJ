@@ -46,7 +46,7 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         def txidCreation = createProperty(senderAddress, ecosystem, amountToCreate)
         generateBlocks(1)
         def txCreation = omniGetTransaction(txidCreation)
-        def currencyID = new CurrencyID(txCreation.propertyid as long)
+        def currencyID = txCreation.propertyId
 
         when: "funding the owners with a new property"
         omniSend(senderAddress, dummyOwnerA, currencyID, 1.indivisible)

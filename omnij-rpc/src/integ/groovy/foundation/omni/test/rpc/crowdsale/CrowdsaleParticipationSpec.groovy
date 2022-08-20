@@ -44,7 +44,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         crowdsaleTx.valid
 
         and: "the crowdsale is active"
-        def propertyId = new CurrencyID(crowdsaleTx.propertyid as Long)
+        def propertyId = crowdsaleTx.propertyId
         omniGetCrowdsale(propertyId).active
 
         when: "participant invests #amountToInvest OMNI"
@@ -61,20 +61,20 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         def sendTx = omniGetTransaction(sendTxid)
 
         then: "it's a valid crowdsale participation transaction"
-        sendTx.txid == sendTxid.toString()
-        sendTx.sendingaddress == investorAddress.toString()
-        sendTx.referenceaddress == issuerAddress.toString()
+        sendTx.txId == sendTxid
+        sendTx.sendingAddress == investorAddress
+        sendTx.referenceAddress == issuerAddress
         sendTx.version == 0
-        sendTx.type_int == 0
+        sendTx.typeInt == 0
         sendTx.type == "Crowdsale Purchase"
-        sendTx.propertyid == currencyMSC.getValue()
+        sendTx.propertyId == currencyMSC
         sendTx.divisible
-        sendTx.amount as BigDecimal == amountToInvest.bigDecimalValue()
-        sendTx.purchasedpropertyid == propertyId.getValue()
-        sendTx.purchasedpropertyname == "MDiv"
-        sendTx.purchasedpropertydivisible
-        sendTx.purchasedtokens as BigDecimal == expectedBalance.bigDecimalValue()
-        sendTx.issuertokens as BigDecimal == 0.0 // no bonus applied
+        sendTx.amount == amountToInvest
+        sendTx.otherInfo.purchasedpropertyid == propertyId.getValue()
+        sendTx.otherInfo.purchasedpropertyname == "MDiv"
+        sendTx.otherInfo.purchasedpropertydivisible
+        sendTx.otherInfo.purchasedtokens as BigDecimal == expectedBalance.bigDecimalValue()
+        sendTx.otherInfo.issuertokens as BigDecimal == 0.0 // no bonus applied
         sendTx.valid
 
         when: "retrieving information about the crowdsale"
@@ -142,7 +142,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         crowdsaleTx.valid
 
         and: "the crowdsale is active"
-        def propertyId = new CurrencyID(crowdsaleTx.propertyid as Long)
+        def propertyId = crowdsaleTx.propertyId
         omniGetCrowdsale(propertyId).active
 
         when: "participant invests #amountToInvest OMNI"
@@ -159,20 +159,20 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         def sendTx = omniGetTransaction(sendTxid)
 
         then: "it's a valid crowdsale participation transaction"
-        sendTx.txid == sendTxid.toString()
-        sendTx.sendingaddress == investorAddress.toString()
-        sendTx.referenceaddress == issuerAddress.toString()
+        sendTx.txId == sendTxid
+        sendTx.sendingAddress == investorAddress
+        sendTx.referenceAddress == issuerAddress
         sendTx.version == 0
-        sendTx.type_int == 0
+        sendTx.typeInt == 0
         sendTx.type == "Crowdsale Purchase"
-        sendTx.propertyid == currencyMSC.getValue()
+        sendTx.propertyId == currencyMSC
         sendTx.divisible
-        sendTx.amount as BigDecimal == amountToInvest.bigDecimalValue()
-        sendTx.purchasedpropertyid == propertyId.getValue()
-        sendTx.purchasedpropertyname == "MDiv"
-        sendTx.purchasedpropertydivisible
-        sendTx.purchasedtokens as BigDecimal == expectedBalance.bigDecimalValue()
-        sendTx.issuertokens as BigDecimal == 0.0 // no bonus applied
+        sendTx.amount == amountToInvest
+        sendTx.otherInfo.purchasedpropertyid == propertyId.getValue()
+        sendTx.otherInfo.purchasedpropertyname == "MDiv"
+        sendTx.otherInfo.purchasedpropertydivisible
+        sendTx.otherInfo.purchasedtokens as BigDecimal == expectedBalance.bigDecimalValue()
+        sendTx.otherInfo.issuertokens as BigDecimal == 0.0 // no bonus applied
         sendTx.valid
 
         when: "retrieving information about the crowdsale"
@@ -244,7 +244,7 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         crowdsaleTx.valid
 
         and: "the crowdsale is active"
-        def propertyId = new CurrencyID(crowdsaleTx.propertyid as Long)
+        def propertyId = crowdsaleTx.propertyId
         omniGetCrowdsale(propertyId).active
 
         when: "participant invests #amountToInvest TOMNI"
@@ -261,20 +261,20 @@ class CrowdsaleParticipationSpec extends BaseRegTestSpec {
         def sendTx = omniGetTransaction(sendTxid)
 
         then: "it's a valid crowdsale participation transaction"
-        sendTx.txid == sendTxid.toString()
-        sendTx.sendingaddress == investorAddress.toString()
-        sendTx.referenceaddress == issuerAddress.toString()
+        sendTx.txId == sendTxid
+        sendTx.sendingAddress == investorAddress
+        sendTx.referenceAddress == issuerAddress
         sendTx.version == 0
-        sendTx.type_int == 0
+        sendTx.typeInt == 0
         sendTx.type == "Crowdsale Purchase"
-        sendTx.propertyid == currencyMSC.getValue()
+        sendTx.propertyId == currencyMSC
         sendTx.divisible
-        sendTx.amount as BigDecimal == amountToInvest.numberValue()
-        sendTx.purchasedpropertyid == propertyId.getValue()
-        sendTx.purchasedpropertyname == "TIndiv"
-        !sendTx.purchasedpropertydivisible
-        sendTx.purchasedtokens as Long == expectedBalance.numberValue()
-        sendTx.issuertokens as BigDecimal == 0.0 // no bonus applied
+        sendTx.amount == amountToInvest
+        sendTx.otherInfo.purchasedpropertyid == propertyId.getValue()
+        sendTx.otherInfo.purchasedpropertyname == "TIndiv"
+        !sendTx.otherInfo.purchasedpropertydivisible
+        sendTx.otherInfo.purchasedtokens as Long == expectedBalance.numberValue()
+        sendTx.otherInfo.issuertokens as BigDecimal == 0.0 // no bonus applied
         sendTx.valid
 
         when: "retrieving information about the crowdsale"

@@ -34,18 +34,18 @@ class DexSpec extends BaseRegTestSpec {
         def offerTx = omniGetTransaction(offerTxid)
 
         then: "it is a valid transaction"
-        offerTx.txid == offerTxid.toString()
-        offerTx.sendingaddress == fundedAddress.toString()
+        offerTx.txId == offerTxid
+        offerTx.sendingAddress == fundedAddress
         offerTx.version == 1
-        offerTx.type_int == 20
+        offerTx.typeInt == 20
         offerTx.type == "DEx Sell Offer"
-        offerTx.propertyid == currencyOffered.getValue()
+        offerTx.propertyId == currencyOffered
         offerTx.divisible
-        offerTx.amount as BigDecimal == amountOffered.numberValue()
-        offerTx.bitcoindesired as BigDecimal == desiredBTC.decimalBtc
-        offerTx.timelimit == stdBlockSpan
-        offerTx.feerequired as BigDecimal == stdCommitFee.decimalBtc
-        offerTx.action == "new"
+        offerTx.amount == amountOffered
+        offerTx.otherInfo.bitcoindesired as BigDecimal == desiredBTC.decimalBtc
+        offerTx.otherInfo.timelimit == stdBlockSpan
+        offerTx.otherInfo.feerequired as BigDecimal == stdCommitFee.decimalBtc
+        offerTx.otherInfo.action == "new"
         offerTx.valid
         offerTx.confirmations == 1
 
@@ -74,7 +74,7 @@ class DexSpec extends BaseRegTestSpec {
         then: "the transaction should be a valid offering of #currencyOffered"
         def offerTx = omniGetTransaction(offerTxid)
         offerTx.valid == true
-        offerTx.propertyid == currencyOffered.getValue()
+        offerTx.propertyId == currencyOffered
 
         where: "the currency identifier is either OMNI or TOMNI"
         currencyOffered << [OMNI, TOMNI]
@@ -93,7 +93,7 @@ class DexSpec extends BaseRegTestSpec {
 
         then: "this indicates to sell all tokens that are available"
         def offerTx = omniGetTransaction(offerTxid)
-        def offerAmount = OmniDivisibleValue.of(new BigDecimal(offerTx.amount))
+        def offerAmount = offerTx.amount
         def amountAvailableNow = omniGetBalance(fundedAddress, currencyOffered).balance
         offerTx.valid == true
         offerAmount.equals(amountAvailableAtStart)
@@ -116,7 +116,7 @@ class DexSpec extends BaseRegTestSpec {
 
         then: "the offered amount is reserved and subtracted from the available balance"
         def offerTx = omniGetTransaction(offerTxid)
-        def offerAmount = OmniDivisibleValue.of(new BigDecimal(offerTx.amount))
+        def offerAmount = offerTx.amount
         def balanceNow = omniGetBalance(fundedAddress, currencyOffered)
         offerTx.valid == true
         balanceNow.balance.equals(balanceAtStart.balance - offerAmount)
@@ -145,7 +145,7 @@ class DexSpec extends BaseRegTestSpec {
         then: "any tokens received are added to the available balance"
         def balanceNow = omniGetBalance(fundedAddress, currencyOffered)
         def sendTx = omniGetTransaction(sendTxid)
-        def sendAmount = OmniDivisibleValue.of(new BigDecimal(sendTx.amount))
+        def sendAmount = sendTx.amount
         sendTx.valid == true
         balanceNow.balance.equals(balanceBeforeReceivingMore.balance + sendAmount)
 
@@ -196,7 +196,7 @@ class DexSpec extends BaseRegTestSpec {
 
         then:
         omniGetTransaction(offerTxid).valid
-        omniGetTransaction(offerTxid).amount as BigDecimal == offeredMSC.numberValue()
+        omniGetTransaction(offerTxid).amount == offeredMSC
 
         and:
         omniGetBalance(fundedAddress, currencyOffered).balance.equals(balanceAtStart.balance - offeredMSC)
@@ -214,8 +214,8 @@ class DexSpec extends BaseRegTestSpec {
         def updateTx = omniGetTransaction(updateTxid)
 
         then: "the offered amount is updated"
-        updateTx.amount as BigDecimal == updatedMSC.numberValue()
-        updateTx.action == "update"
+        updateTx.amount == updatedMSC
+        updateTx.otherInfo.action == "update"
         updateTx.valid
 
         and: "the total amount offered is reserved"
@@ -232,7 +232,7 @@ class DexSpec extends BaseRegTestSpec {
 
         then: "the transaction is valid"
         cancelTx.valid
-        cancelTx.action == "cancel"
+        cancelTx.otherInfo.action == "cancel"
 
         and: "the original balance is restored"
         omniGetBalance(fundedAddress, currencyOffered).balance .equals(balanceAtStart.balance)
@@ -269,15 +269,15 @@ class DexSpec extends BaseRegTestSpec {
         def acceptTx = omniGetTransaction(acceptTxid)
 
         then: "the information matches the specified data"
-        acceptTx.txid == acceptTxid.toString()
-        acceptTx.sendingaddress == actorB.toString()
-        acceptTx.referenceaddress == actorA.toString()
+        acceptTx.txId == acceptTxid
+        acceptTx.sendingAddress == actorB
+        acceptTx.referenceAddress == actorA
         acceptTx.version == 0
-        acceptTx.type_int == 22
+        acceptTx.typeInt == 22
         acceptTx.type == "DEx Accept Offer"
-        acceptTx.propertyid == currencyOffered.value
+        acceptTx.propertyId == currencyOffered
         acceptTx.divisible
-        acceptTx.amount as BigDecimal == offeredMSC.numberValue()
+        acceptTx.amount == offeredMSC
         acceptTx.confirmations == 1
 
         where:

@@ -137,9 +137,9 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
 
         generateBlocks(1)
         def txCreation = omniGetTransaction(txidCreation)
-        assert txCreation.valid == true
+        assert txCreation.valid
         assert txCreation.confirmations == 1
-        return new CurrencyID(txCreation.propertyid as long)
+        return txCreation.propertyId
     }
 
     CurrencyID fundManagedProperty(Address address, PropertyType type, Ecosystem ecosystem) {
@@ -154,7 +154,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
                 "")                 // data
         generateBlocks(1)
         def txCreation = omniGetTransaction(txidCreation)
-        assert txCreation.valid == true
+        assert txCreation.valid
         assert txCreation.confirmations == 1
         return new CurrencyID(txCreation.propertyid as long)
     }
