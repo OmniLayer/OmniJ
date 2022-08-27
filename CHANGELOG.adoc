@@ -7,6 +7,10 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: Not yet
 
+=== Dependency Updates
+
+* SLF4J 2.0.0
+
 == v0.6.0
 
 Released: 2022-08-02
