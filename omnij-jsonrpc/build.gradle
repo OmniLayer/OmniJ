@@ -10,7 +10,7 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     api project(':omnij-core')
-    api "${consensusjGroup}:${consensusjBtcJsonRpcArtifact}:${consensusjVersion}"
+    api "${consensusjGroup}:cj-btc-jsonrpc:${consensusjVersion}"
     api "${consensusjGroup}:cj-btc-rx-jsonrpc:${consensusjVersion}"
 
     testImplementation "org.apache.groovy:groovy:${groovyVersion}"

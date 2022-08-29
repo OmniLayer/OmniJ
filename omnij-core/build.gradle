@@ -5,7 +5,7 @@ plugins {
 ext.moduleName = 'foundation.omni'
 
 dependencies {
-    api "${bitcoinjGroup}:${bitcoinjArtifact}:${bitcoinjVersion}"
+    api "org.bitcoinj:bitcoinj-core:${bitcoinjVersion}"
     api 'javax.money:money-api:1.1'
 }
 
