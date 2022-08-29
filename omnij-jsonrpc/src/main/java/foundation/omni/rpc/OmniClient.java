@@ -216,6 +216,22 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
         return omniListTransactions(null, null, null, null, null);
     }
 
+    public List<OmniTransactionInfo> omniListTransactions(String addressFilter, int count) throws JsonRpcException, IOException {
+        return omniListTransactions(addressFilter, count, null, null, null);
+    }
+
+    /**
+     * Return a list of wallet transactions
+     *
+     * @param addressFilter Return transactions matching this address, use "*" to return all transactions.
+     * @param count maximum transaction count to return
+     * @param skip number to skip
+     * @param startBlock starting block
+     * @param endBlock ending block
+     * @return a list of transaction info objects
+     * @throws JsonRpcException JSON RPC error
+     * @throws IOException network error
+     */
     public List<OmniTransactionInfo> omniListTransactions(String addressFilter, Integer count, Integer skip, Integer startBlock, Integer endBlock) throws JsonRpcException, IOException {
         JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, OmniTransactionInfo.class);
         return send("omni_listtransactions", resultType, addressFilter, count, skip, startBlock, endBlock);
