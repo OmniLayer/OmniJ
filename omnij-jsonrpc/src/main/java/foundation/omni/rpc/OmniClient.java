@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import foundation.omni.*;
 import foundation.omni.json.conversion.OmniClientModule;
 import foundation.omni.json.pojo.OmniPropertyInfo;
+import foundation.omni.json.pojo.OmniTradeInfo;
 import foundation.omni.json.pojo.OmniTransactionInfo;
 import foundation.omni.net.OmniNetworkParameters;
 import org.bitcoinj.core.Address;
@@ -25,7 +26,6 @@ import java.util.SortedMap;
 
 // TODO: add missing RPCs:
 // - omni_gettradehistoryforpair
-// - omni_gettradehistoryforaddress
 
 /**
  * Pure Java Bitcoin and Omni Core JSON-RPC client with camelCase method names.
@@ -651,9 +651,14 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @throws IOException network error
      * @since Omni Core 0.0.10
      */
-    public Map<String, Object> omniGetTrade(Sha256Hash txid) throws JsonRpcException, IOException {
-        Map<String, Object> trade = send("omni_gettrade", txid);
+    public OmniTradeInfo omniGetTrade(Sha256Hash txid) throws JsonRpcException, IOException {
+        OmniTradeInfo trade = send("omni_gettrade", OmniTradeInfo.class, txid);
         return trade;
+    }
+
+    public List<OmniTradeInfo> omniGetTradeHistoryForAddress(Address address, Integer count, CurrencyID propertyId) throws JsonRpcException, IOException {
+        JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, OmniTradeInfo.class);
+        return send("omni_gettradehistoryforaddress", resultType, address, count, propertyId);
     }
 
     /**
