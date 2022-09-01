@@ -130,15 +130,15 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
 
         and:
         omniGetTrade(tradeTxid).status == "open"
-        omniGetTrade(tradeTxid).amountremaining as Long == amountForSale.numberValue()
-        omniGetTrade(tradeTxid).amounttofill as Long == amountDesired.numberValue()
-        omniGetTrade(tradeTxid).amountforsale as Long == amountForSale.numberValue()
-        omniGetTrade(tradeTxid).amountdesired as Long == amountDesired.numberValue()
-        omniGetTrade(tradeTxid).propertyidforsale == tokenA.getValue()
-        omniGetTrade(tradeTxid).propertyiddesired == tokenB.getValue()
-        !omniGetTrade(tradeTxid).propertyidforsaleisdivisible
-        !omniGetTrade(tradeTxid).propertyiddesiredisdivisible
-        omniGetTrade(tradeTxid).unitprice == "2.00000000000000000000000000000000000000000000000000"
+        omniGetTrade(tradeTxid).amountRemaining == amountForSale
+        omniGetTrade(tradeTxid).amountToFill == amountDesired
+        omniGetTrade(tradeTxid).amountForSale == amountForSale
+        omniGetTrade(tradeTxid).amountDesired == amountDesired
+        omniGetTrade(tradeTxid).propertyIdForSale == tokenA
+        omniGetTrade(tradeTxid).propertyIdDesired == tokenB
+        !omniGetTrade(tradeTxid).propertyIdForSaleIsDivisible
+        !omniGetTrade(tradeTxid).propertyIdDesiredIsDivisble
+        omniGetTrade(tradeTxid).unitPrice == "2.00000000000000000000000000000000000000000000000000"
 
         and:
         omniGetBalance(actorAddress, tokenA).balance == balanceAtStart.balance - amountForSale
@@ -155,13 +155,13 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
         omniGetTrade(tradeTxid).status == "cancelled"
 
         and:
-        omniGetTrade(cancelTxid).propertyidforsale == tokenA.getValue()
-        !omniGetTrade(cancelTxid).propertyidforsaleisdivisible
-        omniGetTrade(cancelTxid).amountforsale as Long == amountForSale.numberValue()
-        omniGetTrade(cancelTxid).propertyiddesired == tokenB.getValue()
-        !omniGetTrade(cancelTxid).propertyiddesiredisdivisible
-        omniGetTrade(cancelTxid).amountdesired as Long == amountDesired.numberValue()
-        omniGetTrade(cancelTxid).unitprice == "2.00000000000000000000000000000000000000000000000000"
+        omniGetTrade(cancelTxid).propertyIdForSale == tokenA
+        !omniGetTrade(cancelTxid).propertyIdForSaleIsDivisible
+        omniGetTrade(cancelTxid).amountForSale == amountForSale
+        omniGetTrade(cancelTxid).propertyIdDesired == tokenB
+        !omniGetTrade(cancelTxid).propertyIdDesiredIsDivisble
+        omniGetTrade(cancelTxid).amountDesired == amountDesired
+        omniGetTrade(cancelTxid).unitPrice == "2.00000000000000000000000000000000000000000000000000"
 
         and:
         omniGetBalance(actorAddress, tokenA) == balanceAtStart
@@ -188,9 +188,9 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
         then: "it is a valid open order"
         omniGetTrade(txidOfferA).valid
         omniGetTrade(txidOfferA).status == "open"
-        omniGetTrade(txidOfferA).propertyidforsale == propertySPX.getValue()
-        omniGetTrade(txidOfferA).propertyiddesired == propertySPY.getValue()
-        omniGetTrade(txidOfferA).unitprice == unitPrice
+        omniGetTrade(txidOfferA).propertyIdForSale == propertySPX
+        omniGetTrade(txidOfferA).propertyIdDesired == propertySPY
+        omniGetTrade(txidOfferA).unitPrice == unitPrice
 
         and: "there is an offering for the new property in the orderbook"
         omniGetOrderbook(propertySPX, propertySPY).size() == 1
@@ -206,9 +206,9 @@ class AllPairDExActivationSpec extends BaseActivationSpec {
         then: "the order is filled"
         omniGetTrade(txidOfferB).valid
         omniGetTrade(txidOfferB).status == "filled"
-        omniGetTrade(txidOfferB).propertyidforsale == propertySPY.getValue()
-        omniGetTrade(txidOfferB).propertyiddesired == propertySPX.getValue()
-        omniGetTrade(txidOfferB).unitprice == inversePrice
+        omniGetTrade(txidOfferB).propertyIdForSale == propertySPY
+        omniGetTrade(txidOfferB).propertyIdDesired == propertySPX
+        omniGetTrade(txidOfferB).unitPrice == inversePrice
 
         and: "the offering is no longer listed in the orderbook"
         omniGetOrderbook(propertySPX, propertySPY).size() == 0

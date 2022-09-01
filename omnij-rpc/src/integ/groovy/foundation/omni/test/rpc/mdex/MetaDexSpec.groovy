@@ -60,24 +60,38 @@ class MetaDexSpec extends BaseRegTestSpec {
         def txTradeC = omniGetTrade(txidTradeC)
 
         then: "the order is still unmatched"
-        txTradeC.txid == txidTradeC.toString()
-        txTradeC.sendingaddress == actorC.toString()
+        txTradeC.txId == txidTradeC
+        txTradeC.sendingAddress == actorC
         txTradeC.version == 0
         txTradeC.type_int == 25
         txTradeC.type == "MetaDEx trade"
-        txTradeC.propertyidforsale == propertyOMNI.getValue()
-        txTradeC.propertyidforsaleisdivisible
-        txTradeC.amountforsale as BigDecimal == 0.00000001.divisible.bigDecimalValue()
-        txTradeC.propertyiddesired == propertySPX.getValue()
-        txTradeC.amountdesired as BigDecimal == 10.indivisible.bigDecimalValue()
-        txTradeC.amountremaining as BigDecimal == 0.00000001.divisible.bigDecimalValue()
-        txTradeC.amounttofill as BigDecimal == 10.indivisible.bigDecimalValue()
+        txTradeC.propertyIdForSale == propertyOMNI
+        txTradeC.propertyIdForSaleIsDivisible
+        txTradeC.amountForSale == 0.00000001.divisible
+        txTradeC.propertyIdDesired == propertySPX
+        txTradeC.amountDesired == 10.indivisible
+        txTradeC.amountRemaining == 0.00000001.divisible
+        txTradeC.amountToFill == 10.indivisible
         txTradeC.matches.size() == 0
         if (omniGetInfo().omnicoreversion_int < 1100000) {
-            assert txTradeC.unitprice == "0.00000000100000000000000000000000000000000000000000"
+            assert txTradeC.unitPrice == "0.00000000100000000000000000000000000000000000000000"
         } else {
-            assert txTradeC.unitprice == "1000000000.00000000000000000000000000000000000000000000000000"
+            assert txTradeC.unitPrice == "1000000000.00000000000000000000000000000000000000000000000000"
         }
+
+        when: "we retrieve trade history for actorA"
+        def history = omniGetTradeHistoryForAddress(actorA, 100, propertyOMNI);
+
+        then: "the correct number of transactions are there"
+        history.size() == 1
+
+        when:
+        def fill1 = history.get(0)
+        def matches = fill1.matches
+
+        then:
+        matches instanceof List
+        matches.size() == 1
     }
 
     /**
@@ -112,22 +126,22 @@ class MetaDexSpec extends BaseRegTestSpec {
         txTradeA.status == "open part filled"
 
         and:
-        txTradeA.propertyidforsale == propertySPX.getValue()
-        txTradeA.amountforsale as BigDecimal == 25.indivisible.bigDecimalValue()
-        txTradeA.propertyiddesired == propertyOMNI.getValue()
-        txTradeA.amountdesired as BigDecimal == 2.5.divisible.bigDecimalValue()
-        txTradeA.unitprice == "0.10000000000000000000000000000000000000000000000000"
-        txTradeA.amountremaining as BigDecimal == 20.indivisible.bigDecimalValue()
-        txTradeA.amounttofill as BigDecimal == 2.0.divisible.bigDecimalValue()
+        txTradeA.propertyIdForSale == propertySPX
+        txTradeA.amountForSale == 25.indivisible
+        txTradeA.propertyIdDesired == propertyOMNI
+        txTradeA.amountDesired == 2.5.divisible
+        txTradeA.unitPrice == "0.10000000000000000000000000000000000000000000000000"
+        txTradeA.amountRemaining == 20.indivisible
+        txTradeA.amountToFill == 2.0.divisible
         txTradeA.matches.size() == 1
 
         when:
-        def tradeMatchA = txTradeA.matches.find { it.txid == txidTradeB.toString() } as Map<String, Object>
+        def tradeMatchA = txTradeA.matches.find { it.txId == txidTradeB }
 
         then:
-        tradeMatchA.address == actorB.toString()
-        tradeMatchA.amountsold as BigDecimal == 5.divisible.bigDecimalValue()
-        tradeMatchA.amountreceived as BigDecimal == 0.5.divisible.bigDecimalValue()
+        tradeMatchA.address == actorB
+        tradeMatchA.amountSold == 5.divisible
+        tradeMatchA.amountReceived == 0.5.divisible
 
         when: "retrieving information about trade B"
         def txTradeB = omniGetTrade(txidTradeB)
@@ -136,26 +150,26 @@ class MetaDexSpec extends BaseRegTestSpec {
         txTradeB.status == "open part filled"
 
         and:
-        txTradeB.propertyidforsale == propertyOMNI.getValue()
-        txTradeB.amountforsale as BigDecimal == 0.55.divisible.bigDecimalValue()
-        txTradeB.propertyiddesired == propertySPX.getValue()
-        txTradeB.amountdesired as BigDecimal == 5.indivisible.bigDecimalValue()
-        txTradeB.amountremaining as BigDecimal == 0.05.divisible.bigDecimalValue()
-        txTradeB.amounttofill as BigDecimal == 1.indivisible.bigDecimalValue()
+        txTradeB.propertyIdForSale == propertyOMNI
+        txTradeB.amountForSale == 0.55.divisible
+        txTradeB.propertyIdDesired == propertySPX
+        txTradeB.amountDesired == 5.indivisible
+        txTradeB.amountRemaining == 0.05.divisible
+        txTradeB.amountToFill == 1.indivisible
         txTradeB.matches.size() == 1
         if (omniGetInfo().omnicoreversion_int < 1100000) {
-            assert txTradeB.unitprice == "0.11000000000000000000000000000000000000000000000000"
+            assert txTradeB.unitPrice == "0.11000000000000000000000000000000000000000000000000"
         } else {
-            assert txTradeB.unitprice == "9.09090909090909090909090909090909090909090909090909"
+            assert txTradeB.unitPrice == "9.09090909090909090909090909090909090909090909090909"
         }
 
         when:
-        def tradeMatchB = txTradeB.matches.find { it.txid == txidTradeA.toString() } as Map<String, Object>
+        def tradeMatchB = txTradeB.matches.find { it.txId == txidTradeA }
 
         then:
-        tradeMatchB.address == actorA.toString()
-        tradeMatchB.amountsold as BigDecimal == 0.5.divisible.bigDecimalValue()
-        tradeMatchB.amountreceived as BigDecimal == 5.indivisible.bigDecimalValue()
+        tradeMatchB.address == actorA
+        tradeMatchB.amountSold == 0.5.divisible
+        tradeMatchB.amountReceived == 5.indivisible
     }
 
     /**
@@ -261,7 +275,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         generateBlocks(1)
 
         then:
-        omniGetTrade(txidTrade).valid == false
+        !omniGetTrade(txidTrade).valid
 
         and:
         omniGetBalance(actorAdress, propertySPA).balance == 20.0
@@ -290,8 +304,8 @@ class MetaDexSpec extends BaseRegTestSpec {
         then: "it is a valid open order"
         omniGetTrade(txidOfferA).valid
         omniGetTrade(txidOfferA).status == "open"
-        omniGetTrade(txidOfferA).propertyidforsale == propertyOMNI.getValue()
-        omniGetTrade(txidOfferA).propertyiddesired == propertySPX.getValue()
+        omniGetTrade(txidOfferA).propertyIdForSale == propertyOMNI
+        omniGetTrade(txidOfferA).propertyIdDesired == propertySPX
 
         and: "there is an offering for the new property in the orderbook"
         omniGetOrderbook(propertyOMNI, propertySPX).size() == 1
@@ -307,8 +321,8 @@ class MetaDexSpec extends BaseRegTestSpec {
         then: "the order is filled"
         omniGetTrade(txidOfferB).valid
         omniGetTrade(txidOfferB).status == "filled"
-        omniGetTrade(txidOfferB).propertyidforsale == propertySPX.getValue()
-        omniGetTrade(txidOfferB).propertyiddesired == propertyOMNI.getValue()
+        omniGetTrade(txidOfferB).propertyIdForSale == propertySPX
+        omniGetTrade(txidOfferB).propertyIdDesired == propertyOMNI
 
         and: "the offering is no longer listed in the orderbook"
         omniGetOrderbook(propertyOMNI, propertySPX).size() == 0
@@ -364,8 +378,8 @@ class MetaDexSpec extends BaseRegTestSpec {
         then: "it is a valid open order"
         omniGetTrade(txidOfferA).valid
         omniGetTrade(txidOfferA).status == "open"
-        omniGetTrade(txidOfferA).propertyidforsale == propertySPX.getValue()
-        omniGetTrade(txidOfferA).propertyiddesired == propertyOMNI.getValue()
+        omniGetTrade(txidOfferA).propertyIdForSale == propertySPX
+        omniGetTrade(txidOfferA).propertyIdDesired == propertyOMNI
 
         and: "there is an offering for the new property in the orderbook"
         omniGetOrderbook(propertySPX, propertyOMNI).size() == 1
@@ -381,8 +395,8 @@ class MetaDexSpec extends BaseRegTestSpec {
         then: "the order is filled"
         omniGetTrade(txidOfferB).valid
         omniGetTrade(txidOfferB).status == "filled"
-        omniGetTrade(txidOfferB).propertyidforsale == propertyOMNI.getValue()
-        omniGetTrade(txidOfferB).propertyiddesired == propertySPX.getValue()
+        omniGetTrade(txidOfferB).propertyIdForSale == propertyOMNI
+        omniGetTrade(txidOfferB).propertyIdDesired == propertySPX
 
         and: "the offering is no longer listed in the orderbook"
         omniGetOrderbook(propertySPX, propertyOMNI).size() == 0

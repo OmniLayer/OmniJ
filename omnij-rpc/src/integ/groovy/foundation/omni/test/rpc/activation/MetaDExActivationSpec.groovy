@@ -50,15 +50,15 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
         and:
         omniGetTrade(tradeTxid).status == "open"
-        omniGetTrade(tradeTxid).amountremaining as BigDecimal == amountForSale.numberValue()
-        omniGetTrade(tradeTxid).amounttofill as BigDecimal == amountDesired.numberValue()
-        omniGetTrade(tradeTxid).amountforsale as BigDecimal == amountForSale.numberValue()
-        omniGetTrade(tradeTxid).amountdesired as BigDecimal == amountDesired.numberValue()
-        omniGetTrade(tradeTxid).propertyidforsale == testID.getValue()
-        omniGetTrade(tradeTxid).propertyiddesired == CurrencyID.TOMNI.getValue()
-        omniGetTrade(tradeTxid).propertyidforsaleisdivisible
-        omniGetTrade(tradeTxid).propertyiddesiredisdivisible
-        omniGetTrade(tradeTxid).unitprice == "1.66666666666666666666666666666666666666666666666667"
+        omniGetTrade(tradeTxid).amountRemaining == amountForSale
+        omniGetTrade(tradeTxid).amountToFill == amountDesired
+        omniGetTrade(tradeTxid).amountForSale == amountForSale
+        omniGetTrade(tradeTxid).amountDesired == amountDesired
+        omniGetTrade(tradeTxid).propertyIdForSale == testID
+        omniGetTrade(tradeTxid).propertyIdDesired == CurrencyID.TOMNI
+        omniGetTrade(tradeTxid).propertyIdForSaleIsDivisible
+        omniGetTrade(tradeTxid).propertyIdDesiredIsDivisble
+        omniGetTrade(tradeTxid).unitPrice == "1.66666666666666666666666666666666666666666666666667"
 
         and:
         omniGetBalance(actorAddress, testID).balance == balanceAtStart.balance - amountForSale.numberValue()
@@ -70,14 +70,14 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
         then:
         omniGetTrade(cancelTxid).valid
-        omniGetTrade(cancelTxid).ecosystem == "test"
+        //omniGetTrade(cancelTxid).ecosystem == "test"
 
         and:
         omniGetTrade(tradeTxid).status == "cancelled"
-        omniGetTrade(tradeTxid).amountforsale as BigDecimal == amountForSale.numberValue()
-        omniGetTrade(tradeTxid).amountdesired as BigDecimal == amountDesired.numberValue()
-        omniGetTrade(tradeTxid).propertyidforsale == testID.getValue()
-        omniGetTrade(tradeTxid).propertyiddesired == CurrencyID.TOMNI.getValue()
+        omniGetTrade(tradeTxid).amountForSale == amountForSale
+        omniGetTrade(tradeTxid).amountDesired == amountDesired
+        omniGetTrade(tradeTxid).propertyIdForSale == testID
+        omniGetTrade(tradeTxid).propertyIdDesired == CurrencyID.TOMNI
 
         and:
         omniGetBalance(actorAddress, testID) == balanceAtStart
@@ -89,7 +89,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).valid == false
+        !omniGetTransaction(txid).valid
 
         and:
         omniGetBalance(actorAddress, mainID) == old(omniGetBalance(actorAddress, mainID))
@@ -131,7 +131,7 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         generateBlocks(1)
 
         then:
-        omniGetTransaction(txid).valid == false
+        !omniGetTransaction(txid).valid
 
         and:
         omniGetBalance(actorAddress, mainID) == old(omniGetBalance(actorAddress, mainID))
@@ -178,15 +178,15 @@ class MetaDExActivationSpec extends BaseActivationSpec {
 
         and:
         omniGetTrade(tradeTxid).status == "open"
-        omniGetTrade(tradeTxid).amountremaining as BigDecimal == amountForSale.numberValue()
-        omniGetTrade(tradeTxid).amounttofill as BigDecimal == amountDesired.numberValue()
-        omniGetTrade(tradeTxid).amountforsale as BigDecimal == amountForSale.numberValue()
-        omniGetTrade(tradeTxid).amountdesired as BigDecimal == amountDesired.numberValue()
-        omniGetTrade(tradeTxid).propertyidforsale == CurrencyID.OMNI.getValue()
-        omniGetTrade(tradeTxid).propertyiddesired == mainID.getValue()
-        omniGetTrade(tradeTxid).propertyidforsaleisdivisible
-        omniGetTrade(tradeTxid).propertyiddesiredisdivisible
-        omniGetTrade(tradeTxid).unitprice == "0.00400000000000000000000000000000000000000000000000"
+        omniGetTrade(tradeTxid).amountRemaining == amountForSale
+        omniGetTrade(tradeTxid).amountToFill == amountDesired
+        omniGetTrade(tradeTxid).amountForSale == amountForSale
+        omniGetTrade(tradeTxid).amountDesired == amountDesired
+        omniGetTrade(tradeTxid).propertyIdForSale == CurrencyID.OMNI
+        omniGetTrade(tradeTxid).propertyIdDesired == mainID
+        omniGetTrade(tradeTxid).propertyIdForSaleIsDivisible
+        omniGetTrade(tradeTxid).propertyIdDesiredIsDivisble
+        omniGetTrade(tradeTxid).unitPrice == "0.00400000000000000000000000000000000000000000000000"
 
         and:
         omniGetBalance(actorAddress, CurrencyID.OMNI).balance == balanceAtStart.balance - amountForSale
@@ -203,13 +203,13 @@ class MetaDExActivationSpec extends BaseActivationSpec {
         omniGetTrade(tradeTxid).status == "cancelled"
 
         and:
-        omniGetTrade(cancelTxid).propertyidforsale == CurrencyID.OMNI.getValue()
-        omniGetTrade(cancelTxid).propertyidforsaleisdivisible
-        omniGetTrade(cancelTxid).amountforsale as BigDecimal == amountForSale.numberValue()
-        omniGetTrade(cancelTxid).propertyiddesired == mainID.getValue()
-        omniGetTrade(cancelTxid).propertyiddesiredisdivisible
-        omniGetTrade(cancelTxid).amountdesired as BigDecimal == amountDesired.numberValue()
-        omniGetTrade(cancelTxid).unitprice == "0.00400000000000000000000000000000000000000000000000"
+        omniGetTrade(cancelTxid).propertyIdForSale == CurrencyID.OMNI
+        omniGetTrade(cancelTxid).propertyIdForSaleIsDivisible
+        omniGetTrade(cancelTxid).amountForSale == amountForSale
+        omniGetTrade(cancelTxid).propertyIdDesired == mainID
+        omniGetTrade(cancelTxid).propertyIdDesiredIsDivisble
+        omniGetTrade(cancelTxid).amountDesired == amountDesired
+        omniGetTrade(cancelTxid).unitPrice == "0.00400000000000000000000000000000000000000000000000"
 
         and:
         omniGetBalance(actorAddress, CurrencyID.OMNI) == balanceAtStart
