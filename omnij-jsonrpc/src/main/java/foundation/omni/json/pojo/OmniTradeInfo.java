@@ -8,6 +8,7 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Sha256Hash;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class OmniTradeInfo {
     private final boolean isMine;
     private final int confirmations;
     private final Coin fee;
-    private final long blockTime;
+    private final Instant blockTime;
     private final boolean valid;
     private final int positionInBlock;
     private final int version;
@@ -67,7 +68,7 @@ public class OmniTradeInfo {
         this.isMine = isMine;
         this.confirmations = confirmations;
         this.fee = fee;
-        this.blockTime = blockTime;
+        this.blockTime = Instant.ofEpochSecond(blockTime);
         this.valid = valid;
         this.positionInBlock = positionInBlock;
         this.version = version;
@@ -107,7 +108,7 @@ public class OmniTradeInfo {
         return fee;
     }
 
-    public long getBlockTime() {
+    public Instant getBlockTime() {
         return blockTime;
     }
 

@@ -7,6 +7,12 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: Not yet
 
+=== omnij-jsonrpc
+
+* Add `omniGetTradeHistoryforAddress`
+* Breaking: Return `OmniTradeInfo` for `omniGetTrade`
+* Breaking: `OmniTransactionInfo`: use `Instant` for `blockTime`
+
 === Dependency Updates
 
 * ConsensusJ 0.6.2
