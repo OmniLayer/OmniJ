@@ -41,6 +41,8 @@ public class OmniTransactionInfo {
     private final CurrencyID propertyId;
     private final Sha256Hash blockHash;
     private final int block;
+    private final CurrencyID propertyIdForSale;
+    private final CurrencyID propertyIdDesired;
     private final Map<String, Object> otherInfo;
 
     /* Add a map of additional properties or polymorphism, for now we're using @JsonIgnoreProperties */
@@ -61,7 +63,9 @@ public class OmniTransactionInfo {
                                @JsonProperty("divisible")           boolean     divisible,
                                @JsonProperty("propertyid")          CurrencyID  propertyId,
                                @JsonProperty("blockhash")           Sha256Hash  blockHash,
-                               @JsonProperty("block")               int         block)
+                               @JsonProperty("block")               int         block,
+                               @JsonProperty("propertyidforsale")   CurrencyID  propertyIdForSale,
+                               @JsonProperty("propertyiddesired")   CurrencyID  propertyIdDesired)
     {
         this.txId = txId;
         this.sendingAddress = sendingAddress;
@@ -80,6 +84,8 @@ public class OmniTransactionInfo {
         this.propertyId = propertyId;
         this.blockHash = blockHash;
         this.block = block;
+        this.propertyIdForSale = propertyIdForSale;
+        this.propertyIdDesired = propertyIdDesired;
         this.otherInfo = new HashMap<>();
     }
 
@@ -159,5 +165,15 @@ public class OmniTransactionInfo {
 
     public int getBlock() {
         return block;
+    }
+
+    // Nullable, only non-null for supported Tx types
+    public CurrencyID getPropertyIdForSale() {
+        return propertyIdForSale;
+    }
+
+    // Nullable, only non-null for supported Tx types
+    public CurrencyID getPropertyIdDesired() {
+        return propertyIdDesired;
     }
 }
