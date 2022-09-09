@@ -272,7 +272,7 @@ public class RawTxBuilder {
     static String toHexString(byte[] ba) {
         StringBuilder str = new StringBuilder();
         for (byte b : ba) {
-            str.append(String.format("%x", b));
+            str.append(String.format("%02x", b));
         }
         return str.toString();
     }
