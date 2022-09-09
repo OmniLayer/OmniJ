@@ -9,6 +9,7 @@ import org.bitcoinj.core.Coin;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 import static foundation.omni.tx.Transactions.TransactionType.SIMPLE_SEND;
 
