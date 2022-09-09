@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
+import static foundation.omni.tx.Transactions.TransactionType.SEND_TO_OWNERS;
 import static foundation.omni.tx.Transactions.TransactionType.SIMPLE_SEND;
 
 /**
@@ -53,8 +54,16 @@ public class RawTxBuilder {
      * @return Hex encoded string for the transaction
      */
     public String createSendToOwnersHex(CurrencyID currencyId, OmniValue amount) {
-        String rawTxHex = String.format("00000003%08x%016x", currencyId.getValue(), amount.getWilletts());
-        return rawTxHex;
+        return toHexString(createSendToOwners(currencyId, amount));
+    }
+
+    public byte[] createSendToOwners(CurrencyID currencyId, OmniValue amount) {
+        return ByteBuffer
+                .allocate(SIZE_VERSIONTYPE + SIZE_32 + SIZE_64)
+                .putInt(SEND_TO_OWNERS.versionType())                       // Version + Type
+                .putInt(currencyId.unsignedIntValue())
+                .putLong(amount.getWilletts())
+                .array();
     }
 
     /**

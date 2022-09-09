@@ -23,22 +23,22 @@ class RawTxBuilderSpec extends Specification {
 
     def "The hex-encoded raw transaction matches valid reference: simple send [type 0, version 0]"() {
         when:
-        def txHex = builder.createSimpleSend(
+        def txRaw = builder.createSimpleSend(
                 CurrencyID.OMNI,    // property
                 ONE_OMNI)           // amount to transfer: 1.0 OMNI (in willetts)
 
         then:
-        txHex == "00000000000000010000000005f5e100".decodeHex()
+        txRaw == "00000000000000010000000005f5e100".decodeHex()
     }
 
     def "The hex-encoded raw transaction matches valid reference: send to owners [type 3, version 0]"() {
         when:
-        def txHex = builder.createSendToOwnersHex(
+        def txRaw = builder.createSendToOwners(
                 CurrencyID.OMNI,   // property
                 ONE_OMNI)         // amount to distribute: 1.0 OMNI (in willetts)
 
         then:
-        txHex == "00000003000000010000000005f5e100"
+        txRaw == "00000003000000010000000005f5e100".decodeHex()
     }
 
     def "The hex-encoded raw transaction matches valid reference: sell tokens for bitcoins [type 20, version 1]"() {

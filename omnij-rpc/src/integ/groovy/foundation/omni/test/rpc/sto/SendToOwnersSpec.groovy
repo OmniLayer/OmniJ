@@ -86,7 +86,7 @@ class SendToOwnersSpec extends BaseRegTestSpec {
 
     def "The generated hex-encoded transaction matches a valid reference transaction"() {
         given:
-        def txHex = createSendToOwnersHex(new CurrencyID(6), 100000000000.indivisible)
+        def txHex = createSendToOwnersHex(new CurrencyID(6L), 100000000000.indivisible)
         def expectedHex = "0000000300000006000000174876e800"
 
         expect:

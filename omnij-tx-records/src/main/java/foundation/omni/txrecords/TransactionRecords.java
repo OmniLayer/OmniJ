@@ -9,7 +9,8 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 
 import static foundation.omni.tx.Transactions.TransactionType;
-import static foundation.omni.tx.Transactions.TransactionType.SELL_OMNI_FOR_BITCOIN;
+import static foundation.omni.tx.Transactions.TransactionType.METADEX_TRADE;
+import static foundation.omni.tx.Transactions.TransactionType.TRADE_OFFER;
 import static foundation.omni.tx.Transactions.TransactionType.SEND_TO_OWNERS;
 import static foundation.omni.tx.Transactions.TransactionType.SIMPLE_SEND;
 import static foundation.omni.tx.Transactions.OmniTx;
@@ -60,7 +61,7 @@ public interface TransactionRecords {
     record  SendToOwners(short version, CurrencyID currencyId, OmniValue amount) implements OmniTx {
         @Override public TransactionType type() { return SEND_TO_OWNERS; }
         @Override public byte[] payload() {
-            return PayloadBuilder.create(SIMPLE_SEND)
+            return PayloadBuilder.create(SEND_TO_OWNERS)
                     .putInt32(currencyId)
                     .putInt64(amount)
                     .bytes();
@@ -69,9 +70,9 @@ public interface TransactionRecords {
 
     record DexSellOffer(short version, CurrencyID currencyId, OmniDivisibleValue amountForSale, Coin amountDesired,
                         Byte paymentWindow, Coin commitmentFee, Byte action) implements OmniTx {
-        @Override public TransactionType type() { return SELL_OMNI_FOR_BITCOIN; }
+        @Override public TransactionType type() { return TRADE_OFFER; }
         @Override public byte[] payload() {
-            return PayloadBuilder.create(SIMPLE_SEND)
+            return PayloadBuilder.create(TRADE_OFFER)
                     .putInt32(currencyId)
                     .putInt64(amountForSale)
                     .bytes();
@@ -80,9 +81,9 @@ public interface TransactionRecords {
 
     record MetaDexSellOffer(short version, CurrencyID currencyForSale, OmniValue amountForSale, CurrencyID currencyDesired,
                                OmniValue amountDesired, Byte action) implements OmniTx {
-        @Override public TransactionType type() { return SELL_OMNI_FOR_BITCOIN; }
+        @Override public TransactionType type() { return METADEX_TRADE; }
         @Override public byte[] payload() {
-            return PayloadBuilder.create(SIMPLE_SEND)
+            return PayloadBuilder.create(METADEX_TRADE)
                     .putInt32(currencyForSale)
                     .putInt64(amountForSale)
                     .bytes();
