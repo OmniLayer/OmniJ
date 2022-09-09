@@ -253,19 +253,13 @@ public class RawTxBuilder {
     }
 
     /**
-     * Converts an UTF-8 encoded String into a hexadecimal string representation.
+     * Converts a UTF-8 encoded String into a hexadecimal string representation.
      *
      * @param str The string
      * @return The hexadecimal representation
      */
     static String toHexString(String str) {
-        byte[] ba;
-        try {
-            ba = str.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        byte[] ba = str.getBytes(StandardCharsets.UTF_8);
         return toHexString(ba);
     }
 
@@ -277,8 +271,8 @@ public class RawTxBuilder {
      */
     static String toHexString(byte[] ba) {
         StringBuilder str = new StringBuilder();
-        for (int i = 0; i < ba.length; i++) {
-            str.append(String.format("%x", ba[i]));
+        for (byte b : ba) {
+            str.append(String.format("%x", b));
         }
         return str.toString();
     }
