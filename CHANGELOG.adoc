@@ -15,7 +15,7 @@ Released: Not yet
 
 === Dependency Updates
 
-* ConsensusJ 0.6.2
+* ConsensusJ 0.6.3
 * SLF4J 2.0.0
 
 == v0.6.0
