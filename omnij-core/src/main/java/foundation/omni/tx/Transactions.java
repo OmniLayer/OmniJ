@@ -30,7 +30,49 @@ public class Transactions {
      * <p>
      * Transaction type is an unsigned 16-bit value, and stored as a Java {@code short} that is treated as unsigned.
      * The {@link #value()} accessor performs the proper conversion and returns an unsigned {@code int}.
-     * This is a partial list, see {@code omnicore.h} for the complete list.
+     * <p>
+     * With <a href="https://openjdk.org/jeps/427">JEP 427: Pattern Matching for Switch</a> it is possible
+     * to handle {@code null} as a {@code case}. So if you're using a recent version of Java (with preview enabled) you
+     * can handle undefined transaction types in a single {@code switch} statement/expression. If you have an integer with a transaction type code named {@code typeInt}, you can do something like:
+     * <pre> {@code
+     * Optional<TransactionType> optionalType = TransactionType.find(typeInt);
+     * boolean isSend = switch(optionalType.orElse(null)) {
+     *     case SIMPLE_SEND, SEND_TO_OWNERS, SEND_ALL -> true;
+     *     default -> false;
+     *     case null -> false;
+     * }
+     * }</pre>
+     * The {@code default} case represents defined enum constants not handled with explicit cases and the {@code null} case
+     * provides a way to handle numeric codes not (yet) defined in the enum.
+     * <p>
+     * For versions of Java with switch expressions but no pattern matching, this above code can be written as:
+     * <pre> {@code
+     * Optional<TransactionType> optionalType = TransactionType.find(typeInt);
+     * boolean isSend = optionalType.map(t -> switch(t) {
+     *     case SIMPLE_SEND, SEND_TO_OWNERS, SEND_ALL -> true;
+     *     default -> false;
+     * }).orElse(false);
+     * }</pre>
+     * <p>
+     * For even earlier versions of Java (back to Java 9), it can be written as:
+     * <pre> {@code
+     * Optional<TransactionType> optionalType = TransactionType.find(typeInt);
+     * boolean isSend;
+     * optionalType.ifPresentOrElse(t -> switch(t) {
+     *     case SIMPLE_SEND:
+     *     case SEND_TO_OWNERS:
+     *     case SEND_ALL:
+     *       isSend = true;
+     *       break;
+     *     default:
+     *       isSend = false;
+     * }, {
+     *  isSend = false;
+     * }
+     * }</pre>
+     * For a Java 8 example see the Java unit test {@code TransactionTypeTest.java}.
+     * <p>
+     * This is a partial list of transaction types, see {@code omnicore.h} for the complete list.
      * @see <a href="https://github.com/OmniLayer/omnicore/blob/master/src/omnicore/omnicore.h">enum TransactionType in omnicore.h</a>
      */
     public enum TransactionType {

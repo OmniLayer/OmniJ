@@ -2,9 +2,11 @@ package foundation.omni.json.pojo;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
+import foundation.omni.tx.Transactions;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Sha256Hash;
@@ -12,6 +14,7 @@ import org.bitcoinj.core.Sha256Hash;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * (Mostly) Immutable representation of OmniTransaction info JSON
@@ -145,6 +148,18 @@ public class OmniTransactionInfo {
 
     public String getType() {
         return type;
+    }
+
+    /**
+     * Get the transaction type as an {@code Optional} {@link Transactions.TransactionType} or
+     * as an {@link Optional#empty()} if it's a transaction type not (yet) included in
+     * {@link Transactions.TransactionType}.
+     *
+     * @return The type or {@link Optional#empty()} if it's an unknown type
+     */
+    @JsonIgnore
+    public Optional<Transactions.TransactionType> transactionType() {
+        return Transactions.TransactionType.find(typeInt);
     }
 
     public OmniValue getAmount() {
