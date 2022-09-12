@@ -17,7 +17,7 @@ public class PayloadBuilder {
         // WARNING: Hardcoded for simple-send
         buffer = ByteBuffer.allocate(2 + 2 + 4 + 8);
         buffer.putShort(version);
-        buffer.putShort(type.value());
+        buffer.putShort(type.unsignedShortValue());
     }
 
     private PayloadBuilder(Transactions.TransactionType type) {

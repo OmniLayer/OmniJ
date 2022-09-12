@@ -3,6 +3,7 @@ package foundation.omni.tx;
 import org.bitcoinj.core.Address;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  *
@@ -27,8 +28,9 @@ public class Transactions {
     /**
      * Omni Layer Transaction Type
      * <p>
-     * Transaction type is an unsigned 16-bit value, but all currently defined transaction types
-     * are less than 100. This is a partial list, see {@code omnicore.h} for the complete list.
+     * Transaction type is an unsigned 16-bit value, and stored as a Java {@code short} that is treated as unsigned.
+     * The {@link #value()} accessor performs the proper conversion and returns an unsigned {@code int}.
+     * This is a partial list, see {@code omnicore.h} for the complete list.
      * @see <a href="https://github.com/OmniLayer/omnicore/blob/master/src/omnicore/omnicore.h">enum TransactionType in omnicore.h</a>
      */
     public enum TransactionType {
@@ -48,6 +50,7 @@ public class Transactions {
         CHANGE_ISSUER_ADDRESS(      (short) 0, (short) 70);
 
         private final short version;
+        // This is stored as an unsigned short
         private final short value;
 
         TransactionType(short version, short type) {
@@ -55,11 +58,26 @@ public class Transactions {
             value = type;
         }
 
-        public static TransactionType valueOf(short code) {
+        /**
+         * Get transaction type by numeric value
+         * @param code transaction type integer value
+         * @return The correct enum
+         * @throws IllegalArgumentException if not found
+         */
+        public static TransactionType valueOf(int code) throws IllegalArgumentException {
+            return find(code)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid transaction type code"));
+        }
+
+        /**
+         * Find transaction type by numeric value
+         * @param code transaction type integer value
+         * @return an Optional enum or {@link Optional#empty()} if not found.
+         */
+        public static Optional<TransactionType> find(int code) {
             return Arrays.stream(values())
                     .filter(e -> e.value() == code)
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid transaction type code"));
+                    .findFirst();
         }
 
         /**
@@ -71,9 +89,21 @@ public class Transactions {
         }
 
         /**
+         * Return transaction type numeric value as an unsigned {@code int}
          * @return numeric value of TransactionType
          */
-        public short value() {
+        public int value() {
+            return Short.toUnsignedInt(value);
+        }
+
+        /**
+         * Return the 16-bit unsigned value in a Java {@code short}.
+         * <p>
+         * Use this method with caution as Java treats {@code short}s as signed.
+         *
+         * @return numeric value of TransactionType as an unsigned {@code short}
+         */
+        public short unsignedShortValue() {
             return value;
         }
 
