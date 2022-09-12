@@ -3,15 +3,21 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.6.1-SNAPSHOT
+== v0.6.1
 
-Released: Not yet
+Released: 2022-09-13
+
+=== omnij-core
+
+* RawTxBuilder: Fix bug in `toHexString(byte[])`
+* (Minor breaking) align `enum` names in `TransactionType` with `omnicore.h`
+* Further improvements to (still WIP) `Transactions.TransactionType`
 
 === omnij-jsonrpc
 
+* Add `omniListTransactions()` method, `OmniTransactionInfo` POJO.
 * Add `omniGetTradeHistoryforAddress`
 * Breaking: Return `OmniTradeInfo` for `omniGetTrade`
-* Breaking: `OmniTransactionInfo`: use `Instant` for `blockTime`
 
 === Dependency Updates
 
