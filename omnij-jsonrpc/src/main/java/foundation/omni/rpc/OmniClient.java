@@ -12,6 +12,7 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
+import org.consensusj.bitcoin.json.pojo.NetworkInfo;
 import org.consensusj.bitcoin.jsonrpc.RpcConfig;
 import org.consensusj.bitcoin.rx.jsonrpc.RxBitcoinClient;
 import org.consensusj.jsonrpc.JsonRpcException;
@@ -21,8 +22,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.concurrent.CompletableFuture;
 
 // TODO: add missing RPCs:
 // - omni_gettradehistoryforpair
@@ -56,6 +59,17 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
 
     public OmniNetworkParameters getOmniNetParams() {
         return OmniNetworkParameters.fromBitcoinParms(getNetParams());
+    }
+
+    /**
+     * Check if server is running Omni Core
+     * @return result is true if server is an <b>Omni Core</b> server, false otherwise
+     * @throws JsonRpcException JSON RPC error
+     * @throws IOException network error
+     */
+    public CompletableFuture<Boolean> isOmniServer() throws JsonRpcException, IOException {
+        return supplyAsync(this::getNetworkInfo)
+                .thenApply(n -> n.getSubVersion().toLowerCase(Locale.ROOT).contains("omni"));
     }
 
     /**
