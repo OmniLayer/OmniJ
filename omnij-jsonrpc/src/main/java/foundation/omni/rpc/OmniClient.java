@@ -39,7 +39,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSupport {
 
-    public OmniClient(RpcConfig config) throws IOException {
+    public OmniClient(RpcConfig config) {
         this(config.getNetParams(), config.getURI(), config.getUsername(), config.getPassword());
     }
 
