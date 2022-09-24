@@ -1,6 +1,5 @@
 package foundation.omni.rpc
 
-import org.consensusj.bitcoin.json.pojo.ServerInfo
 import org.consensusj.bitcoin.json.pojo.WalletTransactionInfo
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
@@ -24,8 +23,10 @@ import groovy.transform.CompileStatic
  * because we want the server to choose the defaults, not our client. A <code>null</code>
  * parameter is not sent in the RPC request.
  *
+ * @deprecated Use {@link OmniClient} (or {@code var dynamicClient = omniClient as DynamicRpcMethodFallback} if you really want lower-case RPC method names)
  */
 @CompileStatic
+@Deprecated
 class OmniCLIClient extends OmniClient {
 
     OmniCLIClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {

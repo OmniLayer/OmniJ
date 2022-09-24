@@ -51,14 +51,8 @@ namespace org.consensusj.bitcoin.jsonrpc {
 
 namespace foundation.omni.rpc {
     class OmniClient
-    class OmniScriptingClient << Groovy >>
-    class OmniCLIClient << Groovy >>
-
 
     org.consensusj.bitcoin.jsonrpc.BitcoinExtendedClient <|-- OmniClient
-    OmniClient <|-- OmniScriptingClient
-    org.consensusj.bitcoin.jsonrpc.DynamicRpcMethodFallback <|.. OmniScriptingClient
-    OmniClient <|-- OmniCLIClient
 }
 
 
