@@ -13,12 +13,18 @@ dependencies {
     api "${consensusjGroup}:cj-btc-jsonrpc:${consensusjVersion}"
     api "${consensusjGroup}:cj-btc-rx-jsonrpc:${consensusjVersion}"
 
+    api "com.fasterxml.jackson.module:jackson-module-parameter-names:2.13.4"
+
     testImplementation "org.apache.groovy:groovy:${groovyVersion}"
     testImplementation ("org.apache.groovy:groovy-json:${groovyVersion}")  {
         transitive = false
     }
 
     testImplementation project(':omnij-dsl')
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-parameters'   // For use by jackson-databind
 }
 
 jar {

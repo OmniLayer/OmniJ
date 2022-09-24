@@ -2,6 +2,7 @@ package foundation.omni.rpc;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import foundation.omni.*;
 import foundation.omni.json.conversion.OmniClientModule;
 import foundation.omni.json.pojo.OmniPropertyInfo;
@@ -12,7 +13,6 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
-import org.consensusj.bitcoin.json.pojo.NetworkInfo;
 import org.consensusj.bitcoin.jsonrpc.RpcConfig;
 import org.consensusj.bitcoin.jsonrpc.bitcoind.BitcoinConfFile;
 import org.consensusj.bitcoin.rx.jsonrpc.RxBitcoinClient;
@@ -55,6 +55,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
         super(sslSocketFactory, netParams, server, rpcuser, rpcpassword, useZmq);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.registerModule(new OmniClientModule());
+        mapper.registerModule(new ParameterNamesModule());
     }
 
     public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {

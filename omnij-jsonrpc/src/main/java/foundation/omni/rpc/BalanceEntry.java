@@ -1,7 +1,5 @@
 package foundation.omni.rpc;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import foundation.omni.OmniValue;
 
 import java.util.Arrays;
@@ -9,18 +7,16 @@ import java.util.Iterator;
 
 /**
  * Balance data for a specific Omni CurrencyID in a single Bitcoin address
- * TODO: Move to omnij-core, remove Jackson annotations, write Serializer/Deserializer?
- * (move along with AddressBalanceEntry, PropertyBalanceEntry)
+ * TODO: Move to omnij-core (move along with AddressBalanceEntry, PropertyBalanceEntry)
  */
 public class BalanceEntry implements Iterable<OmniValue>  {
     protected final OmniValue balance;
     protected final OmniValue reserved;
     protected final OmniValue frozen;
 
-    @JsonCreator
-    public BalanceEntry(@JsonProperty("balance") OmniValue balance,
-                        @JsonProperty("reserved") OmniValue reserved,
-                        @JsonProperty("frozen") OmniValue frozen) {
+    public BalanceEntry(OmniValue balance,
+                        OmniValue reserved,
+                        OmniValue frozen) {
         this.balance = balance;
         this.reserved = reserved;
         this.frozen = (frozen != null) ? frozen : OmniValue.of(0, balance.getPropertyType());
