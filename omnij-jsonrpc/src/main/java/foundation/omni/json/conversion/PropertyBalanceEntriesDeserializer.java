@@ -32,7 +32,7 @@ public class PropertyBalanceEntriesDeserializer extends StdDeserializer<Property
 
                 if (t == JsonToken.START_OBJECT) {
                     entry = (PropertyBalanceEntry) entryDeserializer.deserialize(jp, ctxt);
-                    result.put(entry.getPropertyid(), new BalanceEntry( entry.getBalance(),
+                    result.put(entry.getPropertyId(), new BalanceEntry( entry.getBalance(),
                                                                         entry.getReserved(),
                                                                         entry.getFrozen()));
                 } else {

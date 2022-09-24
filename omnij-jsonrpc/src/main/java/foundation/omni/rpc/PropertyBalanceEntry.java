@@ -20,7 +20,7 @@ public class PropertyBalanceEntry extends BalanceEntry {
         this.name = name;
     }
 
-    public CurrencyID getPropertyid() {
+    public CurrencyID getPropertyId() {
         return propertyId;
     }
 
