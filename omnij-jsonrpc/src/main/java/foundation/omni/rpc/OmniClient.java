@@ -14,6 +14,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.consensusj.bitcoin.json.pojo.NetworkInfo;
 import org.consensusj.bitcoin.jsonrpc.RpcConfig;
+import org.consensusj.bitcoin.jsonrpc.bitcoind.BitcoinConfFile;
 import org.consensusj.bitcoin.rx.jsonrpc.RxBitcoinClient;
 import org.consensusj.jsonrpc.JsonRpcException;
 
@@ -38,6 +39,13 @@ import java.util.concurrent.CompletableFuture;
  * @see <a href="https://github.com/OmniLayer/omnicore/blob/master/src/omnicore/doc/rpc-api.md#json-rpc-api">Omni Core JSON RPC API documentation on GitHub</a>
  */
 public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSupport {
+
+    /**
+     * Construct a client by reading {@code bitcoin.conf} (Incubating)
+     */
+    public OmniClient() {
+        this(BitcoinConfFile.readDefaultConfig().getRPCConfig());
+    }
 
     public OmniClient(RpcConfig config) {
         this(config.getNetParams(), config.getURI(), config.getUsername(), config.getPassword());
