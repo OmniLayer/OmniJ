@@ -14,9 +14,13 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.NetworkParameters;
 
 /**
- *
+ * Register serializers and deserializers for OmniClient.
  */
 public class OmniClientModule extends SimpleModule {
+    /**
+     * @deprecated Use {@link #OmniClientModule()}
+     */
+    @Deprecated
     public OmniClientModule(NetworkParameters netParams) {
         this();
     }

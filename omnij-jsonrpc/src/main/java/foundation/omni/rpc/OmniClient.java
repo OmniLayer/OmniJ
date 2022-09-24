@@ -54,7 +54,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq) {
         super(sslSocketFactory, netParams, server, rpcuser, rpcpassword, useZmq);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.registerModule(new OmniClientModule(getNetParams()));
+        mapper.registerModule(new OmniClientModule());
     }
 
     public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {

@@ -29,7 +29,7 @@ abstract class BaseOmniClientMapperSpec extends Specification {
         NetworkParameters netParams = TestNet3Params.get()
         mapper = new ObjectMapper()
         mapper.registerModule(new RpcClientModule(netParams))
-        mapper.registerModule(new OmniClientModule(netParams))
+        mapper.registerModule(new OmniClientModule())
     }
 
 
