@@ -1,11 +1,10 @@
 package foundation.omni.consensus;
 
-import foundation.omni.rpc.BalanceEntry;
+import foundation.omni.BalanceEntry;
 import org.bitcoinj.core.Address;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 
 /**

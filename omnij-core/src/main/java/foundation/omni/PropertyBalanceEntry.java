@@ -1,7 +1,4 @@
-package foundation.omni.rpc;
-
-import foundation.omni.CurrencyID;
-import foundation.omni.OmniValue;
+package foundation.omni;
 
 /**
  * Balance entry for a property/currency

@@ -1,5 +1,6 @@
 package foundation.omni.rpc
 
+import foundation.omni.BalanceEntry
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniIndivisibleValue
 import foundation.omni.PropertyType

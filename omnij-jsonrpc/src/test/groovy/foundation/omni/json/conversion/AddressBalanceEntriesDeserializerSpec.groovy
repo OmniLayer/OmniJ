@@ -2,7 +2,7 @@ package foundation.omni.json.conversion
 
 
 import foundation.omni.rpc.AddressBalanceEntries
-import foundation.omni.rpc.BalanceEntry
+import foundation.omni.BalanceEntry
 import org.bitcoinj.core.LegacyAddress
 import spock.lang.Unroll
 

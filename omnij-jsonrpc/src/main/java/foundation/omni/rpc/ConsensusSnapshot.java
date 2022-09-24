@@ -1,7 +1,7 @@
 package foundation.omni.rpc;
 
 import foundation.omni.CurrencyID;
-import foundation.omni.rpc.BalanceEntry;
+import foundation.omni.BalanceEntry;
 import org.bitcoinj.core.Address;
 
 import java.net.URI;

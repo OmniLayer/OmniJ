@@ -1,5 +1,6 @@
 package foundation.omni.rpc;
 
+import foundation.omni.BalanceEntry;
 import org.bitcoinj.core.Address;
 
 import java.util.TreeMap;

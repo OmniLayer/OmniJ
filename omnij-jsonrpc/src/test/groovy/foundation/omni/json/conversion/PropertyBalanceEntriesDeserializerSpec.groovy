@@ -1,7 +1,7 @@
 package foundation.omni.json.conversion
 
 import foundation.omni.CurrencyID
-import foundation.omni.rpc.BalanceEntry
+import foundation.omni.BalanceEntry
 import foundation.omni.rpc.PropertyBalanceEntries
 import spock.lang.Unroll
 

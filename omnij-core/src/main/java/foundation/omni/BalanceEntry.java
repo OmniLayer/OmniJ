@@ -1,13 +1,10 @@
-package foundation.omni.rpc;
-
-import foundation.omni.OmniValue;
+package foundation.omni;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
 /**
  * Balance data for a specific Omni CurrencyID in a single Bitcoin address
- * TODO: Move to omnij-core (move along with AddressBalanceEntry, PropertyBalanceEntry)
  */
 public class BalanceEntry implements Iterable<OmniValue>  {
     protected final OmniValue balance;

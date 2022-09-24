@@ -1,7 +1,7 @@
 package foundation.omni.consensus
 
 import foundation.omni.net.OmniMainNetParams
-import foundation.omni.rpc.BalanceEntry
+import foundation.omni.BalanceEntry
 import org.bitcoinj.core.Address
 import spock.lang.Specification
 

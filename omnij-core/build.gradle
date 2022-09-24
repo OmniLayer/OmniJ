@@ -9,6 +9,10 @@ dependencies {
     api 'javax.money:money-api:1.1'
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-parameters'   // For use by jackson-databind
+}
+
 jar {
     inputs.property("moduleName", moduleName)
     manifest {

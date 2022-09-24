@@ -18,7 +18,7 @@ import foundation.omni.CurrencyID;
 import foundation.omni.netapi.ConsensusService;
 import foundation.omni.netapi.OmniJBalances;
 import foundation.omni.netapi.WalletAddressBalance;
-import foundation.omni.rpc.BalanceEntry;
+import foundation.omni.BalanceEntry;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.NetworkParameters;
 import org.reactivestreams.Publisher;

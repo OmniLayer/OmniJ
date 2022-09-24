@@ -1,7 +1,6 @@
-package foundation.omni.rpc;
+package foundation.omni;
 
 import org.bitcoinj.core.Address;
-import foundation.omni.OmniValue;
 
 /**
  *  Balance entry for an Address
