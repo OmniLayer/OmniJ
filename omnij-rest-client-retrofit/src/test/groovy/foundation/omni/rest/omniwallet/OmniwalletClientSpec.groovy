@@ -5,8 +5,8 @@ import foundation.omni.Ecosystem
 import foundation.omni.OmniValue
 import foundation.omni.PropertyType
 import foundation.omni.net.OmniMainNetParams
-import foundation.omni.netapi.OmniJBalances
-import foundation.omni.netapi.WalletAddressBalance
+import foundation.omni.json.pojo.OmniJBalances
+import foundation.omni.json.pojo.WalletAddressBalance
 import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
 import foundation.omni.netapi.omniwallet.json.RevisionInfo
 import foundation.omni.BalanceEntry

@@ -1,4 +1,4 @@
-package foundation.omni.netapi;
+package foundation.omni.json.pojo;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import foundation.omni.CurrencyID;

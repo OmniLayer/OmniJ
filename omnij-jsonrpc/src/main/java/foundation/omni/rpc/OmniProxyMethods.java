@@ -1,4 +1,4 @@
-package foundation.omni.netapi.omnicore;
+package foundation.omni.rpc;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -8,8 +8,8 @@ import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniIndivisibleValue;
 import foundation.omni.OmniValue;
 import foundation.omni.json.pojo.OmniPropertyInfo;
-import foundation.omni.netapi.OmniJBalances;
-import foundation.omni.netapi.WalletAddressBalance;
+import foundation.omni.json.pojo.OmniJBalances;
+import foundation.omni.json.pojo.WalletAddressBalance;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Sha256Hash;
 import org.consensusj.analytics.service.TokenRichList;

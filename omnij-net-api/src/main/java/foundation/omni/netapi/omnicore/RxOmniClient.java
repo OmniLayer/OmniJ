@@ -1,6 +1,7 @@
 package foundation.omni.netapi.omnicore;
 
 import foundation.omni.rpc.OmniClient;
+import foundation.omni.rpc.OmniProxyMethods;
 import org.bitcoinj.core.NetworkParameters;
 
 import javax.net.ssl.SSLSocketFactory;

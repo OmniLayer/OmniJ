@@ -12,6 +12,7 @@ dependencies {
     api project(':omnij-core')
     api "${consensusjGroup}:cj-btc-jsonrpc:${consensusjVersion}"
     api "${consensusjGroup}:cj-btc-rx-jsonrpc:${consensusjVersion}"
+    api "${consensusjGroup}:consensusj-analytics:${consensusjVersion}"
 
     api "com.fasterxml.jackson.module:jackson-module-parameter-names:2.13.4"
 

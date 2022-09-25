@@ -9,11 +9,7 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    api project(':omnij-core')
     api project(':omnij-jsonrpc')
-    api "${consensusjGroup}:consensusj-analytics:${consensusjVersion}"
-    api "${consensusjGroup}:cj-btc-rx-jsonrpc:${consensusjVersion}"
-    api "io.reactivex.rxjava3:rxjava:3.1.2"
 
     testImplementation "org.apache.groovy:groovy:${groovyVersion}"
     testImplementation ("org.apache.groovy:groovy-json:${groovyVersion}")  {

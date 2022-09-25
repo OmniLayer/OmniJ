@@ -1,13 +1,12 @@
 package foundation.omni.netapi.omnicore
 
 import foundation.omni.net.OmniMainNetParams
-import foundation.omni.netapi.OmniJBalances
-import foundation.omni.netapi.WalletAddressBalance
+import foundation.omni.json.pojo.OmniJBalances
+import foundation.omni.json.pojo.WalletAddressBalance
 import foundation.omni.netapi.omniwallet.WalletBackupFile
 import org.bitcoinj.core.Address
 import org.bitcoinj.utils.AppDataDirectory
 import org.consensusj.bitcoin.jsonrpc.RpcURI
-import foundation.omni.netapi.omnicore.OmniCoreClient;
 import org.bitcoinj.params.MainNetParams
 import spock.lang.Ignore
 import spock.lang.Requires;
