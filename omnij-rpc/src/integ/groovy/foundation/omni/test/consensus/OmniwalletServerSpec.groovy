@@ -4,7 +4,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
 import foundation.omni.rest.omniwallet.mjdk.OmniwalletModernJDKClient
-import foundation.omni.rpc.SmartPropertyListInfo
+import foundation.omni.json.pojo.SmartPropertyListInfo
 import org.bitcoinj.params.MainNetParams
 import spock.lang.Unroll
 

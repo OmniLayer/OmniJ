@@ -2,7 +2,7 @@ package foundation.omni.consensus;
 
 import foundation.omni.CurrencyID;
 import foundation.omni.rpc.ConsensusFetcher;
-import foundation.omni.rpc.ConsensusSnapshot;
+import foundation.omni.json.pojo.ConsensusSnapshot;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package foundation.omni.consensus
 
-import foundation.omni.rpc.ConsensusSnapshot
-import foundation.omni.rpc.SmartPropertyListInfo
+import foundation.omni.json.pojo.ConsensusSnapshot
+import foundation.omni.json.pojo.SmartPropertyListInfo
 import groovy.sql.Sql
 import foundation.omni.CurrencyID
 import org.postgresql.ds.PGSimpleDataSource

@@ -3,14 +3,12 @@ package foundation.omni.json.conversion;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import foundation.omni.OmniOutput;
-import org.consensusj.bitcoin.json.conversion.AddressDeserializer;
 import foundation.omni.CurrencyID;
 import foundation.omni.Ecosystem;
 import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
-import foundation.omni.rpc.AddressBalanceEntries;
-import foundation.omni.rpc.PropertyBalanceEntries;
-import org.bitcoinj.core.Address;
+import foundation.omni.json.pojo.AddressBalanceEntries;
+import foundation.omni.json.pojo.PropertyBalanceEntries;
 import org.bitcoinj.core.NetworkParameters;
 
 /**

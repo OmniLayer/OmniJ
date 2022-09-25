@@ -1,7 +1,7 @@
 package foundation.omni.consensus;
 
 import foundation.omni.net.OmniMainNetParams;
-import foundation.omni.rpc.ConsensusSnapshot;
+import foundation.omni.json.pojo.ConsensusSnapshot;
 import org.bitcoinj.core.Address;
 
 import java.util.HashSet;

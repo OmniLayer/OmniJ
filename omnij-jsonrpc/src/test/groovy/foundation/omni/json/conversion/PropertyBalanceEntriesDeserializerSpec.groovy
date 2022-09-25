@@ -2,7 +2,7 @@ package foundation.omni.json.conversion
 
 import foundation.omni.CurrencyID
 import foundation.omni.BalanceEntry
-import foundation.omni.rpc.PropertyBalanceEntries
+import foundation.omni.json.pojo.PropertyBalanceEntries
 import spock.lang.Unroll
 
 /**

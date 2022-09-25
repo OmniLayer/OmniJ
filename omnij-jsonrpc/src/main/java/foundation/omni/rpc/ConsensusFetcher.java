@@ -2,6 +2,7 @@ package foundation.omni.rpc;
 
 import foundation.omni.BalanceEntry;
 import foundation.omni.CurrencyID;
+import foundation.omni.json.pojo.ConsensusSnapshot;
 import foundation.omni.json.pojo.OmniPropertyInfo;
 import org.bitcoinj.core.Address;
 

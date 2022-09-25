@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import foundation.omni.BalanceEntry;
-import foundation.omni.rpc.PropertyBalanceEntries;
+import foundation.omni.json.pojo.PropertyBalanceEntries;
 import foundation.omni.PropertyBalanceEntry;
 
 import java.io.IOException;

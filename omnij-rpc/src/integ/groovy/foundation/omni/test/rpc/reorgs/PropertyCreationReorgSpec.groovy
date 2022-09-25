@@ -3,7 +3,7 @@ package foundation.omni.test.rpc.reorgs
 import org.consensusj.jsonrpc.JsonRpcStatusException
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import foundation.omni.rpc.SmartPropertyListInfo
+import foundation.omni.json.pojo.SmartPropertyListInfo
 import org.bitcoinj.core.Coin
 import spock.lang.Shared
 import spock.lang.Unroll

@@ -2,11 +2,9 @@ package foundation.omni.json.pojo;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.tools.javac.Main;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniValue;
-import foundation.omni.rpc.SmartPropertyListInfo;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.LegacyAddress;
@@ -14,8 +12,6 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.params.TestNet3Params;
-
-import java.math.BigDecimal;
 
 /**
  * JSON bean representing the set of information on an Omni Property as returned by the

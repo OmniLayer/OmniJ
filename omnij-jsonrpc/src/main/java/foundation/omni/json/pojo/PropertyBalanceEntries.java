@@ -1,4 +1,4 @@
-package foundation.omni.rpc;
+package foundation.omni.json.pojo;
 
 import foundation.omni.BalanceEntry;
 import foundation.omni.CurrencyID;

@@ -3,7 +3,7 @@ package foundation.omni.consensus;
 import foundation.omni.CurrencyID;
 import foundation.omni.BalanceEntry;
 import foundation.omni.rpc.ConsensusFetcher;
-import foundation.omni.rpc.SmartPropertyListInfo;
+import foundation.omni.json.pojo.SmartPropertyListInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

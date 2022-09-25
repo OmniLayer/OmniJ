@@ -7,7 +7,7 @@ import spock.lang.Ignore
 
 import static foundation.omni.CurrencyID.OMNI
 import static foundation.omni.CurrencyID.TOMNI
-import foundation.omni.rpc.SmartPropertyListInfo
+import foundation.omni.json.pojo.SmartPropertyListInfo
 
 /**
  * Specification for {@code "omni_listproperties"}.

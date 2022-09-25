@@ -10,7 +10,7 @@ import foundation.omni.netapi.WalletAddressBalance
 import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
 import foundation.omni.netapi.omniwallet.json.RevisionInfo
 import foundation.omni.BalanceEntry
-import foundation.omni.rpc.SmartPropertyListInfo
+import foundation.omni.json.pojo.SmartPropertyListInfo
 import io.reactivex.rxjava3.core.Flowable
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.LegacyAddress

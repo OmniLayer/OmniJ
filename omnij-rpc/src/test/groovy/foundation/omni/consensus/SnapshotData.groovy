@@ -2,7 +2,7 @@ package foundation.omni.consensus
 
 import foundation.omni.CurrencyID
 import foundation.omni.BalanceEntry
-import foundation.omni.rpc.ConsensusSnapshot
+import foundation.omni.json.pojo.ConsensusSnapshot
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.ECKey
 import org.bitcoinj.core.LegacyAddress

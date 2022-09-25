@@ -8,7 +8,7 @@ import org.consensusj.analytics.service.RichListService;
 import org.consensusj.analytics.service.TokenRichList;
 import org.consensusj.bitcoin.json.pojo.AddressGroupingItem;
 import foundation.omni.json.pojo.OmniPropertyInfo;
-import foundation.omni.rpc.ConsensusSnapshot;
+import foundation.omni.json.pojo.ConsensusSnapshot;
 import foundation.omni.rpc.OmniClient;
 import org.consensusj.bitcoin.json.pojo.ChainTip;
 import org.consensusj.bitcoin.json.pojo.bitcore.AddressBalanceInfo;
