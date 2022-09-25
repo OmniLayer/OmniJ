@@ -32,12 +32,12 @@ public class OmniCoreConsensusTool extends OmniCoreClient implements ConsensusTo
      *
      * @param client An existing client instance
      */
-    public OmniCoreConsensusTool(RxOmniClient client) {
+    public OmniCoreConsensusTool(OmniClient client) {
         super(client);
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        RxOmniClient client = new RxOmniClient(MainNetParams.get(), RpcURI.getDefaultMainNetURI(), TestServers.getInstance().getRpcTestUser(), TestServers.getInstance().getRpcTestPassword());
+        OmniClient client = new OmniClient(MainNetParams.get(), RpcURI.getDefaultMainNetURI(), TestServers.getInstance().getRpcTestUser(), TestServers.getInstance().getRpcTestPassword());
         OmniCoreConsensusTool tool = new OmniCoreConsensusTool(client);
         tool.run(DefaultGroovyMethods.toList(args));
     }

@@ -42,20 +42,20 @@ import java.util.stream.Stream;
  */
 public class OmniCoreClient implements ConsensusService, RichListService<OmniValue, CurrencyID>, AutoCloseable {
     Logger log = LoggerFactory.getLogger(OmniCoreClient.class);
-    protected final RxOmniClient client;
+    protected final OmniClient client;
 
     /**
      * Constructor that takes an existing RxOmniClient
      *
      * @param client An existing client instance
      */
-    public OmniCoreClient(RxOmniClient client)
+    public OmniCoreClient(OmniClient client)
     {
         this.client = client;
     }
 
     public OmniCoreClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI coreURI, String user, String pass, boolean useZmq, boolean isOmniProxy) {
-        client = new RxOmniClient(sslSocketFactory, netParams, coreURI, user, pass, useZmq, isOmniProxy);
+        client = new OmniClient(sslSocketFactory, netParams, coreURI, user, pass, useZmq, isOmniProxy);
     }
 
     public OmniCoreClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI coreURI, String user, String pass) {
@@ -237,7 +237,7 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
         return client;
     }
 
-    public RxOmniClient getRxOmniClient() {
+    public OmniClient getRxOmniClient() {
         return client;
     }
 

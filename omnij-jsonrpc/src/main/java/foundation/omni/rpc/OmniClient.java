@@ -41,7 +41,8 @@ import java.util.concurrent.CompletableFuture;
  *
  * @see <a href="https://github.com/OmniLayer/omnicore/blob/master/src/omnicore/doc/rpc-api.md#json-rpc-api">Omni Core JSON RPC API documentation on GitHub</a>
  */
-public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSupport {
+public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSupport, OmniProxyMethods {
+    private final boolean isOmniProxy;
 
     /**
      * Construct a client by reading {@code bitcoin.conf} (Incubating)
@@ -55,10 +56,19 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     }
 
     public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq) {
+        this(sslSocketFactory, netParams, server, rpcuser, rpcpassword, useZmq, false);
+    }
+
+    public OmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
+        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams, server, rpcuser, rpcpassword, useZmq, isOmniProxy);
+    }
+
+    public OmniClient(SSLSocketFactory sslSocketFactory,  NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
         super(sslSocketFactory, netParams, server, rpcuser, rpcpassword, useZmq);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.registerModule(new OmniClientModule());
         mapper.registerModule(new ParameterNamesModule());
+        this.isOmniProxy = isOmniProxy;
     }
 
     public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
@@ -82,6 +92,15 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     public CompletableFuture<Boolean> isOmniServer() throws JsonRpcException, IOException {
         return supplyAsync(this::getNetworkInfo)
                 .thenApply(n -> n.getSubVersion().toLowerCase(Locale.ROOT).contains("omni"));
+    }
+
+    // TODO: Query the server to determine if it is OmniProxy
+    /**
+     * @return true of client was configured to talk to OmniProxy
+     */
+    @Override
+    public boolean isOmniProxyServer() {
+        return this.isOmniProxy;
     }
 
     /**

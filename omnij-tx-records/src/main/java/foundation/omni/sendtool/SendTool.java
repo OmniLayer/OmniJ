@@ -3,6 +3,7 @@ package foundation.omni.sendtool;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniDivisibleValue;
 import foundation.omni.netapi.omnicore.RxOmniClient;
+import foundation.omni.rpc.OmniClient;
 import foundation.omni.txsigner.OmniSendService;
 import foundation.omni.txsigner.OmniSigningService;
 import org.bitcoinj.core.Address;
@@ -73,7 +74,7 @@ public class SendTool {
 
         URI omniProxyTestNetURI = URI.create("http://192.168.8.177:18332");
         RpcConfig config = new RpcConfig(netParams, omniProxyTestNetURI, "bitcoinrpc", "pass");
-        var omniProxyClient = new RxOmniClient(config.getNetParams(),
+        var omniProxyClient = new OmniClient(config.getNetParams(),
                 config.getURI(),
                 config.getUsername(),
                 config.getPassword(),

@@ -3,6 +3,7 @@ package foundation.omni.txsigner;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
 import foundation.omni.netapi.omnicore.RxOmniClient;
+import foundation.omni.rpc.OmniClient;
 import foundation.omni.txrecords.TransactionRecords;
 import foundation.omni.txrecords.UnsignedTxSimpleSend;
 import org.bitcoinj.core.*;
@@ -29,11 +30,11 @@ import java.util.concurrent.CompletableFuture;
 public class OmniSendService {
     private static final Logger log = LoggerFactory.getLogger(OmniSendService.class);
 
-    private final RxOmniClient rxOmniClient;
+    private final OmniClient rxOmniClient;
     private final OmniSigningService signingService;
     private final FeeCalculator feeCalculator;
 
-    public OmniSendService(RxOmniClient client, OmniSigningService signingService) {
+    public OmniSendService(OmniClient client, OmniSigningService signingService) {
         this.rxOmniClient = client;
         this.signingService = signingService;
         feeCalculator = new HackedFeeCalculator();

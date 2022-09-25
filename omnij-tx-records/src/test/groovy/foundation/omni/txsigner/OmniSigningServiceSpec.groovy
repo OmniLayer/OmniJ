@@ -4,6 +4,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniValue
 import foundation.omni.netapi.omnicore.RxOmniClient
+import foundation.omni.rpc.OmniClient
 import foundation.omni.txrecords.UnsignedTxSimpleSend
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.NetworkParameters
@@ -51,7 +52,7 @@ class OmniSigningServiceSpec extends Specification {
 
         URI omniProxyTestNetURI = omniProxyUri
         RpcConfig config = new RpcConfig(netParams, omniProxyTestNetURI, "bitcoinrpc", "pass");
-        var omniProxyClient = new RxOmniClient(config.getNetParams(),
+        var omniProxyClient = new OmniClient(config.getNetParams(),
                 config.getURI(),
                 config.getUsername(),
                 config.getPassword(),
