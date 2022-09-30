@@ -13,6 +13,8 @@ import foundation.omni.CurrencyID
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import java.math.RoundingMode
+
 /**
  * Test support functions intended to be mixed-in to Spock test specs
  */
@@ -51,7 +53,7 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
     Sha256Hash requestOmni(Address toAddress, OmniDivisibleValue requestedOmni, Boolean allowIntermediate) {
         // For 1.0 BTC an amount of 100.0 OMNI is generated, resulting in a minimal purchase amount of
         // 0.00000100 OMNI for 0.00000001 BTC
-        Coin btcForOmni = (requestedOmni.willetts / 100).setScale(0, BigDecimal.ROUND_UP).satoshi
+        Coin btcForOmni = (requestedOmni.willetts / 100).setScale(0, RoundingMode.UP).satoshi
         OmniDivisibleValue actualOmni = OmniDivisibleValue.ofWilletts(btcForOmni.value * 100)
 
         if (!allowIntermediate) {
@@ -66,9 +68,9 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
 
             // TODO: avoid magic numbers for dust calculation
             // TODO: convert calculations to Coin type or integer
-            BigDecimal dustForExodus = ((((148 + 34) * 3) / 1000) * stdRelayTxFee.value).setScale(8, BigDecimal.ROUND_UP)
-            BigDecimal dustForReference = ((((148 + 34) * 3) / 1000) * stdRelayTxFee.value).setScale(8, BigDecimal.ROUND_UP)
-            BigDecimal dustForPayload = ((((148 + 80) * 3) / 1000) * stdRelayTxFee.value).setScale(8, BigDecimal.ROUND_UP)
+            BigDecimal dustForExodus = ((((148 + 34) * 3) / 1000) * stdRelayTxFee.value).setScale(8, RoundingMode.UP)
+            BigDecimal dustForReference = ((((148 + 34) * 3) / 1000) * stdRelayTxFee.value).setScale(8, RoundingMode.UP)
+            BigDecimal dustForPayload = ((((148 + 80) * 3) / 1000) * stdRelayTxFee.value).setScale(8, RoundingMode.UP)
 
             // Simple send transactions have a dust output for the receiver reference, a marker output and an output
             // for the actual payload. OMNI and TOMNI are forwarded in two transactions, so this amount, as well as the
