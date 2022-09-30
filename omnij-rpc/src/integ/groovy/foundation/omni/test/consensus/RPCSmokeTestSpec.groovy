@@ -25,14 +25,14 @@ class RPCSmokeTestSpec extends BaseMainNetSpec {
 
     def "Can get Omni Core consensus data"() {
         setup:
-        def mscFetcher = new OmniCoreConsensusTool(client)
+        def tool = new OmniCoreConsensusTool(client)
 
         when: "we get data"
-        def mscSnapshot = mscFetcher.getConsensusSnapshot(OMNI)
+        def snapshot = tool.getConsensusSnapshot(OMNI)
 
         then: "it is there"
-        mscSnapshot.currencyID == OMNI
-        mscSnapshot.entries.size() >= 1
+        snapshot.currencyID == OMNI
+        snapshot.entries.size() >= 1
     }
 
     def "omniGetAllBalancesForAddress(exodusAddress) is working"() {
