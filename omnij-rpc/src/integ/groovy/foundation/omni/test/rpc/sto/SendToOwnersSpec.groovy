@@ -1,5 +1,6 @@
 package foundation.omni.test.rpc.sto
 
+import foundation.omni.tx.RawTxBuilder
 import org.consensusj.jsonrpc.JsonRpcStatusException
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
@@ -86,7 +87,8 @@ class SendToOwnersSpec extends BaseRegTestSpec {
 
     def "The generated hex-encoded transaction matches a valid reference transaction"() {
         given:
-        def txHex = createSendToOwnersHex(new CurrencyID(6L), 100000000000.indivisible)
+        RawTxBuilder builder = new RawTxBuilder()
+        def txHex = builder.createSendToOwnersHex(new CurrencyID(6L), 100000000000.indivisible)
         def expectedHex = "0000000300000006000000174876e800"
 
         expect:

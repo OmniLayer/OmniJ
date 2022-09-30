@@ -3,6 +3,7 @@ package foundation.omni.test.rpc.sto
 //import org.consensusj.bitcoin.jsonrpc.conversion.BitcoinMath
 import foundation.omni.CurrencyID
 import foundation.omni.OmniValue
+import foundation.omni.tx.RawTxBuilder
 import org.bitcoinj.core.Address
 
 /**
@@ -16,7 +17,8 @@ class SendToOwnersTestPlanRawSpec extends SendToOwnersTestPlanSpec {
      */
     @Override
     def executeSendToOwners(Address address, CurrencyID currency, OmniValue amount, Boolean exceptional=false) {
-        def rawTxHex = createSendToOwnersHex(currency, amount);
+        RawTxBuilder builder = new RawTxBuilder()
+        def rawTxHex = builder.createSendToOwnersHex(currency, amount);
         def txid = omniSendRawTx(address, rawTxHex)
         return txid
     }

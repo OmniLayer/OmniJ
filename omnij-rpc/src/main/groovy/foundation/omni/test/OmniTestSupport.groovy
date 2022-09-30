@@ -5,7 +5,6 @@ import foundation.omni.Ecosystem
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniValue
 import foundation.omni.PropertyType
-import foundation.omni.rpc.RawTxDelegate
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
@@ -18,7 +17,7 @@ import java.math.RoundingMode
 /**
  * Test support functions intended to be mixed-in to Spock test specs
  */
-trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDelegate {
+trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate {
     private static final Logger log = LoggerFactory.getLogger(OmniTestSupport.class);
 
     /**
