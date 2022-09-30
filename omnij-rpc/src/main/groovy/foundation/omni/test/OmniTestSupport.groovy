@@ -121,11 +121,6 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
         return fundedAddress
     }
 
-    @Deprecated
-    CurrencyID fundNewProperty(Address address, BigDecimal amountBD, PropertyType type, Ecosystem ecosystem) {
-        return fundNewProperty(address, OmniValue.of(amountBD, type), ecosystem)
-    }
-
     CurrencyID fundNewProperty(Address address, OmniValue amount, Ecosystem ecosystem) {
         def txidCreation = omniSendIssuanceFixed(address,
                 ecosystem,
