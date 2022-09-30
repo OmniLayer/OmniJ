@@ -1,9 +1,9 @@
 package foundation.omni
 
 import foundation.omni.rpc.OmniClient
+import groovy.util.logging.Slf4j
 import org.consensusj.bitcoin.jsonrpc.groovy.BlockchainDotInfoSyncing
 import org.consensusj.jsonrpc.JsonRpcStatusException
-import org.consensusj.jsonrpc.groovy.Loggable
 import org.consensusj.bitcoin.jsonrpc.RpcURI
 import foundation.omni.rpc.OmniClientDelegate
 import foundation.omni.rpc.test.TestServers
@@ -19,8 +19,9 @@ import spock.lang.Specification
  * Bitcoin Blockchain.
  *
  */
+@Slf4j
 abstract class BaseMainNetSpec extends Specification implements OmniClientDelegate,
-        BlockchainDotInfoSyncing, Loggable {
+        BlockchainDotInfoSyncing {
     static final protected TestServers testServers = TestServers.instance
     static final protected String rpcTestUser = testServers.rpcTestUser
     static final protected String rpcTestPassword = testServers.rpcTestPassword;

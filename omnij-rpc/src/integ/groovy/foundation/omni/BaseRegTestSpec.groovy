@@ -1,8 +1,8 @@
 package foundation.omni
 
 import foundation.omni.rpc.test.OmniTestClient
+import groovy.util.logging.Slf4j
 import org.consensusj.bitcoin.json.pojo.NetworkInfo
-import org.consensusj.jsonrpc.groovy.Loggable
 import org.consensusj.bitcoin.jsonrpc.RpcURI
 import org.consensusj.bitcoin.jsonrpc.test.RegTestFundingSource
 import foundation.omni.rpc.test.TestServers
@@ -15,7 +15,8 @@ import spock.lang.Specification
 /**
  * Base specification for integration tests on RegTest net
  */
-abstract class BaseRegTestSpec extends Specification implements OmniTestClientDelegate, OmniTestSupport, Loggable {
+@Slf4j
+abstract class BaseRegTestSpec extends Specification implements OmniTestClientDelegate, OmniTestSupport {
 
     static final private TestServers testServers = TestServers.instance
     static final protected String rpcTestUser = testServers.rpcTestUser
