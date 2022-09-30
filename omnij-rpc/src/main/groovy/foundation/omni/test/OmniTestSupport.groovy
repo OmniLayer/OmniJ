@@ -10,11 +10,14 @@ import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
 import foundation.omni.CurrencyID
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Test support functions intended to be mixed-in to Spock test specs
  */
 trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDelegate {
+    private static final Logger log = LoggerFactory.getLogger(OmniTestSupport.class);
 
     /**
      * Delay long enough to avoid Duplicate block errors when resubmitting blocks in
@@ -127,12 +130,12 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
         def txidCreation = omniSendIssuanceFixed(address,
                 ecosystem,
                 amount.getPropertyType(),
-                new CurrencyID(0),  // previousId
-                "",                 // category
-                "",                 // subCategory
-                "name",             // name
-                "",                 // url
-                "",                 // data
+                CurrencyID.of(0),   // previousId (0 means new token)
+                "",
+                "",
+                "name",
+                "",
+                "",
                 amount);
 
         generateBlocks(1)
@@ -146,17 +149,16 @@ trait OmniTestSupport implements BTCTestSupport, OmniTestClientDelegate, RawTxDe
         def txidCreation = omniSendIssuanceManaged(address,
                 ecosystem,
                 type,
-                new CurrencyID(0),  // previousId
-                "",                 // category
-                "",                 // subCategory
+                CurrencyID.of(0),   // previousId (0 means new token)
+                "",
+                "",
                 "MSP",
-                "",                 // url
-                "")                 // data
+                "",
+                "")
         generateBlocks(1)
         def txCreation = omniGetTransaction(txidCreation)
         assert txCreation.valid
         assert txCreation.confirmations == 1
-        return new CurrencyID(txCreation.propertyid as long)
+        return new CurrencyID(txCreation.propertyId as long)
     }
-
 }
