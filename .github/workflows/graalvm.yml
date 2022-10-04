@@ -14,7 +14,7 @@ jobs:
     name: ${{ matrix.os }} JDK ${{ matrix.graalvm }}
     steps:
     - name: Git checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v3
     - name: Set up GraalVM
       uses: DeLaGuardo/setup-graalvm@4.0
       with:
@@ -25,7 +25,7 @@ jobs:
     - name: Verify Gradle Wrapper
       uses: gradle/wrapper-validation-action@v1
     - name: Cache Gradle packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
@@ -33,7 +33,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew :omnij-cli:nativeCompile --scan --info --stacktrace
     - name: Upload omnij-consensus-tool as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: omnij-consensus-tool-${{ matrix.os }}
         path: omnij-cli/build/omnij-consensus-tool
