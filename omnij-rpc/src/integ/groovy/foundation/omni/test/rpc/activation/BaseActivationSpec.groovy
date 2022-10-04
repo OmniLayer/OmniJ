@@ -41,16 +41,16 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
     @Shared Sha256Hash initialBlock
 
     def setupSpec() {
-        if (!commandExists('omni_sendactivation')) {
+        if (!client.commandExists('omni_sendactivation')) {
             throw new AssumptionViolatedException('The client has no "omni_sendactivation" command')
         }
-        if (!commandExists('omni_getactivations')) {
+        if (!client.commandExists('omni_getactivations')) {
             throw new AssumptionViolatedException('The client has no "omni_getactivations" command')
         }
 
-        generateBlocks(1)
-        def currentBlockCount = getBlockCount()
-        initialBlock = getBlockHash(currentBlockCount)
+        client.generateBlocks(1)
+        def currentBlockCount = client.getBlockCount()
+        initialBlock = client.getBlockHash(currentBlockCount)
     }
 
     def cleanupSpec() {
