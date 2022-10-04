@@ -1,12 +1,14 @@
 package foundation.omni
 
 import foundation.omni.rpc.test.OmniTestClient
+import foundation.omni.rpc.test.OmniTestClientAccessor
 import groovy.util.logging.Slf4j
 import org.consensusj.bitcoin.json.pojo.NetworkInfo
 import org.consensusj.bitcoin.jsonrpc.RpcURI
+import org.consensusj.bitcoin.jsonrpc.test.FundingSource
+import org.consensusj.bitcoin.jsonrpc.test.FundingSourceAccessor
 import org.consensusj.bitcoin.jsonrpc.test.RegTestFundingSource
 import foundation.omni.rpc.test.TestServers
-import foundation.omni.test.OmniTestClientDelegate
 import foundation.omni.test.OmniTestSupport
 import org.bitcoinj.params.RegTestParams
 import spock.lang.Specification
@@ -16,24 +18,34 @@ import spock.lang.Specification
  * Base specification for integration tests on RegTest net
  */
 @Slf4j
-abstract class BaseRegTestSpec extends Specification implements OmniTestClientDelegate, OmniTestSupport {
-
+abstract class BaseRegTestSpec extends Specification implements OmniTestClientAccessor, FundingSourceAccessor, OmniTestSupport {
     static final private TestServers testServers = TestServers.instance
     static final protected String rpcTestUser = testServers.rpcTestUser
     static final protected String rpcTestPassword = testServers.rpcTestPassword;
+    private static RegTestFundingSource FUNDING_INSTANCE;
 
-    {
-        client = getClientInstance()
-        fundingSource = new RegTestFundingSource(client)
+    @Delegate
+    @Override
+    OmniTestClient client() {
+        return getClientInstance()
     }
 
+    @Delegate
+    @Override
+    FundingSource fundingSource() {
+        if (FUNDING_INSTANCE == null) {
+            FUNDING_INSTANCE = new RegTestFundingSource(client())
+        }
+        return FUNDING_INSTANCE;
+    }
 
     private static OmniTestClient INSTANCE;
 
     static synchronized OmniTestClient getClientInstance() {
         // We use a shared client for RegTest integration tests, because we want a single value for regTestMiningAddress
         if (INSTANCE == null) {
-            INSTANCE = new OmniTestClient(RegTestParams.get(), RpcURI.defaultRegTestURI, rpcTestUser, rpcTestPassword)
+            INSTANCE = new OmniTestClient(RegTestParams.get(), RpcURI.getDefaultRegTestWalletURI(), rpcTestUser, rpcTestPassword)
+            INSTANCE.initRegTestWallet()
         }
         return INSTANCE;
     }
@@ -58,4 +70,7 @@ abstract class BaseRegTestSpec extends Specification implements OmniTestClientDe
         consolidateCoins()
     }
 
+    void consolidateCoins() {
+        fundingSource.fundingSourceMaintenance();
+    }
 }
