@@ -58,12 +58,12 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
             return
         }
         for (int i = 0; i < 50; ++i) {
-            generateBlocks(1)
+            client.generateBlocks(1)
         }
-        invalidateBlock(initialBlock)
-        clearMemPool()
+        client.invalidateBlock(initialBlock)
+        client.clearMemPool()
         delayAfterInvalidate()   // Sleep for a few seconds to avoid duplicate block
-        generateBlocks(1)
+        client.generateBlocks(1)
     }
 
     def skipIfActivated(def featureId) {
@@ -77,7 +77,7 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
     }
 
     def skipIfVersionOlderThan(def minClientVersion) {
-        def clientInfo = omniGetInfo()
+        def clientInfo = client.omniGetInfo()
         def clientVersion = clientInfo.omnicoreversion_int
         if (clientVersion < minClientVersion) {
             throw new AssumptionViolatedException("Requires at least version $minClientVersion, but is $clientVersion")
