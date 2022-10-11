@@ -86,10 +86,8 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     /**
      * Check if server is running Omni Core
      * @return result is true if server is an <b>Omni Core</b> server, false otherwise
-     * @throws JsonRpcException JSON RPC error
-     * @throws IOException network error
      */
-    public CompletableFuture<Boolean> isOmniServer() throws JsonRpcException, IOException {
+    public CompletableFuture<Boolean> isOmniServer() {
         return supplyAsync(this::getNetworkInfo)
                 .thenApply(n -> n.getSubVersion().toLowerCase(Locale.ROOT).contains("omni"));
     }

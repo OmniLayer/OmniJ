@@ -11,6 +11,10 @@ Released: In development
 
 Released: 2022-10-11
 
+== omnij-jsonrpc
+
+* Remove ununsed/incorrect thrown exceptions from `OmniClient.isOmniServer()`
+
 === Overview
 
 This release has some major refactoring (some breaking) in order to upgrade to ConsensusJ 0.6.4 , simplify the `OmniClient` class hierarchy, and simplify the inheritance hierarchy of the OmniJ Spock RegTests.
