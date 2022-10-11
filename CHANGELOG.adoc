@@ -7,13 +7,14 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: In development
 
+== omnij-jsonrpc
+
+* Remove unused/incorrect thrown exceptions from `OmniClient.isOmniServer()`
+
+
 == v0.6.2
 
 Released: 2022-10-11
-
-== omnij-jsonrpc
-
-* Remove ununsed/incorrect thrown exceptions from `OmniClient.isOmniServer()`
 
 === Overview
 
