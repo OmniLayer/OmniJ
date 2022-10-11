@@ -7,6 +7,12 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: 2022-10-11
 
+=== Overview
+
+This release has some major refactoring (some breaking) in order to upgrade to ConsensusJ 0.6.4 , simplify the `OmniClient` class hierarchy, and simplify the inheritance hierarchy of the OmniJ Spock RegTests.
+
+The `BitcoinClient` and `BitcoinExtendedClient` of ConsensusJ 0.6.4 add support for **Bitcoin Core v0.23** and its changes to wallet functionality (such as defaulting to descriptor wallets and using wallet names in the JSON-RPC URL path.)  This will help us with the planned rebase of **Omni Core** to the latest **Bitcoin Core** codebase.
+
 === omnij-core
 
 * `BalanceEntry`, `AddressBalanceEntry`, `PropertyBalancEntry` moved from `omnij-jsonrpc`
