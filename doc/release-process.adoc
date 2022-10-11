@@ -14,11 +14,11 @@
 .. `./gradlew clean buildCI regTest`
 . Tag: `git tag -a v0.x.y -m "Release 0.x.y"`
 . Push: `git push --tags origin master`
-. Publish to Gitlab Maven repo:
+. Publish to GitLab Maven repo:
 .. `./gradlew publish`
-. Publish Github pages site including JavaDoc and GroovyDoc
+. Publish GitHub pages site including JavaDoc and GroovyDoc
 .. `./gradlew publishSite`
-. Update Github https://github.com/OmniLayer/OmniJ/releases[OmniJ Releases] page.
+. Update GitHub https://github.com/OmniLayer/OmniJ/releases[OmniJ Releases] page.
 
 == Announcements
 

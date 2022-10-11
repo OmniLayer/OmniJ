@@ -1,15 +1,14 @@
 = OmniJ Project
 Sean Gilligan <https://github.com/msgilligan>
-v0.6.1
+v0.6.2
 :description: OmniJ README document.
-:omnij-version: 0.6.1
+:omnij-version: 0.6.2
 
 [WARNING]
 This software is EXPERIMENTAL software for **REGTEST and TESTNET TRANSACTIONS** only. *USE ON MAINNET AT YOUR OWN RISK.*
 
 [CAUTION]
 This is pre-release software and APIs may change without notice.
-
 
 == OmniJ
 
@@ -91,7 +90,7 @@ A Bitcoin JSON-RPC client (base class), and other components used by OmniJ are i
 
 WARNING: These binaries have not been audited. Use only on TestNet or RegTest.
 
-Although the API is changing, binary releases are available on https://gitlab.com/OmniLayer/OmniJ/-/packages[Gitlab.com]. You can download JARs or use the provided Maven coordinates to link to them directly from your `pom.xml` or `build.gradle`.
+Although the API is changing, binary releases are available on https://gitlab.com/OmniLayer/OmniJ/-/packages[GitLab.com]. You can download JARs or use the provided Maven coordinates to link to them directly from your `pom.xml` or `build.gradle`.
 
 ==== Maven
 

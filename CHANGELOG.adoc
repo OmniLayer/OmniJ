@@ -3,12 +3,36 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.6.2-SNAPSHOT
+== v0.6.2
 
-Released: Under-development
+Released: 2022-10-11
+
+=== omnij-core
+
+* `BalanceEntry`, `AddressBalanceEntry`, `PropertyBalancEntry` moved from `omnij-jsonrpc`
+* Compile with `-parameters` option
+
+=== omnij-jsonrpc
+
+* `OmniClient`: Add `isOmniServer()` method for checking if server is **Omni Core**
+* `OmniProxyMethods` moved here from `omnij-net-api`
+* `OmniClient`: pull-up `RxOmniClient` features (and deprecate `RxOmniClient`)
+* `OmniClient`: Add no-args constructor that reads `bitcoin.conf`
+* Move `BalanceEntry`, `AddressBalanceEntry`, `PropertyBalancEntry` to  `omnij-core`
+* Deprecate `OmniClientModule` constructor that takes `NetworkParameters` argument
+* Move 4 "pojos" from f.o.rpc to f.o.json.pojo
+* Add `jackson-module-parameter-names` dependency and use it in `OmniClient` Jackson mapper
+* Compile with `-parameters` option
+
+=== omnij-rpc
+
+* Rename `RxOmniTestClient` to `OmniTestClient`
+* Deprecate `OmniCLIClient` and `OmniScriptingClient`
+* Deprecate `OmniClientDelegate`, `OmniTestClientDelegate`, and `RawTxDelegate` traits
 
 === Dependency Updates
 
+* ConsensusJ 0.6.4
 * Groovy 4.0.5
 * SLF4J 2.0.3
 
