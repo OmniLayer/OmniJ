@@ -17,7 +17,7 @@ import spock.lang.Shared
  *
  * Before the tests, the hash of a "marker block" is stored, and after the tests 50 blocks are mined, and
  * finally the "marker block" is invalidated. This results in a reorganization, and because only the state of
- * the last 50 blocks is persisted, it completely resets the state, including all activations inbetween.
+ * the last 50 blocks is persisted, it completely resets the state, including all activations in-between.
  */
 abstract class BaseActivationSpec extends BaseRegTestSpec {
 
