@@ -3,6 +3,10 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
+== v0.6.3-SNAPSHOT
+
+Released: In development
+
 == v0.6.2
 
 Released: 2022-10-11
