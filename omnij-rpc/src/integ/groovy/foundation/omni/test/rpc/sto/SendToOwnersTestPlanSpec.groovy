@@ -11,7 +11,7 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
-import org.junit.AssumptionViolatedException
+import org.junit.jupiter.api.Assumptions
 
 import spock.lang.Shared
 import spock.lang.Unroll
@@ -284,7 +284,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         // def numberOfAllOwners = omniGetProperty(currencyOMNI).size() // Map.size() ??
         def numberOfAllOwners = 13  // TODO: Fix me
         if ((startMSC.willetts - amountSTO.willetts) < (numberOfAllOwners - 1)) {
-            throw new AssumptionViolatedException("actor may not have enough OMNI to pay the fee")
+            Assumptions.abort("actor may not have enough OMNI to pay the fee")
         }
 
         // fund participants
@@ -421,10 +421,10 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
      */
     def maybeSkipReservedMetaDexTests(def amountReserved, def amountReservedOwners) {
         if (amountReserved > 0) {
-            throw new AssumptionViolatedException("skipped")
+            Assumptions.abort("skipped")
         }
         if (amountReservedOwners.sum() > 0) {
-            throw new AssumptionViolatedException("skipped")
+            Assumptions.abort("skipped")
         }
     }
 
