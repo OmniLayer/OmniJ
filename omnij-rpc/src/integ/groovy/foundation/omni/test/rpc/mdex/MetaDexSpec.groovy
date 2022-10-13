@@ -5,7 +5,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.OmniDivisibleValue
 import org.bitcoinj.core.Coin
-import org.junit.internal.AssumptionViolatedException
+import org.junit.AssumptionViolatedException
 import spock.lang.Unroll
 
 /**

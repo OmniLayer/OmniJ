@@ -5,7 +5,7 @@ import org.bitcoinj.core.Coin
 import org.consensusj.jsonrpc.JsonRpcException
 import foundation.omni.BaseRegTestSpec
 import org.bitcoinj.core.Sha256Hash
-import org.junit.internal.AssumptionViolatedException
+import org.junit.AssumptionViolatedException
 
 abstract class BaseReorgSpec extends BaseRegTestSpec {
 
