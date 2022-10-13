@@ -4,7 +4,7 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.OmniValue
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Sha256Hash
-import org.junit.AssumptionViolatedException
+import org.junit.jupiter.api.Assumptions
 import spock.lang.Shared
 
 /**
@@ -42,10 +42,10 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
 
     def setupSpec() {
         if (!client.commandExists('omni_sendactivation')) {
-            throw new AssumptionViolatedException('The client has no "omni_sendactivation" command')
+            Assumptions.abort('The client has no "omni_sendactivation" command')
         }
         if (!client.commandExists('omni_getactivations')) {
-            throw new AssumptionViolatedException('The client has no "omni_getactivations" command')
+            Assumptions.abort('The client has no "omni_getactivations" command')
         }
 
         client.generateBlocks(1)
@@ -69,10 +69,10 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
     def skipIfActivated(def featureId) {
         def activations = omniGetActivations()
         if (activations.pendingactivations.any( { it.featureid == featureId } )) {
-            throw new AssumptionViolatedException("Feature $featureId is already activated")
+            Assumptions.abort("Feature $featureId is already activated")
         }
         if (activations.completedactivations.any( { it.featureid == featureId } )) {
-            throw new AssumptionViolatedException("Feature $featureId is already live")
+            Assumptions.abort("Feature $featureId is already live")
         }
     }
 
@@ -80,7 +80,7 @@ abstract class BaseActivationSpec extends BaseRegTestSpec {
         def clientInfo = client.omniGetInfo()
         def clientVersion = clientInfo.omnicoreversion_int
         if (clientVersion < minClientVersion) {
-            throw new AssumptionViolatedException("Requires at least version $minClientVersion, but is $clientVersion")
+            Assumptions.abort("Requires at least version $minClientVersion, but is $clientVersion")
         }
     }
 }

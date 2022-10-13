@@ -1,11 +1,12 @@
 package foundation.omni.tx;
 
-import org.junit.Test;
-
 import java.util.Optional;
 
 import foundation.omni.tx.Transactions.TransactionType;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Tests for {@link Transactions.TransactionType}

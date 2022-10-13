@@ -4,7 +4,7 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.OmniOutput
 import foundation.omni.OmniValue
-import org.junit.AssumptionViolatedException
+import org.junit.jupiter.api.Assumptions
 
 class SendToManySpec extends BaseRegTestSpec {
 
@@ -125,7 +125,7 @@ class SendToManySpec extends BaseRegTestSpec {
 
     def setupSpec() {
         if (!commandExists("omni_sendtomany")) {
-            throw new AssumptionViolatedException('The client has no "omni_sendtomany" command')
+            Assumptions.abort('The client has no "omni_sendtomany" command')
         }
     }
 

@@ -3,7 +3,7 @@ package foundation.omni.test.rpc.sendall
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import org.junit.AssumptionViolatedException
+import org.junit.jupiter.api.Assumptions
 import spock.lang.Unroll
 
 class SendAllSpec extends BaseRegTestSpec {
@@ -143,7 +143,7 @@ class SendAllSpec extends BaseRegTestSpec {
 
     def setupSpec() {
         if (!commandExists("omni_sendall")) {
-            throw new AssumptionViolatedException('The client has no "omni_sendall" command')
+            Assumptions.abort('The client has no "omni_sendall" command')
         }
     }
 

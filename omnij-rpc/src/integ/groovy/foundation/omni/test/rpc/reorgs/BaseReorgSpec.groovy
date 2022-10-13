@@ -5,7 +5,8 @@ import org.bitcoinj.core.Coin
 import org.consensusj.jsonrpc.JsonRpcException
 import foundation.omni.BaseRegTestSpec
 import org.bitcoinj.core.Sha256Hash
-import org.junit.AssumptionViolatedException
+import org.junit.jupiter.api.Assumptions
+
 
 abstract class BaseReorgSpec extends BaseRegTestSpec {
 
@@ -16,11 +17,11 @@ abstract class BaseReorgSpec extends BaseRegTestSpec {
         try {
             clearMemPool()
         } catch(JsonRpcException ignored) {
-            throw new AssumptionViolatedException('The client has no "clearmempool" command')
+            Assumptions.abort('The client has no "clearmempool" command')
         }
     }
 
-    Sha256Hash generateAndGetBlockHash() throws AssumptionViolatedException
+    Sha256Hash generateAndGetBlockHash()
     {
         List<Sha256Hash> result = generateBlocks(1)
         assert result.size() > 0

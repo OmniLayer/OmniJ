@@ -5,7 +5,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.OmniDivisibleValue
 import org.bitcoinj.core.Coin
-import org.junit.AssumptionViolatedException
+import org.junit.jupiter.api.Assumptions
 import spock.lang.Unroll
 
 /**
@@ -434,10 +434,10 @@ class MetaDexSpec extends BaseRegTestSpec {
 
     def setupSpec() {
         if (!commandExists("omni_gettrade")) {
-            throw new AssumptionViolatedException('The client has no "omni_gettrade" command')
+            Assumptions.abort('The client has no "omni_gettrade" command')
         }
         if (!commandExists("omni_getorderbook")) {
-            throw new AssumptionViolatedException('The client has no "omni_getorderbook" command')
+            Assumptions.abort('The client has no "omni_getorderbook" command')
         }
     }
 
