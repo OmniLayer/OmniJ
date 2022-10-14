@@ -92,6 +92,11 @@ class MetaDexSpec extends BaseRegTestSpec {
         then:
         matches instanceof List
         matches.size() == 1
+        matches[0].txId == txidTradeB
+        matches[0].address == actorB
+        matches[0].amountSold == 0.00000006.divisible
+        matches[0].amountReceived == 6.divisible
+        // TODO: If Omni Core >= 0.12.0 blockTime should be non-null and recent
     }
 
     /**
