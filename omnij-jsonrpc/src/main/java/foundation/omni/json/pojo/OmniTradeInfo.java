@@ -183,6 +183,7 @@ public class OmniTradeInfo {
     public static class Match {
         private final Sha256Hash txId;
         private final int block;
+        private final Instant blockTime;
         private final Address address;
         private final OmniValue amountSold;
         private final OmniValue amountReceived;
@@ -190,11 +191,13 @@ public class OmniTradeInfo {
         @JsonCreator
         public Match(@JsonProperty("txid")              Sha256Hash txId,
                      @JsonProperty("block")             int block,
+                     @JsonProperty("blocktime")         Long blockTime,
                      @JsonProperty("address")           Address address,
                      @JsonProperty("amountsold")        OmniValue amountSold,
                      @JsonProperty("amountreceived")    OmniValue amountReceived) {
             this.txId = txId;
             this.block = block;
+            this.blockTime = (blockTime != null) ? Instant.ofEpochSecond(blockTime) : null;
             this.address = address;
             this.amountSold = amountSold;
             this.amountReceived = amountReceived;
@@ -206,6 +209,11 @@ public class OmniTradeInfo {
 
         public int getBlock() {
             return block;
+        }
+
+        // Nullable, added in Omni Core 0.12.0
+        public Instant getBlockTime() {
+            return blockTime;
         }
 
         public Address getAddress() {
