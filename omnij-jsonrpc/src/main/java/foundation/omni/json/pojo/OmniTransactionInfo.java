@@ -40,6 +40,7 @@ public class OmniTransactionInfo {
     private final int typeInt;
     private final String type;
     private final OmniValue amount;
+    private final OmniValue totalAmount;
     private final boolean divisible;
     private final CurrencyID propertyId;
     private final Sha256Hash blockHash;
@@ -63,6 +64,7 @@ public class OmniTransactionInfo {
                                @JsonProperty("type_int")            int         typeInt,
                                @JsonProperty("type")                String      type,
                                @JsonProperty("amount")              OmniValue   amount,
+                               @JsonProperty("totalamount")         OmniValue   totalAmount,
                                @JsonProperty("divisible")           boolean     divisible,
                                @JsonProperty("propertyid")          CurrencyID  propertyId,
                                @JsonProperty("blockhash")           Sha256Hash  blockHash,
@@ -83,6 +85,7 @@ public class OmniTransactionInfo {
         this.typeInt = typeInt;
         this.type = type;
         this.amount = amount;
+        this.totalAmount = totalAmount;
         this.divisible = divisible;
         this.propertyId = propertyId;
         this.blockHash = blockHash;
@@ -164,6 +167,10 @@ public class OmniTransactionInfo {
 
     public OmniValue getAmount() {
         return amount;
+    }
+
+    public OmniValue getTotalAmount() {
+        return totalAmount;
     }
 
     public boolean isDivisible() {

@@ -3,7 +3,6 @@ package foundation.omni.test.rpc.sendtomany
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.OmniOutput
-import foundation.omni.OmniValue
 import org.junit.jupiter.api.Assumptions
 
 class SendToManySpec extends BaseRegTestSpec {
@@ -42,7 +41,7 @@ class SendToManySpec extends BaseRegTestSpec {
 
         then: "the transaction is valid and all destinations receivers the correct balance"
         sendTx.valid
-        OmniValue.of(sendTx.totalamount) == 0.00000028.divisible
+        sendTx.totalAmount == 0.00000028.divisible
         omniGetBalance(otherAddress1, CurrencyID.OMNI).balance == 0.00000001.divisible
         omniGetBalance(otherAddress2, CurrencyID.OMNI).balance == 0.00000002.divisible
         omniGetBalance(otherAddress3, CurrencyID.OMNI).balance == 0.00000003.divisible
@@ -85,7 +84,7 @@ class SendToManySpec extends BaseRegTestSpec {
 
         then: "the transaction is valid and all destinations receivers the correct balance"
         sendTx.valid
-        OmniValue.of(sendTx.totalamount) == 0.00000036.divisible
+        sendTx.totalAmount == 0.00000036.divisible
         omniGetBalance(otherAddress1, CurrencyID.OMNI).balance == 0.00000001.divisible
         omniGetBalance(otherAddress2, CurrencyID.OMNI).balance == 0.00000002.divisible
         omniGetBalance(otherAddress3, CurrencyID.OMNI).balance == 0.00000003.divisible
@@ -118,7 +117,7 @@ class SendToManySpec extends BaseRegTestSpec {
 
         then: "the transaction is valid and the receiver received the correct number of tokens"
         sendTx.valid
-        OmniValue.of(sendTx.totalamount) == 0.00000227.divisible
+        sendTx.totalAmount == 0.00000227.divisible
         omniGetBalance(otherAddressA, CurrencyID.TOMNI).balance == 0.00000220.divisible
         omniGetBalance(otherAddressB, CurrencyID.TOMNI).balance == 0.00000007.divisible
     }
