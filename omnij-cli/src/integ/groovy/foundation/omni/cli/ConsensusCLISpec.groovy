@@ -14,6 +14,7 @@ import spock.lang.Specification
  */
 class ConsensusCLISpec extends Specification implements CLITestSupport {
 
+    static final rpcHost = 'localhost'
     static final rpcUser = TestServers.instance.rpcTestUser
     static final rpcPassword = TestServers.instance.rpcTestPassword
 
@@ -29,7 +30,7 @@ class ConsensusCLISpec extends Specification implements CLITestSupport {
 
     def "fetch Omni consensus to stdout"() {
         when:
-        def result = command "-regtest -rpcuser=${rpcUser} -rpcpassword=${rpcPassword} -rpcwait -property 1"
+        def result = command "-regtest -rpcconnect=${rpcHost} -rpcuser=${rpcUser} -rpcpassword=${rpcPassword} -rpcwait -property 1"
 
         then:
         result.status == 0
@@ -49,7 +50,7 @@ class ConsensusCLISpec extends Specification implements CLITestSupport {
 
     def "fetch Omni consensus to stdout with rpcconnect option"() {
         when:
-        def result = command "-regtest -rpcuser=${rpcUser} -rpcpassword=${rpcPassword} -rpcwait -property=1 -rpcconnect=127.0.0.1"
+        def result = command "-regtest -rpcconnect=${rpcHost} -rpcuser=${rpcUser} -rpcpassword=${rpcPassword} -rpcwait -property=1 -rpcconnect=127.0.0.1"
 
         then:
         result.status == 0
@@ -59,8 +60,8 @@ class ConsensusCLISpec extends Specification implements CLITestSupport {
 
     def "Compare Omni consensus of all properties (using localhost as a dummy for remote-core)"() {
         when:
-        def result = command "-regtest -rpcuser=${rpcUser} -rpcpassword=${rpcPassword} -rpcwait -compare -rpcconnect=127.0.0.1 " +
-                "--omnicore-url=http://${rpcUser}:${rpcPassword}@127.0.0.1:18443/"
+        def result = command "-regtest -rpcuser=${rpcUser} -rpcpassword=${rpcPassword} -rpcwait -compare -rpcconnect=${rpcHost} " +
+                "--omnicore-url=http://${rpcUser}:${rpcPassword}@${rpcHost}:18443/"
 
         then:
         result.status == 0

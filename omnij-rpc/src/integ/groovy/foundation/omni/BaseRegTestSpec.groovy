@@ -4,6 +4,7 @@ import foundation.omni.rpc.test.OmniTestClient
 import foundation.omni.rpc.test.OmniTestClientAccessor
 import groovy.util.logging.Slf4j
 import org.consensusj.bitcoin.json.pojo.NetworkInfo
+import org.consensusj.bitcoin.jsonrpc.BitcoinExtendedClient
 import org.consensusj.bitcoin.jsonrpc.RpcURI
 import org.consensusj.bitcoin.jsonrpc.test.FundingSource
 import org.consensusj.bitcoin.jsonrpc.test.FundingSourceAccessor
@@ -44,7 +45,9 @@ abstract class BaseRegTestSpec extends Specification implements OmniTestClientAc
     static synchronized OmniTestClient getClientInstance() {
         // We use a shared client for RegTest integration tests, because we want a single value for regTestMiningAddress
         if (INSTANCE == null) {
-            INSTANCE = new OmniTestClient(RegTestParams.get(), RpcURI.getDefaultRegTestWalletURI(), rpcTestUser, rpcTestPassword)
+            var host = 'localhost'
+            var uri = URI.create("http://${host}:18443").resolve("/wallet/${BitcoinExtendedClient.REGTEST_WALLET_NAME}")
+            INSTANCE = new OmniTestClient(RegTestParams.get(), uri, rpcTestUser, rpcTestPassword)
             INSTANCE.initRegTestWallet()
         }
         return INSTANCE;
