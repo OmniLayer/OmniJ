@@ -207,7 +207,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetBalance(actorAddress, currencyID) == old(omniGetBalance(actorAddress, currencyID))
     }
 
-    def "Granted tokens can be transfered as usual"() {
+    def "Granted tokens can be transferred as usual"() {
         when:
         def txid = omniSend(actorAddress, otherAddress, currencyID, 1.indivisible)
         generateBlocks(1)
