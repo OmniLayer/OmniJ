@@ -275,14 +275,34 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         !omniGetTransaction(txid).valid
     }
 
-    @Ignore
-    def "Tokens can only be revoked by the issuer on record"() {
+    def "Tokens can be revoked by non-issuer owners"() {
         when:
-        def txid = revokeTokens(otherAddress, currencyID, 1.divisible)
+        var txid = revokeTokens(otherAddress, currencyID, 1.indivisible)
         generateBlocks(1)
+        var txInfo = omniGetTransaction(txid)
 
         then:
-        !omniGetTransaction(txid).valid
+        txInfo.valid
+        txInfo.propertyId == currencyID
+
+        and:
+        omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens - 1.indivisible
+        omniGetBalance(actorAddress, currencyID) == old(omniGetBalance(actorAddress, currencyID))
+        omniGetBalance(otherAddress, currencyID).balance == old(omniGetBalance(otherAddress, currencyID)).balance - 1.indivisible
+        omniGetBalance(otherAddress, currencyID).reserved == old(omniGetBalance(otherAddress, currencyID)).reserved
+        omniGetBalance(otherAddress, currencyID).frozen == old(omniGetBalance(otherAddress, currencyID)).frozen
+    }
+
+    def "Tokens can't be revoked when there is an insufficient balance"() {
+        when:
+        var txid = revokeTokens(otherAddress, currencyID, 1.indivisible)
+        generateBlocks(1)
+        var txInfo = omniGetTransaction(txid)
+
+        then:
+        !txInfo.valid
+        txInfo.propertyId == currencyID
+        txInfo.otherInfo.get("invalidreason") == "Sender has insufficient balance"
 
         and:
         omniGetProperty(currencyID).totaltokens == old(omniGetProperty(currencyID)).totaltokens
