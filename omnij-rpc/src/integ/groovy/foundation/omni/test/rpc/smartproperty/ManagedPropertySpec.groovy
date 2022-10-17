@@ -217,8 +217,8 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
         and:
         omniGetProperty(currencyID).totaltokens as Long == 9223372036854775807L
-        omniGetBalance(actorAddress, currencyID).balance == 9223372036854775806.0
-        omniGetBalance(otherAddress, currencyID).balance == 1.0
+        omniGetBalance(actorAddress, currencyID).balance == 9223372036854775806L
+        omniGetBalance(otherAddress, currencyID).balance == 1
     }
 
     @Ignore
