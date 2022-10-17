@@ -4,6 +4,7 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.OmniDivisibleValue
+import foundation.omni.OmniValue
 import foundation.omni.PropertyType
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
@@ -28,6 +29,11 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         actorAddress = createFundedAddress(startBTC, zeroAmount)
         otherAddress = createFundedAddress(startBTC, zeroAmount)
         nonManagedID = fundNewProperty(actorAddress, 10.divisible, Ecosystem.OMNI)
+    }
+
+    def "The MAX_WILLETTS constant is as expected"() {
+        expect:
+        OmniValue.MAX_WILLETTS == 9223372036854775807
     }
 
     def "A managed property can be created with transaction type 54"() {
@@ -113,7 +119,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         def propertyInfo = omniGetProperty(currencyID)
 
         then:
-        propertyInfo.totaltokens == 100
+        propertyInfo.totaltokens == 100.indivisible
     }
 
     def "Granting tokens increases the issuer's balance"() {
@@ -121,8 +127,9 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         def balance = omniGetBalance(actorAddress, currencyID)
 
         then:
-        balance.balance == 100 as BigDecimal
-        balance.reserved == 0 as BigDecimal
+        balance.balance == 100.indivisible
+        balance.reserved == 0.indivisible
+        balance.frozen == 0.indivisible
     }
 
     def "Tokens can be granted several times"() {
@@ -136,11 +143,11 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).typeInt == 55
         omniGetTransaction(txid).propertyId == currencyID
         !omniGetTransaction(txid).divisible
-        omniGetTransaction(txid).amount == 170
+        omniGetTransaction(txid).amount == 170.indivisible
 
         and:
-        omniGetProperty(currencyID).totaltokens == 270
-        omniGetBalance(actorAddress, currencyID).balance == 270 as BigDecimal
+        omniGetProperty(currencyID).totaltokens == 270.indivisible
+        omniGetBalance(actorAddress, currencyID).balance == 270.indivisible
     }
 
     def "It's impossible to grant tokens for an non-existing property"() {
@@ -174,8 +181,8 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         !omniGetTransaction(txid).valid
 
         and:
-        omniGetProperty(currencyID).totaltokens == 270
-        omniGetBalance(actorAddress, currencyID).balance == 270 as BigDecimal
+        omniGetProperty(currencyID).totaltokens == 270.indivisible
+        omniGetBalance(actorAddress, currencyID).balance == 270.indivisible
         omniGetBalance(otherAddress, currencyID).balance == zeroAmount
     }
 
@@ -186,11 +193,11 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
         then:
         omniGetTransaction(txid).valid
-        omniGetTransaction(txid).amount.longValueExact() == 9223372036854775537L
+        omniGetTransaction(txid).amount == 9223372036854775537.indivisible
 
         and:
-        omniGetProperty(currencyID).totaltokens == 9223372036854775807L
-        omniGetBalance(actorAddress, currencyID).balance == 9223372036854775807.0
+        omniGetProperty(currencyID).totaltokens == 9223372036854775807.indivisible
+        omniGetBalance(actorAddress, currencyID).balance == 9223372036854775807.indivisible
     }
 
     @Ignore
@@ -216,9 +223,9 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).valid
 
         and:
-        omniGetProperty(currencyID).totaltokens as Long == 9223372036854775807L
-        omniGetBalance(actorAddress, currencyID).balance == 9223372036854775806L
-        omniGetBalance(otherAddress, currencyID).balance == 1
+        omniGetProperty(currencyID).totaltokens == 9223372036854775807.indivisible
+        omniGetBalance(actorAddress, currencyID).balance == 9223372036854775806.indivisible
+        omniGetBalance(otherAddress, currencyID).balance == 1.indivisible
     }
 
     @Ignore
@@ -247,7 +254,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetTransaction(txid).typeInt == 56
         omniGetTransaction(txid).propertyId == currencyID
         !omniGetTransaction(txid).divisible
-        omniGetTransaction(txid).amount.longValueExact() == 9223372036854775805L
+        omniGetTransaction(txid).amount == 9223372036854775805.indivisible
     }
 
     def "Revoking tokens decreases the total number of tokens"() {
@@ -305,7 +312,7 @@ class ManagedPropertySpec extends BaseRegTestSpec {
 
     def "Revoking more tokens than available is not possible"() {
         when:
-        def txid = revokeTokens(actorAddress, currencyID, 100.divisible) // issuer has less than 100 tokens
+        def txid = revokeTokens(actorAddress, currencyID, 100.indivisible) // issuer has less than 100 tokens
         generateBlocks(1)
 
         then:
