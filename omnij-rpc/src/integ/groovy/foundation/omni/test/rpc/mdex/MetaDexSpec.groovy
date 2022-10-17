@@ -28,6 +28,7 @@ class MetaDexSpec extends BaseRegTestSpec {
         def propertySPX = fundNewProperty(actorB, 10.divisible, propertyOMNI.ecosystem)
 
         when:
+        // TODO: propertySPX is divisible, but we are using `.indivisible` in declaring the trade amounts
         def txidTradeA = omniSendTrade(actorA, propertyOMNI, 0.00000006.divisible , propertySPX, 6.indivisible)
         generateBlocks(1)
         def txidTradeB = omniSendTrade(actorB, propertySPX, 10.indivisible, propertyOMNI, 0.00000001.divisible)
