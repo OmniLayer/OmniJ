@@ -221,7 +221,6 @@ class ManagedPropertySpec extends BaseRegTestSpec {
         omniGetBalance(otherAddress, currencyID).balance == 1
     }
 
-    @Ignore
     def "Sending of granted tokens does not remove the limit of total tokens"() {
         when:
         def txid = grantTokens(actorAddress, currencyID, 1.indivisible) // MAX < total + 1 (!)
