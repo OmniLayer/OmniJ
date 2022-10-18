@@ -407,7 +407,12 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
         try {
             txid = omniSendSTO(address, currency, amount)
-        } catch(Exception) {
+        } catch(Exception e) {
+            if (exceptional) {
+                log.debug("Expected exception: ", e)
+            } else {
+                log.error("Unexpected exception: ", e)
+            }
             thrown = true
         }
 
