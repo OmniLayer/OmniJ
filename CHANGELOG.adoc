@@ -17,6 +17,10 @@ Released: In development
 * Groovy 4.0.9
 * SLF4J 2.0.6
 
+=== Build/Test Updates
+
+* GraalVM 22.3.1 (used on GitHub Actions)
+
 == v0.6.2
 
 Released: 2022-10-11
