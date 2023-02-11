@@ -9,19 +9,19 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest]
         graalvm: [ '22.2.0' ]
-        java: [ 'java17' ]
+        java: [ '17' ]
       fail-fast: false
     name: ${{ matrix.os }} JDK ${{ matrix.graalvm }}
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
     - name: Set up GraalVM
-      uses: DeLaGuardo/setup-graalvm@4.0
+      uses: graalvm/setup-graalvm@v1
       with:
-        graalvm: ${{ matrix.graalvm }}
-        java: ${{ matrix.java }}
-    - name: Install native-image plugin
-      run: gu install native-image
+        version: ${{ matrix.graalvm }}
+        java-version: ${{ matrix.java }}
+        components: 'native-image'
+        github-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Verify Gradle Wrapper
       uses: gradle/wrapper-validation-action@v1
     - name: Cache Gradle packages
