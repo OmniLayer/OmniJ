@@ -15,7 +15,7 @@ Released: In development
 
 * bitcoinj 0.16.2
 * Groovy 4.0.11
-* SLF4J 2.0.6
+* SLF4J 2.0.7
 
 === Build/Test Updates
 
