@@ -19,6 +19,7 @@ Released: In development
 
 === Build/Test Updates
 
+* Gradle 7.6.1
 * GraalVM 22.3.1 (used on GitHub Actions)
 
 == v0.6.2
