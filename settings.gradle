@@ -2,6 +2,10 @@ plugins {
     id "com.gradle.enterprise" version "3.4"
 }
 
+if (!JavaVersion.current().isJava11Compatible()) {
+    throw new GradleScriptException("Building OmniJ requires JDK 11 or later", null)
+}
+
 rootProject.name = 'OmniJ'
 
 include 'omnij-core',
