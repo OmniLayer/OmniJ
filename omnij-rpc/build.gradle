@@ -17,7 +17,7 @@ dependencies {
     api project(':omnij-net-api')
     api project(':omnij-rest-client-jdk')    // For OmniwalletModernJDKClient
 
-    api ("${consensusjGroup}:cj-btc-jsonrpc-gvy:${consensusjVersion}", {
+    api ("com.msgilligan:cj-btc-jsonrpc-gvy:${consensusjVersion}", {
         // These exclusions can be removed when ConsensusJ upgrades to Groovy 4.0
         exclude group: 'org.codehaus.groovy', module: 'groovy'
         exclude group: 'org.codehaus.groovy', module: 'groovy-json'

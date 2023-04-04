@@ -20,7 +20,7 @@ dependencies {
         exclude group: 'org.apache.groovy', module: 'groovy-json'
     })
 
-    implementation "${consensusjGroup}:cj-btc-cli:${consensusjVersion}"
+    implementation "com.msgilligan:cj-btc-cli:${consensusjVersion}"
 
     runtimeOnly "org.slf4j:slf4j-jdk14:${slf4jVersion}"
 }

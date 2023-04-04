@@ -11,7 +11,7 @@ ext.moduleName = 'foundation.omni.txrecords'
 dependencies {
     api project(':omnij-core')
     api project(':omnij-rest-client-jdk')
-    api "${consensusjGroup}:cj-bitcoinj-util:${consensusjVersion}"
+    api "com.msgilligan:cj-bitcoinj-util:${consensusjVersion}"
 
     implementation "org.slf4j:slf4j-jdk14:${slf4jVersion}"     // Runtime implementation of slf4j for tests
 }
