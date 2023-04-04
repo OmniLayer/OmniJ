@@ -42,9 +42,9 @@ class DexSpec extends BaseRegTestSpec {
         offerTx.propertyId == currencyOffered
         offerTx.divisible
         offerTx.amount == amountOffered
-        offerTx.otherInfo.bitcoindesired as BigDecimal == desiredBTC.decimalBtc
+        offerTx.otherInfo.bitcoindesired as BigDecimal == desiredBTC.toBtc()
         offerTx.otherInfo.timelimit == stdBlockSpan
-        offerTx.otherInfo.feerequired as BigDecimal == stdCommitFee.decimalBtc
+        offerTx.otherInfo.feerequired as BigDecimal == stdCommitFee.toBtc()
         offerTx.otherInfo.action == "new"
         offerTx.valid
         offerTx.confirmations == 1
