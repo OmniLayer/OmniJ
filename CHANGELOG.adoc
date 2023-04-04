@@ -3,22 +3,29 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.6.3-SNAPSHOT
+== v0.6.3
 
-Released: In development
+Released: 2023.04.04
 
 == omnij-jsonrpc
 
+* `OmniTransactionInfo`: add `totalAmount` property for `SendToMany`
+* `OmniTradeInfo.Match`: add `blockTime` property
 * Remove unused/incorrect thrown exceptions from `OmniClient.isOmniServer()`
 
 === Dependency Updates
 
+* ConsensusJ 0.6.5
 * bitcoinj 0.16.2
 * Groovy 4.0.11
 * SLF4J 2.0.7
 
 === Build/Test Updates
 
+* Send to Many test plan (from DexX7)
+* `test-omni-integ-regtest.sh`: add `-addresstype=p2sh-segwit`
+* Many other test improvements
+* Finish migration to JUnit 5 API
 * Gradle 7.6.1
 * GraalVM 22.3.1 (used on GitHub Actions)
 
