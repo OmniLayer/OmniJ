@@ -34,7 +34,7 @@
 . Commit and push to master
 
 
-== Publish Snapshot release to Github Maven repo
+== Publish Snapshot release to GitLab Maven repo
 
 . `.gradlew clean buildCI regTest publish`
 
