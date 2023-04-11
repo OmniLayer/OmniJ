@@ -7,6 +7,7 @@ import foundation.omni.rpc.OmniClient;
 import foundation.omni.txrecords.TransactionRecords;
 import foundation.omni.txrecords.UnsignedTxSimpleSend;
 import org.bitcoinj.core.*;
+import org.bitcoinj.script.Script;
 import org.consensusj.bitcoin.json.conversion.HexUtil;
 import org.consensusj.bitcoin.json.pojo.bitcore.AddressUtxoInfo;
 import org.consensusj.bitcoinj.signing.DefaultSigningRequest;
@@ -132,10 +133,10 @@ public class OmniSendService {
 
     private TransactionInputData mapUtxo(AddressUtxoInfo info) {
         return new TransactionInputDataImpl(rxOmniClient.getNetParams().getId(),
-                info.getTxid().getBytes(),
+                info.getTxid(),
                 info.getOutputIndex(),
-                info.getSatoshis(),
-                info.getScript());
+                Coin.ofSat(info.getSatoshis()),
+                new Script(info.getScript()));
     }
 
 
