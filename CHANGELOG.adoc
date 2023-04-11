@@ -9,6 +9,10 @@ Released: Under development
 
 The 0.7.0 release of **OmniJ** will require the forthcoming **ConsensusJ** 0.7.0 and **bitcoinj** v0.17 (currently in alpha release.) There will likely be multiple alpha releases of OmniJ and ConsensusJ as bitcoinj is updated.
 
+=== Dependency Updates
+
+* All modules now require a minimum of JDK 11 or later (`omnij-txrecords` and `omnij-cli` still require JDK 17 or later)
+
 == v0.6.3
 
 Released: 2023.04.04

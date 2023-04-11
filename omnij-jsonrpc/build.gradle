@@ -4,10 +4,6 @@ plugins {
 
 ext.moduleName = 'foundation.omni.jsonrpc'
 
-tasks.withType(JavaCompile) {
-    options.release = 9
-}
-
 dependencies {
     api project(':omnij-core')
     api "com.msgilligan:cj-btc-jsonrpc:${consensusjVersion}"

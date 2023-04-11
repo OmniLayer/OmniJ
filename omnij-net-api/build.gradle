@@ -4,10 +4,6 @@ plugins {
 
 ext.moduleName = 'foundation.omni.netapi'
 
-tasks.withType(JavaCompile) {
-    options.release = 9
-}
-
 dependencies {
     api project(':omnij-jsonrpc')
 

@@ -4,10 +4,6 @@ plugins {
 
 ext.moduleName = 'foundation.omni.omniwallet.retrofit'
 
-tasks.withType(JavaCompile) {
-    options.release = 9
-}
-
 dependencies {
     api project(':omnij-core')
     api project(':omnij-jsonrpc')
