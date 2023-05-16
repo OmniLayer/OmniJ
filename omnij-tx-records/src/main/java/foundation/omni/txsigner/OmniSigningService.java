@@ -1,78 +1,40 @@
 package foundation.omni.txsigner;
 
+import foundation.omni.tx.ClassCEncoder;
+import foundation.omni.tx.Transactions;
 import foundation.omni.txrecords.UnsignedTxSimpleSend;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.params.TestNet3Params;
 import org.consensusj.bitcoinj.signing.DefaultSigningRequest;
 import org.consensusj.bitcoinj.signing.FeeCalculator;
 import org.consensusj.bitcoinj.signing.SigningRequest;
 import org.consensusj.bitcoinj.signing.SigningUtils;
-import org.consensusj.bitcoinj.signing.HDKeychainSigner;
 import org.consensusj.bitcoinj.signing.TransactionInputData;
 import org.consensusj.bitcoinj.signing.TransactionOutputData;
 import org.consensusj.bitcoinj.signing.TransactionOutputOpReturn;
-import org.consensusj.bitcoinj.wallet.BipStandardDeterministicKeyChain;
-import foundation.omni.tx.ClassCEncoder;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static foundation.omni.tx.Transactions.OmniTx;
-import static foundation.omni.tx.Transactions.OmniRefTx;
-
 /**
- * A service to sign Omni transactions
+ *
  */
-public class OmniSigningService {
-    private final NetworkParameters netParams;
-    private final BipStandardDeterministicKeyChain keyChain;
-    private final HDKeychainSigner signingWalletKeyChain;
-    private final FeeCalculator feeCalculator;
+public interface OmniSigningService {
 
-    static class HackedFeeCalculator implements FeeCalculator {
-
-        @Override
-        public Coin calculateFee(SigningRequest signingRequest) {
-            return Coin.ofSat(257);
-        }
-    }
-
-    public OmniSigningService(NetworkParameters netParams, BipStandardDeterministicKeyChain deterministicKeyChain) {
-        this.netParams = netParams;
-        this.keyChain = deterministicKeyChain;
-        this.signingWalletKeyChain = new HDKeychainSigner(deterministicKeyChain);
-        feeCalculator = new HackedFeeCalculator();
-    }
-
-    /* package */ BipStandardDeterministicKeyChain getKeychain() {
-        return keyChain;
-    }
-
-//    public CompletableFuture<Transaction> omniSignTx(List<TransactionOutput> utxos, Address fromAddress, OmniTx omniTx) throws InsufficientMoneyException {
-//        return omniSignTx(utxos, fromAddress, omniTx, fromAddress, Coin.ZERO);
-//    }
-
-//    public CompletableFuture<Transaction> omniSignTx(List<TransactionOutput> utxos, Address fromAddress, OmniTx omniTx, Address redeemAddress, Coin referenceAmount) throws InsufficientMoneyException {
-//        ECKey fromKey = (ECKey) null;  // Get signing key from signingWalletKeychain
-//        Address refAddress = (omniTx instanceof OmniRefTx refTx) ? refTx.referenceAddress() : null;
-//        Transaction tx = txBuilder.createSignedOmniTransaction(fromKey, /* fromAddress.getOutputScriptType(), */ utxos,  refAddress, omniTx.payload());
-//        return CompletableFuture.completedFuture(tx);
-//    }
-
-
-    public CompletableFuture<Transaction> omniSignTx(Address fromAddress, List<TransactionInputData> inputUtxos, OmniTx omniTx, Address changeAddress, Address redeemAddress, Coin referenceAmount) {
+    default CompletableFuture<Transaction> omniSignTx(Address fromAddress, List<TransactionInputData> inputUtxos, Transactions.OmniTx omniTx, Address changeAddress, Address redeemAddress, Coin referenceAmount) {
         throw new UnsupportedOperationException("no redeemaddress support yet");
     }
 
-    public CompletableFuture<Transaction> omniSignTx(Address fromAddress, List<? super TransactionInputData> inputUtxos,  OmniTx omniTx, Address changeAddress) {
+    default CompletableFuture<Transaction> omniSignTx(Address fromAddress, List<? super TransactionInputData> inputUtxos, Transactions.OmniTx omniTx, Address changeAddress) {
         SigningRequest signingRequest = createOmniClassCSigningRequest(fromAddress, inputUtxos, omniTx, changeAddress);
         return signTx(signingRequest);
     }
 
-    public CompletableFuture<Transaction> omniSignTx(UnsignedTxSimpleSend unsignedTx) {
+    default CompletableFuture<Transaction> omniSignTx(UnsignedTxSimpleSend unsignedTx) {
         return omniSignTx(unsignedTx.fromAddress(), unsignedTx.inputs(), unsignedTx.payload(), unsignedTx.changeAddress());
     }
 
@@ -82,9 +44,7 @@ public class OmniSigningService {
      * @param signingRequest a ConsensusJ signing request
      * @return a signed bitcoinj transaction
      */
-    public CompletableFuture<Transaction> signTx(SigningRequest signingRequest) {
-        return signingWalletKeyChain.signTransaction(signingRequest);
-    }
+    CompletableFuture<Transaction> signTx(SigningRequest signingRequest);
 
     /**
      * Build a {@link SigningRequest} for an Omni transaction. Performs the following:
@@ -100,25 +60,48 @@ public class OmniSigningService {
      * @param changeAddress Address to return bitcoin change to
      * @return A ConsensusJ SigningRequest for the transaction
      */
-    public SigningRequest createOmniClassCSigningRequest(Address fromAddress, List<? super TransactionInputData> inputUtxos, OmniTx omniTx, Address changeAddress) {
+    default SigningRequest createOmniClassCSigningRequest(Address fromAddress, List<? super TransactionInputData> inputUtxos, Transactions.OmniTx omniTx, Address changeAddress) {
         // Create a signing request with just the OP_RETURN output
-        SigningRequest request = new DefaultSigningRequest(netParams, (List<TransactionInputData>) inputUtxos, List.of(createOpReturn(omniTx)));
+        SigningRequest request = new DefaultSigningRequest(netParams(), (List<TransactionInputData>) inputUtxos, List.of(createOpReturn(omniTx)));
 
         // Add a reference address output if necessary
-        Address refAddress = (omniTx instanceof OmniRefTx refTx) ? refTx.referenceAddress() : null;
+        Address refAddress = (omniTx instanceof Transactions.OmniRefTx refTx) ? refTx.referenceAddress() : null;
         if (refAddress != null) {
-            request = request.addDustOutput(refAddress);
+            //request = request.addDustOutput(refAddress);
+            request = request.addOutput(refAddress, Coin.MICROCOIN);
         }
         try {
-            return SigningUtils.addChange(request, changeAddress, feeCalculator);
+            return SigningUtils.addChange(request, changeAddress, feeCalculator());
         } catch (InsufficientMoneyException ime) {
             throw new RuntimeException(ime);
         }
     }
 
-    private TransactionOutputData createOpReturn(OmniTx omniTx) {
+    default SigningRequest createOmniClassCSigningRequest(UnsignedTxSimpleSend unsignedTxSimpleSend) {
+        return createOmniClassCSigningRequest(unsignedTxSimpleSend.fromAddress(),
+                unsignedTxSimpleSend.inputs(),
+                unsignedTxSimpleSend.payload(),
+                unsignedTxSimpleSend.changeAddress());
+    }
+
+    FeeCalculator feeCalculator();
+
+    @Deprecated
+    default NetworkParameters netParams() {
+        return TestNet3Params.get();
+    }
+
+    default TransactionOutputData createOpReturn(Transactions.OmniTx omniTx) {
         byte[] unprefixedPayload = omniTx.payload();
         byte[] opReturnData = ClassCEncoder.addOmniPrefix(unprefixedPayload);
-        return new TransactionOutputOpReturn(netParams.getId(), opReturnData);
+        return new TransactionOutputOpReturn(TestNet3Params.get().getId(), opReturnData);
+    }
+
+    class HackedFeeCalculator implements FeeCalculator {
+
+        @Override
+        public Coin calculateFee(SigningRequest signingRequest) {
+            return Coin.ofSat(2570);
+        }
     }
 }

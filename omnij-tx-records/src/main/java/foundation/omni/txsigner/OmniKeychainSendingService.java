@@ -2,9 +2,7 @@ package foundation.omni.txsigner;
 
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
-import foundation.omni.netapi.omnicore.RxOmniClient;
 import foundation.omni.rpc.OmniClient;
-import foundation.omni.txrecords.TransactionRecords;
 import foundation.omni.txrecords.UnsignedTxSimpleSend;
 import org.bitcoinj.core.*;
 import org.bitcoinj.script.Script;
@@ -26,19 +24,21 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * A service to sign and send Omni Transactions (similar to functionality in Omni Core)
+ * A service to sign and send Omni Transactions (similar to functionality in Omni Core). Uses a local HD Keychain
+ * (via {@link OmniKeychainSigningService}) and a local or remote JSON-RPC server {@link OmniClient} to provide
+ * this service.
  */
-public class OmniSendService {
-    private static final Logger log = LoggerFactory.getLogger(OmniSendService.class);
+public class OmniKeychainSendingService implements OmniSendingService {
+    private static final Logger log = LoggerFactory.getLogger(OmniKeychainSendingService.class);
 
     private final OmniClient rxOmniClient;
-    private final OmniSigningService signingService;
+    private final OmniKeychainSigningService signingService;
     private final FeeCalculator feeCalculator;
 
-    public OmniSendService(OmniClient client, OmniSigningService signingService) {
+    public OmniKeychainSendingService(OmniClient client, OmniKeychainSigningService signingService) {
         this.rxOmniClient = client;
         this.signingService = signingService;
-        feeCalculator = new HackedFeeCalculator();
+        feeCalculator = new OmniSigningService.HackedFeeCalculator();
     }
 
     // Simple Bitcoin send, from receive address 0 with change to sending address
@@ -59,13 +59,6 @@ public class OmniSendService {
             return SigningUtils.addChange(request, changeAddress, feeCalculator);
         } catch (InsufficientMoneyException ime) {
             throw new RuntimeException(ime);
-        }
-    }
-
-    static class HackedFeeCalculator implements FeeCalculator {
-        @Override
-        public Coin calculateFee(SigningRequest signingRequest) {
-            return Coin.ofSat(257);
         }
     }
 
@@ -96,29 +89,13 @@ public class OmniSendService {
      */
     public CompletableFuture<Sha256Hash> omniSend(UnsignedTxSimpleSend simpleSend) throws IOException {
         Transaction tx = signingService.omniSignTx(simpleSend.fromAddress(), simpleSend.inputs(), simpleSend.payload(), simpleSend.changeAddress()).join();
-        CompletableFuture<Sha256Hash> sendFuture = this.sendRawTx(tx);
+        CompletableFuture<Sha256Hash> sendFuture = this.sendRawTransactionAsync(tx);
         return sendFuture;
 //        return signingService
 //                .omniSignTx(fromAddress, (List<TransactionInputData>) utxos, sendTx, fromAddress)
 //                .thenCompose(this::sendRawTx);
     }
 
-    /**
-     * Build a complete, unsigned SimpleSend ("signing request") transaction.
-     * Fetches the transaction inputs, assembles the payload, etc.
-     * 
-     * @param fromAddress Omni address sending funds
-     * @param toAddress Omni address receiving funds
-     * @param currency Currency type
-     * @param amount amount
-     * @return A record containing all necessary data for signing
-     * @throws IOException if an error occurred fetching inputs
-     */
-    public UnsignedTxSimpleSend assembleSimpleSend(Address fromAddress, Address toAddress, CurrencyID currency, OmniValue amount) throws IOException {
-        List<TransactionInputData> utxos = getInputsFor(fromAddress);
-        TransactionRecords.SimpleSend sendTx = new TransactionRecords.SimpleSend(toAddress, currency, amount);
-        return new UnsignedTxSimpleSend(fromAddress, utxos, sendTx, toAddress);
-    }
 
     /**
      * Fetch inputs for an address
@@ -139,13 +116,13 @@ public class OmniSendService {
                 new Script(info.getScript()));
     }
 
-
-    CompletableFuture<Sha256Hash> sendRawTx(Transaction tx) {
-        log.info("OmniSendService: preparing to send: {}", tx);
+    @Override
+    public CompletableFuture<Sha256Hash> sendRawTransactionAsync(Transaction tx) {
+        log.info("Preparing to send: {}", tx);
         return rxOmniClient.supplyAsync(() -> {
-               String hexTx = HexUtil.bytesToHexString(tx.bitcoinSerialize());
-               log.warn("OmniSendService: About to send tx: {}", hexTx);
-               return rxOmniClient.sendRawTransaction(hexTx);
-            });
+            String hexTx = HexUtil.bytesToHexString(tx.bitcoinSerialize());
+            log.warn("OmniSendingService: About to send tx: {}", hexTx);
+            return rxOmniClient.sendRawTransaction(hexTx);
+        });
     }
 }

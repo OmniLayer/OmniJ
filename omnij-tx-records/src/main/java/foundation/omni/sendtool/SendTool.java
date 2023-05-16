@@ -2,10 +2,9 @@ package foundation.omni.sendtool;
 
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniDivisibleValue;
-import foundation.omni.netapi.omnicore.RxOmniClient;
 import foundation.omni.rpc.OmniClient;
-import foundation.omni.txsigner.OmniSendService;
-import foundation.omni.txsigner.OmniSigningService;
+import foundation.omni.txsigner.OmniKeychainSendingService;
+import foundation.omni.txsigner.OmniKeychainSigningService;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
@@ -25,13 +24,13 @@ import java.time.ZoneOffset;
 import java.util.concurrent.CompletableFuture;
 
 /**
- *
+ *  Omni transaction sending tool that uses a local keychain and a remote, address-indexed Omni Core server (or OmniProxy)
  */
 public class SendTool {
     public static final String mnemonicString = "panda diary marriage suffer basic glare surge auto scissors describe sell unique";
     public static final Instant creationInstant = LocalDate.of(2019, 4, 10).atStartOfDay().toInstant(ZoneOffset.UTC);
-    private final OmniSigningService signingService;
-    private final OmniSendService sendService;
+    private final OmniKeychainSigningService signingService;
+    private final OmniKeychainSendingService sendService;
 
     public static void main(String[] args) throws IOException {
         SendTool sendTool = new SendTool();
@@ -69,7 +68,7 @@ public class SendTool {
         signingKeychain.getKeys(KeyChain.KeyPurpose.RECEIVE_FUNDS, 20);  // Generate first 2 receiving address
         signingKeychain.getKeys(KeyChain.KeyPurpose.CHANGE, 20);         // Generate first 2 change address
 
-        signingService = new OmniSigningService(netParams, signingKeychain);
+        signingService = new OmniKeychainSigningService(netParams, signingKeychain);
 
 
         URI omniProxyTestNetURI = URI.create("http://192.168.8.177:18332");
@@ -81,7 +80,7 @@ public class SendTool {
                 false,
                 false);
 
-        sendService = new OmniSendService(omniProxyClient, signingService);
+        sendService = new OmniKeychainSendingService(omniProxyClient, signingService);
     }
 
     public CompletableFuture<Sha256Hash> send(Address fromAddress, Address toAddress, CurrencyID currencyId, OmniDivisibleValue amount) throws IOException {

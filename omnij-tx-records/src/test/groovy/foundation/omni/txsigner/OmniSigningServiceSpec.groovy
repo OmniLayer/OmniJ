@@ -3,7 +3,6 @@ package foundation.omni.txsigner
 import foundation.omni.CurrencyID
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniValue
-import foundation.omni.netapi.omnicore.RxOmniClient
 import foundation.omni.rpc.OmniClient
 import foundation.omni.txrecords.UnsignedTxSimpleSend
 import org.bitcoinj.core.Address
@@ -60,8 +59,8 @@ class OmniSigningServiceSpec extends Specification {
                 false);
 
 
-        OmniSigningService signService = new OmniSigningService(netParams, signingKeychain)
-        OmniSendService sendService = new OmniSendService(omniProxyClient, signService)
+        OmniKeychainSigningService signService = new OmniKeychainSigningService(netParams, signingKeychain)
+        OmniKeychainSendingService sendService = new OmniKeychainSendingService(omniProxyClient, signService)
 
         when: "We assemble the unsigned transaction"
         UnsignedTxSimpleSend sendTx = sendService.assembleSimpleSend(fromAddress, toAddress, currencyID, amount)
