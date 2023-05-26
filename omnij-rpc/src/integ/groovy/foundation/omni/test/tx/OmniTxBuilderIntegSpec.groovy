@@ -4,7 +4,7 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.tx.OmniTxBuilder
 import foundation.omni.tx.SimpleVariableFeeCalculator
-import org.bitcoinj.core.Coin
+import org.bitcoinj.base.Coin
 import org.bitcoinj.core.TransactionOutput
 import spock.lang.Ignore
 

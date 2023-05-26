@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.Version
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
+import org.bitcoinj.base.BitcoinNetwork
 import org.consensusj.bitcoin.json.conversion.RpcClientModule
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniIndivisibleValue
@@ -27,10 +28,9 @@ abstract class BaseOmniClientMapperSpec extends Specification {
     def mapper
 
     def setupSpec() {
-        NetworkParameters netParams = TestNet3Params.get()
         mapper = new ObjectMapper()
         mapper.registerModule(new ParameterNamesModule())
-        mapper.registerModule(new RpcClientModule(netParams))
+        mapper.registerModule(new RpcClientModule(BitcoinNetwork.TESTNET))
         mapper.registerModule(new OmniClientModule())
     }
 

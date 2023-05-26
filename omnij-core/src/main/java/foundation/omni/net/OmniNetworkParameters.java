@@ -1,6 +1,8 @@
 package foundation.omni.net;
 
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.BitcoinNetwork;
+import org.bitcoinj.base.Network;
 import org.bitcoinj.core.NetworkParameters;
 
 /**
@@ -27,19 +29,20 @@ public abstract class OmniNetworkParameters {
     /**
      * Get Omni Network params given Bitcoin Network params
      *
-     * @param btcNetParms Bitcoin network parameters
+     * @param bitcoinNetwork Bitcoin network enum
      * @return Omni network params for specified Bitcoin network
      */
-    public static OmniNetworkParameters fromBitcoinParms(NetworkParameters btcNetParms) {
-        switch (btcNetParms.getId()) {
-            case NetworkParameters.ID_MAINNET:
+    public static OmniNetworkParameters fromBitcoinNetwork(Network bitcoinNetwork) {
+        if (!(bitcoinNetwork instanceof BitcoinNetwork)) throw new IllegalArgumentException("Unsupported Network");
+        switch ((BitcoinNetwork) bitcoinNetwork) {
+            case MAINNET:
                 return OmniMainNetParams.get();
-            case NetworkParameters.ID_TESTNET:
+            case TESTNET:
                 return OmniTestNetParams.get();
-            case NetworkParameters.ID_REGTEST:
+            case REGTEST:
                 return OmniRegTestParams.get();
             default:
-                throw new IllegalArgumentException("Unsupported NetworkParameters instance");
+                throw new IllegalArgumentException("Unsupported Network");
         }
     }
 

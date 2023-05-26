@@ -1,7 +1,7 @@
 package foundation.omni.tx;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.Sha256Hash;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient;
 import foundation.omni.netapi.omniwallet.json.OmniwalletPropertiesListResponse;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 import foundation.omni.netapi.omniwallet.json.AddressVerifyInfo;
 import foundation.omni.netapi.omniwallet.json.OmniwalletAddressBalance;
 import foundation.omni.netapi.omniwallet.json.OmniwalletClientModule;
@@ -114,7 +114,7 @@ public class OmniwalletClient extends OmniwalletAbstractClient {
         super(baseURI, debug, strictMode, netParams);
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.registerModule(new OmniwalletClientModule(netParams));
+        mapper.registerModule(new OmniwalletClientModule(netParams.network()));
 
         Retrofit restAdapter = new Retrofit.Builder()
                 .client(client)

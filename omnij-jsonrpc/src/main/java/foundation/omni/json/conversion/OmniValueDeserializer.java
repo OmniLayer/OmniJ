@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
-import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.base.Sha256Hash;
 
 import java.io.IOException;
 import java.math.BigDecimal;

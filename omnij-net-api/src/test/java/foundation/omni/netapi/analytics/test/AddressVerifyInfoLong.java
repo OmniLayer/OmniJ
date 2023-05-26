@@ -1,6 +1,6 @@
 package foundation.omni.netapi.analytics.test;
 
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 import java.math.BigDecimal;
 

@@ -1,7 +1,7 @@
 package foundation.omni.test.rpc.sto
 
 import foundation.omni.OmniValue
-import org.bitcoinj.core.Address
+import org.bitcoinj.base.Address
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType

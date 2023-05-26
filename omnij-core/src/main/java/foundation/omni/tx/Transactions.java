@@ -1,6 +1,6 @@
 package foundation.omni.tx;
 
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 import java.util.Arrays;
 import java.util.Optional;

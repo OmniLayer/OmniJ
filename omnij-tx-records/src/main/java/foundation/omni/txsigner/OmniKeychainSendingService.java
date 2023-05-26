@@ -4,8 +4,12 @@ import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
 import foundation.omni.rpc.OmniClient;
 import foundation.omni.txrecords.UnsignedTxSimpleSend;
-import org.bitcoinj.core.*;
-import org.bitcoinj.script.Script;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.Coin;
+import org.bitcoinj.base.ScriptType;
+import org.bitcoinj.base.Sha256Hash;
+import org.bitcoinj.core.InsufficientMoneyException;
+import org.bitcoinj.core.Transaction;
 import org.consensusj.bitcoin.json.conversion.HexUtil;
 import org.consensusj.bitcoin.json.pojo.bitcore.AddressUtxoInfo;
 import org.consensusj.bitcoinj.signing.DefaultSigningRequest;
@@ -13,9 +17,10 @@ import org.consensusj.bitcoinj.signing.FeeCalculator;
 import org.consensusj.bitcoinj.signing.SigningRequest;
 import org.consensusj.bitcoinj.signing.SigningUtils;
 import org.consensusj.bitcoinj.signing.TransactionInputData;
-import org.consensusj.bitcoinj.signing.TransactionInputDataImpl;
+import org.consensusj.bitcoinj.signing.TransactionInputDataUtxo;
 import org.consensusj.bitcoinj.signing.TransactionOutputAddress;
 import org.consensusj.bitcoinj.signing.TransactionOutputData;
+import org.consensusj.bitcoinj.wallet.BipStandardDeterministicKeyChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +49,8 @@ public class OmniKeychainSendingService implements OmniSendingService {
     // Simple Bitcoin send, from receive address 0 with change to sending address
     // This is for testing (e.g. for sending TBTC to the moneyman address)
     public CompletableFuture<Sha256Hash> bitcoinSend(Address toAddress, Coin amount) throws IOException {
-        Address fromAddress = signingService.getKeychain().receivingAddr(0);    // Hardcode to receive address 0
+        ScriptType scriptType = signingService.getKeychain().getOutputScriptType();
+        Address fromAddress = signingService.getKeychain().getKeyByPath(BipStandardDeterministicKeyChain.ACCOUNT_ZERO_PATH.extend(BipStandardDeterministicKeyChain.EXTERNAL_SUBPATH), false).toAddress(scriptType, rxOmniClient.getNetwork());    // Hardcode to receive-address 0
         List<TransactionInputData> utxos = getInputsFor(fromAddress);
         TransactionOutputData outputData = new TransactionOutputAddress(amount, toAddress);
         SigningRequest bitcoinSendReq = createBitcoinSigningRequest(fromAddress, utxos, List.of(outputData), fromAddress);
@@ -54,7 +60,7 @@ public class OmniKeychainSendingService implements OmniSendingService {
 
     public SigningRequest createBitcoinSigningRequest(Address fromAddress, List<? super TransactionInputData> inputUtxos, List<TransactionOutputData> outputs, Address changeAddress) {
         // Create a signing request with just the OP_RETURN output
-        SigningRequest request = new DefaultSigningRequest(fromAddress.getParameters(), (List<TransactionInputData>) inputUtxos, outputs);
+        SigningRequest request = new DefaultSigningRequest(fromAddress.network(), (List<TransactionInputData>) inputUtxos, outputs);
         try {
             return SigningUtils.addChange(request, changeAddress, feeCalculator);
         } catch (InsufficientMoneyException ime) {
@@ -109,11 +115,11 @@ public class OmniKeychainSendingService implements OmniSendingService {
     }
 
     private TransactionInputData mapUtxo(AddressUtxoInfo info) {
-        return new TransactionInputDataImpl(rxOmniClient.getNetParams().getId(),
+        return new TransactionInputDataUtxo(
                 info.getTxid(),
                 info.getOutputIndex(),
-                Coin.ofSat(info.getSatoshis()),
-                new Script(info.getScript()));
+                info.getSatoshis(),
+                info.getScript());
     }
 
     @Override

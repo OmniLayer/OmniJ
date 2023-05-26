@@ -1,8 +1,9 @@
 package foundation.omni.address
 
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.ECKey
-import org.bitcoinj.core.LegacyAddress
+import org.bitcoinj.base.Address
+import org.bitcoinj.base.ScriptType
+import org.bitcoinj.crypto.ECKey
+import org.bitcoinj.base.LegacyAddress
 import org.bitcoinj.params.MainNetParams
 import org.bitcoinj.script.Script
 import spock.lang.Specification
@@ -24,8 +25,8 @@ class OmniBase58LegacyAddressConverterSpec extends Specification {
         LegacyAddress omniAddress = OmniBase58LegacyAddressConverter.btcToOmni(btcAddress)
 
         then: "it's a valid Omni address"
-        omniAddress.parameters == omniParams
-        omniAddress.getOutputScriptType() == Script.ScriptType.P2PKH
+        omniAddress.network() == omniParams.network()
+        omniAddress.getOutputScriptType() == ScriptType.P2PKH
         omniAddress.toString().substring(0,1) == 'o'
 
         when: "we convert back to Bitcoin"
@@ -33,8 +34,8 @@ class OmniBase58LegacyAddressConverterSpec extends Specification {
 
         then: "it's the same, valid BTC address"
         backAgainBTCAddress == btcAddress
-        backAgainBTCAddress.parameters == btcParams
-        backAgainBTCAddress.getOutputScriptType() == Script.ScriptType.P2PKH
+        backAgainBTCAddress.network() == btcParams.network()
+        backAgainBTCAddress.getOutputScriptType() == ScriptType.P2PKH
         backAgainBTCAddress.toString().substring(0,1) == '1'
     }
 
@@ -47,8 +48,8 @@ class OmniBase58LegacyAddressConverterSpec extends Specification {
         def omniAddress = OmniBase58LegacyAddressConverter.btcToOmni(btcAddress)
 
         then: "it's a valid Omni address"
-        omniAddress.parameters == omniParams
-        omniAddress.getOutputScriptType() == Script.ScriptType.P2PKH
+        omniAddress.network() == omniParams.network()
+        omniAddress.getOutputScriptType() == ScriptType.P2PKH
         omniAddress.toString().substring(0,1) == 'o'
 
         when: "we convert back to Bitcoin"
@@ -57,7 +58,7 @@ class OmniBase58LegacyAddressConverterSpec extends Specification {
         then: "it's the same, valid BTC address"
         backAgainBTCAddress == btcAddress
         backAgainBTCAddress.parameters == btcParams
-        backAgainBTCAddress.getOutputScriptType() == Script.ScriptType.P2PKH
+        backAgainBTCAddress.getOutputScriptType() == ScriptType.P2PKH
         backAgainBTCAddress.toString().substring(0,1) == '1'
 
         where:
@@ -73,8 +74,8 @@ class OmniBase58LegacyAddressConverterSpec extends Specification {
         def btcAddress = OmniBase58LegacyAddressConverter.omniToBTC(omniAddress)
 
         then: "it's a valid BTC address"
-        btcAddress.parameters == btcParams
-        btcAddress.getOutputScriptType() == Script.ScriptType.P2PKH
+        btcAddress.network() == btcParams.network()
+        btcAddress.getOutputScriptType() == ScriptType.P2PKH
         btcAddress.toString().substring(0,1) == '1'
 
         when: "we convert back to Omni"
@@ -82,8 +83,8 @@ class OmniBase58LegacyAddressConverterSpec extends Specification {
 
         then: "it's the same, valid Omni address"
         backAgainOmniAddress == omniAddress
-        backAgainOmniAddress.parameters == omniParams
-        backAgainOmniAddress.getOutputScriptType() == Script.ScriptType.P2PKH
+        backAgainOmniAddress.network() == omniParams.network()
+        backAgainOmniAddress.getOutputScriptType() == ScriptType.P2PKH
         backAgainOmniAddress.toString().substring(0,1) == 'o'
 
         where:

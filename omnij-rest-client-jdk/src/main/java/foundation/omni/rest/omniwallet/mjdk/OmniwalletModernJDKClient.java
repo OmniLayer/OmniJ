@@ -10,7 +10,7 @@ import foundation.omni.netapi.omniwallet.json.OmniwalletAddressBalance;
 import foundation.omni.netapi.omniwallet.json.OmniwalletClientModule;
 import foundation.omni.netapi.omniwallet.json.OmniwalletPropertiesListResponse;
 import foundation.omni.netapi.omniwallet.json.RevisionInfo;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 import org.bitcoinj.core.NetworkParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,7 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
                 .connectTimeout(Duration.ofMinutes(2))
                 .build();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.registerModule(new OmniwalletClientModule(netParams));
+        objectMapper.registerModule(new OmniwalletClientModule(netParams.network()));
     }
 
     @Override

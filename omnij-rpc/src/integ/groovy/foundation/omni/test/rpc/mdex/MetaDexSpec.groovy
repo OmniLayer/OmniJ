@@ -4,7 +4,7 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.OmniDivisibleValue
-import org.bitcoinj.core.Coin
+import org.bitcoinj.base.Coin
 import org.junit.jupiter.api.Assumptions
 import spock.lang.Unroll
 

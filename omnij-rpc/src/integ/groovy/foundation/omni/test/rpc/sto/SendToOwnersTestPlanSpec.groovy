@@ -3,9 +3,9 @@ package foundation.omni.test.rpc.sto
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniValue
 import foundation.omni.dsl.categories.NumberCategory
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.Coin
-import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.base.Address
+import org.bitcoinj.base.Coin
+import org.bitcoinj.base.Sha256Hash
 import com.xlson.groovycsv.CsvParser
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID

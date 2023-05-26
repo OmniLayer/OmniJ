@@ -12,10 +12,10 @@ import foundation.omni.json.pojo.OmniTransactionInfo;
 import foundation.omni.json.pojo.PropertyBalanceEntries;
 import foundation.omni.json.pojo.SmartPropertyListInfo;
 import foundation.omni.net.OmniNetworkParameters;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.Coin;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.base.Sha256Hash;
 import org.consensusj.bitcoin.jsonrpc.RpcConfig;
 import org.consensusj.bitcoin.jsonrpc.bitcoind.BitcoinConfFile;
 import org.consensusj.bitcoin.rx.jsonrpc.RxBitcoinClient;
@@ -64,7 +64,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     }
 
     public OmniClient(SSLSocketFactory sslSocketFactory,  NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
-        super(sslSocketFactory, netParams, server, rpcuser, rpcpassword, useZmq);
+        super(sslSocketFactory, netParams.network(), server, rpcuser, rpcpassword, useZmq);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.registerModule(new OmniClientModule());
         mapper.registerModule(new ParameterNamesModule());
@@ -80,7 +80,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     }
 
     public OmniNetworkParameters getOmniNetParams() {
-        return OmniNetworkParameters.fromBitcoinParms(getNetParams());
+        return OmniNetworkParameters.fromBitcoinNetwork(getNetwork());
     }
 
     /**

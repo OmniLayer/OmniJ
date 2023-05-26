@@ -12,9 +12,9 @@ import foundation.omni.netapi.omniwallet.json.RevisionInfo
 import foundation.omni.BalanceEntry
 import foundation.omni.json.pojo.SmartPropertyListInfo
 import io.reactivex.rxjava3.core.Flowable
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.LegacyAddress
-import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.base.Address
+import org.bitcoinj.base.LegacyAddress
+import org.bitcoinj.base.Sha256Hash
 import org.bitcoinj.params.MainNetParams
 import org.consensusj.bitcoin.json.pojo.ChainTip
 import org.reactivestreams.Subscriber

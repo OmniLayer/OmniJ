@@ -4,16 +4,14 @@ import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
 import foundation.omni.txrecords.TransactionRecords;
 import foundation.omni.txrecords.UnsignedTxSimpleSend;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.Sha256Hash;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.params.TestNet3Params;
-import org.bitcoinj.script.Script;
 import org.consensusj.bitcoin.json.conversion.HexUtil;
 import org.consensusj.bitcoin.json.pojo.UnspentOutput;
 import org.consensusj.bitcoin.jsonrpc.BitcoinClient;
 import org.consensusj.bitcoinj.signing.TransactionInputData;
-import org.consensusj.bitcoinj.signing.TransactionInputDataImpl;
+import org.consensusj.bitcoinj.signing.TransactionInputDataUtxo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,12 +78,11 @@ public class OmniRpcClientSendingService implements OmniSendingService {
     }
 
     TransactionInputData mapUnspent(UnspentOutput unspent) {
-        return new TransactionInputDataImpl(
-                TestNet3Params.get().getId(),
+        return new TransactionInputDataUtxo(
                 unspent.getTxid(),
                 unspent.getVout(),
                 unspent.getAmount(),
-                new Script(hexFormat.parseHex(unspent.getScriptPubKey())));
+                unspent.getScriptPubKey());
     }
 
     public CompletableFuture<Sha256Hash> sendRawTransactionAsync(Transaction tx) {

@@ -2,7 +2,7 @@ package foundation.omni.netapi.omniwallet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 import java.io.File;
 import java.io.IOException;

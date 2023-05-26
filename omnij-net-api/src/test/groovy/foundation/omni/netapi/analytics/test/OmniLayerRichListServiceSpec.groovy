@@ -6,7 +6,7 @@ import foundation.omni.netapi.ConsensusService
 import foundation.omni.netapi.analytics.OmniLayerRichListService
 import foundation.omni.netapi.omnicore.OmniCoreClient
 import io.reactivex.rxjava3.core.Observable
-import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.base.Sha256Hash
 import org.bitcoinj.params.MainNetParams
 import org.consensusj.analytics.service.TokenRichList
 import org.consensusj.bitcoin.json.pojo.ChainTip

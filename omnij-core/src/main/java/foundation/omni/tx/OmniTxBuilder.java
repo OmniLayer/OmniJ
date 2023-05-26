@@ -3,9 +3,10 @@ package foundation.omni.tx;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
 import foundation.omni.net.OmniNetworkParameters;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.ECKey;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.Coin;
+import org.bitcoinj.base.ScriptType;
+import org.bitcoinj.crypto.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
@@ -39,7 +40,7 @@ public class OmniTxBuilder {
 
     public OmniTxBuilder(NetworkParameters netParams, FeeCalculator feeCalculator) {
         this.netParams = netParams;
-        this.omniParams = OmniNetworkParameters.fromBitcoinParms(netParams);
+        this.omniParams = OmniNetworkParameters.fromBitcoinNetwork(netParams.network());
         this.transactionEncoder = new EncodeMultisig(netParams);
         this.classCEncoder = new ClassCEncoder(netParams);
         this.feeCalculator = feeCalculator;
@@ -59,7 +60,7 @@ public class OmniTxBuilder {
         if (payload.length < ClassCEncoder.MAX_CLASS_C_PAYLOAD) {
             return createClassCTransaction(refAddress, payload);
         } else {
-            return createClassBTransaction(redeemingKey, Script.ScriptType.P2PKH, refAddress, payload);
+            return createClassBTransaction(redeemingKey, ScriptType.P2PKH, refAddress, payload);
         }
     }
 
@@ -90,7 +91,7 @@ public class OmniTxBuilder {
      * @param payload Omni transaction payload as a raw byte array
      * @return Incomplete Transaction, no inputs or change output
      */
-    public Transaction createClassBTransaction(ECKey redeemingKey, Script.ScriptType scriptType, Address refAddress, byte[] payload) {
+    public Transaction createClassBTransaction(ECKey redeemingKey, ScriptType scriptType, Address refAddress, byte[] payload) {
         Address redeemingAddress = Address.fromKey(netParams, redeemingKey, scriptType);
 
         // Encode the Omni Protocol Payload as a Class B transaction
@@ -126,7 +127,7 @@ public class OmniTxBuilder {
      */
     public Transaction createSignedOmniTransaction(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
-        return createSignedClassBTransaction(fromKey, Script.ScriptType.P2PKH, unspentOutputs, refAddress, payload);
+        return createSignedClassBTransaction(fromKey, ScriptType.P2PKH, unspentOutputs, refAddress, payload);
     }
     
     /**
@@ -141,7 +142,7 @@ public class OmniTxBuilder {
      * @return Signed and ready-to-send Transaction
      * @throws InsufficientMoneyException if unspentOutputs contain insufficient funds for the transaction
      */
-    public Transaction createSignedClassBTransaction(ECKey fromKey, Script.ScriptType scriptType, Collection<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload)
+    public Transaction createSignedClassBTransaction(ECKey fromKey, ScriptType scriptType, Collection<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
         Address fromAddress = Address.fromKey(netParams, fromKey, scriptType);
 
@@ -187,7 +188,7 @@ public class OmniTxBuilder {
      */
     public Transaction createUnsignedOmniTransaction(ECKey fromKey, List<TransactionInput> inputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
-        Address fromAddress = Address.fromKey(netParams, fromKey, Script.ScriptType.P2PKH);
+        Address fromAddress = Address.fromKey(netParams, fromKey, ScriptType.P2PKH);
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 

@@ -7,11 +7,11 @@ import org.consensusj.bitcoin.json.conversion.ECKeySerializer;
 import org.consensusj.bitcoin.json.conversion.PeerSerializer;
 import org.consensusj.bitcoin.json.conversion.Sha256HashSerializer;
 import org.consensusj.bitcoin.json.conversion.TransactionSerializer;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.ECKey;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.Coin;
+import org.bitcoinj.crypto.ECKey;
 import org.bitcoinj.core.Peer;
-import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.base.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 
 /**

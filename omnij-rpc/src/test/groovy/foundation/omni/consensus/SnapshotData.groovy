@@ -3,9 +3,9 @@ package foundation.omni.consensus
 import foundation.omni.CurrencyID
 import foundation.omni.BalanceEntry
 import foundation.omni.json.pojo.ConsensusSnapshot
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.ECKey
-import org.bitcoinj.core.LegacyAddress
+import org.bitcoinj.base.Address
+import org.bitcoinj.crypto.ECKey
+import org.bitcoinj.base.LegacyAddress
 import org.bitcoinj.params.MainNetParams
 
 /**

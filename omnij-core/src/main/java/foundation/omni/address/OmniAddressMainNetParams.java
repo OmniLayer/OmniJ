@@ -1,5 +1,7 @@
 package foundation.omni.address;
 
+import foundation.omni.net.OmniNetwork;
+import org.bitcoinj.base.Network;
 import org.bitcoinj.params.MainNetParams;
 
 /**
@@ -26,5 +28,10 @@ public class OmniAddressMainNetParams extends MainNetParams {
             instance = new OmniAddressMainNetParams();
         }
         return instance;
+    }
+
+    @Override
+    public Network network() {
+        return OmniNetwork.MAINNET;
     }
 }

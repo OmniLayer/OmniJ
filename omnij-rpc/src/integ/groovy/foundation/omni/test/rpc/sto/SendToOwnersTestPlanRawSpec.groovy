@@ -4,7 +4,7 @@ package foundation.omni.test.rpc.sto
 import foundation.omni.CurrencyID
 import foundation.omni.OmniValue
 import foundation.omni.tx.RawTxBuilder
-import org.bitcoinj.core.Address
+import org.bitcoinj.base.Address
 
 /**
  * Data driven tests for the "send to owners" transaction type, whereby a raw transaction

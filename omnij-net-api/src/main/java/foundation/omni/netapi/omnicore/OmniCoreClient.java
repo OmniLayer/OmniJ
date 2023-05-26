@@ -4,6 +4,7 @@ import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniValue;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
+import org.bitcoinj.base.BitcoinNetwork;
 import org.consensusj.analytics.service.RichListService;
 import org.consensusj.analytics.service.TokenRichList;
 import org.consensusj.bitcoin.json.pojo.AddressGroupingItem;
@@ -19,7 +20,7 @@ import foundation.omni.netapi.ConsensusService;
 import foundation.omni.json.pojo.OmniJBalances;
 import foundation.omni.json.pojo.WalletAddressBalance;
 import foundation.omni.BalanceEntry;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 import org.bitcoinj.core.NetworkParameters;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -286,9 +287,9 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
                 .thenApply(list -> {
                     // Convert SmartPropertyListInfo to OmniPropertyInfo (with "mock" data for some fields)
                     Stream<OmniPropertyInfo> stream = list.stream()
-                            .map(spl -> new OmniPropertyInfo(client.getNetParams(), spl));
+                            .map(spl -> new OmniPropertyInfo((BitcoinNetwork) client.getNetwork(), spl));
                     // Prepend a "mock" Bitcoin entry
-                    return streamPrepend(OmniPropertyInfo.mockBitcoinPropertyInfo(client.getNetParams()), stream)
+                    return streamPrepend(OmniPropertyInfo.mockBitcoinPropertyInfo((BitcoinNetwork) client.getNetwork()), stream)
                             .collect(Collectors.toList());
                 });
     }

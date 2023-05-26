@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniIndivisibleValue
 import foundation.omni.OmniValue
-import org.bitcoinj.core.Coin
+import org.bitcoinj.base.Coin
 import org.bitcoinj.core.NetworkParameters
 import spock.lang.Unroll
 

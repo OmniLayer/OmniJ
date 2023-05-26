@@ -2,7 +2,7 @@ package foundation.omni.netapi.omniwallet.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.base.Sha256Hash;
 
 /**
  * Jackson POJO wrapper for raw Omniwallet response

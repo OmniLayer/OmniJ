@@ -4,7 +4,7 @@ import foundation.omni.net.OmniMainNetParams
 import foundation.omni.json.pojo.OmniJBalances
 import foundation.omni.json.pojo.WalletAddressBalance
 import foundation.omni.netapi.omniwallet.WalletBackupFile
-import org.bitcoinj.core.Address
+import org.bitcoinj.base.Address
 import org.bitcoinj.utils.AppDataDirectory
 import org.consensusj.bitcoin.jsonrpc.RpcURI
 import org.bitcoinj.params.MainNetParams

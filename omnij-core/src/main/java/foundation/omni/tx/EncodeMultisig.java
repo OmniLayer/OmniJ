@@ -1,7 +1,7 @@
 package foundation.omni.tx;
 
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.ECKey;
+import org.bitcoinj.base.Coin;
+import org.bitcoinj.crypto.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionOutput;
@@ -62,7 +62,7 @@ public class EncodeMultisig {
             redeemableGroup.addAll(group);
             Script script = ScriptBuilder.createMultiSigOutputScript(1, redeemableGroup); // 1 of redeemableGroup.size() multisig
             TransactionOutput output = new TransactionOutput(netParams, null, Coin.ZERO, script.getProgram());
-            output.setValue(output.getMinNonDustValue());
+            output.setValue(output.getMinNonDustValue());    // TODO: Check this
             txClassB.addOutput(output);
         }
 

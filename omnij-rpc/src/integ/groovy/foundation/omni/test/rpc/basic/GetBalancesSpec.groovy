@@ -3,7 +3,7 @@ package foundation.omni.test.rpc.basic
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.BalanceEntry
-import org.bitcoinj.core.Address
+import org.bitcoinj.base.Address
 import spock.lang.Shared
 
 import static foundation.omni.CurrencyID.OMNI

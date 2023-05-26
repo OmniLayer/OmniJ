@@ -2,7 +2,7 @@ package foundation.omni.netapi.analytics.test
 
 import foundation.omni.OmniValue
 import groovy.json.JsonSlurper
-import org.bitcoinj.core.Address
+import org.bitcoinj.base.Address
 import org.consensusj.analytics.util.collector.LargestSliceAccumulator
 import org.consensusj.analytics.util.collector.LargestSliceCollector
 import org.consensusj.analytics.util.collector.LargestSliceList

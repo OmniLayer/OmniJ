@@ -3,8 +3,10 @@ package foundation.omni.txsigner;
 import foundation.omni.tx.ClassCEncoder;
 import foundation.omni.tx.Transactions;
 import foundation.omni.txrecords.UnsignedTxSimpleSend;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.BitcoinNetwork;
+import org.bitcoinj.base.Coin;
+import org.bitcoinj.base.Network;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
@@ -13,15 +15,21 @@ import org.consensusj.bitcoinj.signing.DefaultSigningRequest;
 import org.consensusj.bitcoinj.signing.FeeCalculator;
 import org.consensusj.bitcoinj.signing.SigningRequest;
 import org.consensusj.bitcoinj.signing.SigningUtils;
+import org.consensusj.bitcoinj.signing.HDKeychainSigner;
 import org.consensusj.bitcoinj.signing.TransactionInputData;
 import org.consensusj.bitcoinj.signing.TransactionOutputData;
 import org.consensusj.bitcoinj.signing.TransactionOutputOpReturn;
+import org.consensusj.bitcoinj.wallet.BipStandardDeterministicKeyChain;
+import foundation.omni.tx.ClassCEncoder;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static foundation.omni.tx.Transactions.OmniTx;
+import static foundation.omni.tx.Transactions.OmniRefTx;
+
 /**
- *
+ * A service to sign Omni transactions
  */
 public interface OmniSigningService {
 
@@ -61,15 +69,16 @@ public interface OmniSigningService {
      * @return A ConsensusJ SigningRequest for the transaction
      */
     default SigningRequest createOmniClassCSigningRequest(Address fromAddress, List<? super TransactionInputData> inputUtxos, Transactions.OmniTx omniTx, Address changeAddress) {
-        // Create a signing request with just the OP_RETURN output
-        SigningRequest request = new DefaultSigningRequest(netParams(), (List<TransactionInputData>) inputUtxos, List.of(createOpReturn(omniTx)));
+        // Create a signing request with an OP_RETURN output...
+        TransactionOutputData opReturn =  createOpReturn(omniTx);
 
-        // Add a reference address output if necessary
+        // ... and a reference address output if necessary
         Address refAddress = (omniTx instanceof Transactions.OmniRefTx refTx) ? refTx.referenceAddress() : null;
-        if (refAddress != null) {
-            //request = request.addDustOutput(refAddress);
-            request = request.addOutput(refAddress, Coin.MICROCOIN);
-        }
+        List<TransactionOutputData> outputs = (refAddress != null)
+                ? List.of(opReturn, TransactionOutputData.of(refAddress, Coin.MICROCOIN))  // .addDustOutput(refAddress);
+                : List.of(opReturn);
+
+        SigningRequest request = SigningRequest.of(network(), (List<TransactionInputData>) inputUtxos, outputs);
         try {
             return SigningUtils.addChange(request, changeAddress, feeCalculator());
         } catch (InsufficientMoneyException ime) {
@@ -86,15 +95,12 @@ public interface OmniSigningService {
 
     FeeCalculator feeCalculator();
 
-    @Deprecated
-    default NetworkParameters netParams() {
-        return TestNet3Params.get();
-    }
+    Network network();
 
     default TransactionOutputData createOpReturn(Transactions.OmniTx omniTx) {
         byte[] unprefixedPayload = omniTx.payload();
         byte[] opReturnData = ClassCEncoder.addOmniPrefix(unprefixedPayload);
-        return new TransactionOutputOpReturn(TestNet3Params.get().getId(), opReturnData);
+        return new TransactionOutputOpReturn(opReturnData);
     }
 
     class HackedFeeCalculator implements FeeCalculator {

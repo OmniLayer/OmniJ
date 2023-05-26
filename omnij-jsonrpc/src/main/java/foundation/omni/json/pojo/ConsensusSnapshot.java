@@ -2,7 +2,7 @@ package foundation.omni.json.pojo;
 
 import foundation.omni.CurrencyID;
 import foundation.omni.BalanceEntry;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 import java.net.URI;
 import java.util.SortedMap;

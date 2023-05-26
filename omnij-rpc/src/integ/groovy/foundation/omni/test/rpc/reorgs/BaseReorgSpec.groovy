@@ -1,10 +1,10 @@
 package foundation.omni.test.rpc.reorgs
 
 import foundation.omni.OmniDivisibleValue
-import org.bitcoinj.core.Coin
+import org.bitcoinj.base.Coin
 import org.consensusj.jsonrpc.JsonRpcException
 import foundation.omni.BaseRegTestSpec
-import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.base.Sha256Hash
 import org.junit.jupiter.api.Assumptions
 
 

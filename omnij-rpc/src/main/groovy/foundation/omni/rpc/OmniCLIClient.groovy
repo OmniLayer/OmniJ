@@ -1,10 +1,10 @@
 package foundation.omni.rpc
 
 import org.consensusj.bitcoin.json.pojo.WalletTransactionInfo
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.Coin
+import org.bitcoinj.base.Address
+import org.bitcoinj.base.Coin
 import org.bitcoinj.core.NetworkParameters
-import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.base.Sha256Hash
 import org.bitcoinj.core.Transaction
 import groovy.transform.CompileStatic
 

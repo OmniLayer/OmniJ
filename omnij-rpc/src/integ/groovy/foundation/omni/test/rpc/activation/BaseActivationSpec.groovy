@@ -2,8 +2,8 @@ package foundation.omni.test.rpc.activation
 
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.OmniValue
-import org.bitcoinj.core.Coin
-import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.base.Coin
+import org.bitcoinj.base.Sha256Hash
 import org.junit.jupiter.api.Assumptions
 import spock.lang.Shared
 

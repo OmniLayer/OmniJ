@@ -8,9 +8,9 @@ import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
 import foundation.omni.tx.RawTxBuilder;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.Coin;
+import org.bitcoinj.base.Sha256Hash;
 
 import java.io.IOException;
 

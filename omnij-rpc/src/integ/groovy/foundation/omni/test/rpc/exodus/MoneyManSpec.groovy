@@ -2,11 +2,11 @@ package foundation.omni.test.rpc.exodus
 
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.net.MoneyMan
-import org.bitcoinj.core.Address
+import org.bitcoinj.base.Address
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.rpc.OmniClient
-import org.bitcoinj.core.Coin
-import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.base.Coin
+import org.bitcoinj.base.Sha256Hash
 import spock.lang.Shared
 import spock.lang.Stepwise
 

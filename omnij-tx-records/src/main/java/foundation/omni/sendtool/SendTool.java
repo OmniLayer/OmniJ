@@ -5,14 +5,17 @@ import foundation.omni.OmniDivisibleValue;
 import foundation.omni.rpc.OmniClient;
 import foundation.omni.txsigner.OmniKeychainSendingService;
 import foundation.omni.txsigner.OmniKeychainSigningService;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.AddressParser;
+import org.bitcoinj.base.BitcoinNetwork;
+import org.bitcoinj.base.DefaultAddressParser;
+import org.bitcoinj.base.Network;
+import org.bitcoinj.base.ScriptType;
+import org.bitcoinj.base.Sha256Hash;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.params.TestNet3Params;
-import org.bitcoinj.script.Script;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.KeyChain;
-import org.bitcoinj.wallet.UnreadableWalletException;
 import org.consensusj.bitcoin.jsonrpc.RpcConfig;
 import org.consensusj.bitcoinj.wallet.BipStandardDeterministicKeyChain;
 
@@ -27,6 +30,7 @@ import java.util.concurrent.CompletableFuture;
  *  Omni transaction sending tool that uses a local keychain and a remote, address-indexed Omni Core server (or OmniProxy)
  */
 public class SendTool {
+    private static final AddressParser addressParser = new DefaultAddressParser();
     public static final String mnemonicString = "panda diary marriage suffer basic glare surge auto scissors describe sell unique";
     public static final Instant creationInstant = LocalDate.of(2019, 4, 10).atStartOfDay().toInstant(ZoneOffset.UTC);
     private final OmniKeychainSigningService signingService;
@@ -48,8 +52,8 @@ public class SendTool {
         }
 
 
-        Address fromAddress = Address.fromString(null, arg0);
-        Address toAddress = Address.fromString(null, arg1);
+        Address fromAddress = addressParser.parseAddressAnyNetwork(arg0);
+        Address toAddress = addressParser.parseAddressAnyNetwork(arg1);
         CurrencyID id = CurrencyID.of(Long.parseLong(arg2));
         OmniDivisibleValue amount = OmniDivisibleValue.ofWilletts(Long.parseLong(arg3));
         var futureHash = sendTool.send(fromAddress, toAddress, id, amount);
@@ -58,21 +62,21 @@ public class SendTool {
     }
 
     public SendTool() {
-        NetworkParameters netParams = TestNet3Params.get();
+        Network network = BitcoinNetwork.TESTNET;
         int signingAccountIndex = 0;
-        Script.ScriptType outputScriptType = Script.ScriptType.P2PKH;
+        ScriptType outputScriptType = ScriptType.P2PKH;
         DeterministicSeed seed = setupTestSeed();
 
-        BipStandardDeterministicKeyChain signingKeychain = new BipStandardDeterministicKeyChain(seed, outputScriptType, netParams);
+        BipStandardDeterministicKeyChain signingKeychain = new BipStandardDeterministicKeyChain(seed, outputScriptType, network);
         // We need to create some leaf keys in the HD keychain so that they can be found for verifying transactions
         signingKeychain.getKeys(KeyChain.KeyPurpose.RECEIVE_FUNDS, 20);  // Generate first 2 receiving address
         signingKeychain.getKeys(KeyChain.KeyPurpose.CHANGE, 20);         // Generate first 2 change address
 
-        signingService = new OmniKeychainSigningService(netParams, signingKeychain);
+        signingService = new OmniKeychainSigningService(network, signingKeychain);
 
 
         URI omniProxyTestNetURI = URI.create("http://192.168.8.177:18332");
-        RpcConfig config = new RpcConfig(netParams, omniProxyTestNetURI, "bitcoinrpc", "pass");
+        RpcConfig config = new RpcConfig(network, omniProxyTestNetURI, "bitcoinrpc", "pass");
         var omniProxyClient = new OmniClient(config.getNetParams(),
                 config.getURI(),
                 config.getUsername(),
@@ -88,10 +92,6 @@ public class SendTool {
     }
 
     static DeterministicSeed setupTestSeed() {
-        try {
-            return new DeterministicSeed(mnemonicString, null, "", creationInstant.getEpochSecond());
-        } catch (UnreadableWalletException e) {
-            throw new RuntimeException(e);
-        }
+        return DeterministicSeed.ofMnemonic(mnemonicString, "", creationInstant);
     }
 }

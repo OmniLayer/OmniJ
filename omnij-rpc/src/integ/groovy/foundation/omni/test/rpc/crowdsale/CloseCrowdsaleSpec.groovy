@@ -4,7 +4,7 @@ import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.PropertyType
-import org.bitcoinj.core.Address
+import org.bitcoinj.base.Address
 import spock.lang.Shared
 
 class CloseCrowdsaleSpec extends BaseRegTestSpec {

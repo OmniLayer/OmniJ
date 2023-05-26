@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import foundation.omni.OmniOutput;
 import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 import java.io.IOException;
 import java.math.BigDecimal;

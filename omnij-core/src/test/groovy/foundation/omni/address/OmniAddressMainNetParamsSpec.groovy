@@ -1,10 +1,10 @@
 package foundation.omni.address
 
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.ECKey
-import org.bitcoinj.core.LegacyAddress
-import org.bitcoinj.core.Utils
-import org.bitcoinj.params.MainNetParams
+import foundation.omni.net.OmniNetwork
+import org.bitcoinj.base.ScriptType
+import org.bitcoinj.crypto.ECKey
+import org.bitcoinj.base.LegacyAddress
+import org.bitcoinj.crypto.internal.CryptoUtils
 import spock.lang.Specification
 
 /**
@@ -12,15 +12,12 @@ import spock.lang.Specification
  * via OmniAddressMainNetParams
  */
 class OmniAddressMainNetParamsSpec extends Specification {
-    static final omniParams = OmniAddressMainNetParams.get()
-    static final btcParams = MainNetParams.get();
-
     def "can create an omni address"() {
         given: "A randomly generated ECKey"
         def key = new ECKey()
 
         when: "We generate an Omni address from it"
-        def omniAddress = LegacyAddress.fromKey(omniParams, key)
+        def omniAddress = key.toAddress(ScriptType.P2PKH, OmniNetwork.MAINNET)
 
         then: "It begins with an 'o'"
         omniAddress.toString().substring(0,1) == 'o'
@@ -28,10 +25,10 @@ class OmniAddressMainNetParamsSpec extends Specification {
 
     def "can create an omni P2SH address"() {
         given: "An arbitrary hash value"
-        byte[] hash160 = Utils.sha256hash160([0] as byte[])
+        byte[] hash160 = CryptoUtils.sha256hash160([0] as byte[])
 
         when: "We generate an Omni address from it"
-        def omniAddress = LegacyAddress.fromScriptHash(omniParams, hash160)
+        def omniAddress = LegacyAddress.fromScriptHash(OmniNetwork.MAINNET, hash160)
 
         then: "It begins with an 'Q'"
         omniAddress.toString().substring(0,1) == 'Q'

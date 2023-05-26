@@ -2,9 +2,9 @@ package foundation.omni.test.rpc.basic
 
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.dsl.categories.NumberCategory
-import org.bitcoinj.core.Address
+import org.bitcoinj.base.Address
 import foundation.omni.BaseRegTestSpec
-import org.bitcoinj.core.Coin
+import org.bitcoinj.base.Coin
 import spock.lang.Shared
 
 /**

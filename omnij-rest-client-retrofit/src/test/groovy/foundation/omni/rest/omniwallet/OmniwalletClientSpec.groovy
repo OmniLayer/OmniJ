@@ -11,9 +11,9 @@ import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
 import foundation.omni.netapi.omniwallet.json.RevisionInfo
 import foundation.omni.BalanceEntry
 import foundation.omni.json.pojo.SmartPropertyListInfo
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.LegacyAddress
-import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.base.Address
+import org.bitcoinj.base.LegacyAddress
+import org.bitcoinj.base.Sha256Hash
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification

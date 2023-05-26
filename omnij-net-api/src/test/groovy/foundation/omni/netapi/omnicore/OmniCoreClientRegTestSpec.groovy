@@ -4,8 +4,8 @@ package foundation.omni.netapi.omnicore
 import foundation.omni.net.OmniRegTestParams
 import foundation.omni.json.pojo.OmniJBalances
 import foundation.omni.json.pojo.WalletAddressBalance
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.LegacyAddress
+import org.bitcoinj.base.Address
+import org.bitcoinj.base.LegacyAddress
 import org.bitcoinj.params.RegTestParams
 import org.consensusj.bitcoin.jsonrpc.RpcURI
 import spock.lang.Ignore
