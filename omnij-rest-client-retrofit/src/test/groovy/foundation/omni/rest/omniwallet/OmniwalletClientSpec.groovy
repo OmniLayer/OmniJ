@@ -60,7 +60,7 @@ class OmniwalletClientSpec extends Specification {
 
     def      "load balances of address with single address"() {
         when:
-        WalletAddressBalance balances = client.balancesForAddress(testAddr)
+        WalletAddressBalance balances = client.balancesForAddressAsync(testAddr).join()
 
         then:
         balances != null
@@ -81,7 +81,7 @@ class OmniwalletClientSpec extends Specification {
 
     def "load balances of addresses with single address"() {
         when:
-        OmniJBalances balances = client.balancesForAddresses([testAddr])
+        OmniJBalances balances = client.balancesForAddressesAsync([testAddr]).join()
 
         then:
         balances != null
@@ -93,7 +93,7 @@ class OmniwalletClientSpec extends Specification {
 
     def "load balances of addresses with multiple addresses"() {
         when:
-        def balances = client.balancesForAddresses([testAddr, exodusAddress])
+        def balances = client.balancesForAddressesAsync([testAddr, exodusAddress]).join()
 
         then:
         balances != null

@@ -64,7 +64,7 @@ public class OmniCoreClientSpec extends Specification {
 
         when:
         def start = System.currentTimeMillis()
-        OmniJBalances balances = client.balancesForAddresses(addresses)
+        OmniJBalances balances = client.balancesForAddressesAsync(addresses).join()
         def end = System.currentTimeMillis()
         System.out.println("${end-start} milliseconds")
 

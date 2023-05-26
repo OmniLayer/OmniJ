@@ -67,9 +67,7 @@ public interface OmniProxyMethods extends JacksonRpcClient {
         List<TokenRichList.TokenBalancePair<OmniValue>> listOnly = new ArrayList<>();
         JsonNode listNode = node.get("richList");
         if (listNode != null) {
-            listNode.iterator().forEachRemaining(elementNode-> {
-                listOnly.add(nodeToBalancePair(elementNode));
-            });
+            listNode.iterator().forEachRemaining(elementNode-> listOnly.add(nodeToBalancePair(elementNode)));
         }
         return new TokenRichList<>(
                 0,

@@ -261,9 +261,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
         if (!cachedPropertyTypes.containsKey(propertyID)) {
             listSmartProperties().whenComplete((infos,t) -> {
                 if (infos != null) {
-                    infos.forEach(info -> {
-                        cachedPropertyTypes.put(info.getPropertyid(), divisibleToPropertyType(info.getDivisible()));
-                    });
+                    infos.forEach(info -> cachedPropertyTypes.put(info.getPropertyid(), divisibleToPropertyType(info.getDivisible())));
                     PropertyType type = cachedPropertyTypes.get(propertyID);
                     if (type != null) {
                         future.complete(type);

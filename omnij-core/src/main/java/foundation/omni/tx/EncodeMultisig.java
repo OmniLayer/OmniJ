@@ -44,7 +44,7 @@ public class EncodeMultisig {
         int numGroups = (dataAsKeys.size() + (maxDataKeys - 1)) / (maxDataKeys);
 
         // Create groups of keys, one group per multisig output
-        List<List <ECKey>> keysByOutput = new ArrayList<List <ECKey>>();
+        List<List <ECKey>> keysByOutput = new ArrayList<>();
         for (int n = 0 ; n < numGroups ; n++) {
             int groupSize = Math.min(numGroups - n, maxDataKeys);
             int from = n * (maxDataKeys);
@@ -57,7 +57,7 @@ public class EncodeMultisig {
 
         for (List<ECKey> group : keysByOutput) {
             // Add the redeemable key to the front of each group list
-            List<ECKey> redeemableGroup = new ArrayList<ECKey>();
+            List<ECKey> redeemableGroup = new ArrayList<>();
             redeemableGroup.add(redeemingKey);
             redeemableGroup.addAll(group);
             Script script = ScriptBuilder.createMultiSigOutputScript(1, redeemableGroup); // 1 of redeemableGroup.size() multisig

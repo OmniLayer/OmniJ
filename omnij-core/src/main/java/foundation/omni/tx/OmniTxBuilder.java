@@ -92,7 +92,7 @@ public class OmniTxBuilder {
      * @return Incomplete Transaction, no inputs or change output
      */
     public Transaction createClassBTransaction(ECKey redeemingKey, ScriptType scriptType, Address refAddress, byte[] payload) {
-        Address redeemingAddress = Address.fromKey(netParams, redeemingKey, scriptType);
+        Address redeemingAddress = redeemingKey.toAddress(scriptType, netParams.network());
 
         // Encode the Omni Protocol Payload as a Class B transaction
         Transaction tx = transactionEncoder.encodeObfuscated(redeemingKey, payload, redeemingAddress.toString());
@@ -144,7 +144,7 @@ public class OmniTxBuilder {
      */
     public Transaction createSignedClassBTransaction(ECKey fromKey, ScriptType scriptType, Collection<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
-        Address fromAddress = Address.fromKey(netParams, fromKey, scriptType);
+        Address fromAddress = fromKey.toAddress(scriptType, netParams.network());
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 
@@ -188,7 +188,7 @@ public class OmniTxBuilder {
      */
     public Transaction createUnsignedOmniTransaction(ECKey fromKey, List<TransactionInput> inputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
-        Address fromAddress = Address.fromKey(netParams, fromKey, ScriptType.P2PKH);
+        Address fromAddress = fromKey.toAddress(ScriptType.P2PKH, netParams.network());
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 

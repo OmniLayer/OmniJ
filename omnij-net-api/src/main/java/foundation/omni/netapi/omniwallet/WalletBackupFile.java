@@ -36,7 +36,7 @@ public class WalletBackupFile {
     public void setAddressList(List<Address> addresses) {
         this.addresses = addresses.stream()
                 .map(WalletBackupEntry::new)
-                .collect(Collectors.toList());;
+                .collect(Collectors.toList());
     }
 
 

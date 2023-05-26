@@ -3,6 +3,7 @@ package foundation.omni.json.conversion
 
 import foundation.omni.json.pojo.AddressBalanceEntries
 import foundation.omni.BalanceEntry
+import org.bitcoinj.base.BitcoinNetwork
 import org.bitcoinj.base.LegacyAddress
 import spock.lang.Unroll
 
@@ -10,7 +11,7 @@ import spock.lang.Unroll
  *
  */
 class AddressBalanceEntriesDeserializerSpec extends BaseOmniClientMapperSpec {
-    static final LegacyAddress moneyMan = LegacyAddress.fromBase58(null, "moneyqMan7uh8FqdCA2BV5yZ8qVrc9ikLP")
+    static final LegacyAddress moneyMan = LegacyAddress.fromBase58("moneyqMan7uh8FqdCA2BV5yZ8qVrc9ikLP", BitcoinNetwork.TESTNET)
 
     @Unroll
     def "fragment #fragment scans to #expectedEntry"(String fragment, BalanceEntry expectedEntry) {

@@ -1,6 +1,8 @@
 package foundation.omni.net;
 
 import org.bitcoinj.base.Address;
+import org.bitcoinj.base.AddressParser;
+import org.bitcoinj.base.DefaultAddressParser;
 import org.bitcoinj.base.exceptions.AddressFormatException;
 import org.bitcoinj.base.LegacyAddress;
 import org.bitcoinj.params.RegTestParams;
@@ -11,17 +13,18 @@ import org.bitcoinj.params.RegTestParams;
 public class OmniRegTestParams extends OmniNetworkParameters {
     private final static String ExodusAddress = "mpexoDuSkGGqvqrkrjiFng38QPkJQVFyqv";
     private final static String MoneyManAddress = "moneyqMan7uh8FqdCA2BV5yZ8qVrc9ikLP";
+    private static final AddressParser parser = new DefaultAddressParser();
 
     private OmniRegTestParams() {
         super();
         params = RegTestParams.get();
         try {
-            exodusAddress = Address.fromString(params, ExodusAddress);
+            exodusAddress = parser.parseAddress(ExodusAddress, params.network());
         } catch (AddressFormatException e) {
             exodusAddress = null;
         }
         try {
-            moneyManAddress = Address.fromString(params, MoneyManAddress);
+            moneyManAddress = parser.parseAddress(MoneyManAddress, params.network());
         } catch (AddressFormatException e) {
             moneyManAddress = null;
         }

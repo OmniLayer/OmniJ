@@ -13,7 +13,7 @@ import javax.sql.DataSource
  */
 abstract class DBConsensusTool implements ConsensusTool {
     private final PGSimpleDataSource dataSource
-    private final Sql sql = null
+    private Sql sql = null
 
     DBConsensusTool(DataSource dataSource) {
         this.dataSource = dataSource
