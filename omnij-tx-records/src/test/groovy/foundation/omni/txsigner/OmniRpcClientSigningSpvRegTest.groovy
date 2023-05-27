@@ -35,7 +35,6 @@ class OmniRpcClientSigningSpvRegTest extends Specification {
     def "basic test"() {
         given: "Setup similar to that in SendTool"
         Network network = BitcoinNetwork.REGTEST
-        NetworkParameters netParams = NetworkParameters.of(network)
 
         RpcConfig config = new RpcConfig(network, serverUri, "bitcoinrpc", "pass");
         var rpcClient = new BitcoinExtendedClient(config)
@@ -71,7 +70,7 @@ class OmniRpcClientSigningSpvRegTest extends Specification {
 
         var serializedTx = ByteBuffer.wrap(signedTx.bitcoinSerialize())
 
-        Transaction deserializedTx = new Transaction(netParams, serializedTx)
+        Transaction deserializedTx = new Transaction(NetworkParameters.of(network), serializedTx)
 
         then: "No exception was thrown and deserializedTx is not null"
         deserializedTx != null

@@ -13,9 +13,9 @@ import foundation.omni.BalanceEntry
 import foundation.omni.json.pojo.SmartPropertyListInfo
 import io.reactivex.rxjava3.core.Flowable
 import org.bitcoinj.base.Address
+import org.bitcoinj.base.BitcoinNetwork
 import org.bitcoinj.base.LegacyAddress
 import org.bitcoinj.base.Sha256Hash
-import org.bitcoinj.params.MainNetParams
 import org.consensusj.bitcoin.json.pojo.ChainTip
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
@@ -39,7 +39,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
     private static final Logger log = LoggerFactory.getLogger(OmniwalletModernJDKClientSpec.class);
 
     final static Address exodusAddress = OmniMainNetParams.get().exodusAddress;
-    final static Address testAddr = LegacyAddress.fromBase58(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
+    final static Address testAddr = LegacyAddress.fromBase58("19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu", BitcoinNetwork.MAINNET)
     final static int balanceQueryRateLimitDelay = 12_100; // milliseconds
 
     @Shared OmniwalletModernJDKClient client
@@ -404,7 +404,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
     def setup() {
         URI baseURL = OmniwalletAbstractClient.omniExplorerApiBase
         boolean debug = true
-        client = new OmniwalletModernJDKClient(baseURL, debug, false, MainNetParams.get())
+        client = new OmniwalletModernJDKClient(baseURL, debug, false, BitcoinNetwork.MAINNET)
         client.start()
     }
 

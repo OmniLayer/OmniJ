@@ -7,8 +7,6 @@ import org.bitcoinj.base.Address
 import org.bitcoinj.base.BitcoinNetwork
 import org.bitcoinj.base.ScriptType
 import org.bitcoinj.crypto.ECKey
-import org.bitcoinj.base.LegacyAddress
-import org.bitcoinj.params.MainNetParams
 
 /**
  * ConsensusSnapshot test data

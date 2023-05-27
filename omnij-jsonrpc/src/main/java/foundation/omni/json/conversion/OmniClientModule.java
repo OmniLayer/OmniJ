@@ -9,20 +9,11 @@ import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
 import foundation.omni.json.pojo.AddressBalanceEntries;
 import foundation.omni.json.pojo.PropertyBalanceEntries;
-import org.bitcoinj.core.NetworkParameters;
 
 /**
  * Register serializers and deserializers for OmniClient.
  */
 public class OmniClientModule extends SimpleModule {
-    /**
-     * @deprecated Use {@link #OmniClientModule()}
-     */
-    @Deprecated
-    public OmniClientModule(NetworkParameters netParams) {
-        this();
-    }
-
     public OmniClientModule() {
         super("OmniJMappingClient", new Version(1, 0, 0, null, null, null));
         this.addDeserializer(CurrencyID.class, new CurrencyIDDeserializer())

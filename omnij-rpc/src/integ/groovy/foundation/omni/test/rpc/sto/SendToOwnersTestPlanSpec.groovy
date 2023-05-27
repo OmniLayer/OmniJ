@@ -112,11 +112,11 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         amountSTO = new BigDecimal(data.AmountSTO)
         mscAvailable = new BigDecimal(data.MSCAvailable)
         mscReserved = new BigDecimal(data.MSCReserved)
-        numberOfOwners = new Integer(data.NumOwners)
+        numberOfOwners = Integer.valueOf(data.NumOwners)
         sptAvailableOwners = Eval.me(data.AmountAvailableOwners) as List<BigDecimal>
         sptReservedOwners = Eval.me(data.AmountReservedOwners) as List<BigDecimal>
-        expectException = new Boolean(data.Exceptional)
-        expectedValidity = new Boolean(data.ExpectedValidity)
+        expectException = Boolean.valueOf(data.Exceptional)
+        expectedValidity = Boolean.valueOf(data.ExpectedValidity)
         expectedSPTAvailable = new BigDecimal(data.ExpectedAmountAvailable)
         expectedSPTReserved = new BigDecimal(data.ExpectedAmountReserved)
         expectedMSCAvailable = new BigDecimal(data.ExpectedMSCAvailable)

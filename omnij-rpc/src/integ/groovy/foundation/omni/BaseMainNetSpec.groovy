@@ -2,10 +2,10 @@ package foundation.omni
 
 import foundation.omni.rpc.OmniClient
 import groovy.util.logging.Slf4j
+import org.bitcoinj.base.BitcoinNetwork
 import org.consensusj.bitcoin.jsonrpc.groovy.BlockchainDotInfoSyncing
 import org.consensusj.bitcoin.jsonrpc.RpcURI
 import foundation.omni.rpc.test.TestServers
-import org.bitcoinj.params.MainNetParams
 import spock.lang.Specification
 
 /**
@@ -28,7 +28,7 @@ abstract class BaseMainNetSpec extends Specification implements BlockchainDotInf
     @Delegate
     OmniClient client() {
         if (INSTANCE == null) {
-            INSTANCE = new OmniClient(MainNetParams.get(), RpcURI.defaultMainNetURI, rpcTestUser, rpcTestPassword)
+            INSTANCE = new OmniClient(BitcoinNetwork.MAINNET, RpcURI.defaultMainNetURI, rpcTestUser, rpcTestPassword)
         }
         return INSTANCE;
     }

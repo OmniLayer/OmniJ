@@ -1,7 +1,5 @@
 package foundation.omni.net;
 
-import foundation.omni.address.OmniAddressMainNetParams;
-import org.bitcoinj.base.Address;
 import org.bitcoinj.base.exceptions.AddressFormatException;
 import org.bitcoinj.params.MainNetParams;
 

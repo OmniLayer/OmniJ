@@ -1,12 +1,12 @@
 package foundation.omni.tx
 
 import foundation.omni.OmniDivisibleValue
+import org.bitcoinj.base.BitcoinNetwork
 import org.bitcoinj.base.Coin
 import org.bitcoinj.base.Sha256Hash
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.TransactionInput
 import org.bitcoinj.core.TransactionOutPoint
-import org.bitcoinj.params.RegTestParams
 import org.bitcoinj.script.Script
 import org.bitcoinj.script.ScriptBuilder
 import spock.lang.Ignore
@@ -27,9 +27,9 @@ class BitcoinJTransactionBuilderSpec extends BaseTxSpec {
 
 
     @Ignore("amount fields seems to have changed in bitcoinj-0.17-alpha1")
-    def "Build a transaction using EncodeMultisig.encodeObfuscated and BitcoinJ"() {
+    def "Build a transaction using EncodeMultisig.encodeObfuscated and bitcoinj"() {
         given:
-        EncodeMultisig encoder = new EncodeMultisig(RegTestParams.get())
+        EncodeMultisig encoder = new EncodeMultisig(BitcoinNetwork.REGTEST)
 
         when:
         def toAddress = senderAddr

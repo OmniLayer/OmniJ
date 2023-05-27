@@ -4,29 +4,20 @@ import foundation.omni.tx.ClassCEncoder;
 import foundation.omni.tx.Transactions;
 import foundation.omni.txrecords.UnsignedTxSimpleSend;
 import org.bitcoinj.base.Address;
-import org.bitcoinj.base.BitcoinNetwork;
 import org.bitcoinj.base.Coin;
 import org.bitcoinj.base.Network;
 import org.bitcoinj.core.InsufficientMoneyException;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.params.TestNet3Params;
-import org.consensusj.bitcoinj.signing.DefaultSigningRequest;
 import org.consensusj.bitcoinj.signing.FeeCalculator;
 import org.consensusj.bitcoinj.signing.SigningRequest;
 import org.consensusj.bitcoinj.signing.SigningUtils;
-import org.consensusj.bitcoinj.signing.HDKeychainSigner;
 import org.consensusj.bitcoinj.signing.TransactionInputData;
 import org.consensusj.bitcoinj.signing.TransactionOutputData;
 import org.consensusj.bitcoinj.signing.TransactionOutputOpReturn;
-import org.consensusj.bitcoinj.wallet.BipStandardDeterministicKeyChain;
-import foundation.omni.tx.ClassCEncoder;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static foundation.omni.tx.Transactions.OmniTx;
-import static foundation.omni.tx.Transactions.OmniRefTx;
 
 /**
  * A service to sign Omni transactions

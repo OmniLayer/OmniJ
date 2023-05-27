@@ -9,11 +9,7 @@ import org.bitcoinj.base.Address;
 import org.bitcoinj.base.BitcoinNetwork;
 import org.bitcoinj.base.Coin;
 import org.bitcoinj.base.LegacyAddress;
-import org.bitcoinj.base.Network;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.base.Sha256Hash;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.TestNet3Params;
 
 /**
  * JSON bean representing the set of information on an Omni Property as returned by the

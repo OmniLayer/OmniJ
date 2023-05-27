@@ -1,29 +1,17 @@
 package foundation.omni.net;
 
-import org.bitcoinj.base.Address;
-import org.bitcoinj.base.BitcoinNetwork;
-import org.bitcoinj.base.exceptions.AddressFormatException;
 import org.bitcoinj.params.TestNet3Params;
 
 /**
  * Omni Protocol parameters for Bitcoin TestNet
  */
 public class OmniTestNetParams extends OmniNetworkParameters {
-    private final static String MoneyManAddress = "moneyqMan7uh8FqdCA2BV5yZ8qVrc9ikLP";
 
     private OmniTestNetParams() {
         super();
         params = TestNet3Params.get();
-        try {
-            exodusAddress = OmniNetwork.TESTNET.exodusAddress();
-        } catch (AddressFormatException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            moneyManAddress = OmniNetwork.addressParser.parseAddress(MoneyManAddress, BitcoinNetwork.TESTNET);
-        } catch (AddressFormatException e) {
-            throw new RuntimeException(e);
-        }
+        exodusAddress = OmniNetwork.TESTNET.exodusAddress();
+        moneyManAddress = OmniNetwork.TESTNET.moneyManAddress();
         /* TODO: Find out magic block numbers for TestNet */
         firstExodusBlock = 5;
         lastExodusBlock = -1;

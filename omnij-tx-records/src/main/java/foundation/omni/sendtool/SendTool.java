@@ -12,8 +12,6 @@ import org.bitcoinj.base.DefaultAddressParser;
 import org.bitcoinj.base.Network;
 import org.bitcoinj.base.ScriptType;
 import org.bitcoinj.base.Sha256Hash;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.KeyChain;
 import org.consensusj.bitcoin.jsonrpc.RpcConfig;
@@ -77,7 +75,7 @@ public class SendTool {
 
         URI omniProxyTestNetURI = URI.create("http://192.168.8.177:18332");
         RpcConfig config = new RpcConfig(network, omniProxyTestNetURI, "bitcoinrpc", "pass");
-        var omniProxyClient = new OmniClient(config.getNetParams(),
+        var omniProxyClient = new OmniClient(config.network(),
                 config.getURI(),
                 config.getUsername(),
                 config.getPassword(),

@@ -1,6 +1,5 @@
 package foundation.omni.txsigner;
 
-import org.bitcoinj.base.BitcoinNetwork;
 import org.bitcoinj.base.Network;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
@@ -45,10 +44,6 @@ public class OmniRpcClientSigningService implements OmniSigningService {
         return client.getNetwork();
     }
 
-    public NetworkParameters netParams() {
-        return client.getNetParams();
-    }
-
     public CompletableFuture<SignedRawTransaction> signRawTransactionWithWalletAsync(Transaction tx) {
         log.info("Preparing to sign: {}", tx);
         return client.supplyAsync(() -> {
@@ -59,7 +54,7 @@ public class OmniRpcClientSigningService implements OmniSigningService {
     }
 
     Transaction asSignedTransaction(SignedRawTransaction signedRawTransaction) {
-        Transaction tx = new Transaction(netParams(), ByteBuffer.wrap(hexFormat.parseHex(signedRawTransaction.getHex())));
+        Transaction tx = new Transaction(NetworkParameters.of(network()), ByteBuffer.wrap(hexFormat.parseHex(signedRawTransaction.getHex())));
         log.info("converting to tx {}", tx);
         return tx;
     }

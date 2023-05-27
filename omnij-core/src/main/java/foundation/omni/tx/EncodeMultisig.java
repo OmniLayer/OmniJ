@@ -1,6 +1,7 @@
 package foundation.omni.tx;
 
 import org.bitcoinj.base.Coin;
+import org.bitcoinj.base.Network;
 import org.bitcoinj.crypto.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
@@ -22,14 +23,14 @@ public class EncodeMultisig {
     private static final int maxKeys = 3;  /* Redeemable key + 2 data keys */
     private static final int maxDataKeys = maxKeys - 1;
 
-    private final NetworkParameters netParams;
+    private final Network network;
 
     /**
      * Construct an encoder for a network
-     * @param netParams network to encode for
+     * @param network network to encode for
      */
-    public EncodeMultisig(NetworkParameters netParams) {
-        this.netParams = netParams;
+    public EncodeMultisig(Network network) {
+        this.network = network;
     }
 
     /**
@@ -53,7 +54,7 @@ public class EncodeMultisig {
             keysByOutput.add(group);
         }
 
-        Transaction txClassB = new Transaction(netParams);
+        Transaction txClassB = new Transaction(NetworkParameters.of(network));
 
         for (List<ECKey> group : keysByOutput) {
             // Add the redeemable key to the front of each group list
@@ -61,7 +62,7 @@ public class EncodeMultisig {
             redeemableGroup.add(redeemingKey);
             redeemableGroup.addAll(group);
             Script script = ScriptBuilder.createMultiSigOutputScript(1, redeemableGroup); // 1 of redeemableGroup.size() multisig
-            TransactionOutput output = new TransactionOutput(netParams, null, Coin.ZERO, script.getProgram());
+            TransactionOutput output = new TransactionOutput(NetworkParameters.of(network), null, Coin.ZERO, script.getProgram());
             output.setValue(output.getMinNonDustValue());    // TODO: Check this
             txClassB.addOutput(output);
         }

@@ -5,11 +5,8 @@ import foundation.omni.OmniValue
 import foundation.omni.netapi.ConsensusService
 import foundation.omni.netapi.analytics.OmniLayerRichListService
 import foundation.omni.netapi.omnicore.OmniCoreClient
-import io.reactivex.rxjava3.core.Observable
-import org.bitcoinj.base.Sha256Hash
-import org.bitcoinj.params.MainNetParams
+import org.bitcoinj.base.BitcoinNetwork
 import org.consensusj.analytics.service.TokenRichList
-import org.consensusj.bitcoin.json.pojo.ChainTip
 import org.consensusj.bitcoin.jsonrpc.RpcURI
 import spock.lang.Ignore
 import spock.lang.Shared
@@ -92,7 +89,7 @@ class OmniLayerRichListServiceSpec extends Specification {
     }
 
     def setup() {
-        consensusService = new OmniCoreClient(MainNetParams.get(), RpcURI.DEFAULT_MAINNET_URI, "bitcoinrpc","pass")
+        consensusService = new OmniCoreClient(BitcoinNetwork.MAINNET, RpcURI.DEFAULT_MAINNET_URI, "bitcoinrpc","pass")
         omniLayerRichListService = new OmniLayerRichListService(consensusService);
     }
 }

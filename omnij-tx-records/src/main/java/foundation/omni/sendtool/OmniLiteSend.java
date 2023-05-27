@@ -8,7 +8,6 @@ import org.bitcoinj.base.AddressParser;
 import org.bitcoinj.base.BitcoinNetwork;
 import org.bitcoinj.base.DefaultAddressParser;
 import org.bitcoinj.base.Sha256Hash;
-import org.bitcoinj.params.TestNet3Params;
 import org.consensusj.bitcoin.jsonrpc.BitcoinClient;
 
 import java.io.IOException;

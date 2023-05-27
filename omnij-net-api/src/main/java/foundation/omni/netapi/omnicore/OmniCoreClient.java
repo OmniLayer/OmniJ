@@ -5,6 +5,7 @@ import foundation.omni.OmniValue;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import org.bitcoinj.base.BitcoinNetwork;
+import org.bitcoinj.base.Network;
 import org.consensusj.analytics.service.RichListService;
 import org.consensusj.analytics.service.TokenRichList;
 import org.consensusj.bitcoin.json.pojo.AddressGroupingItem;
@@ -55,18 +56,33 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
         this.client = client;
     }
 
+    public OmniCoreClient(SSLSocketFactory sslSocketFactory, Network network, URI coreURI, String user, String pass, boolean useZmq, boolean isOmniProxy) {
+        client = new OmniClient(sslSocketFactory, network, coreURI, user, pass, useZmq, isOmniProxy);
+    }
+
+    @Deprecated
     public OmniCoreClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI coreURI, String user, String pass, boolean useZmq, boolean isOmniProxy) {
-        client = new OmniClient(sslSocketFactory, netParams, coreURI, user, pass, useZmq, isOmniProxy);
+        this(sslSocketFactory, netParams.network(), coreURI, user, pass, useZmq, isOmniProxy);
     }
 
+    @Deprecated
     public OmniCoreClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI coreURI, String user, String pass) {
-        this(sslSocketFactory, netParams, coreURI, user, pass, false, false);
+        this(sslSocketFactory, netParams.network(), coreURI, user, pass, false, false);
     }
 
+    @Deprecated
     public OmniCoreClient(NetworkParameters netParams, URI coreURI, String user, String pass) {
-        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams, coreURI, user, pass);
+        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams.network(), coreURI, user, pass);
     }
-    
+
+    public OmniCoreClient(SSLSocketFactory sslSocketFactory, Network network, URI coreURI, String user, String pass) {
+        this(sslSocketFactory, network, coreURI, user, pass, false, false);
+    }
+
+    public OmniCoreClient(Network network, URI coreURI, String user, String pass) {
+        this((SSLSocketFactory)SSLSocketFactory.getDefault(), network, coreURI, user, pass);
+    }
+
     @Override
     public CompletableFuture<Integer> currentBlockHeightAsync() {
         return client.supplyAsync(client::getBlockCount);

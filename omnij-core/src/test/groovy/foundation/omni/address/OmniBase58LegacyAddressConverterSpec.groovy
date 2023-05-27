@@ -1,11 +1,10 @@
 package foundation.omni.address
 
-import org.bitcoinj.base.Address
+import foundation.omni.net.OmniNetwork
+import org.bitcoinj.base.BitcoinNetwork
 import org.bitcoinj.base.ScriptType
-import org.bitcoinj.crypto.ECKey
 import org.bitcoinj.base.LegacyAddress
-import org.bitcoinj.params.MainNetParams
-import org.bitcoinj.script.Script
+import org.bitcoinj.crypto.ECKey
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -13,19 +12,18 @@ import spock.lang.Unroll
  * Proof-of-concept test of conversion between Omni and BTC addresses
  */
 class OmniBase58LegacyAddressConverterSpec extends Specification {
-    static final omniParams = OmniAddressMainNetParams.get()
-    static final btcParams = MainNetParams.get();
+    static final omniNetwork = OmniNetwork.MAINNET
+    static final btcNetwork = BitcoinNetwork.MAINNET;
 
     def "2 way conversion works for a random address"() {
         given: "a random bitcoin address"
-        def key = new ECKey()
-        def btcAddress = LegacyAddress.fromKey(btcParams, key)
+        def btcAddress = new ECKey().toAddress(ScriptType.P2PKH, btcNetwork)
 
         when: "we convert to Omni"
         LegacyAddress omniAddress = OmniBase58LegacyAddressConverter.btcToOmni(btcAddress)
 
         then: "it's a valid Omni address"
-        omniAddress.network() == omniParams.network()
+        omniAddress.network() == omniNetwork
         omniAddress.getOutputScriptType() == ScriptType.P2PKH
         omniAddress.toString().substring(0,1) == 'o'
 
@@ -34,7 +32,7 @@ class OmniBase58LegacyAddressConverterSpec extends Specification {
 
         then: "it's the same, valid BTC address"
         backAgainBTCAddress == btcAddress
-        backAgainBTCAddress.network() == btcParams.network()
+        backAgainBTCAddress.network() == btcNetwork
         backAgainBTCAddress.getOutputScriptType() == ScriptType.P2PKH
         backAgainBTCAddress.toString().substring(0,1) == '1'
     }
@@ -42,13 +40,13 @@ class OmniBase58LegacyAddressConverterSpec extends Specification {
     @Unroll
     def "2 way conversion works for Bitcoin address #addressString"(String addressString) {
         given: "a bitcoin address"
-        def btcAddress = Address.fromString(btcParams, addressString)
+        def btcAddress = LegacyAddress.fromBase58(addressString, btcNetwork)
 
         when: "we convert to Omni"
         def omniAddress = OmniBase58LegacyAddressConverter.btcToOmni(btcAddress)
 
         then: "it's a valid Omni address"
-        omniAddress.network() == omniParams.network()
+        omniAddress.network() == omniNetwork
         omniAddress.getOutputScriptType() == ScriptType.P2PKH
         omniAddress.toString().substring(0,1) == 'o'
 
@@ -57,7 +55,7 @@ class OmniBase58LegacyAddressConverterSpec extends Specification {
 
         then: "it's the same, valid BTC address"
         backAgainBTCAddress == btcAddress
-        backAgainBTCAddress.parameters == btcParams
+        backAgainBTCAddress.network() == btcNetwork
         backAgainBTCAddress.getOutputScriptType() == ScriptType.P2PKH
         backAgainBTCAddress.toString().substring(0,1) == '1'
 
@@ -68,13 +66,13 @@ class OmniBase58LegacyAddressConverterSpec extends Specification {
     @Unroll
     def "2 way conversion works for Omni address #addressString"(String addressString) {
         given: "an Omni address"
-        def omniAddress = Address.fromString(omniParams, addressString)
+        def omniAddress = LegacyAddress.fromBase58(addressString, omniNetwork)
 
         when: "we convert to BTC"
         def btcAddress = OmniBase58LegacyAddressConverter.omniToBTC(omniAddress)
 
         then: "it's a valid BTC address"
-        btcAddress.network() == btcParams.network()
+        btcAddress.network() == btcNetwork
         btcAddress.getOutputScriptType() == ScriptType.P2PKH
         btcAddress.toString().substring(0,1) == '1'
 
@@ -83,7 +81,7 @@ class OmniBase58LegacyAddressConverterSpec extends Specification {
 
         then: "it's the same, valid Omni address"
         backAgainOmniAddress == omniAddress
-        backAgainOmniAddress.network() == omniParams.network()
+        backAgainOmniAddress.network() == omniNetwork
         backAgainOmniAddress.getOutputScriptType() == ScriptType.P2PKH
         backAgainOmniAddress.toString().substring(0,1) == 'o'
 

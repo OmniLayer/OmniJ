@@ -2,6 +2,7 @@ package foundation.omni.tx;
 
 import org.bitcoinj.base.Address;
 import org.bitcoinj.base.Coin;
+import org.bitcoinj.base.Network;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionOutput;
@@ -24,10 +25,10 @@ public class ClassCEncoder {
 
     /**
      * Construct an encoder for a network
-     * @param netParams The network this instance will encode transactions for
+     * @param network The network this instance will encode transactions for
      */
-    public ClassCEncoder(NetworkParameters netParams) {
-        this.netParams = netParams;
+    public ClassCEncoder(Network network) {
+        this.netParams = NetworkParameters.of(network);
     }
 
     /**

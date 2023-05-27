@@ -3,18 +3,10 @@ package foundation.omni.address;
 import foundation.omni.net.OmniNetwork;
 import org.bitcoinj.base.Bech32;
 import org.bitcoinj.base.BitcoinNetwork;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.base.SegwitAddress;
-import org.bitcoinj.params.Networks;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Convert between Bitcoin and Omni Bech32 Segwit addresses
- * Adds Omni networks to bitcoinj's {@link Networks} registry
  * Bitcoin: bc1xxxx
  * Omni: om1xxxx
  */
@@ -69,10 +61,4 @@ class OmniSegwitAddressConverter {
                 throw new IllegalArgumentException("Unspported network");
         }
     }
-
-    // Create an unmodifiable set of NetworkParameters from an array/varargs
-    private static Set<NetworkParameters> unmodifiableSet(NetworkParameters... ts) {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(ts)));
-    }
-
 }

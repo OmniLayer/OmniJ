@@ -101,6 +101,7 @@ public enum OmniNetwork implements Network {
      */
     public int legacyAddressHeader() {
         //return LegacyAddress.AddressHeader.ofNetwork(this).headerByte();
+        // TODO: Finalize this as either Omni or Bitcoin
         switch(this) {
             case MAINNET:
                 return 115;
@@ -121,6 +122,7 @@ public enum OmniNetwork implements Network {
      */
     public int legacyP2SHHeader() {
         //return LegacyAddress.P2SHHeader.ofNetwork(this).headerByte();
+        // TODO: Finalize this as either Omni or Bitcoin
         switch(this) {
             case MAINNET:
                 return 58;
@@ -149,24 +151,68 @@ public enum OmniNetwork implements Network {
             case SIGNET:
                 return "to";
             case REGTEST:
-                return "ort";
+                return "ocrt";
         }
         throw new IllegalStateException();
     }
 
-    private static final String ExodusAddress = "1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P";
-    private static final String TestNetExodusAddress = "mpexoDuSkGGqvqrkrjiFng38QPkJQVFyqv";
+    private static final Address ExodusAddress = LegacyAddress.fromBase58("1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P", BitcoinNetwork.MAINNET);
+    private static final Address TestNetExodusAddress = LegacyAddress.fromBase58("mpexoDuSkGGqvqrkrjiFng38QPkJQVFyqv", BitcoinNetwork.TESTNET);
+    private static final Address MoneyManAddress = LegacyAddress.fromBase58("moneyqMan7uh8FqdCA2BV5yZ8qVrc9ikLP", BitcoinNetwork.TESTNET);
 
     public Address exodusAddress() {
         switch(this) {
             case MAINNET:
-                return addressParser.parseAddress(ExodusAddress, BitcoinNetwork.MAINNET);
+                return ExodusAddress;
             case TESTNET:
-                return addressParser.parseAddress(TestNetExodusAddress, BitcoinNetwork.TESTNET);
+                return TestNetExodusAddress;
             case SIGNET:
                 throw new UnsupportedOperationException(); // not defined yet
             case REGTEST:
-                return addressParser.parseAddress(TestNetExodusAddress, BitcoinNetwork.TESTNET);
+                return TestNetExodusAddress;
+        }
+        throw new IllegalStateException();
+    }
+
+    public Address moneyManAddress() {
+        switch(this) {
+            case MAINNET:
+                throw new UnsupportedOperationException(); // No MoneyMan address on MainNet
+            case TESTNET:
+                return MoneyManAddress;
+            case SIGNET:
+                throw new UnsupportedOperationException(); // not defined yet
+            case REGTEST:
+                return MoneyManAddress;
+        }
+        throw new IllegalStateException();
+    }
+
+    public BitcoinNetwork bitcoinNetwork() {
+        switch(this) {
+            case MAINNET:
+                return BitcoinNetwork.MAINNET;
+            case TESTNET:
+                return BitcoinNetwork.TESTNET;
+            case SIGNET:
+                return BitcoinNetwork.SIGNET;
+            case REGTEST:
+                return BitcoinNetwork.REGTEST;
+        }
+        throw new IllegalStateException();
+    }
+
+    public static OmniNetwork of(Network bitcoinNetwork) {
+        if (!(bitcoinNetwork instanceof BitcoinNetwork)) throw new IllegalArgumentException();
+        switch((BitcoinNetwork) bitcoinNetwork) {
+            case MAINNET:
+                return OmniNetwork.MAINNET;
+            case TESTNET:
+                return OmniNetwork.TESTNET;
+            case SIGNET:
+                return OmniNetwork.SIGNET;
+            case REGTEST:
+                return OmniNetwork.REGTEST;
         }
         throw new IllegalStateException();
     }

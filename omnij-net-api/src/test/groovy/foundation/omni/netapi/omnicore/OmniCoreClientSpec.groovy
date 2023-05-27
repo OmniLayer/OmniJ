@@ -5,9 +5,9 @@ import foundation.omni.json.pojo.OmniJBalances
 import foundation.omni.json.pojo.WalletAddressBalance
 import foundation.omni.netapi.omniwallet.WalletBackupFile
 import org.bitcoinj.base.Address
+import org.bitcoinj.base.BitcoinNetwork
 import org.bitcoinj.utils.AppDataDirectory
 import org.consensusj.bitcoin.jsonrpc.RpcURI
-import org.bitcoinj.params.MainNetParams
 import spock.lang.Ignore
 import spock.lang.Requires;
 import spock.lang.Shared
@@ -97,7 +97,7 @@ public class OmniCoreClientSpec extends Specification {
     }
 
     def setupSpec() {
-        client = new OmniCoreClient(MainNetParams.get(),
+        client = new OmniCoreClient(BitcoinNetwork.MAINNET,
                 RpcURI.getDefaultMainNetURI(),
                 "bitcoinrpc",
                 "pass")

@@ -1,26 +1,15 @@
 package foundation.omni.txsigner;
 
-import foundation.omni.txrecords.UnsignedTxSimpleSend;
-import org.bitcoinj.base.Address;
-import org.bitcoinj.base.Coin;
 import org.bitcoinj.base.Network;
-import org.bitcoinj.core.InsufficientMoneyException;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.wallet.DeterministicKeyChain;
-import org.consensusj.bitcoinj.signing.DefaultSigningRequest;
 import org.consensusj.bitcoinj.signing.FeeCalculator;
 import org.consensusj.bitcoinj.signing.SigningRequest;
-import org.consensusj.bitcoinj.signing.SigningUtils;
 import org.consensusj.bitcoinj.signing.HDKeychainSigner;
-import org.consensusj.bitcoinj.signing.TransactionInputData;
 import org.consensusj.bitcoinj.wallet.BipStandardDeterministicKeyChain;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static foundation.omni.tx.Transactions.OmniTx;
-import static foundation.omni.tx.Transactions.OmniRefTx;
 
 /**
  * A service to sign Omni transactions
@@ -32,7 +21,7 @@ public class OmniKeychainSigningService implements OmniSigningService {
     private final FeeCalculator feeCalculator;
 
 
-    public OmniKeychainSigningService(Network network, BipStandardDeterministicKeyChain deterministicKeyChain) {
+    public OmniKeychainSigningService(Network network, DeterministicKeyChain deterministicKeyChain) {
         this.network = network;
         this.keyChain = deterministicKeyChain;
         this.signingWalletKeyChain = new HDKeychainSigner(deterministicKeyChain);

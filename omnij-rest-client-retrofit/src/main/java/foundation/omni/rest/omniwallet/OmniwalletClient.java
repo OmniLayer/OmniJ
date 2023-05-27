@@ -15,6 +15,7 @@ import okhttp3.ConnectionSpec;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.bitcoinj.base.Network;
 import org.bitcoinj.core.NetworkParameters;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -78,15 +79,15 @@ public class OmniwalletClient extends OmniwalletAbstractClient {
      * @param strictMode Only accept valid amounts from server
      */
     public OmniwalletClient(URI baseURI, boolean debug, boolean strictMode) {
-        this(baseURI, debug, strictMode, null, defaultHttpClient(debug), Executors.newFixedThreadPool(2));
+        this(baseURI, debug, strictMode, (Network) null, defaultHttpClient(debug), Executors.newFixedThreadPool(2));
     }
 
     public OmniwalletClient(URI baseURI, boolean debug, boolean strictMode, OkHttpClient client) {
-        this(baseURI, debug, strictMode, null, client, Executors.newFixedThreadPool(2));
+        this(baseURI, debug, strictMode, (Network) null, client, Executors.newFixedThreadPool(2));
     }
 
     public OmniwalletClient(URI baseURI, boolean debug, boolean strictMode,  OkHttpClient client, Executor executor) {
-        this(baseURI, debug, strictMode, null, defaultHttpClient(debug), Executors.newFixedThreadPool(2));
+        this(baseURI, debug, strictMode, (Network) null, defaultHttpClient(debug), Executors.newFixedThreadPool(2));
     }
 
     /**
@@ -94,10 +95,48 @@ public class OmniwalletClient extends OmniwalletAbstractClient {
      * @param baseURI Base URL of server
      * @param debug Enable debugging, logging, etc.
      * @param strictMode Only accept valid amounts from server
-     * @param netParams Specify active Bitcoin network (used for Address validation)
+     * @param network Specify active Bitcoin network (used for Address validation)
      */
+    public OmniwalletClient(URI baseURI, boolean debug, boolean strictMode, Network network) {
+        this(baseURI, debug, strictMode, network, defaultHttpClient(debug), Executors.newFixedThreadPool(2));
+    }
+
+    /**
+     * OmniwalletClient constructor with all parameters
+     *
+     * @param baseURI Base URL of server
+     * @param debug Enable debugging, logging, etc.
+     * @param strictMode Only accept valid amounts from server
+     * @param network Specify active Bitcoin network (used for Address validation)
+     * @param client Custom OkHttp client
+     * @param executor Executor
+     */
+    public OmniwalletClient(URI baseURI, boolean debug, boolean strictMode, Network network, OkHttpClient client, Executor executor) {
+        super(baseURI, debug, strictMode, network);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.registerModule(new OmniwalletClientModule(network));
+
+        Retrofit restAdapter = new Retrofit.Builder()
+                .client(client)
+                .baseUrl(HttpUrl.get(baseURI))
+                .addConverterFactory(JacksonConverterFactory.create(mapper))
+                .callbackExecutor(executor)
+                .build();
+
+        service = restAdapter.create(OmniwalletService.class);
+    }
+
+    /**
+     * @param baseURI Base URL of server
+     * @param debug Enable debugging, logging, etc.
+     * @param strictMode Only accept valid amounts from server
+     * @param netParams Specify active Bitcoin network (used for Address validation)
+     * @deprecated Use {@link OmniwalletClient#OmniwalletClient(URI, boolean, boolean, Network)}
+     */
+    @Deprecated
     public OmniwalletClient(URI baseURI, boolean debug, boolean strictMode, NetworkParameters netParams) {
-        this(baseURI, debug, strictMode, netParams, defaultHttpClient(debug), Executors.newFixedThreadPool(2));
+        this(baseURI, debug, strictMode, netParams.network());
     }
 
     /**
@@ -109,21 +148,11 @@ public class OmniwalletClient extends OmniwalletAbstractClient {
      * @param netParams Specify active Bitcoin network (used for Address validation)
      * @param client Custom OkHttp client
      * @param executor Executor
+     * @deprecated Use {@link OmniwalletClient#OmniwalletClient(URI, boolean, boolean, Network, OkHttpClient, Executor)}
      */
+    @Deprecated
     public OmniwalletClient(URI baseURI, boolean debug, boolean strictMode, NetworkParameters netParams, OkHttpClient client, Executor executor) {
-        super(baseURI, debug, strictMode, netParams);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.registerModule(new OmniwalletClientModule(netParams.network()));
-
-        Retrofit restAdapter = new Retrofit.Builder()
-                .client(client)
-                .baseUrl(HttpUrl.get(baseURI))
-                .addConverterFactory(JacksonConverterFactory.create(mapper))
-                .callbackExecutor(executor)
-                .build();
-
-        service = restAdapter.create(OmniwalletService.class);
+        this(baseURI, debug, strictMode, netParams.network(), client, executor);
     }
 
     public static OkHttpClient defaultHttpClient(boolean debug) {

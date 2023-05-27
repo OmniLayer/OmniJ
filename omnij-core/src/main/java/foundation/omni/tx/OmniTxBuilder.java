@@ -2,13 +2,15 @@ package foundation.omni.tx;
 
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
+import foundation.omni.net.OmniNetwork;
 import foundation.omni.net.OmniNetworkParameters;
 import org.bitcoinj.base.Address;
+import org.bitcoinj.base.BitcoinNetwork;
 import org.bitcoinj.base.Coin;
+import org.bitcoinj.base.Network;
 import org.bitcoinj.base.ScriptType;
 import org.bitcoinj.crypto.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
@@ -24,25 +26,35 @@ import java.util.List;
  * Builds Omni transactions in bitcoinj Transaction objects
  */
 public class OmniTxBuilder {
-    private final NetworkParameters netParams;
-    private final OmniNetworkParameters omniParams;
+    private final Network network;
+    private final OmniNetwork omniNetwork;
     private final RawTxBuilder builder = new RawTxBuilder();
     private final EncodeMultisig transactionEncoder;
     private final ClassCEncoder classCEncoder;
     private final FeeCalculator feeCalculator;
 
-    /**
-     * @param netParams The Bitcoin network to construct transactions for
-     */
-    public OmniTxBuilder(NetworkParameters netParams) {
-        this(netParams, new DefaultFixedFeeCalculator());
+
+    public OmniTxBuilder(BitcoinNetwork bitcoinNetwork) {
+        this(OmniNetwork.of(bitcoinNetwork));
     }
 
-    public OmniTxBuilder(NetworkParameters netParams, FeeCalculator feeCalculator) {
-        this.netParams = netParams;
-        this.omniParams = OmniNetworkParameters.fromBitcoinNetwork(netParams.network());
-        this.transactionEncoder = new EncodeMultisig(netParams);
-        this.classCEncoder = new ClassCEncoder(netParams);
+    public OmniTxBuilder(OmniNetwork omniNetwork) {
+        this(omniNetwork, new DefaultFixedFeeCalculator());
+    }
+
+    public OmniTxBuilder(BitcoinNetwork bitcoinNetwork, FeeCalculator feeCalculator) {
+        this(OmniNetwork.of(bitcoinNetwork), feeCalculator);
+    }
+
+    /**
+     * @param omniNetwork The network to construct transactions for
+     * @param feeCalculator transaction fee calculator
+     */
+    public OmniTxBuilder(OmniNetwork omniNetwork, FeeCalculator feeCalculator) {
+        this.network = omniNetwork.bitcoinNetwork();
+        this.omniNetwork = omniNetwork;
+        this.transactionEncoder = new EncodeMultisig(network);
+        this.classCEncoder = new ClassCEncoder(network);
         this.feeCalculator = feeCalculator;
     }
 
@@ -92,13 +104,13 @@ public class OmniTxBuilder {
      * @return Incomplete Transaction, no inputs or change output
      */
     public Transaction createClassBTransaction(ECKey redeemingKey, ScriptType scriptType, Address refAddress, byte[] payload) {
-        Address redeemingAddress = redeemingKey.toAddress(scriptType, netParams.network());
+        Address redeemingAddress = redeemingKey.toAddress(scriptType, network);
 
         // Encode the Omni Protocol Payload as a Class B transaction
         Transaction tx = transactionEncoder.encodeObfuscated(redeemingKey, payload, redeemingAddress.toString());
 
         // Add outputs to the transaction
-        addDustOutput(tx, omniParams.getExodusAddress());   // Add Exodus Output for this chain
+        addDustOutput(tx, omniNetwork.exodusAddress());   // Add Exodus Output for this chain
         if (refAddress != null) {
             addDustOutput(tx, refAddress);                  // Add reference (aka destination) address output
         }
@@ -144,7 +156,7 @@ public class OmniTxBuilder {
      */
     public Transaction createSignedClassBTransaction(ECKey fromKey, ScriptType scriptType, Collection<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
-        Address fromAddress = fromKey.toAddress(scriptType, netParams.network());
+        Address fromAddress = fromKey.toAddress(scriptType, network);
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 
@@ -188,7 +200,7 @@ public class OmniTxBuilder {
      */
     public Transaction createUnsignedOmniTransaction(ECKey fromKey, List<TransactionInput> inputs, Address refAddress, byte[] payload)
             throws InsufficientMoneyException {
-        Address fromAddress = fromKey.toAddress(ScriptType.P2PKH, netParams.network());
+        Address fromAddress = fromKey.toAddress(ScriptType.P2PKH, network);
 
         Transaction tx = createOmniTransaction(fromKey, refAddress, payload);
 

@@ -5,8 +5,8 @@ import foundation.omni.net.OmniRegTestParams
 import foundation.omni.json.pojo.OmniJBalances
 import foundation.omni.json.pojo.WalletAddressBalance
 import org.bitcoinj.base.Address
+import org.bitcoinj.base.BitcoinNetwork
 import org.bitcoinj.base.LegacyAddress
-import org.bitcoinj.params.RegTestParams
 import org.consensusj.bitcoin.jsonrpc.RpcURI
 import spock.lang.Ignore
 import spock.lang.Shared
@@ -86,12 +86,12 @@ class OmniCoreClientRegTestSpec extends Specification  {
     def setup() {
         boolean testOmniProxy = false
         if (testOmniProxy) {
-        client = new OmniCoreClient(RegTestParams.get(),
+        client = new OmniCoreClient(BitcoinNetwork.REGTEST,
                 URI.create("http://localhost:8080"),
                 "",
                 "")
         } else {
-            client = new OmniCoreClient(RegTestParams.get(),
+            client = new OmniCoreClient(BitcoinNetwork.REGTEST,
                     RpcURI.getDefaultRegTestURI(),
                     "bitcoinrpc",
                     "pass")

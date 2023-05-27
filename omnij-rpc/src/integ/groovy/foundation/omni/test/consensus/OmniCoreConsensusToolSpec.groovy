@@ -2,7 +2,7 @@ package foundation.omni.test.consensus
 
 import foundation.omni.consensus.OmniCoreConsensusTool
 import foundation.omni.rpc.test.TestServers
-import org.bitcoinj.params.MainNetParams
+import org.bitcoinj.base.BitcoinNetwork
 import spock.lang.Ignore
 import spock.lang.Specification
 
@@ -23,7 +23,7 @@ class OmniCoreConsensusToolSpec extends Specification {
         String hostname = testServers.stableOmniRpcHost
         URI uri = "https://${encUser}:${encPass}@${hostname}:8332".toURI()
 
-        OmniCoreConsensusTool fetcher = new OmniCoreConsensusTool(MainNetParams.get(), uri)
+        OmniCoreConsensusTool fetcher = new OmniCoreConsensusTool(BitcoinNetwork.MAINNET, uri)
 
         when: "we get block height"
         def blockHeight = fetcher.currentBlockHeightAsync().get()

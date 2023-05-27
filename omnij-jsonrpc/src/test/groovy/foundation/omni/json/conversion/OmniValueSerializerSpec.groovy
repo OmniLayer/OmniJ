@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniIndivisibleValue
 import foundation.omni.OmniValue
+import org.bitcoinj.base.BitcoinNetwork
 import org.bitcoinj.base.Coin
-import org.bitcoinj.core.NetworkParameters
 import spock.lang.Unroll
 
 
@@ -29,7 +29,7 @@ class OmniValueSerializerSpec extends BaseObjectMapperSpec {
 
         where:
         expectedResult         | value
-        '"21000000.0"'         | OmniDivisibleValue.ofWilletts(NetworkParameters.MAX_MONEY.value)
+        '"21000000.0"'         | OmniDivisibleValue.ofWilletts(BitcoinNetwork.MAX_MONEY.value)
         '"1.0"'                | OmniDivisibleValue.ofWilletts(Coin.COIN.value)
         '"0.001"'              | OmniDivisibleValue.ofWilletts(Coin.MILLICOIN.value)
         '"0.000001"'           | OmniDivisibleValue.ofWilletts(Coin.MICROCOIN.value)
@@ -52,7 +52,7 @@ class OmniValueSerializerSpec extends BaseObjectMapperSpec {
 
         where:
         expectedResult          | value
-        '"2100000000000000"'    | OmniIndivisibleValue.ofWilletts(NetworkParameters.MAX_MONEY.value)
+        '"2100000000000000"'    | OmniIndivisibleValue.ofWilletts(BitcoinNetwork.MAX_MONEY.value)
         '"100000000"'           | OmniIndivisibleValue.ofWilletts(Coin.COIN.value)
         '"100000"'              | OmniIndivisibleValue.ofWilletts(Coin.MILLICOIN.value)
         '"100"'                 | OmniIndivisibleValue.ofWilletts(Coin.MICROCOIN.value)

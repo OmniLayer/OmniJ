@@ -1,8 +1,8 @@
 package foundation.omni.tx
 
+import org.bitcoinj.base.BitcoinNetwork
 import org.bitcoinj.crypto.ECKey
 import org.bitcoinj.core.Transaction
-import org.bitcoinj.params.RegTestParams
 import spock.lang.Ignore
 import spock.lang.Shared
 
@@ -42,7 +42,7 @@ class EncodeMultisigSpec extends BaseTxSpec {
     @Ignore("tx.outputs[0].value is zero with bitcoinj 0.17-alpha1")
     def "encode" () {
         given:
-        EncodeMultisig encoder = new EncodeMultisig(RegTestParams.get())
+        EncodeMultisig encoder = new EncodeMultisig(BitcoinNetwork.REGTEST)
 
         when:
         Transaction tx = encoder.encodeObfuscated(senderPubKey, payload, sendingAddr);

@@ -1,12 +1,11 @@
 package foundation.omni.consensus;
 
-import foundation.omni.netapi.omnicore.RxOmniClient;
+import org.bitcoinj.base.BitcoinNetwork;
+import org.bitcoinj.base.Network;
 import org.consensusj.bitcoin.jsonrpc.RpcURI;
 import foundation.omni.netapi.omnicore.OmniCoreClient;
 import foundation.omni.rpc.OmniClient;
 import foundation.omni.rpc.test.TestServers;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.params.MainNetParams;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
 import java.io.IOException;
@@ -20,11 +19,11 @@ public class OmniCoreConsensusTool extends OmniCoreClient implements ConsensusTo
     /**
      * URI Constructor
      *
-     * @param netParams *bitcoinj* NetworkParameters for server to connect to
+     * @param network *bitcoinj* NetworkParameters for server to connect to
      * @param coreURI URI to connect to - user/pass if required, must be encoded in URL
      */
-    public OmniCoreConsensusTool(NetworkParameters netParams, URI coreURI) {
-        super(netParams, coreURI, coreURI.getUserInfo().split(":")[0], coreURI.getUserInfo().split(":")[1]);
+    public OmniCoreConsensusTool(Network network, URI coreURI) {
+        super(network, coreURI, coreURI.getUserInfo().split(":")[0], coreURI.getUserInfo().split(":")[1]);
     }
 
     /**
@@ -37,7 +36,7 @@ public class OmniCoreConsensusTool extends OmniCoreClient implements ConsensusTo
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        OmniClient client = new OmniClient(MainNetParams.get(), RpcURI.getDefaultMainNetURI(), TestServers.getInstance().getRpcTestUser(), TestServers.getInstance().getRpcTestPassword());
+        OmniClient client = new OmniClient(BitcoinNetwork.MAINNET, RpcURI.getDefaultMainNetURI(), TestServers.getInstance().getRpcTestUser(), TestServers.getInstance().getRpcTestPassword());
         OmniCoreConsensusTool tool = new OmniCoreConsensusTool(client);
         tool.run(DefaultGroovyMethods.toList(args));
     }

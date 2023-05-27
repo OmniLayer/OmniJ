@@ -19,7 +19,6 @@ import foundation.omni.json.conversion.OmniValueDeserializer;
 import foundation.omni.json.conversion.OmniValueSerializer;
 import foundation.omni.json.conversion.PropertyTypeSerializer;
 import org.bitcoinj.base.Address;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.base.Sha256Hash;
 
 import java.util.Objects;
