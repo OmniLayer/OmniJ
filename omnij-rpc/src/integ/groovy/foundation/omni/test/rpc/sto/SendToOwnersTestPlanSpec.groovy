@@ -54,7 +54,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         //log.debug "Creating startOmni from: {} + {}", mscAvailable, mscReserved
         def startMSC = OmniDivisibleValue.of(mscAvailable + mscReserved)
         def actorAddress = createFundedAddress(startBTC, startMSC, false)
-        def currencyMSC = new CurrencyID(ecosystem.value())
+        def currencyMSC = CurrencyID.of(ecosystem.value())
         def currencySPT = getStoProperty(actorAddress, data)
 
         // Create a DEx offer to reserve an amount
@@ -137,8 +137,8 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def expectedValidity = false
 
         def actorAddress = createFundedAddress(startBTC, startMSC)
-        def currencyMSC = new CurrencyID(ecosystem.value())
-        def currencySPT = new CurrencyID(4294967295L) // does not exist
+        def currencyMSC = CurrencyID.of(ecosystem.value())
+        def currencySPT = CurrencyID.of(4294967295L) // does not exist
 
         given: "the actor starts with #startOmni #currencyMSC"
         assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC
@@ -166,7 +166,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         OmniDivisibleValue startMSC = 2.0.divisible
         def expectException = true
         def expectedValidity = false
-        def currencyMSC = new CurrencyID(ecosystem.value())
+        def currencyMSC = CurrencyID.of(ecosystem.value())
 
         when: "there is a well funded actor and two owners with bitcoin"
         def actorAddress = createFundedAddress(btcAvailable, startMSC)
@@ -206,7 +206,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def startMSC = OmniDivisibleValue.of(1.0)
         def expectException = false
         def expectedValidity = false
-        def currencyMSC = new CurrencyID(ecosystem.value())
+        def currencyMSC = CurrencyID.of(ecosystem.value())
 
         def actorAddress = createFundedAddress(startBTC, startMSC)
         def ownerA = createFundedAddress(startBTC, startMSC)
@@ -276,7 +276,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def reservedOwnerC = 0.divisible
         def expectException = false
         def expectedValidity = true
-        def currencyOMNI = new CurrencyID(ecosystem.value())
+        def currencyOMNI = CurrencyID.of(ecosystem.value())
 
         /*
             TODO: Implement this check correctly according ot the original intention
