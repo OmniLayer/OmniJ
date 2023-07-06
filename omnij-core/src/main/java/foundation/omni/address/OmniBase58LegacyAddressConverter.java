@@ -7,7 +7,9 @@ import org.bitcoinj.base.LegacyAddress;
 
 /**
  * EXPERIMENTAL 2-way Conversion between MAINNET Omni and BTC Addresses
+ * @deprecated Omni "Safe" addresses will be implemented for Segwit and/or Taproot, not Base58
  */
+@Deprecated
 class OmniBase58LegacyAddressConverter {
     static Address btcToOmni(Address btcAddress) {
         return LegacyAddress.fromPubKeyHash(OmniNetwork.MAINNET, btcAddress.getHash());

@@ -23,7 +23,9 @@ import java.util.stream.Stream;
 import static org.bitcoinj.base.Coin.COIN;
 
 /**
- * This should only be used for constructing addresses with bitcoinj
+ * Definitions for Omni "safe" addresses. This should only be used for constructing addresses with bitcoinj,
+ * for other functions the {@link BitcoinNetwork} instances should be used.
+ * @see foundation.omni.address.OmniSegwitAddressConverter
  */
 public enum OmniNetwork implements Network {
     MAINNET("org.omnilayer.mainnet"),
@@ -100,19 +102,7 @@ public enum OmniNetwork implements Network {
      * @see LegacyAddress.AddressHeader
      */
     public int legacyAddressHeader() {
-        //return LegacyAddress.AddressHeader.ofNetwork(this).headerByte();
-        // TODO: Finalize this as either Omni or Bitcoin
-        switch(this) {
-            case MAINNET:
-                return 115;
-            case TESTNET:
-                return 115;
-            case SIGNET:
-                return 115;
-            case REGTEST:
-                return 115;
-        }
-        throw new IllegalStateException();
+        return bitcoinNetwork().legacyAddressHeader();
     }
 
     /**
@@ -121,19 +111,7 @@ public enum OmniNetwork implements Network {
      * @see LegacyAddress.P2SHHeader
      */
     public int legacyP2SHHeader() {
-        //return LegacyAddress.P2SHHeader.ofNetwork(this).headerByte();
-        // TODO: Finalize this as either Omni or Bitcoin
-        switch(this) {
-            case MAINNET:
-                return 58;
-            case TESTNET:
-                return 58;
-            case SIGNET:
-                return 58;
-            case REGTEST:
-                return 58;
-        }
-        throw new IllegalStateException();
+        return bitcoinNetwork().legacyP2SHHeader();
     }
 
     /**

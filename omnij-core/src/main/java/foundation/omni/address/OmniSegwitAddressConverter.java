@@ -10,7 +10,7 @@ import org.bitcoinj.base.SegwitAddress;
  * Bitcoin: bc1xxxx
  * Omni: om1xxxx
  */
-class OmniSegwitAddressConverter {
+public class OmniSegwitAddressConverter {
 
     public static SegwitAddress btcToOmni(SegwitAddress btcAddress) {
         OmniNetwork omniNet = btcNetworkToOmniNetwork((BitcoinNetwork) btcAddress.network());

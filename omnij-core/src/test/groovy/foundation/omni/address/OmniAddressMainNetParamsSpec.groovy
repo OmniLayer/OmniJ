@@ -16,11 +16,11 @@ class OmniAddressMainNetParamsSpec extends Specification {
         given: "A randomly generated ECKey"
         def key = new ECKey()
 
-        when: "We generate an Omni address from it"
+        when: "We generate an Omni Base58 address from it"
         def omniAddress = key.toAddress(ScriptType.P2PKH, OmniNetwork.MAINNET)
 
-        then: "It begins with an 'o'"
-        omniAddress.toString().substring(0,1) == 'o'
+        then: "It begins with a '1'"
+        omniAddress.toString().substring(0,1) == '1'
     }
 
     def "can create an omni P2SH address"() {
@@ -30,7 +30,7 @@ class OmniAddressMainNetParamsSpec extends Specification {
         when: "We generate an Omni address from it"
         def omniAddress = LegacyAddress.fromScriptHash(OmniNetwork.MAINNET, hash160)
 
-        then: "It begins with an 'Q'"
-        omniAddress.toString().substring(0,1) == 'Q'
+        then: "It begins with an '3'"
+        omniAddress.toString().substring(0,1) == '3'
     }
 }
