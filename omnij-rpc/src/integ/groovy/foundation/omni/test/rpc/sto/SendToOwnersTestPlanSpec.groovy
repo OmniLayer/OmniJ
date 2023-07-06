@@ -17,6 +17,8 @@ import spock.lang.Shared
 import spock.lang.Unroll
 import spock.util.mop.Use
 
+import java.util.stream.Collectors
+
 /**
  * Data driven tests for the "send to owners" transaction type
  */
@@ -61,10 +63,11 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         }
 
         when: "the owners are funded"
-        def owners = [] as List<Address>
         def ownerIds = 0..<numberOfOwners
-        ownerIds.each { owners << newAddress }
-        owners = owners.sort { it.toString() }
+        def owners = ownerIds.stream()
+                .map { newAddress }
+                .sorted()
+                .collect(Collectors.toList())
         ownerIds.each { omniSend(actorAddress, owners[it], currencySPT, OmniValue.of(sptAvailableOwners[it], propertyType)) }
         generateBlocks(1)
 
