@@ -130,9 +130,8 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
     def "STO Property ID is non-existent"() {
         def ecosystem = Ecosystem.TOMNI
-        def propertyType = PropertyType.DIVISIBLE
-        def amountSTO = 1.0
-        def startMSC = 2.0.divisible    // test/demo of Omni NumberCategory meta-programming
+        def amountSTO = 1.0.divisible
+        def startMSC = 2.0.divisible
         def expectException = true
         def expectedValidity = false
 
@@ -144,7 +143,7 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         assert omniGetBalance(actorAddress, currencyMSC).balance == startMSC
 
         when: "#amountSTO is sent to owners of #currencySPT"
-        def txid = executeSendToOwners(actorAddress, currencySPT, OmniValue.of(amountSTO, propertyType), expectException)
+        def txid = executeSendToOwners(actorAddress, currencySPT, amountSTO, expectException)
         generateBlocks(1)
 
         then: "the transaction validity is #expectedValidity"
@@ -201,9 +200,8 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
     def "Sender owns all the coins of the STO Property, other addresses had non-zero balances but now zero balances"() {
         def ecosystem = Ecosystem.TOMNI
-        def propertyType = PropertyType.DIVISIBLE
-        def amountSTO = OmniDivisibleValue.of(1.0)
-        def startMSC = OmniDivisibleValue.of(1.0)
+        def amountSTO = 1.0.divisible
+        def startMSC = 1.0.divisible
         def expectException = false
         def expectedValidity = false
         def currencyMSC = CurrencyID.of(ecosystem.value())
@@ -268,7 +266,6 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
     def "Owners with similar effective balances, but different available/reserved ratios, receive the same amount"() {
         def ecosystem = Ecosystem.TOMNI
-//        def propertyType = PropertyType.DIVISIBLE
         def startMSC = 100.divisible
         def amountSTO = 99.divisible
         def reservedOwnerA = 100.divisible
