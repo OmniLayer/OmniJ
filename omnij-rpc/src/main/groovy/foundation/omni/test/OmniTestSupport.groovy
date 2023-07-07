@@ -1,5 +1,6 @@
 package foundation.omni.test
 
+import foundation.omni.net.MoneyMan
 import foundation.omni.rpc.test.OmniTestClientAccessor
 import org.consensusj.bitcoin.jsonrpc.groovy.test.BTCTestSupport
 import foundation.omni.Ecosystem
@@ -54,8 +55,8 @@ interface OmniTestSupport extends OmniTestClientAccessor, FundingSourceAccessor,
     default Sha256Hash requestOmni(Address toAddress, OmniDivisibleValue requestedOmni, Boolean allowIntermediate) {
         // For 1.0 BTC an amount of 100.0 OMNI is generated, resulting in a minimal purchase amount of
         // 0.00000100 OMNI for 0.00000001 BTC
-        Coin btcForOmni = (requestedOmni.willetts / 100).setScale(0, RoundingMode.UP).satoshi
-        OmniDivisibleValue actualOmni = OmniDivisibleValue.ofWilletts(btcForOmni.value * 100)
+        Coin btcForOmni = MoneyMan.requiredBitcoin(requestedOmni)
+        OmniDivisibleValue actualOmni = MoneyMan.toOmni(btcForOmni) // Because of rounding we might get extra Omni
 
         if (!allowIntermediate) {
             assert actualOmni == requestedOmni
