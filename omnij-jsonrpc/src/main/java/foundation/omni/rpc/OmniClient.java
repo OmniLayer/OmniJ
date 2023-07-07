@@ -21,6 +21,8 @@ import org.consensusj.bitcoin.jsonrpc.RpcConfig;
 import org.consensusj.bitcoin.jsonrpc.bitcoind.BitcoinConfFile;
 import org.consensusj.bitcoin.rx.jsonrpc.RxBitcoinClient;
 import org.consensusj.jsonrpc.JsonRpcException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
@@ -44,6 +46,7 @@ import java.util.concurrent.CompletableFuture;
  * @see <a href="https://github.com/OmniLayer/omnicore/blob/master/src/omnicore/doc/rpc-api.md#json-rpc-api">Omni Core JSON RPC API documentation on GitHub</a>
  */
 public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSupport, OmniProxyMethods {
+    private static final Logger log = LoggerFactory.getLogger(OmniClient.class);
     private final boolean isOmniProxy;
 
     /**
