@@ -65,7 +65,8 @@ interface OmniTestSupport extends OmniTestClientAccessor, FundingSourceAccessor,
         fundingSource().requestBitcoin(toAddress, btcForOmni + client().stdTxFee)
         def txid = client().sendBitcoin(toAddress, client().omniNetParams.moneyManAddress, btcForOmni)
 
-        if (actualOmni.willetts != requestedOmni.willetts) {
+        if (actualOmni != requestedOmni) {
+            log.warn("requestedOmni is not a multiple of 100 willetts, excess OMNI/TOMNI will be sent to a random address")
             def excessiveOmni = actualOmni - requestedOmni
 
             // TODO: avoid magic numbers for dust calculation
@@ -114,12 +115,18 @@ interface OmniTestSupport extends OmniTestClientAccessor, FundingSourceAccessor,
             client().generateBlocks(1)
         }
 
-        // TODO: maybe add assertions to check correct funding amounts?
+        def balanceBtc = client().getBitcoinBalance(fundedAddress)
+        def balanceOmni =  client().omniGetBalance(fundedAddress, CurrencyID.OMNI)
+        def balanceTOmni =  client().omniGetBalance(fundedAddress, CurrencyID.TOMNI)
+        log.info "fundedAddress {} has {} BTC, {} OMNI, {} TOMNI", fundedAddress, balanceBtc.toFriendlyString(), balanceOmni.balance, balanceTOmni.balance
+
         Boolean check = true
         if (check && confirmTransactions) {
-            assert client().getBitcoinBalance(fundedAddress).value >= requestedBTC.value
-            assert client().omniGetBalance(fundedAddress, CurrencyID.OMNI).balance >= requestedOmni.numberValue()
-            log.debug "balances verified, fundedAddress has {} and {} Omni", requestedBTC.toFriendlyString(), requestedOmni
+            // TODO: maybe change assertions to check exact funding amounts?
+            assert balanceBtc >= requestedBTC
+            assert balanceOmni.balance >= requestedOmni
+            assert balanceTOmni.balance >= requestedOmni
+            log.debug "balances verified"
         }
 
         return fundedAddress
