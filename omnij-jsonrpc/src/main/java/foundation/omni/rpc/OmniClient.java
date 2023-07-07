@@ -206,7 +206,9 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public BalanceEntry omniGetBalance(Address address, CurrencyID currency)
             throws JsonRpcException, IOException {
-        return send("omni_getbalance", BalanceEntry.class, address, currency.getValue());
+        var result = send("omni_getbalance", BalanceEntry.class, address, currency.getValue());
+        log.info("omni_getbalance result for {}, {}: {}", address, currency, result);
+        return result;
     }
 
     /**
