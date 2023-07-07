@@ -1,6 +1,6 @@
 package foundation.omni;
 
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 /**
  * A record-like container for an amount and a destination address. Intended for {@code omni_sendmany}.

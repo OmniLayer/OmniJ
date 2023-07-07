@@ -1,7 +1,7 @@
 package foundation.omni.netapi.omniwallet.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 /**
  * Jackson POJO wrapper for raw Omniwallet response

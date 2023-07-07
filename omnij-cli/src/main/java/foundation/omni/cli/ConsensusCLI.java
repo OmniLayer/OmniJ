@@ -109,7 +109,7 @@ public class ConsensusCLI extends BitcoinCLITool {
         tool1 = new OmniCoreConsensusTool((OmniClient) call.rpcClient());
         if (line.hasOption("omnicore-url")) {
             uri2 = URI.create(line.getOptionValue("omnicore-url"));
-            tool2 = new OmniCoreConsensusTool(call.getRPCConfig().getNetParams(), uri2);
+            tool2 = new OmniCoreConsensusTool(call.getRPCConfig().network(), uri2);
         } else if (line.hasOption("omniwallet-url")) {
             uri2 = URI.create(line.getOptionValue("omniwallet-url"));
             tool2 = new OmniwalletConsensusTool(uri2);

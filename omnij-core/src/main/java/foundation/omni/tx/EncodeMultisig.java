@@ -1,7 +1,8 @@
 package foundation.omni.tx;
 
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.ECKey;
+import org.bitcoinj.base.Coin;
+import org.bitcoinj.base.Network;
+import org.bitcoinj.crypto.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionOutput;
@@ -22,14 +23,14 @@ public class EncodeMultisig {
     private static final int maxKeys = 3;  /* Redeemable key + 2 data keys */
     private static final int maxDataKeys = maxKeys - 1;
 
-    private final NetworkParameters netParams;
+    private final Network network;
 
     /**
      * Construct an encoder for a network
-     * @param netParams network to encode for
+     * @param network network to encode for
      */
-    public EncodeMultisig(NetworkParameters netParams) {
-        this.netParams = netParams;
+    public EncodeMultisig(Network network) {
+        this.network = network;
     }
 
     /**
@@ -44,7 +45,7 @@ public class EncodeMultisig {
         int numGroups = (dataAsKeys.size() + (maxDataKeys - 1)) / (maxDataKeys);
 
         // Create groups of keys, one group per multisig output
-        List<List <ECKey>> keysByOutput = new ArrayList<List <ECKey>>();
+        List<List <ECKey>> keysByOutput = new ArrayList<>();
         for (int n = 0 ; n < numGroups ; n++) {
             int groupSize = Math.min(numGroups - n, maxDataKeys);
             int from = n * (maxDataKeys);
@@ -53,20 +54,34 @@ public class EncodeMultisig {
             keysByOutput.add(group);
         }
 
-        Transaction txClassB = new Transaction(netParams);
+        Transaction txClassB = new Transaction(NetworkParameters.of(network));
 
         for (List<ECKey> group : keysByOutput) {
             // Add the redeemable key to the front of each group list
-            List<ECKey> redeemableGroup = new ArrayList<ECKey>();
+            List<ECKey> redeemableGroup = new ArrayList<>();
             redeemableGroup.add(redeemingKey);
             redeemableGroup.addAll(group);
             Script script = ScriptBuilder.createMultiSigOutputScript(1, redeemableGroup); // 1 of redeemableGroup.size() multisig
-            TransactionOutput output = new TransactionOutput(netParams, null, Coin.ZERO, script.getProgram());
-            output.setValue(output.getMinNonDustValue());
+            TransactionOutput output = new TransactionOutput(NetworkParameters.of(network), null, Coin.ZERO, script.getProgram());
+            output.setValue(calcNonDustValue(output));
             txClassB.addOutput(output);
         }
 
         return txClassB;
+    }
+
+    // Calculate the non-dust output value for a Class B multi-sig output
+    private Coin calcNonDustValue(TransactionOutput output) {
+        boolean useWorkaround = true;
+        if (useWorkaround) {
+            // This is a workaround until https://github.com/bitcoinj/bitcoinj/pull/3120 is merged and
+            // a new bitcoinj 0.17-xxx is released.
+            Coin feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE.multiply(3);
+            long size = output.bitcoinSerialize().length + 32 + 4 + 1 + 107 + 4; // 148
+            return feePerKb.multiply(size).divide(1000);
+        } else {
+            return output.getMinNonDustValue();
+        }
     }
 
     /**

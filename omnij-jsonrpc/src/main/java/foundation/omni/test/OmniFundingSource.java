@@ -2,8 +2,8 @@ package foundation.omni.test;
 
 import org.consensusj.bitcoin.jsonrpc.test.FundingSource;
 import foundation.omni.OmniDivisibleValue;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.Coin;
 
 /**
  *

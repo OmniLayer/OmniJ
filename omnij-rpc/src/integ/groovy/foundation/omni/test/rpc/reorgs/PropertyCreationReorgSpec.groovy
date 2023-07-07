@@ -4,7 +4,7 @@ import org.consensusj.jsonrpc.JsonRpcStatusException
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.json.pojo.SmartPropertyListInfo
-import org.bitcoinj.core.Coin
+import org.bitcoinj.base.Coin
 import spock.lang.Shared
 import spock.lang.Unroll
 

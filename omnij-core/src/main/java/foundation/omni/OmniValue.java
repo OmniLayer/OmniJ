@@ -1,6 +1,6 @@
 package foundation.omni;
 
-import org.bitcoinj.core.Coin;
+import org.bitcoinj.base.Coin;
 
 import javax.money.NumberValue;
 import java.math.BigDecimal;

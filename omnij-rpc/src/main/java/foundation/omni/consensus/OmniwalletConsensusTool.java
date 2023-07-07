@@ -1,7 +1,7 @@
 package foundation.omni.consensus;
 
 import foundation.omni.rest.omniwallet.mjdk.OmniwalletModernJDKClient;
-import org.bitcoinj.params.MainNetParams;
+import org.bitcoinj.base.BitcoinNetwork;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
 import java.io.IOException;
@@ -13,16 +13,17 @@ import java.util.concurrent.ExecutionException;
  */
 public class OmniwalletConsensusTool extends OmniwalletModernJDKClient implements ConsensusTool {
     public OmniwalletConsensusTool() {
-        super(omniExplorerApiBase, true, true, MainNetParams.get());
+        super(omniExplorerApiBase, true, true, BitcoinNetwork.MAINNET);
     }
 
     public OmniwalletConsensusTool(URI hostURI) {
-        super(hostURI, true, true, MainNetParams.get());
+        super(hostURI, true, true, BitcoinNetwork.MAINNET);
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        OmniwalletConsensusTool tool = new OmniwalletConsensusTool();
-        tool.run(DefaultGroovyMethods.toList(args));
+        try (OmniwalletConsensusTool tool = new OmniwalletConsensusTool()) {
+            tool.run(DefaultGroovyMethods.toList(args));
+        }
     }
 
 }

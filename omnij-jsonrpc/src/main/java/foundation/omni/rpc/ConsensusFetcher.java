@@ -4,7 +4,7 @@ import foundation.omni.BalanceEntry;
 import foundation.omni.CurrencyID;
 import foundation.omni.json.pojo.ConsensusSnapshot;
 import foundation.omni.json.pojo.OmniPropertyInfo;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 import java.util.List;
 import java.util.SortedMap;

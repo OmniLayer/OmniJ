@@ -4,6 +4,8 @@ import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniValue;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
+import org.bitcoinj.base.BitcoinNetwork;
+import org.bitcoinj.base.Network;
 import org.consensusj.analytics.service.RichListService;
 import org.consensusj.analytics.service.TokenRichList;
 import org.consensusj.bitcoin.json.pojo.AddressGroupingItem;
@@ -19,7 +21,7 @@ import foundation.omni.netapi.ConsensusService;
 import foundation.omni.json.pojo.OmniJBalances;
 import foundation.omni.json.pojo.WalletAddressBalance;
 import foundation.omni.BalanceEntry;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 import org.bitcoinj.core.NetworkParameters;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -54,18 +56,33 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
         this.client = client;
     }
 
+    public OmniCoreClient(SSLSocketFactory sslSocketFactory, Network network, URI coreURI, String user, String pass, boolean useZmq, boolean isOmniProxy) {
+        client = new OmniClient(sslSocketFactory, network, coreURI, user, pass, useZmq, isOmniProxy);
+    }
+
+    @Deprecated
     public OmniCoreClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI coreURI, String user, String pass, boolean useZmq, boolean isOmniProxy) {
-        client = new OmniClient(sslSocketFactory, netParams, coreURI, user, pass, useZmq, isOmniProxy);
+        this(sslSocketFactory, netParams.network(), coreURI, user, pass, useZmq, isOmniProxy);
     }
 
+    @Deprecated
     public OmniCoreClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI coreURI, String user, String pass) {
-        this(sslSocketFactory, netParams, coreURI, user, pass, false, false);
+        this(sslSocketFactory, netParams.network(), coreURI, user, pass, false, false);
     }
 
+    @Deprecated
     public OmniCoreClient(NetworkParameters netParams, URI coreURI, String user, String pass) {
-        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams, coreURI, user, pass);
+        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams.network(), coreURI, user, pass);
     }
-    
+
+    public OmniCoreClient(SSLSocketFactory sslSocketFactory, Network network, URI coreURI, String user, String pass) {
+        this(sslSocketFactory, network, coreURI, user, pass, false, false);
+    }
+
+    public OmniCoreClient(Network network, URI coreURI, String user, String pass) {
+        this((SSLSocketFactory)SSLSocketFactory.getDefault(), network, coreURI, user, pass);
+    }
+
     @Override
     public CompletableFuture<Integer> currentBlockHeightAsync() {
         return client.supplyAsync(client::getBlockCount);
@@ -286,9 +303,9 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
                 .thenApply(list -> {
                     // Convert SmartPropertyListInfo to OmniPropertyInfo (with "mock" data for some fields)
                     Stream<OmniPropertyInfo> stream = list.stream()
-                            .map(spl -> new OmniPropertyInfo(client.getNetParams(), spl));
+                            .map(spl -> new OmniPropertyInfo((BitcoinNetwork) client.getNetwork(), spl));
                     // Prepend a "mock" Bitcoin entry
-                    return streamPrepend(OmniPropertyInfo.mockBitcoinPropertyInfo(client.getNetParams()), stream)
+                    return streamPrepend(OmniPropertyInfo.mockBitcoinPropertyInfo((BitcoinNetwork) client.getNetwork()), stream)
                             .collect(Collectors.toList());
                 });
     }

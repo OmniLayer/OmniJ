@@ -5,11 +5,13 @@ import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniValue
 import foundation.omni.rpc.OmniClient
 import foundation.omni.txrecords.UnsignedTxSimpleSend
-import org.bitcoinj.core.Address
+import org.bitcoinj.base.Address
+import org.bitcoinj.base.BitcoinNetwork
+import org.bitcoinj.base.Network
+import org.bitcoinj.base.ScriptType
 import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.TransactionInput
-import org.bitcoinj.params.TestNet3Params
 import org.bitcoinj.script.Script
 import org.bitcoinj.script.ScriptBuilder
 import org.bitcoinj.wallet.DeterministicSeed
@@ -20,6 +22,7 @@ import org.consensusj.bitcoinj.wallet.BipStandardDeterministicKeyChain
 import spock.lang.Ignore
 import spock.lang.Specification
 
+import java.nio.ByteBuffer
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -28,7 +31,7 @@ import java.time.ZoneOffset
  * Functional test of Signing Service that uses SendService to fetch inputs
  */
 @Ignore("Functional test requires a server")
-class OmniSigningServiceSpec extends Specification {
+class OmniKeychainSigningServiceSpec extends Specification {
     static final String mnemonicString = "panda diary marriage suffer basic glare surge auto scissors describe sell unique";
     static final Instant creationInstant = LocalDate.of(2019, 4, 10).atStartOfDay().toInstant(ZoneOffset.UTC)
     static final Address fromAddress = Address.fromString(null, "mq9GZtX1fq2DnerX2Cd8HSAQAVVMmPCVu1")
@@ -39,18 +42,18 @@ class OmniSigningServiceSpec extends Specification {
 
     def "basic test"() {
         given: "Setup similar to that in SendTool"
-        NetworkParameters netParams = TestNet3Params.get()
-        int signingAccountIndex = 0
-        Script.ScriptType outputScriptType = Script.ScriptType.P2PKH
+        Network network = BitcoinNetwork.TESTNET
+        NetworkParameters netParams = NetworkParameters.of(network)
+        ScriptType outputScriptType = ScriptType.P2PKH
         DeterministicSeed seed = setupTestSeed()
 
-        BipStandardDeterministicKeyChain signingKeychain = new BipStandardDeterministicKeyChain(seed, outputScriptType, netParams, signingAccountIndex);
+        BipStandardDeterministicKeyChain signingKeychain = new BipStandardDeterministicKeyChain(seed, outputScriptType, network);
         // We need to create some leaf keys in the HD keychain so that they can be found for verifying transactions
         signingKeychain.getKeys(KeyChain.KeyPurpose.RECEIVE_FUNDS, 20)  // Generate first 2 receiving address
         signingKeychain.getKeys(KeyChain.KeyPurpose.CHANGE, 20)         // Generate first 2 change address
 
         URI omniProxyTestNetURI = omniProxyUri
-        RpcConfig config = new RpcConfig(netParams, omniProxyTestNetURI, "bitcoinrpc", "pass");
+        RpcConfig config = new RpcConfig(network, omniProxyTestNetURI, "bitcoinrpc", "pass");
         var omniProxyClient = new OmniClient(config.getNetParams(),
                 config.getURI(),
                 config.getUsername(),
@@ -59,7 +62,7 @@ class OmniSigningServiceSpec extends Specification {
                 false);
 
 
-        OmniKeychainSigningService signService = new OmniKeychainSigningService(netParams, signingKeychain)
+        OmniKeychainSigningService signService = new OmniKeychainSigningService(network, signingKeychain)
         OmniKeychainSendingService sendService = new OmniKeychainSendingService(omniProxyClient, signService)
 
         when: "We assemble the unsigned transaction"
@@ -75,9 +78,9 @@ class OmniSigningServiceSpec extends Specification {
         input.getScriptSig()
                 .correctlySpends(tx, 0, null, input.getValue(), scriptPubKey, Script.ALL_VERIFY_FLAGS);
 
-        byte[] serializedTx = tx.bitcoinSerialize()
+        var serializedTx = ByteBuffer.wrap(tx.bitcoinSerialize())
 
-        Transaction deserializedTx = new Transaction(rxOmniClient.getNetParams(), serializedTx)
+        Transaction deserializedTx = new Transaction(netParams, serializedTx)
 
         then: "No exception was thrown and deserializedTx is not null"
         deserializedTx != null
@@ -85,7 +88,7 @@ class OmniSigningServiceSpec extends Specification {
 
     DeterministicSeed setupTestSeed() {
         try {
-            return new DeterministicSeed(mnemonicString, null, "", creationInstant.getEpochSecond())
+            return DeterministicSeed.ofMnemonic(mnemonicString, "", creationInstant)
         } catch (UnreadableWalletException e) {
             throw new RuntimeException(e)
         }

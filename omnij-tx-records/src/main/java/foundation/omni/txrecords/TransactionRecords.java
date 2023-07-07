@@ -5,8 +5,8 @@ import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniValue;
 import foundation.omni.tx.PayloadBuilder;
 import foundation.omni.tx.PayloadParser;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.Coin;
 
 import static foundation.omni.tx.Transactions.TransactionType;
 import static foundation.omni.tx.Transactions.TransactionType.METADEX_TRADE;

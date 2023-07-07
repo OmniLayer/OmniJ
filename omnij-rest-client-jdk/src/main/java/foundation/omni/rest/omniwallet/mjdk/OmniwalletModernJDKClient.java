@@ -10,7 +10,8 @@ import foundation.omni.netapi.omniwallet.json.OmniwalletAddressBalance;
 import foundation.omni.netapi.omniwallet.json.OmniwalletClientModule;
 import foundation.omni.netapi.omniwallet.json.OmniwalletPropertiesListResponse;
 import foundation.omni.netapi.omniwallet.json.RevisionInfo;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.Network;
 import org.bitcoinj.core.NetworkParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,24 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
     private final JsonMapper objectMapper = new JsonMapper();
 
     public OmniwalletModernJDKClient(URI baseURI) {
-        this(baseURI, true, false, null);
+        this(baseURI, true, false, (Network) null);
+    }
+
+    /**
+     *
+     * @param baseURI Base URL of server
+     * @param debug Enable debugging, logging, etc.
+     * @param strictMode Only accept valid amounts from server
+     * @param network Specify active Bitcoin network (used for Address validation)
+     */
+    public OmniwalletModernJDKClient(URI baseURI, boolean debug, boolean strictMode, Network network) {
+        super(baseURI, true, false, network);
+        log.info("OmniwalletModernJDKClient opened for: {}", baseURI);
+        this.client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMinutes(2))
+                .build();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.registerModule(new OmniwalletClientModule(network));
     }
 
     /**
@@ -50,14 +68,9 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
      * @param strictMode Only accept valid amounts from server
      * @param netParams Specify active Bitcoin network (used for Address validation)
      */
+    @Deprecated
     public OmniwalletModernJDKClient(URI baseURI, boolean debug, boolean strictMode, NetworkParameters netParams) {
-        super(baseURI, true, false, netParams);
-        log.info("OmniwalletModernJDKClient opened for: {}", baseURI);
-        this.client = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofMinutes(2))
-                .build();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.registerModule(new OmniwalletClientModule(netParams));
+        this(baseURI, debug, strictMode, netParams.network());
     }
 
     @Override

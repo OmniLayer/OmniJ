@@ -2,11 +2,11 @@ package foundation.omni.test.rpc.smartproperty
 
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniIndivisibleValue
-import org.bitcoinj.core.Address
+import org.bitcoinj.base.Address
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import org.bitcoinj.core.Coin
+import org.bitcoinj.base.Coin
 import spock.lang.Shared
 
 /*

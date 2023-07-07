@@ -2,7 +2,7 @@ package foundation.omni.txrecords;
 
 import foundation.omni.tx.PayloadParser;
 import foundation.omni.tx.Transactions;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 /**
  *

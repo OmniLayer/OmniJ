@@ -1,6 +1,5 @@
 package foundation.omni.cli;
 
-import foundation.omni.netapi.omnicore.RxOmniClient;
 import org.consensusj.bitcoin.jsonrpc.RpcConfig;
 import foundation.omni.rpc.OmniClient;
 import org.consensusj.bitcoin.cli.BitcoinCLITool;
@@ -23,6 +22,6 @@ public class OmniCoreCLICall extends BitcoinCLITool.BitcoinCLICall {
 
     @Override
     public OmniClient createClient(SSLSocketFactory sslSocketFactory, RpcConfig config) {
-        return new OmniClient(sslSocketFactory, config.getNetParams(), config.getURI(), config.getUsername(), config.getPassword(), false, false);
+        return new OmniClient(sslSocketFactory, config.network(), config.getURI(), config.getUsername(), config.getPassword(), false, false);
     }
 }

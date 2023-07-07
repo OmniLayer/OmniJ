@@ -2,13 +2,16 @@ package foundation.omni.netapi.omniwallet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.AddressParser;
+import org.bitcoinj.base.DefaultAddressParser;
+import org.bitcoinj.base.exceptions.AddressFormatException;
 
 /**
  * For mapping to/from Omniwallet backup json files
  */
 public class WalletBackupEntry {
+    private static final AddressParser parser = new DefaultAddressParser();
     private final String address;
     private final String privkey;
     private final String pubkey;
@@ -33,7 +36,7 @@ public class WalletBackupEntry {
     @JsonIgnore
     public Address getAddressObject() {
         try {
-            return Address.fromString(null, address);
+            return parser.parseAddressAnyNetwork(address);
         } catch (AddressFormatException e) {
             throw new RuntimeException("Bitcoin AddressFormatException");
         }

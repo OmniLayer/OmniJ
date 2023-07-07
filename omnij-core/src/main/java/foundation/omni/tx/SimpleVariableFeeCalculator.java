@@ -1,6 +1,6 @@
 package foundation.omni.tx;
 
-import org.bitcoinj.core.Coin;
+import org.bitcoinj.base.Coin;
 import org.bitcoinj.core.Transaction;
 
 /**

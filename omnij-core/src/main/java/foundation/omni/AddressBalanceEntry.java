@@ -1,6 +1,6 @@
 package foundation.omni;
 
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 /**
  *  Balance entry for an Address

@@ -1,8 +1,9 @@
 package foundation.omni.tx
 
-import org.bitcoinj.core.ECKey
+import org.bitcoinj.base.BitcoinNetwork
+import org.bitcoinj.crypto.ECKey
 import org.bitcoinj.core.Transaction
-import org.bitcoinj.params.RegTestParams
+import spock.lang.Ignore
 import spock.lang.Shared
 
 /**
@@ -40,7 +41,7 @@ class EncodeMultisigSpec extends BaseTxSpec {
 
     def "encode" () {
         given:
-        EncodeMultisig encoder = new EncodeMultisig(RegTestParams.get())
+        EncodeMultisig encoder = new EncodeMultisig(BitcoinNetwork.REGTEST)
 
         when:
         Transaction tx = encoder.encodeObfuscated(senderPubKey, payload, sendingAddr);

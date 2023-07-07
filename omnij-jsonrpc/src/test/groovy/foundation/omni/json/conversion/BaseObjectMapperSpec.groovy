@@ -3,7 +3,7 @@ package foundation.omni.json.conversion
 import com.fasterxml.jackson.core.Version
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
-import org.bitcoinj.core.Coin
+import org.bitcoinj.base.Coin
 import spock.lang.Shared
 import spock.lang.Specification
 

@@ -3,10 +3,10 @@ package foundation.omni.consensus
 import foundation.omni.CurrencyID
 import foundation.omni.BalanceEntry
 import foundation.omni.json.pojo.ConsensusSnapshot
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.ECKey
-import org.bitcoinj.core.LegacyAddress
-import org.bitcoinj.params.MainNetParams
+import org.bitcoinj.base.Address
+import org.bitcoinj.base.BitcoinNetwork
+import org.bitcoinj.base.ScriptType
+import org.bitcoinj.crypto.ECKey
 
 /**
  * ConsensusSnapshot test data
@@ -15,9 +15,9 @@ class SnapshotData {
 
     static String TestDataConsensusSource = "TEST DATA";
 
-    static Address a = LegacyAddress.fromKey(MainNetParams.get(), new ECKey())
-    static Address b = LegacyAddress.fromKey(MainNetParams.get(), new ECKey())
-    static Address c = LegacyAddress.fromKey(MainNetParams.get(), new ECKey())
+    static Address a = new ECKey().toAddress(ScriptType.P2PKH, BitcoinNetwork.MAINNET)
+    static Address b = new ECKey().toAddress(ScriptType.P2PKH, BitcoinNetwork.MAINNET)
+    static Address c = new ECKey().toAddress(ScriptType.P2PKH, BitcoinNetwork.MAINNET)
 
     static TreeMap<Address, BalanceEntry> empty = new TreeMap([:])
     static TreeMap<Address, BalanceEntry> small1 = new TreeMap([(a): new BalanceEntry(0.divisible, 0.divisible, 0.divisible),

@@ -2,7 +2,7 @@ package foundation.omni.consensus;
 
 import foundation.omni.net.OmniMainNetParams;
 import foundation.omni.json.pojo.ConsensusSnapshot;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 import java.util.HashSet;
 import java.util.Iterator;

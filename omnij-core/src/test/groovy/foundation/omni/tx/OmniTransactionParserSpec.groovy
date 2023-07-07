@@ -1,6 +1,9 @@
 package foundation.omni.tx
 
+import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Transaction
+
+import java.nio.ByteBuffer
 
 /**
  *
@@ -16,7 +19,7 @@ class OmniTransactionParserSpec extends BaseTxSpec {
     static final byte[] rawTx = hex(rawTxString)
     static final byte[] txHash = hex(rawTxHashString)
     static final byte[] omniPayload = hex(omniPayloadString)
-    static final Transaction tx = new Transaction(netParams, rawTx)
+    static final Transaction tx = new Transaction(NetworkParameters.of(network), ByteBuffer.wrap(rawTx))
 
     def "Make sure tx string hashes to hash string"() {
         expect:

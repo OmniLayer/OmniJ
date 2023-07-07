@@ -1,7 +1,7 @@
 package foundation.omni.test.rpc.bitcore
 
-import org.bitcoinj.core.Coin
-import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.base.Coin
+import org.bitcoinj.base.Sha256Hash
 import org.consensusj.bitcoin.json.pojo.bitcore.AddressBalanceInfo
 import foundation.omni.BaseRegTestSpec
 import spock.lang.Requires

@@ -4,7 +4,7 @@ import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
 import foundation.omni.OmniValue
 import foundation.omni.PropertyType
-import org.bitcoinj.core.Coin
+import org.bitcoinj.base.Coin
 
 class SendToOwnersReorgSpec extends BaseReorgSpec {
 

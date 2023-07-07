@@ -3,8 +3,8 @@ package foundation.omni.rest.omniwallet
 import foundation.omni.net.OmniMainNetParams
 import foundation.omni.netapi.omniwallet.json.OmniwalletAddressBalance
 import okhttp3.HttpUrl
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.LegacyAddress
+import org.bitcoinj.base.Address
+import org.bitcoinj.base.LegacyAddress
 import retrofit2.Response
 import spock.lang.Ignore
 import spock.lang.Shared

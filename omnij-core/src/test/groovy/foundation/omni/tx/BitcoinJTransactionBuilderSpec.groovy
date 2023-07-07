@@ -1,12 +1,13 @@
 package foundation.omni.tx
 
 import foundation.omni.OmniDivisibleValue
-import org.bitcoinj.core.Coin
-import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.base.BitcoinNetwork
+import org.bitcoinj.base.Coin
+import org.bitcoinj.base.Sha256Hash
+import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.TransactionInput
 import org.bitcoinj.core.TransactionOutPoint
-import org.bitcoinj.params.RegTestParams
 import org.bitcoinj.script.Script
 import org.bitcoinj.script.ScriptBuilder
 
@@ -24,10 +25,9 @@ class BitcoinJTransactionBuilderSpec extends BaseTxSpec {
     static final RawTxBuilder builder = new RawTxBuilder()
 
 
-
-    def "Build a transaction using EncodeMultisig.encodeObfuscated and BitcoinJ"() {
+    def "Build a transaction using EncodeMultisig.encodeObfuscated and bitcoinj"() {
         given:
-        EncodeMultisig encoder = new EncodeMultisig(RegTestParams.get())
+        EncodeMultisig encoder = new EncodeMultisig(BitcoinNetwork.REGTEST)
 
         when:
         def toAddress = senderAddr
@@ -36,9 +36,9 @@ class BitcoinJTransactionBuilderSpec extends BaseTxSpec {
         tx.addOutput(Coin.MILLICOIN, omniParams.exodusAddress)
         tx.addOutput(Coin.CENT, toAddress)
         Script script = ScriptBuilder.createInputScript(null)
-        def outPoint = new TransactionOutPoint(netParams, 1, Sha256Hash.of("boppitybop".getBytes()))
+        def outPoint = new TransactionOutPoint(NetworkParameters.of(network), 1, Sha256Hash.of("boppitybop".getBytes()))
 
-        TransactionInput input = new TransactionInput(netParams, null, script.program, outPoint, null)
+        TransactionInput input = new TransactionInput(NetworkParameters.of(network), null, script.program, outPoint, null)
         tx.addInput(input)
         byte[] rawTx = tx.bitcoinSerialize()
 

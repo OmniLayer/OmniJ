@@ -2,7 +2,7 @@ package foundation.omni.consensus;
 
 import foundation.omni.BalanceEntry;
 import foundation.omni.json.pojo.ConsensusSnapshot;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 import java.io.File;
 import java.io.FileNotFoundException;

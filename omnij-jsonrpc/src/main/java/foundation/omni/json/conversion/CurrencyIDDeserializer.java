@@ -6,8 +6,8 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import foundation.omni.CurrencyID;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.base.Coin;
+import org.bitcoinj.base.Sha256Hash;
 
 import java.io.IOException;
 

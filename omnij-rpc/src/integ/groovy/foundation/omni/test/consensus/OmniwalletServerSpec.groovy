@@ -5,7 +5,7 @@ import foundation.omni.Ecosystem
 import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
 import foundation.omni.rest.omniwallet.mjdk.OmniwalletModernJDKClient
 import foundation.omni.json.pojo.SmartPropertyListInfo
-import org.bitcoinj.params.MainNetParams
+import org.bitcoinj.base.BitcoinNetwork
 import spock.lang.Unroll
 
 import static foundation.omni.CurrencyID.*
@@ -133,6 +133,6 @@ class OmniwalletServerSpec extends Specification {
     }
 
     private static OmniwalletAbstractClient getOmniwalletClient() {
-        return new OmniwalletModernJDKClient(OmniwalletAbstractClient.omniExplorerApiBase, false, true, MainNetParams.get())
+        return new OmniwalletModernJDKClient(OmniwalletAbstractClient.omniExplorerApiBase, false, true, BitcoinNetwork.MAINNET)
     }
 }

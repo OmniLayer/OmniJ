@@ -1,43 +1,34 @@
 package foundation.omni.txsigner;
 
-import foundation.omni.txrecords.UnsignedTxSimpleSend;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.InsufficientMoneyException;
-import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.base.Network;
 import org.bitcoinj.core.Transaction;
-import org.consensusj.bitcoinj.signing.DefaultSigningRequest;
+import org.bitcoinj.wallet.DeterministicKeyChain;
 import org.consensusj.bitcoinj.signing.FeeCalculator;
 import org.consensusj.bitcoinj.signing.SigningRequest;
-import org.consensusj.bitcoinj.signing.SigningUtils;
 import org.consensusj.bitcoinj.signing.HDKeychainSigner;
-import org.consensusj.bitcoinj.signing.TransactionInputData;
 import org.consensusj.bitcoinj.wallet.BipStandardDeterministicKeyChain;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static foundation.omni.tx.Transactions.OmniTx;
-import static foundation.omni.tx.Transactions.OmniRefTx;
 
 /**
  * A service to sign Omni transactions
  */
 public class OmniKeychainSigningService implements OmniSigningService {
-    private final NetworkParameters netParams;
-    private final BipStandardDeterministicKeyChain keyChain;
+    private final Network network;
+    private final DeterministicKeyChain keyChain;
     private final HDKeychainSigner signingWalletKeyChain;
     private final FeeCalculator feeCalculator;
 
 
-    public OmniKeychainSigningService(NetworkParameters netParams, BipStandardDeterministicKeyChain deterministicKeyChain) {
-        this.netParams = netParams;
+    public OmniKeychainSigningService(Network network, DeterministicKeyChain deterministicKeyChain) {
+        this.network = network;
         this.keyChain = deterministicKeyChain;
         this.signingWalletKeyChain = new HDKeychainSigner(deterministicKeyChain);
         feeCalculator = new HackedFeeCalculator();
     }
 
-    /* package */ BipStandardDeterministicKeyChain getKeychain() {
+    /* package */ DeterministicKeyChain getKeychain() {
         return keyChain;
     }
 
@@ -69,8 +60,7 @@ public class OmniKeychainSigningService implements OmniSigningService {
         return feeCalculator;
     }
 
-    @Override
-    public NetworkParameters netParams() {
-        return netParams;
+    public Network network() {
+        return network;
     }
 }

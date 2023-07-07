@@ -2,7 +2,7 @@ package foundation.omni.netapi;
 
 import foundation.omni.json.pojo.OmniJBalances;
 import foundation.omni.json.pojo.WalletAddressBalance;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 import org.consensusj.bitcoin.json.pojo.ChainTip;
 
 import java.io.IOException;

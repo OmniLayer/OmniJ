@@ -1,7 +1,7 @@
 package foundation.omni.net;
 
 import foundation.omni.OmniDivisibleValue;
-import org.bitcoinj.core.Coin;
+import org.bitcoinj.base.Coin;
 
 /**
  * Definitions for MoneyMan address functionality on TestNet and RegTest

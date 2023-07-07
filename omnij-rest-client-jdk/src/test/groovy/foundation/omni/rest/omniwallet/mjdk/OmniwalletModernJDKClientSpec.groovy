@@ -12,10 +12,10 @@ import foundation.omni.netapi.omniwallet.json.RevisionInfo
 import foundation.omni.BalanceEntry
 import foundation.omni.json.pojo.SmartPropertyListInfo
 import io.reactivex.rxjava3.core.Flowable
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.LegacyAddress
-import org.bitcoinj.core.Sha256Hash
-import org.bitcoinj.params.MainNetParams
+import org.bitcoinj.base.Address
+import org.bitcoinj.base.BitcoinNetwork
+import org.bitcoinj.base.LegacyAddress
+import org.bitcoinj.base.Sha256Hash
 import org.consensusj.bitcoin.json.pojo.ChainTip
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
@@ -39,7 +39,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
     private static final Logger log = LoggerFactory.getLogger(OmniwalletModernJDKClientSpec.class);
 
     final static Address exodusAddress = OmniMainNetParams.get().exodusAddress;
-    final static Address testAddr = LegacyAddress.fromBase58(null, "19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu")
+    final static Address testAddr = LegacyAddress.fromBase58("19ZbcHED8F6u5Wr5gp97KMVNvKV8HUrmeu", BitcoinNetwork.MAINNET)
     final static int balanceQueryRateLimitDelay = 12_100; // milliseconds
 
     @Shared OmniwalletModernJDKClient client
@@ -93,7 +93,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
 
     def "load balances of address with single address"() {
         when:
-        WalletAddressBalance balances = client.balancesForAddress(testAddr)
+        WalletAddressBalance balances = client.balancesForAddressAsync(testAddr).join()
 
         then:
         balances != null
@@ -114,7 +114,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
 
     def "load balances of addresses with single address"() {
         when:
-        OmniJBalances balances = client.balancesForAddresses([testAddr])
+        OmniJBalances balances = client.balancesForAddressesAsync([testAddr]).join()
 
         then:
         balances != null
@@ -126,7 +126,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
 
     def "load balances of addresses with multiple addresses"() {
         when:
-        def balances = client.balancesForAddresses([testAddr, exodusAddress])
+        def balances = client.balancesForAddressesAsync([testAddr, exodusAddress]).join()
 
         then:
         balances != null
@@ -156,9 +156,8 @@ class OmniwalletModernJDKClientSpec extends Specification {
 
     def "load balances of addresses with multiple addresses - in single request"() {
         when:
-        // Note: This call is a direct test of the private Retrofit `service` object
         def balances = (false)
-                ? client.service.balancesForAddresses([testAddr, exodusAddress]).get().body()
+                ? client.balancesForAddressesAsync([testAddr, exodusAddress]).join()
                 : 'dummy'
 
         then:
@@ -405,7 +404,7 @@ class OmniwalletModernJDKClientSpec extends Specification {
     def setup() {
         URI baseURL = OmniwalletAbstractClient.omniExplorerApiBase
         boolean debug = true
-        client = new OmniwalletModernJDKClient(baseURL, debug, false, MainNetParams.get())
+        client = new OmniwalletModernJDKClient(baseURL, debug, false, BitcoinNetwork.MAINNET)
         client.start()
     }
 

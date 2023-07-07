@@ -6,9 +6,9 @@ import foundation.omni.Ecosystem
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniValue
 import foundation.omni.PropertyType
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.Coin
-import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.base.Address
+import org.bitcoinj.base.Coin
+import org.bitcoinj.base.Sha256Hash
 import foundation.omni.CurrencyID
 import org.consensusj.bitcoin.jsonrpc.test.FundingSourceAccessor
 import org.slf4j.Logger

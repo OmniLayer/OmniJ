@@ -3,10 +3,11 @@ package foundation.omni.sendtool;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniDivisibleValue;
 import foundation.omni.txsigner.OmniRpcClientSendingService;
-import foundation.omni.txsigner.OmniSendingService;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.params.TestNet3Params;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.AddressParser;
+import org.bitcoinj.base.BitcoinNetwork;
+import org.bitcoinj.base.DefaultAddressParser;
+import org.bitcoinj.base.Sha256Hash;
 import org.consensusj.bitcoin.jsonrpc.BitcoinClient;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
  * balances before signing or sending, so a transaction may be built for which there are insufficient funds.
  */
 public class OmniLiteSend {
+    private static final AddressParser addressParser = new DefaultAddressParser();
     private final OmniRpcClientSendingService omniSendingService;
 
     public static void main(String[] args) throws IOException {
@@ -27,7 +29,7 @@ public class OmniLiteSend {
             arg0 = "mq9GZtX1fq2DnerX2Cd8HSAQAVVMmPCVu1";    // Source Address  muuZ2RXkePUsx9Y6cWt3TCSbQyetD6nKak
             arg1 = "muuZ2RXkePUsx9Y6cWt3TCSbQyetD6nKak";    // Dest Address (was 'mzFyqtcLU6Gkp9e4qqsGK7buiuH4HEcW1q')
             arg2 = "1";                                     // Currency ID
-            arg3 = "80112";                                // Amount in willetts
+            arg3 = "80119";                                // Amount in willetts
         } else {
             arg0 = args[0];
             arg1 = args[1];
@@ -36,8 +38,8 @@ public class OmniLiteSend {
         }
 
         // Parse Parameters
-        Address fromAddress = Address.fromString(null, arg0);
-        Address toAddress = Address.fromString(null, arg1);
+        Address fromAddress = addressParser.parseAddressAnyNetwork(arg0);
+        Address toAddress = addressParser.parseAddressAnyNetwork(arg1);
         CurrencyID id = CurrencyID.of(Long.parseLong(arg2));
         OmniDivisibleValue amount = OmniDivisibleValue.ofWilletts(Long.parseLong(arg3));
 
@@ -48,7 +50,7 @@ public class OmniLiteSend {
     }
 
     public OmniLiteSend() {
-        BitcoinClient rpcClient = new BitcoinClient(TestNet3Params.get(), URI.create("http://localhost:8080"), "", "");
+        BitcoinClient rpcClient = new BitcoinClient(BitcoinNetwork.TESTNET, URI.create("http://localhost:8080"), "", "");
         omniSendingService = new OmniRpcClientSendingService(rpcClient);
     }
 

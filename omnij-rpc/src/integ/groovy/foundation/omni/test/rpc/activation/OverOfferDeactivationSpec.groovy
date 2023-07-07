@@ -2,7 +2,7 @@ package foundation.omni.test.rpc.activation
 
 import foundation.omni.CurrencyID
 import foundation.omni.OmniDivisibleValue
-import org.bitcoinj.core.Coin
+import org.bitcoinj.base.Coin
 import spock.lang.Shared
 import spock.lang.Stepwise
 

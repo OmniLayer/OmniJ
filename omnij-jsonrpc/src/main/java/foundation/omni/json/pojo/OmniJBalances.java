@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
 import foundation.omni.PropertyType;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 import org.consensusj.bitcoin.json.conversion.AddressKeyDeserializer;
 
 import java.util.concurrent.ConcurrentHashMap;

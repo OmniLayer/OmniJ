@@ -12,10 +12,11 @@ import foundation.omni.json.pojo.OmniTransactionInfo;
 import foundation.omni.json.pojo.PropertyBalanceEntries;
 import foundation.omni.json.pojo.SmartPropertyListInfo;
 import foundation.omni.net.OmniNetworkParameters;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.Coin;
+import org.bitcoinj.base.Network;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.base.Sha256Hash;
 import org.consensusj.bitcoin.jsonrpc.RpcConfig;
 import org.consensusj.bitcoin.jsonrpc.bitcoind.BitcoinConfFile;
 import org.consensusj.bitcoin.rx.jsonrpc.RxBitcoinClient;
@@ -28,6 +29,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.concurrent.CompletableFuture;
 
@@ -52,35 +54,50 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     }
 
     public OmniClient(RpcConfig config) {
-        this(config.getNetParams(), config.getURI(), config.getUsername(), config.getPassword());
+        this(config.network(), config.getURI(), config.getUsername(), config.getPassword());
     }
 
-    public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq) {
-        this(sslSocketFactory, netParams, server, rpcuser, rpcpassword, useZmq, false);
+    public OmniClient(Network network, URI server, String rpcuser, String rpcpassword) {
+        this((SSLSocketFactory)SSLSocketFactory.getDefault(), network, server, rpcuser, rpcpassword, false, false);
     }
 
-    public OmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
-        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams, server, rpcuser, rpcpassword, useZmq, isOmniProxy);
+    public OmniClient(SSLSocketFactory sslSocketFactory, Network network, URI server, String rpcuser, String rpcpassword, boolean useZmq) {
+        this(sslSocketFactory, network, server, rpcuser, rpcpassword, useZmq, false);
     }
 
-    public OmniClient(SSLSocketFactory sslSocketFactory,  NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
-        super(sslSocketFactory, netParams, server, rpcuser, rpcpassword, useZmq);
+    public OmniClient(Network network, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
+        this((SSLSocketFactory)SSLSocketFactory.getDefault(), network, server, rpcuser, rpcpassword, useZmq, isOmniProxy);
+    }
+
+    public OmniClient(SSLSocketFactory sslSocketFactory, Network network, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
+        super(sslSocketFactory, network, server, rpcuser, rpcpassword, useZmq);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.registerModule(new OmniClientModule());
         mapper.registerModule(new ParameterNamesModule());
         this.isOmniProxy = isOmniProxy;
     }
 
-    public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
-        this(sslSocketFactory, netParams, server, rpcuser, rpcpassword, false);
+    /**
+     * @deprecated Use {@link OmniClient#OmniClient(SSLSocketFactory, Network, URI, String, String, boolean, boolean)}
+     */
+    @Deprecated
+    public OmniClient(SSLSocketFactory sslSocketFactory,  NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
+        this(sslSocketFactory, netParams.network(), server, rpcuser, rpcpassword, useZmq, isOmniProxy);
     }
 
+
+    @Deprecated
+    public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
+        this(sslSocketFactory, netParams.network(), server, rpcuser, rpcpassword, false);
+    }
+
+    @Deprecated
     public OmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
-        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams, server, rpcuser, rpcpassword);
+        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams.network(), server, rpcuser, rpcpassword, false);
     }
 
     public OmniNetworkParameters getOmniNetParams() {
-        return OmniNetworkParameters.fromBitcoinParms(getNetParams());
+        return OmniNetworkParameters.fromBitcoinNetwork(getNetwork());
     }
 
     /**
@@ -681,8 +698,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public Map<String, Object> omniGetSTO(Sha256Hash txid) throws JsonRpcException, IOException {
         String filter = "*"; // no filter at all
-        Map<String, Object> stoInfo = send("omni_getsto", txid, filter);
-        return stoInfo;
+        return send("omni_getsto", txid, filter);
     }
 
     /**
@@ -695,8 +711,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @since Omni Core 0.0.10
      */
     public OmniTradeInfo omniGetTrade(Sha256Hash txid) throws JsonRpcException, IOException {
-        OmniTradeInfo trade = send("omni_gettrade", OmniTradeInfo.class, txid);
-        return trade;
+        return send("omni_gettrade", OmniTradeInfo.class, txid);
     }
 
     public List<OmniTradeInfo> omniGetTradeHistoryForAddress(Address address, Integer count, CurrencyID propertyId) throws JsonRpcException, IOException {
@@ -714,8 +729,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @since Omni Core 0.0.10
      */
     public List<Map<String, Object>> omniGetOrderbook(CurrencyID propertyForSale) throws JsonRpcException, IOException {
-        List<Map<String, Object>> orders = send("omni_getorderbook", propertyForSale);
-        return orders;
+        return send("omni_getorderbook", propertyForSale);
     }
 
     /**
@@ -730,8 +744,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<Map<String, Object>> omniGetOrderbook(CurrencyID propertyForSale, CurrencyID propertyDesired)
             throws JsonRpcException, IOException {
-        List<Map<String, Object>> orders = send("omni_getorderbook", propertyForSale, propertyDesired);
-        return orders;
+        return send("omni_getorderbook", propertyForSale, propertyDesired);
     }
 
     /**
@@ -743,8 +756,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @throws IOException network error
      */
     public List<Map<String, Object>> omniGetGrants(CurrencyID propertyid) throws JsonRpcException, IOException {
-        List<Map<String, Object>> orders = send("omni_getgrants", propertyid);
-        return orders;
+        return send("omni_getgrants", propertyid);
     }
 
     /**
@@ -756,8 +768,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @since Omni Core 0.0.10
      */
     public Map<String, List<Map<String, Object>>> omniGetActivations() throws JsonRpcException, IOException {
-        Map<String, List<Map<String, Object>>> activations = send("omni_getactivations");
-        return activations;
+        return send("omni_getactivations");
     }
 
     /**
@@ -774,8 +785,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<Map<String, Object>> omniGetFeeCache(CurrencyID propertyid)
             throws JsonRpcException, IOException {
-        List<Map<String, Object>> cache = send("omni_getfeecache", propertyid);
-        return cache;
+        return send("omni_getfeecache", propertyid);
     }
 
     /**
@@ -792,8 +802,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<Map<String, Object>> omniGetFeeTrigger(CurrencyID propertyId)
             throws JsonRpcException, IOException {
-        List<Map<String, Object>> triggers = send("omni_getfeetrigger", propertyId);
-        return triggers;
+        return send("omni_getfeetrigger", propertyId);
     }
 
     /**
@@ -814,13 +823,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<Map<String, Object>> omniGetFeeShare(Address address, Ecosystem ecosystem)
             throws JsonRpcException, IOException {
-        List<Map<String, Object>> shares;
-        if (address == null) {
-            shares = send("omni_getfeeshare", "", ecosystem);
-        } else {
-            shares = send("omni_getfeeshare", address, ecosystem);
-        }
-        return shares;
+        return send("omni_getfeeshare", Objects.requireNonNullElse(address, ""), ecosystem);
     }
 
     /**
@@ -836,8 +839,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public Map<String, Object> omniGetFeeDistribution(Integer distributionId)
             throws JsonRpcException, IOException {
-        Map<String, Object> info = send("omni_getfeedistribution", distributionId);
-        return info;
+        return send("omni_getfeedistribution", distributionId);
     }
 
     /**
@@ -853,7 +855,6 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<Map<String, Object>> omniGetFeeDistributions(CurrencyID propertyId)
             throws JsonRpcException, IOException {
-        List<Map<String, Object>> infos = send("omni_getfeedistributions", propertyId);
-        return infos;
+        return send("omni_getfeedistributions", propertyId);
     }
 }

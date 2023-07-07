@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Stopwatch;
 import foundation.omni.netapi.omniwallet.json.AddressVerifyInfo;
 import foundation.omni.netapi.omniwallet.json.OmniwalletClientModule;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.BitcoinNetwork;
+import org.bitcoinj.base.LegacyAddress;
 import org.consensusj.analytics.util.collector.LargestSliceCollector;
 import org.consensusj.analytics.util.collector.LargestSliceList;
 import org.junit.jupiter.api.BeforeAll;
@@ -34,8 +36,8 @@ public class LargestSliceFromTetherBalanceFileTest {
     static final long richTotal = richTotalDecimal.movePointRight(8).longValueExact();
     static final long otherTotal = otherTotalDecimal.movePointRight(8).longValueExact();
     static final long grandTotal = grandTotalDecimal.movePointRight(8).longValueExact();
-    static final Address richAddress001 = Address.fromString(null, "18jm59kYYk7jJTkESn7SgVZPiGohkSUYpt");
-    static final Address richAddress100 = Address.fromString(null, "1NTMakcgVwQpMdGxRQnFKyb3G1FAJysSfz");
+    static final Address richAddress001 = LegacyAddress.fromBase58("18jm59kYYk7jJTkESn7SgVZPiGohkSUYpt", BitcoinNetwork.MAINNET);
+    static final Address richAddress100 = LegacyAddress.fromBase58("1NTMakcgVwQpMdGxRQnFKyb3G1FAJysSfz", BitcoinNetwork.MAINNET);
     static final long richBalance001 = 150000100000000L;
     static final long richBalance100 = 19141023930853148L;
     static final boolean verbose = true; // enable println output?

@@ -1,12 +1,10 @@
 package foundation.omni.address
 
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.ECKey
-import org.bitcoinj.core.NetworkParameters
-import org.bitcoinj.core.SegwitAddress
-import org.bitcoinj.params.MainNetParams
-import org.bitcoinj.params.Networks
-import org.bitcoinj.script.Script
+import foundation.omni.net.OmniNetwork
+import org.bitcoinj.base.BitcoinNetwork
+import org.bitcoinj.base.ScriptType
+import org.bitcoinj.crypto.ECKey
+import org.bitcoinj.base.SegwitAddress
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -14,8 +12,8 @@ import spock.lang.Unroll
  * Test conversion between BTC and Omni Segwit/Bech32 addresses
  */
 class OmniSegwitAddressConverterSpec extends Specification {
-    static final omniParams = OmniAddressMainNetParams.get()
-    static final btcParams = MainNetParams.get();
+    static final omniNetwork = OmniNetwork.MAINNET
+    static final btcNetwork = BitcoinNetwork.MAINNET
     static final bitFinexColdWalletAddress = "bc1qgdjqv0av3q56jvd82tkdjpy7gdp9ut8tlqmgrpmv24sq90ecnvqqjwvw97"
 
 
@@ -39,15 +37,14 @@ class OmniSegwitAddressConverterSpec extends Specification {
 
     def "2 way conversion works for a random address"() {
         given: "a random-generated Elliptic Curve private key and associated Bitcoin address"
-        def key = new ECKey()
-        def btcAddress = SegwitAddress.fromKey(btcParams, key)
+        def btcAddress = new ECKey().toAddress(ScriptType.P2WPKH, btcNetwork)
 
         when: "we convert to Omni"
         SegwitAddress omniAddress = OmniSegwitAddressConverter.btcToOmni(btcAddress)
 
         then: "it's a valid Omni address"
-        omniAddress.parameters == omniParams
-        omniAddress.getOutputScriptType() == Script.ScriptType.P2WPKH
+        omniAddress.network() == omniNetwork
+        omniAddress.getOutputScriptType() == ScriptType.P2WPKH
         omniAddress.toString().substring(0,2) == 'o1'
 
         when: "we convert back to Bitcoin"
@@ -55,22 +52,22 @@ class OmniSegwitAddressConverterSpec extends Specification {
 
         then: "it's the same, valid BTC address"
         backAgainBTCAddress == btcAddress
-        backAgainBTCAddress.parameters == btcParams
-        backAgainBTCAddress.getOutputScriptType() == Script.ScriptType.P2WPKH
+        backAgainBTCAddress.network() == btcNetwork
+        backAgainBTCAddress.getOutputScriptType() == ScriptType.P2WPKH
         backAgainBTCAddress.toString().substring(0,3) == 'bc1'
     }
 
     @Unroll
     def "2 way conversion works for Bitcoin address #addressString"(String addressString) {
         given: "a bitcoin address"
-        def btcAddress = Address.fromString(btcParams, addressString)
+        def btcAddress = SegwitAddress.fromBech32(addressString, btcNetwork)
 
         when: "we convert to Omni"
         def omniAddress = OmniSegwitAddressConverter.btcToOmni(btcAddress)
 
         then: "it's a valid Omni address"
-        omniAddress.parameters == omniParams
-        omniAddress.getOutputScriptType() == Script.ScriptType.P2WPKH || omniAddress.getOutputScriptType() == Script.ScriptType.P2WSH
+        omniAddress.network() == omniNetwork
+        omniAddress.getOutputScriptType() == ScriptType.P2WPKH || omniAddress.getOutputScriptType() == ScriptType.P2WSH
         omniAddress.toString().substring(0,2) == 'o1'
 
         when: "we convert back to Bitcoin"
@@ -78,8 +75,8 @@ class OmniSegwitAddressConverterSpec extends Specification {
 
         then: "it's the same, valid BTC address"
         backAgainBTCAddress == btcAddress
-        backAgainBTCAddress.parameters == btcParams
-        backAgainBTCAddress.getOutputScriptType() == Script.ScriptType.P2WPKH || backAgainBTCAddress.getOutputScriptType() == Script.ScriptType.P2WSH
+        backAgainBTCAddress.network() == btcNetwork
+        backAgainBTCAddress.getOutputScriptType() == ScriptType.P2WPKH || backAgainBTCAddress.getOutputScriptType() == ScriptType.P2WSH
 
         where:
         addressString << [bitFinexColdWalletAddress, "bc1q5shngj24323nsrmxv99st02na6srekfctt30ch", "bc1q2raxkmk55p000ggfa8euzs9fzq7p4cx4twycx7"]
@@ -88,14 +85,14 @@ class OmniSegwitAddressConverterSpec extends Specification {
     @Unroll
     def "2 way conversion works for Omni address #addressString"(String addressString) {
         given: "an Omni address"
-        def omniAddress = Address.fromString(omniParams, addressString)
+        def omniAddress = OmniNetwork.addressParser.parseAddress(addressString, OmniNetwork.MAINNET)
 
         when: "we convert to BTC"
         def btcAddress = OmniSegwitAddressConverter.omniToBtc(omniAddress)
 
         then: "it's a valid BTC address"
-        btcAddress.parameters == btcParams
-        btcAddress.getOutputScriptType() == Script.ScriptType.P2WPKH || btcAddress.getOutputScriptType() == Script.ScriptType.P2WSH
+        btcAddress.network() == btcNetwork
+        btcAddress.getOutputScriptType() == ScriptType.P2WPKH || btcAddress.getOutputScriptType() == ScriptType.P2WSH
         btcAddress.toString().substring(0,3) == 'bc1'
 
         when: "we convert back to Omni"
@@ -103,15 +100,15 @@ class OmniSegwitAddressConverterSpec extends Specification {
 
         then: "it's the same, valid Omni address"
         backAgainOmniAddress == omniAddress
-        backAgainOmniAddress.parameters == omniParams
-        backAgainOmniAddress.getOutputScriptType() == Script.ScriptType.P2WPKH || backAgainOmniAddress.getOutputScriptType() == Script.ScriptType.P2WSH
+        backAgainOmniAddress.network() == omniNetwork
+        backAgainOmniAddress.getOutputScriptType() == ScriptType.P2WPKH || backAgainOmniAddress.getOutputScriptType() == ScriptType.P2WSH
 
         where:
         addressString << ["o1qgdjqv0av3q56jvd82tkdjpy7gdp9ut8tlqmgrpmv24sq90ecnvqqu9f4ew", "o1q5shngj24323nsrmxv99st02na6srekfc6rupyk"]
     }
 
     static SegwitAddress fromBech32(String addressString) {
-        SegwitAddress.fromBech32(null, addressString)
+        (SegwitAddress) OmniNetwork.addressParser.parseAddressAnyNetwork(addressString)
     }
 
     void setupSpec() {

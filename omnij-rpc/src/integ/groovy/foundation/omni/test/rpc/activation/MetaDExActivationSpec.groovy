@@ -2,7 +2,7 @@ package foundation.omni.test.rpc.activation
 
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
-import org.bitcoinj.core.Address
+import org.bitcoinj.base.Address
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise

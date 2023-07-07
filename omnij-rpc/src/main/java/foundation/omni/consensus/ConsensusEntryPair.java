@@ -1,7 +1,7 @@
 package foundation.omni.consensus;
 
 import foundation.omni.BalanceEntry;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -3,6 +3,7 @@ package foundation.omni
 import foundation.omni.rpc.test.OmniTestClient
 import foundation.omni.rpc.test.OmniTestClientAccessor
 import groovy.util.logging.Slf4j
+import org.bitcoinj.base.BitcoinNetwork
 import org.consensusj.bitcoin.json.pojo.NetworkInfo
 import org.consensusj.bitcoin.jsonrpc.BitcoinExtendedClient
 import org.consensusj.bitcoin.jsonrpc.RpcURI
@@ -11,7 +12,6 @@ import org.consensusj.bitcoin.jsonrpc.test.FundingSourceAccessor
 import org.consensusj.bitcoin.jsonrpc.test.RegTestFundingSource
 import foundation.omni.rpc.test.TestServers
 import foundation.omni.test.OmniTestSupport
-import org.bitcoinj.params.RegTestParams
 import spock.lang.Specification
 
 
@@ -47,7 +47,7 @@ abstract class BaseRegTestSpec extends Specification implements OmniTestClientAc
         if (INSTANCE == null) {
             var host = 'localhost'
             var uri = URI.create("http://${host}:18443").resolve("/wallet/${BitcoinExtendedClient.REGTEST_WALLET_NAME}")
-            INSTANCE = new OmniTestClient(RegTestParams.get(), uri, rpcTestUser, rpcTestPassword)
+            INSTANCE = new OmniTestClient(BitcoinNetwork.REGTEST, uri, rpcTestUser, rpcTestPassword)
             INSTANCE.initRegTestWallet()
         }
         return INSTANCE;

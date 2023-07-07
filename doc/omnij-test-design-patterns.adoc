@@ -1,5 +1,4 @@
-OmniJ Test Architecture and Design Patterns
-============================================
+= OmniJ Test Architecture and Design Patterns
 :toc:
 :toc-placement: manual
 :numbered:

@@ -1,11 +1,9 @@
 package foundation.omni.tx
 
 import foundation.omni.OmniDivisibleValue
+import foundation.omni.net.OmniNetwork
 import org.bitcoinj.core.InsufficientMoneyException
 import org.bitcoinj.core.TransactionOutput
-import org.bitcoinj.params.MainNetParams
-import org.bitcoinj.params.RegTestParams
-import org.bitcoinj.params.TestNet3Params
 import spock.lang.Unroll
 
 import static foundation.omni.CurrencyID.OMNI
@@ -15,7 +13,7 @@ import static foundation.omni.CurrencyID.OMNI
  *
  */
 class OmniTxBuilderSpec extends BaseTxSpec {
-    static final OmniTxBuilder omniTxBuilder = new OmniTxBuilder(netParams)
+    static final OmniTxBuilder omniTxBuilder = new OmniTxBuilder(network)
 
     def "Build a transaction using OmniTxBuilder with insufficient funds throws InsufficientMoneyException" () {
         when:
@@ -34,15 +32,15 @@ class OmniTxBuilderSpec extends BaseTxSpec {
     }
 
     @Unroll
-    def "can instantiate for network #netParams"() {
+    def "can instantiate for network #omniNetwork"(OmniNetwork omniNetwork) {
         when: "we call the constructor"
-        def txBuilder = new OmniTxBuilder(netParams)
+        def txBuilder = new OmniTxBuilder(omniNetwork)
 
         then: "we get a valid object"
 
 
         where:
-        netParams << [MainNetParams.get(), TestNet3Params.get(), RegTestParams.get()]
+        omniNetwork << [OmniNetwork.MAINNET, OmniNetwork.TESTNET, OmniNetwork.REGTEST]
     }
 
 }

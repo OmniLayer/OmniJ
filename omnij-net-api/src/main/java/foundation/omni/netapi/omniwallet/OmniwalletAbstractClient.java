@@ -23,7 +23,8 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.processors.BehaviorProcessor;
 import io.reactivex.rxjava3.processors.FlowableProcessor;
-import org.bitcoinj.core.Address;
+import org.bitcoinj.base.Address;
+import org.bitcoinj.base.Network;
 import org.bitcoinj.core.NetworkParameters;
 import org.consensusj.bitcoin.json.pojo.ChainTip;
 import org.consensusj.bitcoin.rx.jsonrpc.PollingChainTipService;
@@ -70,7 +71,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
     /**
      * netParams, if non-null, is used for validating addresses during deserialization
      */
-    protected final NetworkParameters netParams;
+    protected final Network network;
     private final Flowable<Long> chainTipPollingInterval;
     private final Flowable<ChainTip> chainTipSource;
     private Disposable chainTipSubscription;
@@ -79,16 +80,21 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
     protected final Map<CurrencyID, PropertyType> cachedPropertyTypes = new ConcurrentHashMap<>();
 
     public OmniwalletAbstractClient(URI baseURI, boolean debug, boolean strictMode) {
-        this(baseURI, debug, strictMode, null);
+        this(baseURI, debug, strictMode, (Network) null);
     }
 
-    public OmniwalletAbstractClient(URI baseURI, boolean debug, boolean strictMode, NetworkParameters netParams) {
+    public OmniwalletAbstractClient(URI baseURI, boolean debug, boolean strictMode, Network network) {
         this.baseURI = baseURI;
         this.debug = debug;
         this.strictMode = strictMode;
-        this.netParams = netParams;
+        this.network = network;
         chainTipPollingInterval = Flowable.interval(2,60, TimeUnit.SECONDS);
         chainTipSource = pollForDistinctChainTip();
+    }
+
+    @Deprecated
+    public OmniwalletAbstractClient(URI baseURI, boolean debug, boolean strictMode, NetworkParameters netParams) {
+        this(baseURI, debug, strictMode, netParams.network());
     }
 
     public synchronized void start() {
@@ -261,9 +267,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
         if (!cachedPropertyTypes.containsKey(propertyID)) {
             listSmartProperties().whenComplete((infos,t) -> {
                 if (infos != null) {
-                    infos.forEach(info -> {
-                        cachedPropertyTypes.put(info.getPropertyid(), divisibleToPropertyType(info.getDivisible()));
-                    });
+                    infos.forEach(info -> cachedPropertyTypes.put(info.getPropertyid(), divisibleToPropertyType(info.getDivisible())));
                     PropertyType type = cachedPropertyTypes.get(propertyID);
                     if (type != null) {
                         future.complete(type);

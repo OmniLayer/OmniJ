@@ -2,8 +2,8 @@ package foundation.omni.test.rpc.misc
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.OmniDivisibleValue
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.Coin
+import org.bitcoinj.base.Address
+import org.bitcoinj.base.Coin
 import spock.lang.Ignore
 import spock.lang.Unroll
 
