@@ -350,11 +350,9 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def amountAvailable = OmniValue.of(new BigDecimal(data.AmountAvailable), propertyType)
         def ecosystem = Ecosystem.valueOf(Short.valueOf(data.Ecosystem))
         def propertyName = new String(data.PropertyName)
-        def numberOfTokens = OmniValue.of(0, propertyType)
-
-        if (amountAvailableOwners.size()) {
-            numberOfTokens += OmniValue.of((BigDecimal) amountAvailableOwners.sum(), propertyType)
-        }
+        def numberOfTokens = (amountAvailableOwners.size())
+                ? OmniValue.of((BigDecimal) amountAvailableOwners.sum(), propertyType)
+                : OmniValue.of(0, propertyType)
 
         if (propertyName == "OMNI" || propertyName == "TOMNI") {
             if (numberOfTokens > 0) {
@@ -363,22 +361,16 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
                 generateBlocks(1)
             }
             return CurrencyID.valueOf(propertyName)
+        } else {
+            def txid = createProperty(actorAddress, ecosystem, numberOfTokens + amountAvailable)
+            generateBlocks(1)
+
+            def transaction = omniGetTransaction(txid)
+            assert transaction.valid
+            assert transaction.confirmations == 1
+
+            return transaction.propertyId
         }
-
-        numberOfTokens += amountAvailable
-
-//        if (propertyType == PropertyType.DIVISIBLE) {
-//            numberOfTokens = BTC.btcToSatoshis(numberOfTokens)
-//        }
-
-        def txid = createProperty(actorAddress, ecosystem, numberOfTokens)
-        generateBlocks(1)
-
-        def transaction = omniGetTransaction(txid)
-        assert transaction.valid
-        assert transaction.confirmations == 1
-
-        return transaction.propertyId
     }
 
     /**
