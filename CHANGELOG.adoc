@@ -20,6 +20,7 @@ The 0.7.0 release of **OmniJ** will require the forthcoming **ConsensusJ** 0.7.0
 === Build/Test Updates
 
 * JUnit Jupiter 5.9.3
+* Use latest GraalVM 17 (new version numbering mechanism) on GitHub Actions
 
 == v0.6.3
 
