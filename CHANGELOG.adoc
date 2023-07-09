@@ -12,6 +12,8 @@ The 0.7.0 release of **OmniJ** will require the forthcoming **ConsensusJ** 0.7.0
 === Dependency Updates
 
 * All modules now require a minimum of JDK 11 or later (`omnij-txrecords` and `omnij-cli` still require JDK 17 or later)
+* bitcoinj 0.17-alpha1
+* ConsensusJ 0.7.0-alpha1
 * jackson-module-parameter-names 2.15.2
 * Groovy 4.0.13
 
