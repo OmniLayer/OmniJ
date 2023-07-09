@@ -55,11 +55,22 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
         def startMSC = OmniDivisibleValue.of(mscAvailable + mscReserved)
         def actorAddress = createFundedAddress(startBTC, startMSC, false)
         def currencyMSC = CurrencyID.of(ecosystem.value())
+
+        assertBalance(actorAddress, currencyMSC, startMSC, 0.divisible)
+
         def currencySPT = getStoProperty(actorAddress, data)
+
+        if (currencySPT != CurrencyID.OMNI && currencySPT != CurrencyID.TOMNI) {
+            assertBalance(actorAddress, currencyMSC, startMSC, 0.divisible)
+        }
 
         // Create a DEx offer to reserve an amount
         if (mscReserved > 0) {
             reserveAmountMSC(actorAddress, currencyMSC, mscReserved.divisible)
+        }
+
+        if (currencySPT != CurrencyID.OMNI && currencySPT != CurrencyID.TOMNI) {
+            assertBalance(actorAddress, currencyMSC, mscAvailable, mscReserved)
         }
 
         when: "the owners are funded"
