@@ -1,6 +1,7 @@
 package foundation.omni.rest.omniwallet
 
 import foundation.omni.net.OmniMainNetParams
+import foundation.omni.netapi.omniwallet.OmniwalletAbstractClient
 import foundation.omni.netapi.omniwallet.json.OmniwalletAddressBalance
 import foundation.omni.netapi.omniwallet.json.RevisionInfo
 import okhttp3.HttpUrl
@@ -64,9 +65,8 @@ class OmniwalletClientServiceSpec extends Specification {
     }
 
     def setup() {
-        HttpUrl baseURL = HttpUrl.parse("https://staging.omniwallet.org")
-        boolean debug = true
-        client = new OmniwalletClient(baseURL, true)
+        URI baseURI = OmniwalletAbstractClient.omniExplorerApiBase
+        client = new OmniwalletClient(baseURI, true)
     }
 
 }
