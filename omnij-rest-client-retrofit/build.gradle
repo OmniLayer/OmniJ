@@ -10,9 +10,9 @@ dependencies {
     api project(':omnij-net-api')
 
     api 'com.squareup.okhttp3:okhttp:3.12.8'   // OmniwalletClient constructor with OkHttp parameter
-    api 'com.squareup.retrofit2:retrofit:2.6.4'
+    api 'com.squareup.retrofit2:retrofit:2.9.0'
 
-    implementation 'com.squareup.retrofit2:converter-jackson:2.6.4'
+    implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.8'
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
