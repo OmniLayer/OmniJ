@@ -22,8 +22,6 @@ jobs:
         distribution: ${{ matrix.distribution }}
         components: 'native-image'
         github-token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Verify Gradle Wrapper
-      uses: gradle/wrapper-validation-action@v1
     - name: Cache Gradle packages
       uses: actions/cache@v3
       with:
