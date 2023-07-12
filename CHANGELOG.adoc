@@ -19,6 +19,7 @@ The 0.7.0 release of **OmniJ** will require the forthcoming **ConsensusJ** 0.7.0
 
 === Build/Test Updates
 
+* Gradle 8.2.1
 * JUnit Jupiter 5.9.3
 * Use latest GraalVM 17 (new version numbering mechanism) on GitHub Actions
 
