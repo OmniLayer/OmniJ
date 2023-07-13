@@ -30,7 +30,7 @@ dependencies {
     implementation ("org.apache.groovy:groovy-sql:${groovyVersion}") {
         transitive = false
     }
-    implementation 'org.postgresql:postgresql:9.3-1102-jdbc41'
+    implementation 'org.postgresql:postgresql:42.6.0'
 
     testImplementation project(':omnij-dsl')
     testImplementation 'com.xlson.groovycsv:groovycsv:1.0'   // Used by Omni STO tests
