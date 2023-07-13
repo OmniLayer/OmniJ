@@ -3,11 +3,15 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.7.0-SNAPSHOT
+== v0.7.0 (planned)
 
-Released: Under development
+Released: Forthcoming
 
 The 0.7.0 release of **OmniJ** will require the forthcoming **ConsensusJ** 0.7.0 and **bitcoinj** v0.17 (currently in alpha release.) There will likely be multiple alpha releases of OmniJ and ConsensusJ as bitcoinj is updated.
+
+== v0.7.0-alpha1
+
+Released: 2023.07.13
 
 === Dependency Updates
 
@@ -16,12 +20,14 @@ The 0.7.0 release of **OmniJ** will require the forthcoming **ConsensusJ** 0.7.0
 * ConsensusJ 0.7.0-alpha1
 * jackson-module-parameter-names 2.15.2
 * Groovy 4.0.13
+* OkHttp 3.4.19, Retrofit 2.9.0 (in `omnij-rest-client-retrofit`)
 
 === Build/Test Updates
 
 * Gradle 8.2.1
 * JUnit Jupiter 5.9.3
 * Use latest GraalVM 17 (new version numbering mechanism) on GitHub Actions
+* Code cleanup and logging improvements in RegTests
 
 == v0.6.3
 
