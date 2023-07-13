@@ -59,7 +59,7 @@ subprojects {
         testImplementation("org.spockframework:spock-core:${spockVersion}") {
             exclude module: "groovy-all"
         }
-        testImplementation "org.junit.jupiter:junit-jupiter-api:5.9.0"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:5.9.3"
         testRuntimeOnly "org.slf4j:slf4j-jdk14:${slf4jVersion}"     // Runtime implementation of slf4j for tests
     }
 
