@@ -9,6 +9,11 @@ Released: Forthcoming
 
 The 0.7.0 release of **OmniJ** will require the forthcoming **ConsensusJ** 0.7.0 and **bitcoinj** v0.17 (currently in alpha release.) There will likely be multiple alpha releases of OmniJ and ConsensusJ as bitcoinj is updated.
 
+== v0.7.0-SNAPSHOT
+
+Released: Forthcoming
+
+
 == v0.7.0-alpha1
 
 Released: 2023.07.13
