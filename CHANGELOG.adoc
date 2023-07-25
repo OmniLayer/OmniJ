@@ -13,6 +13,9 @@ The 0.7.0 release of **OmniJ** will require the forthcoming **ConsensusJ** 0.7.0
 
 Released: Forthcoming
 
+=== Build/Test Updates
+
+* JUnit Jupiter 5.10.0
 
 == v0.7.0-alpha1
 
