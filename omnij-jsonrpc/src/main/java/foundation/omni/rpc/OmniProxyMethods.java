@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.NullNode;
 import foundation.omni.CurrencyID;
-import foundation.omni.OmniDivisibleValue;
-import foundation.omni.OmniIndivisibleValue;
 import foundation.omni.OmniValue;
 import foundation.omni.json.pojo.OmniPropertyInfo;
 import foundation.omni.json.pojo.OmniJBalances;
@@ -21,10 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Interface with default methods implementing omniproxy RPCs.
@@ -34,13 +32,10 @@ public interface OmniProxyMethods extends JacksonRpcClient {
     AddressParser addressParser = new DefaultAddressParser();
 
     /**
-     * Determine at run-time if remote server is an OmniProxy server.
-     * Implementations must override this method if they can detect an OmniProxy server.
+     * Determine if remote server is an OmniProxy server.
      * @return true if server is OmniProxy
      */
-    default boolean isOmniProxyServer() {
-        return false;
-    }
+    boolean isOmniProxyServer();
 
     private List<OmniPropertyInfo> omniProxyListPropertiesSync() throws IOException {
         JavaType javaType = getMapper().getTypeFactory().constructCollectionType(List.class, OmniPropertyInfo.class);
@@ -64,40 +59,34 @@ public interface OmniProxyMethods extends JacksonRpcClient {
             log.error("Got null node: {}", node);
             throw new JsonRpcException("Got null node");
         }
-        List<TokenRichList.TokenBalancePair<OmniValue>> listOnly = new ArrayList<>();
         JsonNode listNode = node.get("richList");
-        if (listNode != null) {
-            listNode.iterator().forEachRemaining(elementNode-> listOnly.add(nodeToBalancePair(elementNode)));
-        }
+        List<TokenRichList.TokenBalancePair<OmniValue>> listOnly =
+                (listNode != null)
+                ? StreamSupport.stream(listNode.spliterator(), false)
+                            .map(this::nodeToBalancePair)
+                            .collect(Collectors.toList())
+                : List.of();
         return new TokenRichList<>(
                 0,
                 Sha256Hash.ZERO_HASH,
                 0,
                 CurrencyID.OMNI,
                 listOnly,
-                parseOmniValue(node.get("otherBalanceTotal").asText())
+                OmniValue.of(node.get("otherBalanceTotal").asText())
         );
     }
 
     default WalletAddressBalance omniProxyGetBalance(Address address) throws IOException {
-        JavaType javaType = getMapper().getTypeFactory().constructCollectionType(List.class, OmniPropertyInfo.class);
         return send("omniproxy.getbalance", WalletAddressBalance.class, address);
     }
 
     default OmniJBalances omniProxyGetBalances(List<Address> addresses) throws IOException {
-        JavaType javaType = getMapper().getTypeFactory().constructCollectionType(List.class, OmniPropertyInfo.class);
         return send("omniproxy.getbalances", OmniJBalances.class, addresses.toArray());
     }
 
     private TokenRichList.TokenBalancePair<OmniValue> nodeToBalancePair(JsonNode node) {
         Address address = addressParser.parseAddressAnyNetwork(node.get("address").asText());
-        OmniValue value = parseOmniValue(node.get("balance").asText());
+        OmniValue value = OmniValue.of(node.get("balance").asText());
         return new TokenRichList.TokenBalancePair<>(address, value);
-    }
-
-    private OmniValue parseOmniValue(String numberString) {
-        boolean divisible = numberString.contains(".");  // Divisible amounts always contain a decimal point
-        return divisible ?  OmniDivisibleValue.of(new BigDecimal(numberString)) :
-                OmniIndivisibleValue.of(Long.parseLong(numberString));
     }
 }
