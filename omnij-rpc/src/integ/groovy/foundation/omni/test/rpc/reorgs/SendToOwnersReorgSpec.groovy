@@ -162,11 +162,9 @@ class SendToOwnersReorgSpec extends BaseReorgSpec {
         clearMemPool()
         delayAfterInvalidate()  // Sleep for a little while to avoid `ProcessNewBlock, block not accepted` (duplicate block)
         generateBlocks(1)
-        def secondOrphanedTx = omniGetTransaction(secondTxid)
 
         then: "the transaction is not valid"
-        !secondOrphanedTx.valid
-        // secondOrphanedTx.confirmations == -1 TODO: activate after Omni Core adjustment
+        !checkTransactionValidity(secondTxid)
 
         when: "creating a third STO transaction"
         requestBitcoin(actorAddress, Coin.CENT)  // maybe use startBTC instead
