@@ -10,7 +10,6 @@ import foundation.omni.json.pojo.OmniJBalances;
 import foundation.omni.json.pojo.WalletAddressBalance;
 import org.bitcoinj.base.Address;
 import org.bitcoinj.base.AddressParser;
-import org.bitcoinj.base.DefaultAddressParser;
 import org.bitcoinj.base.Sha256Hash;
 import org.consensusj.analytics.service.TokenRichList;
 import org.consensusj.jsonrpc.JacksonRpcClient;
@@ -29,7 +28,7 @@ import java.util.stream.StreamSupport;
  */
 public interface OmniProxyMethods extends JacksonRpcClient {
     Logger log = LoggerFactory.getLogger(OmniProxyMethods.class);
-    AddressParser addressParser = new DefaultAddressParser();
+    AddressParser addressParser = AddressParser.getDefault();
 
     /**
      * Determine if remote server is an OmniProxy server.
@@ -85,7 +84,7 @@ public interface OmniProxyMethods extends JacksonRpcClient {
     }
 
     private TokenRichList.TokenBalancePair<OmniValue> nodeToBalancePair(JsonNode node) {
-        Address address = addressParser.parseAddressAnyNetwork(node.get("address").asText());
+        Address address = addressParser.parseAddress(node.get("address").asText());
         OmniValue value = OmniValue.of(node.get("balance").asText());
         return new TokenRichList.TokenBalancePair<>(address, value);
     }

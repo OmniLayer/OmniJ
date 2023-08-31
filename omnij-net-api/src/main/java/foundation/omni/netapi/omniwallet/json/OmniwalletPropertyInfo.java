@@ -7,7 +7,6 @@ import foundation.omni.OmniValue;
 import org.bitcoinj.base.Address;
 import org.bitcoinj.base.AddressParser;
 import org.bitcoinj.base.BitcoinNetwork;
-import org.bitcoinj.base.DefaultAddressParser;
 import org.bitcoinj.base.LegacyAddress;
 import org.bitcoinj.base.Sha256Hash;
 
@@ -19,9 +18,9 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OmniwalletPropertyInfo {
-    private static final AddressParser parser = new DefaultAddressParser();
+    private static final AddressParser parser = AddressParser.getDefault();
     // Satoshi's address that received the block reward for Block 0
-    private static final Address bitcoinIssuerAddress = parser.parseAddress("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", BitcoinNetwork.MAINNET);
+    private static final Address bitcoinIssuerAddress = parser.parseAddress("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa");
 
     private final long blocktime;
     private final String category;
@@ -167,6 +166,6 @@ public class OmniwalletPropertyInfo {
      * @return The issuer converted to an {@code Address}
      */
     private static Address mapIssuer(String issuerString) {
-        return issuerString.equals("Satoshi Nakamoto") ? bitcoinIssuerAddress : parser.parseAddressAnyNetwork(issuerString);
+        return issuerString.equals("Satoshi Nakamoto") ? bitcoinIssuerAddress : parser.parseAddress(issuerString);
     }
 }

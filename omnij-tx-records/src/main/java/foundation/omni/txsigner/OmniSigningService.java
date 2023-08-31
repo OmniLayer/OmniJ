@@ -69,7 +69,7 @@ public interface OmniSigningService {
                 ? List.of(opReturn, TransactionOutputData.of(refAddress, Coin.MICROCOIN))  // .addDustOutput(refAddress);
                 : List.of(opReturn);
 
-        SigningRequest request = SigningRequest.of(network(), (List<TransactionInputData>) inputUtxos, outputs);
+        SigningRequest request = SigningRequest.of((List<TransactionInputData>) inputUtxos, outputs);
         try {
             return SigningUtils.addChange(request, changeAddress, feeCalculator());
         } catch (InsufficientMoneyException ime) {

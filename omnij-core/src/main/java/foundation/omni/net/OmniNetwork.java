@@ -1,10 +1,10 @@
 package foundation.omni.net;
 
+import foundation.omni.address.DefaultAddressParserProvider;
 import org.bitcoinj.base.Address;
 import org.bitcoinj.base.AddressParser;
 import org.bitcoinj.base.BitcoinNetwork;
 import org.bitcoinj.base.Coin;
-import org.bitcoinj.base.DefaultAddressParser;
 import org.bitcoinj.base.LegacyAddress;
 import org.bitcoinj.base.Monetary;
 import org.bitcoinj.base.Network;
@@ -37,9 +37,9 @@ public enum OmniNetwork implements Network {
      * Scheme part for Bitcoin URIs.
      */
     public static final String BITCOIN_SCHEME = "bitcoin";
-    public static final AddressParser addressParser;
+    public static final AddressParser.AddressParserProvider addressParser;
     static {
-        addressParser = new DefaultAddressParser(List.of(BitcoinNetwork.MAINNET, BitcoinNetwork.TESTNET, OmniNetwork.MAINNET, OmniNetwork.TESTNET),
+        addressParser = new DefaultAddressParserProvider(List.of(BitcoinNetwork.MAINNET, BitcoinNetwork.TESTNET, OmniNetwork.MAINNET, OmniNetwork.TESTNET),
                 List.of(BitcoinNetwork.MAINNET, BitcoinNetwork.TESTNET, OmniNetwork.MAINNET, OmniNetwork.TESTNET));
     }
 

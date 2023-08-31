@@ -108,7 +108,7 @@ class OmniSegwitAddressConverterSpec extends Specification {
     }
 
     static SegwitAddress fromBech32(String addressString) {
-        (SegwitAddress) OmniNetwork.addressParser.parseAddressAnyNetwork(addressString)
+        (SegwitAddress) OmniNetwork.addressParser.forKnownNetworks().parseAddress(addressString)
     }
 
     void setupSpec() {

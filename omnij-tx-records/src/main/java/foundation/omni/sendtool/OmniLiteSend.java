@@ -6,7 +6,6 @@ import foundation.omni.txsigner.OmniRpcClientSendingService;
 import org.bitcoinj.base.Address;
 import org.bitcoinj.base.AddressParser;
 import org.bitcoinj.base.BitcoinNetwork;
-import org.bitcoinj.base.DefaultAddressParser;
 import org.bitcoinj.base.Sha256Hash;
 import org.consensusj.bitcoin.jsonrpc.BitcoinClient;
 
@@ -20,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
  * balances before signing or sending, so a transaction may be built for which there are insufficient funds.
  */
 public class OmniLiteSend {
-    private static final AddressParser addressParser = new DefaultAddressParser();
+    private static final AddressParser addressParser = AddressParser.getDefault();
     private final OmniRpcClientSendingService omniSendingService;
 
     public static void main(String[] args) throws IOException {
@@ -38,8 +37,8 @@ public class OmniLiteSend {
         }
 
         // Parse Parameters
-        Address fromAddress = addressParser.parseAddressAnyNetwork(arg0);
-        Address toAddress = addressParser.parseAddressAnyNetwork(arg1);
+        Address fromAddress = addressParser.parseAddress(arg0);
+        Address toAddress = addressParser.parseAddress(arg1);
         CurrencyID id = CurrencyID.of(Long.parseLong(arg2));
         OmniDivisibleValue amount = OmniDivisibleValue.ofWilletts(Long.parseLong(arg3));
 

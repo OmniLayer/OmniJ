@@ -4,7 +4,7 @@ import org.consensusj.bitcoin.jsonrpc.RpcConfig;
 import foundation.omni.rpc.OmniClient;
 import org.consensusj.bitcoin.cli.BitcoinCLITool;
 
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.SSLContext;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
@@ -21,7 +21,7 @@ public class OmniCoreCLICall extends BitcoinCLITool.BitcoinCLICall {
     }
 
     @Override
-    public OmniClient createClient(SSLSocketFactory sslSocketFactory, RpcConfig config) {
-        return new OmniClient(sslSocketFactory, config.network(), config.getURI(), config.getUsername(), config.getPassword(), false, false);
+    public OmniClient createClient(SSLContext sslContext, RpcConfig config) {
+        return new OmniClient(sslContext.getSocketFactory(), config.network(), config.getURI(), config.getUsername(), config.getPassword(), false, false);
     }
 }

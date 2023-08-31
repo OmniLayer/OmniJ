@@ -8,7 +8,6 @@ import foundation.omni.txsigner.OmniKeychainSigningService;
 import org.bitcoinj.base.Address;
 import org.bitcoinj.base.AddressParser;
 import org.bitcoinj.base.BitcoinNetwork;
-import org.bitcoinj.base.DefaultAddressParser;
 import org.bitcoinj.base.Network;
 import org.bitcoinj.base.ScriptType;
 import org.bitcoinj.base.Sha256Hash;
@@ -28,7 +27,7 @@ import java.util.concurrent.CompletableFuture;
  *  Omni transaction sending tool that uses a local keychain and a remote, address-indexed Omni Core server (or OmniProxy)
  */
 public class SendTool {
-    private static final AddressParser addressParser = new DefaultAddressParser();
+    private static final AddressParser addressParser = AddressParser.getDefault();
     public static final String mnemonicString = "panda diary marriage suffer basic glare surge auto scissors describe sell unique";
     public static final Instant creationInstant = LocalDate.of(2019, 4, 10).atStartOfDay().toInstant(ZoneOffset.UTC);
     private final OmniKeychainSigningService signingService;
@@ -50,8 +49,8 @@ public class SendTool {
         }
 
 
-        Address fromAddress = addressParser.parseAddressAnyNetwork(arg0);
-        Address toAddress = addressParser.parseAddressAnyNetwork(arg1);
+        Address fromAddress = addressParser.parseAddress(arg0);
+        Address toAddress = addressParser.parseAddress(arg1);
         CurrencyID id = CurrencyID.of(Long.parseLong(arg2));
         OmniDivisibleValue amount = OmniDivisibleValue.ofWilletts(Long.parseLong(arg3));
         var futureHash = sendTool.send(fromAddress, toAddress, id, amount);

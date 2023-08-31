@@ -38,7 +38,7 @@ public class ClassCEncoder {
      * @return A bitcoinj {@code Transaction} object
      */
     public Transaction encode(Address refAddress, byte[] payload) {
-        Transaction txClassC = new Transaction(netParams);
+        Transaction txClassC = new Transaction();
 
         TransactionOutput output = encodeOpReturnOutput(payload);
         txClassC.addOutput(output);
@@ -58,7 +58,7 @@ public class ClassCEncoder {
     public TransactionOutput encodeOpReturnOutput(byte[] payload) {
         Script script = createOmniTxOpReturnScript(payload);
 
-        return new TransactionOutput(netParams, null, Coin.ZERO, script.getProgram());
+        return new TransactionOutput(null, Coin.ZERO, script.getProgram());
     }
 
     /**

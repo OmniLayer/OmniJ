@@ -54,7 +54,7 @@ public class EncodeMultisig {
             keysByOutput.add(group);
         }
 
-        Transaction txClassB = new Transaction(NetworkParameters.of(network));
+        Transaction txClassB = new Transaction();
 
         for (List<ECKey> group : keysByOutput) {
             // Add the redeemable key to the front of each group list
@@ -62,7 +62,7 @@ public class EncodeMultisig {
             redeemableGroup.add(redeemingKey);
             redeemableGroup.addAll(group);
             Script script = ScriptBuilder.createMultiSigOutputScript(1, redeemableGroup); // 1 of redeemableGroup.size() multisig
-            TransactionOutput output = new TransactionOutput(NetworkParameters.of(network), null, Coin.ZERO, script.getProgram());
+            TransactionOutput output = new TransactionOutput(null, Coin.ZERO, script.getProgram());
             output.setValue(calcNonDustValue(output));
             txClassB.addOutput(output);
         }

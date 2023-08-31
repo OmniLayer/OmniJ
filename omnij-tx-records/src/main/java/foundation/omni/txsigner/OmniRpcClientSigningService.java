@@ -54,7 +54,7 @@ public class OmniRpcClientSigningService implements OmniSigningService {
     }
 
     Transaction asSignedTransaction(SignedRawTransaction signedRawTransaction) {
-        Transaction tx = new Transaction(NetworkParameters.of(network()), ByteBuffer.wrap(hexFormat.parseHex(signedRawTransaction.getHex())));
+        Transaction tx = Transaction.read(ByteBuffer.wrap(hexFormat.parseHex(signedRawTransaction.getHex())));
         log.info("converting to tx {}", tx);
         return tx;
     }

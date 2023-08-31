@@ -1,6 +1,7 @@
 package foundation.omni.tx;
 
 import org.bitcoinj.base.Address;
+import org.bitcoinj.base.BitcoinNetwork;
 import org.bitcoinj.base.ScriptType;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.crypto.ECKey;
@@ -15,8 +16,10 @@ import java.util.List;
 
 /**
  * Omni Protocol transaction
- *
+ * TODO: Omni Transaction class should not be a subclass of 
+ * @deprecated This code is incomplete, doesn't work, and will be replaced.
  */
+@Deprecated
 public class OmniTransaction extends Transaction {
     //Address fromAddress;
     //Address refAddress;
@@ -25,14 +28,14 @@ public class OmniTransaction extends Transaction {
 
     /* Create from Bitcoin transaction */
     public OmniTransaction(Transaction transaction) {
-        super(transaction.getParams(), ByteBuffer.wrap(transaction.bitcoinSerialize()));     // Is serialized byte array == payload byte array???
+        super();     // Is serialized byte array == payload byte array???
 
         // For now assume only a single multisig encoded output
         // Also Assume it is a simple send
         List<ECKey> keys = null;
         List<TransactionOutput> outputs = transaction.getOutputs();
         for (TransactionOutput output : outputs) {
-            Script script = new Script(output.getScriptBytes());
+            Script script = Script.parse(output.getScriptBytes());
             if (ScriptPattern.isSentToMultisig(script)) {
                 keys = script.getPubKeys();
             }
@@ -55,7 +58,8 @@ public class OmniTransaction extends Transaction {
         ECKey redeemKey = keys.get(0);
         ECKey dataKey = keys.get(1);    // 0th key is redeem key, 1st key contains data
 
-        Address redeemAddress = redeemKey.toAddress(ScriptType.P2PKH, transaction.getParams().network());
+        // TODO: Fix hard-coded Network
+        Address redeemAddress = redeemKey.toAddress(ScriptType.P2PKH, BitcoinNetwork.MAINNET);
 
         byte[] input = dataKey.getPubKey();
         byte[] deobf = Obfuscation.obfuscate(input, redeemAddress);
@@ -71,13 +75,13 @@ public class OmniTransaction extends Transaction {
 
     /* Create unsigned */
     public OmniTransaction(ECKey redeemingKey, Address refAddress, byte[] payload) throws InsufficientMoneyException {
-        super(NetworkParameters.of(refAddress.network()));
+        super();
         throw new RuntimeException("Not implemented yet");
     }
 
     /* Create Signed */
     public OmniTransaction(ECKey fromKey, List<TransactionOutput> unspentOutputs, Address refAddress, byte[] payload) throws InsufficientMoneyException {
-        super(NetworkParameters.of(refAddress.network()));
+        super();
         throw new RuntimeException("Not implemented yet");
     }
 

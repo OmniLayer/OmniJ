@@ -60,7 +60,7 @@ public class OmniKeychainSendingService implements OmniSendingService {
 
     public SigningRequest createBitcoinSigningRequest(Address fromAddress, List<? super TransactionInputData> inputUtxos, List<TransactionOutputData> outputs, Address changeAddress) {
         // Create a signing request with just the OP_RETURN output
-        SigningRequest request = new DefaultSigningRequest(fromAddress.network(), (List<TransactionInputData>) inputUtxos, outputs);
+        SigningRequest request = new DefaultSigningRequest((List<TransactionInputData>) inputUtxos, outputs);
         try {
             return SigningUtils.addChange(request, changeAddress, feeCalculator);
         } catch (InsufficientMoneyException ime) {
