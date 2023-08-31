@@ -13,6 +13,10 @@ The 0.7.0 release of **OmniJ** will require the forthcoming **ConsensusJ** 0.7.0
 
 Released: Forthcoming
 
+=== Dependency Updates
+
+* Groovy 4.0.14
+
 === Build/Test Updates
 
 * JUnit Jupiter 5.10.0
