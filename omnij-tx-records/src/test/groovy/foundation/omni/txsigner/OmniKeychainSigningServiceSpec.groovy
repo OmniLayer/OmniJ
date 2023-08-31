@@ -9,7 +9,6 @@ import org.bitcoinj.base.Address
 import org.bitcoinj.base.BitcoinNetwork
 import org.bitcoinj.base.Network
 import org.bitcoinj.base.ScriptType
-import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.TransactionInput
 import org.bitcoinj.script.Script
@@ -43,7 +42,6 @@ class OmniKeychainSigningServiceSpec extends Specification {
     def "basic test"() {
         given: "Setup similar to that in SendTool"
         Network network = BitcoinNetwork.TESTNET
-        NetworkParameters netParams = NetworkParameters.of(network)
         ScriptType outputScriptType = ScriptType.P2PKH
         DeterministicSeed seed = setupTestSeed()
 
@@ -54,7 +52,7 @@ class OmniKeychainSigningServiceSpec extends Specification {
 
         URI omniProxyTestNetURI = omniProxyUri
         RpcConfig config = new RpcConfig(network, omniProxyTestNetURI, "bitcoinrpc", "pass");
-        var omniProxyClient = new OmniClient(config.getNetParams(),
+        var omniProxyClient = new OmniClient(config.network(),
                 config.getURI(),
                 config.getUsername(),
                 config.getPassword(),
@@ -72,15 +70,15 @@ class OmniKeychainSigningServiceSpec extends Specification {
         Transaction tx = signService.omniSignTx(sendTx).join()
 
         and: "We do some verification"
-        tx.verify()
+        Transaction.verify(network, tx)
         Script scriptPubKey = ScriptBuilder.createOutputScript(fromAddress);
         TransactionInput input = tx.getInputs().get(0)
         input.getScriptSig()
                 .correctlySpends(tx, 0, null, input.getValue(), scriptPubKey, Script.ALL_VERIFY_FLAGS);
 
-        var serializedTx = ByteBuffer.wrap(tx.bitcoinSerialize())
+        var serializedTx = ByteBuffer.wrap(tx.serialize()t)
 
-        Transaction deserializedTx = new Transaction(netParams, serializedTx)
+        Transaction deserializedTx = Transaction.read(serializedTx)
 
         then: "No exception was thrown and deserializedTx is not null"
         deserializedTx != null

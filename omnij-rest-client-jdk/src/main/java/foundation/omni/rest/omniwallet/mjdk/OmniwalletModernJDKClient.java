@@ -12,7 +12,6 @@ import foundation.omni.netapi.omniwallet.json.OmniwalletPropertiesListResponse;
 import foundation.omni.netapi.omniwallet.json.RevisionInfo;
 import org.bitcoinj.base.Address;
 import org.bitcoinj.base.Network;
-import org.bitcoinj.core.NetworkParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,18 +58,6 @@ public class OmniwalletModernJDKClient extends OmniwalletAbstractClient {
                 .build();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.registerModule(new OmniwalletClientModule(network));
-    }
-
-    /**
-     *
-     * @param baseURI Base URL of server
-     * @param debug Enable debugging, logging, etc.
-     * @param strictMode Only accept valid amounts from server
-     * @param netParams Specify active Bitcoin network (used for Address validation)
-     */
-    @Deprecated
-    public OmniwalletModernJDKClient(URI baseURI, boolean debug, boolean strictMode, NetworkParameters netParams) {
-        this(baseURI, debug, strictMode, netParams.network());
     }
 
     @Override

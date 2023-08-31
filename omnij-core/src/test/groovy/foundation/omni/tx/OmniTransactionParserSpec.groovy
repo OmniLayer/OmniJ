@@ -1,6 +1,5 @@
 package foundation.omni.tx
 
-import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Transaction
 import spock.lang.Ignore
 

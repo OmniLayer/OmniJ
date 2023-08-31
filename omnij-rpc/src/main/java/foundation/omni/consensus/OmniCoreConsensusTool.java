@@ -19,7 +19,7 @@ public class OmniCoreConsensusTool extends OmniCoreClient implements ConsensusTo
     /**
      * URI Constructor
      *
-     * @param network *bitcoinj* NetworkParameters for server to connect to
+     * @param network *bitcoinj* Network for server to connect to
      * @param coreURI URI to connect to - user/pass if required, must be encoded in URL
      */
     public OmniCoreConsensusTool(Network network, URI coreURI) {

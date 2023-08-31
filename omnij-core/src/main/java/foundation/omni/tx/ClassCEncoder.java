@@ -3,7 +3,6 @@ package foundation.omni.tx;
 import org.bitcoinj.base.Address;
 import org.bitcoinj.base.Coin;
 import org.bitcoinj.base.Network;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.script.Script;
@@ -21,14 +20,20 @@ public class ClassCEncoder {
     private static final int OMNI_MARKER_LENGTH = OMNI_MARKER.length();
     /** Maximum Class C Payload length (not counting the 4-byte {@code 'omni'} marker) */
     public static final int MAX_CLASS_C_PAYLOAD = 80 - OMNI_MARKER_LENGTH;
-    private final NetworkParameters netParams;
+
+    /**
+     * Construct an encoder
+     */
+    public ClassCEncoder() {
+    }
 
     /**
      * Construct an encoder for a network
      * @param network The network this instance will encode transactions for
+     * @deprecated Use {@link ClassCEncoder#ClassCEncoder()}
      */
+    @Deprecated
     public ClassCEncoder(Network network) {
-        this.netParams = NetworkParameters.of(network);
     }
 
     /**

@@ -3,7 +3,6 @@ package foundation.omni.tx;
 import foundation.omni.CurrencyID;
 import foundation.omni.OmniValue;
 import foundation.omni.net.OmniNetwork;
-import foundation.omni.net.OmniNetworkParameters;
 import org.bitcoinj.base.Address;
 import org.bitcoinj.base.BitcoinNetwork;
 import org.bitcoinj.base.Coin;
@@ -54,7 +53,7 @@ public class OmniTxBuilder {
         this.network = omniNetwork.bitcoinNetwork();
         this.omniNetwork = omniNetwork;
         this.transactionEncoder = new EncodeMultisig(network);
-        this.classCEncoder = new ClassCEncoder(network);
+        this.classCEncoder = new ClassCEncoder();
         this.feeCalculator = feeCalculator;
     }
 

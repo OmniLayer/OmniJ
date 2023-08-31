@@ -22,6 +22,6 @@ public class OmniCoreCLICall extends BitcoinCLITool.BitcoinCLICall {
 
     @Override
     public OmniClient createClient(SSLContext sslContext, RpcConfig config) {
-        return new OmniClient(sslContext.getSocketFactory(), config.network(), config.getURI(), config.getUsername(), config.getPassword(), false, false);
+        return new OmniClient(sslContext, config.network(), config.getURI(), config.getUsername(), config.getPassword(), false, false);
     }
 }

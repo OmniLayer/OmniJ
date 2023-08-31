@@ -15,7 +15,6 @@ import foundation.omni.net.OmniNetworkParameters;
 import org.bitcoinj.base.Address;
 import org.bitcoinj.base.Coin;
 import org.bitcoinj.base.Network;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.base.Sha256Hash;
 import org.consensusj.bitcoin.jsonrpc.RpcConfig;
 import org.consensusj.bitcoin.jsonrpc.bitcoind.BitcoinConfFile;
@@ -24,7 +23,7 @@ import org.consensusj.jsonrpc.JsonRpcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -61,42 +60,23 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     }
 
     public OmniClient(Network network, URI server, String rpcuser, String rpcpassword) {
-        this((SSLSocketFactory)SSLSocketFactory.getDefault(), network, server, rpcuser, rpcpassword, false, false);
+        this(getDefaultSSLContext(), network, server, rpcuser, rpcpassword, false, false);
     }
 
-    public OmniClient(SSLSocketFactory sslSocketFactory, Network network, URI server, String rpcuser, String rpcpassword, boolean useZmq) {
-        this(sslSocketFactory, network, server, rpcuser, rpcpassword, useZmq, false);
+    public OmniClient(SSLContext sslContext, Network network, URI server, String rpcuser, String rpcpassword, boolean useZmq) {
+        this(sslContext, network, server, rpcuser, rpcpassword, useZmq, false);
     }
 
     public OmniClient(Network network, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
-        this((SSLSocketFactory)SSLSocketFactory.getDefault(), network, server, rpcuser, rpcpassword, useZmq, isOmniProxy);
+        this(getDefaultSSLContext(), network, server, rpcuser, rpcpassword, useZmq, isOmniProxy);
     }
 
-    public OmniClient(SSLSocketFactory sslSocketFactory, Network network, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
-        super(sslSocketFactory, network, server, rpcuser, rpcpassword, useZmq);
+    public OmniClient(SSLContext sslContext, Network network, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
+        super(sslContext, network, server, rpcuser, rpcpassword, useZmq);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.registerModule(new OmniClientModule());
         mapper.registerModule(new ParameterNamesModule());
         this.isOmniProxy = isOmniProxy;
-    }
-
-    /**
-     * @deprecated Use {@link OmniClient#OmniClient(SSLSocketFactory, Network, URI, String, String, boolean, boolean)}
-     */
-    @Deprecated
-    public OmniClient(SSLSocketFactory sslSocketFactory,  NetworkParameters netParams, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
-        this(sslSocketFactory, netParams.network(), server, rpcuser, rpcpassword, useZmq, isOmniProxy);
-    }
-
-
-    @Deprecated
-    public OmniClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
-        this(sslSocketFactory, netParams.network(), server, rpcuser, rpcpassword, false);
-    }
-
-    @Deprecated
-    public OmniClient(NetworkParameters netParams, URI server, String rpcuser, String rpcpassword) {
-        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams.network(), server, rpcuser, rpcpassword, false);
     }
 
     public OmniNetworkParameters getOmniNetParams() {

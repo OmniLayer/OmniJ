@@ -27,10 +27,3 @@ jar {
                 'Implementation-Version': archiveVersion.get()
     }
 }
-
-idea {
-    module {
-        jdkName = '1.8'
-//        languageLevel = '1.8'
-    }
-}

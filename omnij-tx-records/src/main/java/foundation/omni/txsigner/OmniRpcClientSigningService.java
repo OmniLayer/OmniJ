@@ -1,7 +1,6 @@
 package foundation.omni.txsigner;
 
 import org.bitcoinj.base.Network;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.consensusj.bitcoin.json.pojo.SignedRawTransaction;
 import org.consensusj.bitcoin.jsonrpc.BitcoinClient;

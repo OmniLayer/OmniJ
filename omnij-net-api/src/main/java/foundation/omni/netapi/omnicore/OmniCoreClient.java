@@ -22,14 +22,14 @@ import foundation.omni.json.pojo.OmniJBalances;
 import foundation.omni.json.pojo.WalletAddressBalance;
 import foundation.omni.BalanceEntry;
 import org.bitcoinj.base.Address;
-import org.bitcoinj.core.NetworkParameters;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.net.URI;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -56,31 +56,28 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
         this.client = client;
     }
 
-    public OmniCoreClient(SSLSocketFactory sslSocketFactory, Network network, URI coreURI, String user, String pass, boolean useZmq, boolean isOmniProxy) {
-        client = new OmniClient(sslSocketFactory, network, coreURI, user, pass, useZmq, isOmniProxy);
+    public OmniCoreClient(SSLContext sslContext, Network network, URI coreURI, String user, String pass, boolean useZmq, boolean isOmniProxy) {
+        client = new OmniClient(sslContext, network, coreURI, user, pass, useZmq, isOmniProxy);
     }
 
-    @Deprecated
-    public OmniCoreClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI coreURI, String user, String pass, boolean useZmq, boolean isOmniProxy) {
-        this(sslSocketFactory, netParams.network(), coreURI, user, pass, useZmq, isOmniProxy);
-    }
-
-    @Deprecated
-    public OmniCoreClient(SSLSocketFactory sslSocketFactory, NetworkParameters netParams, URI coreURI, String user, String pass) {
-        this(sslSocketFactory, netParams.network(), coreURI, user, pass, false, false);
-    }
-
-    @Deprecated
-    public OmniCoreClient(NetworkParameters netParams, URI coreURI, String user, String pass) {
-        this((SSLSocketFactory)SSLSocketFactory.getDefault(), netParams.network(), coreURI, user, pass);
-    }
-
-    public OmniCoreClient(SSLSocketFactory sslSocketFactory, Network network, URI coreURI, String user, String pass) {
-        this(sslSocketFactory, network, coreURI, user, pass, false, false);
+    public OmniCoreClient(SSLContext sslContext, Network network, URI coreURI, String user, String pass) {
+        this(sslContext, network, coreURI, user, pass, false, false);
     }
 
     public OmniCoreClient(Network network, URI coreURI, String user, String pass) {
-        this((SSLSocketFactory)SSLSocketFactory.getDefault(), network, coreURI, user, pass);
+        this(getDefaultSSLContext(), network, coreURI, user, pass);
+    }
+
+    /**
+     * Return the default {@link SSLContext} without declaring a checked exception
+     * @return The default {@code SSLContext}
+     */
+    protected static SSLContext getDefaultSSLContext() {
+        try {
+            return SSLContext.getDefault();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

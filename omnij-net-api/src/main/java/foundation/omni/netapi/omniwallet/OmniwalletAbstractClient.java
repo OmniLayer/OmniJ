@@ -25,7 +25,6 @@ import io.reactivex.rxjava3.processors.BehaviorProcessor;
 import io.reactivex.rxjava3.processors.FlowableProcessor;
 import org.bitcoinj.base.Address;
 import org.bitcoinj.base.Network;
-import org.bitcoinj.core.NetworkParameters;
 import org.consensusj.bitcoin.json.pojo.ChainTip;
 import org.consensusj.bitcoin.rx.jsonrpc.PollingChainTipService;
 import org.reactivestreams.Publisher;
@@ -90,11 +89,6 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
         this.network = network;
         chainTipPollingInterval = Flowable.interval(2,60, TimeUnit.SECONDS);
         chainTipSource = pollForDistinctChainTip();
-    }
-
-    @Deprecated
-    public OmniwalletAbstractClient(URI baseURI, boolean debug, boolean strictMode, NetworkParameters netParams) {
-        this(baseURI, debug, strictMode, netParams.network());
     }
 
     public synchronized void start() {

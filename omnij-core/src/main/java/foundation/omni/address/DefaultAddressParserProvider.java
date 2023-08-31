@@ -163,7 +163,7 @@ public class DefaultAddressParserProvider implements AddressParser.AddressParser
                 .orElseThrow(() -> new AddressFormatException.InvalidPrefix("No network found for " + base58));
     }
 
-    // Create an unmodifiable set of NetworkParameters from an array/varargs
+    // Create an unmodifiable list of Network from an array/varargs
     private static List<Network> unmodifiableList(Network... ts) {
         return Collections.unmodifiableList(new ArrayList<>(Arrays.asList(ts)));
     }

@@ -8,7 +8,6 @@ import foundation.omni.txrecords.UnsignedTxSimpleSend
 import org.bitcoinj.base.Address
 import org.bitcoinj.base.BitcoinNetwork
 import org.bitcoinj.base.Network
-import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.TransactionInput
 import org.bitcoinj.script.Script
@@ -62,15 +61,15 @@ class OmniRpcClientSigningSpvRegTest extends Specification {
         Transaction signedTx = signService.omniSignTx(unsigned).join()
 
         and: "We do some verification"
-        signedTx.verify()
+        Transaction.verify(network, signedTx)
         Script scriptPubKey = ScriptBuilder.createOutputScript(fromAddress);
         TransactionInput input = signedTx.getInputs().get(0)
         input.getScriptSig()
                 .correctlySpends(signedTx, 0, null, input.getValue(), scriptPubKey, Script.ALL_VERIFY_FLAGS);
 
-        var serializedTx = ByteBuffer.wrap(signedTx.bitcoinSerialize())
+        var serializedTx = ByteBuffer.wrap(signedTx.serialize())
 
-        Transaction deserializedTx = new Transaction(NetworkParameters.of(network), serializedTx)
+        Transaction deserializedTx = Transaction.read(serializedTx)
 
         then: "No exception was thrown and deserializedTx is not null"
         deserializedTx != null
