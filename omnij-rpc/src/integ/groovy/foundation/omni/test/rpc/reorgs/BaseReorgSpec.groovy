@@ -31,26 +31,13 @@ abstract class BaseReorgSpec extends BaseRegTestSpec {
     Boolean checkTransactionValidity(Sha256Hash txid, Integer confirmationsLimit = 1)
     {
         try {
-            def transaction = getRawTransactionInfo(txid)
-            if (transaction.confirmations < confirmationsLimit) {
-                return false
-            }
+            var transaction = omniGetTransaction(txid)
+            var txInfo = getRawTransactionInfo(txid)
+            return transaction.valid &&
+                    transaction.confirmations >= confirmationsLimit &&
+                    txInfo.confirmations >= confirmationsLimit
         } catch(Exception ignored) {
             return false
         }
-        try {
-            def transaction = omniGetTransaction(txid)
-            if (transaction.valid != true) {
-                return false
-            }
-            if (transaction.confirmations < confirmationsLimit) {
-                return false
-            }
-        } catch(Exception ignored) {
-            return false
-        }
-
-        return true
     }
-
 }
