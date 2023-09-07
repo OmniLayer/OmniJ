@@ -21,7 +21,7 @@ reverse link org.consensusj.bitcoin.jsonrpc.BitcoinClient to org.consensusj.bitc
 reverse link org.consensusj.bitcoin.jsonrpc.BitcoinExtendedClient to org.consensusj.bitcoin.jsonrpc.BitcoinScriptingClient--><path d="M275.92,489.45 C260.1,505.15 241.2,523.91 227.53,537.48 " fill="none" id="org.consensusj.bitcoin.jsonrpc.BitcoinExtendedClient&lt;-org.consensusj.bitcoin.jsonrpc.BitcoinScriptingClient" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="270.29,485.19,289.42,476.07,280.15,495.13,270.29,485.19" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[8e9708e177a3205fa9b04e350fd5b0d3]
 reverse link org.consensusj.bitcoin.jsonrpc.DynamicRpcMethodFallback to org.consensusj.bitcoin.jsonrpc.BitcoinScriptingClient--><path d="M94.88,295.62 C82.03,308.38 69.27,324.07 62,341.2 C38.29,397.1 25.37,425.9 57,477.73 C74.78,506.86 107.26,525.58 137.64,537.38 " fill="none" id="org.consensusj.bitcoin.jsonrpc.DynamicRpcMethodFallback&lt;-org.consensusj.bitcoin.jsonrpc.BitcoinScriptingClient" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="none" points="89.74,290.93,109.23,282.62,99.17,301.27,89.74,290.93" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[95ac4c27fb303c6f70ae5fe90b49c6d5]
 reverse link org.consensusj.bitcoin.jsonrpc.BitcoinClient to org.consensusj.bitcoin.jsonrpc.BitcoinCLIClient--><path d="M260.04,387.06 C230.78,403.44 193.55,424.27 167.16,439.04 " fill="none" id="org.consensusj.bitcoin.jsonrpc.BitcoinClient&lt;-org.consensusj.bitcoin.jsonrpc.BitcoinCLIClient" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="256.49,380.46,277.37,376.8,263.33,392.68,256.49,380.46" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[b55617969e2a19a8861f2e5505783581]
-reverse link org.consensusj.bitcoin.jsonrpc.BitcoinExtendedClient to foundation.omni.rpc.OmniClient--><path d="M368,482.76 C378.84,487.4 389.88,492.5 400,497.87 C423.9,510.53 449.45,528.1 466.63,540.58 " fill="none" id="org.consensusj.bitcoin.jsonrpc.BitcoinExtendedClient&lt;-foundation.omni.rpc.OmniClient" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="365.81,489.02,349.94,474.98,371.1,476.06,365.81,489.02" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[eb7a0de4c0fd9192bf27d29b76887d93]
+reverse link org.consensusj.bitcoin.jsonrpc.BitcoinExtendedClient to foundation.omni.rpc.OmniClient--><path d="M368,482.76 C378.84,487.4 389.88,492.5 400,497.87 C423.9,510.53 449.45,528.1 466.63,540.58 " fill="none" id="org.consensusj.bitcoin.jsonrpc.BitcoinExtendedClient&lt;-foundation.omni.rpc.OmniClient" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="365.81,489.02,349.94,474.98,371.1,476.06,365.81,489.02" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[50929cfe0fb2649f46e4a78d3f60c603]
 @startuml
 skinparam packageStyle Rect
 skinparam shadowing false
@@ -68,7 +68,7 @@ PlantUML version 1.2019.12(Sun Nov 03 02:24:54 PST 2019)
 (APACHE source distribution)
 Java Runtime: OpenJDK Runtime Environment
 JVM: OpenJDK 64-Bit Server VM
-Java Version: 17.0.7+7
+Java Version: 17.0.8.1+1
 Operating System: Mac OS X
 Default Encoding: UTF-8
 Language: en
