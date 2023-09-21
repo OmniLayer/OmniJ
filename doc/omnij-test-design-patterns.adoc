@@ -23,17 +23,17 @@ Although the initial focus was testing, it was always the intention to build gen
 
 The core clients are written in pure Java are strongly typed using bitcoinj classes (e.g. Sha256Sum, Address) and use method overloading to create convenience methods with fewer parameters given that Java doesn't support optional parameters.
 
-More detail should be provided here. I've written about this elsewhere (Github Issue comments?) and some of that information should be consoolidated here.
+More detail should be provided here. I've written about this elsewhere (Github Issue comments?) and some of that information should be consolidated here.
 
 === Test Support Classes
 
-Since all the tests are written in the Spock Framework and we want to support rapid development of expressive, non-verbose tests, most of of the test support code is in Groovy -- with much of it being in Groovy traits and in Spock base classes.
+Since all the tests are written in the Spock Framework and we want to support rapid development of expressive, non-verbose tests, most of the test support code is in Groovy -- with much of it being in Groovy traits and in Spock base classes.
 
 As use cases beyond testing are discovered for functionality in test support components, it can be refactored into classes that can be used outside of the test framework and even into pure Java classes when we desire to support the largest possible set of run-time environments.
 
 == Test Framework Design Patterns
 
-A variety of approaches are made for aggregrating test framework functionality into the Spock integration tests. Each approach has advantages and disadvantages and we have been frequently refactoring the code to maximize readability and to make core functionality reusable within the tests and, when desired, outside the tests.
+A variety of approaches are made for aggregating test framework functionality into the Spock integration tests. Each approach has advantages and disadvantages and we have been frequently refactoring the code to maximize readability and to make core functionality reusable within the tests and, when desired, outside the tests.
 
 When test support functionality is useful for (upstream) Bitcoin testing, we place it in a subpackage of `com.msgilligan.bitcoin`, when it is Omni specific we place it in a subpackage of `foundation.omni`.
 
@@ -77,7 +77,7 @@ Disadvantage:
 
 === RPC Clients
 
-When there is functionality that will be useful to any application communicating with Bitcoin/Omni Core via JSON-RPC that functionality can be placed directly in one of the RPC client implementations. Currently all the RPC clients generally try to limit themselves to 1 RPC call per method and try to keep a 1-to-1 relationship betwen client object methods and JSON-RPC methods.
+When there is functionality that will be useful to any application communicating with Bitcoin/Omni Core via JSON-RPC that functionality can be placed directly in one of the RPC client implementations. Currently all the RPC clients generally try to limit themselves to 1 RPC call per method and try to keep a 1-to-1 relationship between client object methods and JSON-RPC methods.
 
 (A minor exception to the 1-to-1 rule is the `OmniExtendedClient` which uses client-side transaction generation and the `sendrawtx_MP` method to create and send Omni transactions that are not supported in the current, stable version of Omni Core.)
 
