@@ -80,7 +80,7 @@ Specify an Omni property id
 Write consensus info to _filename_
 
 *-v*, *-verbose*::
-Verbose (logging) outpu.
+Verbose (logging) output.
 
 
 *-x*, *-compare*::
@@ -103,13 +103,13 @@ Perform a consensus comparison
 
 Here are some examples.
 
-* Print consensus info for property id 1 (OMNI) from localhost Omni Core. The command will use the information in `bitcion.conf` to find the local server.
+* Print consensus info for property id 1 (OMNI) from localhost Omni Core. The command will use the information in `bitcoin.conf` to find the local server.
 +
 ------------
 $ omnij-consensus-tool -property 1
 ------------
 
-* Save consensus info for property id 1 (OMNI) from localhost Omni Core to a tab-seperate-value file named `omni_balances.tsv`. The command will use the information in `bitcion.conf` to find the local server.
+* Save consensus info for property id 1 (OMNI) from localhost Omni Core to a tab-separate-value file named `omni_balances.tsv`. The command will use the information in `bitcoin.conf` to find the local server.
 +
 ------------
 $ omnij-consensus-tool -property 1 -output omni_balances.tsv
