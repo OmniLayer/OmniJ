@@ -35,7 +35,7 @@ It is for these reasons that we propose using a hashing function to create hashe
 
 Details forthcoming.
 
-Note that the hash data does not need to be calculate or stored by Omni Core itself, but can be calculated and stored by integration tests and/or Omniwallet. Hashes could be stored in a SQL databases and indexed by block height and currencyID.
+Note that the hash data does not need to be calculated or stored by Omni Core itself, but can be calculated and stored by integration tests and/or Omniwallet. Hashes could be stored in a SQL databases and indexed by block height and currencyID.
 
 === Defining inputs to the hashes
 
@@ -51,11 +51,11 @@ This is a hash of all consensus data for all currencies in existence at a specif
 
 === Currency Delta Consensus Hash
 
-A hash of only the changes to balances of a specific CurrencyID that occurred during the specific block.  This has may not be very useful and/or may be difficult to compute.
+A hash of only the changes to balances of a specific CurrencyID that occurred during the specific block.  This may not be very useful and/or may be difficult to compute.
 
 === Block Delta Consensus Hash
 
-A hash of the changes to balances of all currencies that occurred during the specific block.  This has may not be very useful and/or may be difficult to compute.
+A hash of the changes to balances of all currencies that occurred during the specific block.  This may not be very useful and/or may be difficult to compute.
 
 == Notes on Hash Algorithms
 
