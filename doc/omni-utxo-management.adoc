@@ -52,7 +52,7 @@ https://github.com/bitcoin/bips/blob/master/bip-0084.mediawiki[BIP-84: Derivatio
 
 === SLIP 44
 
-SatoshiLabs has created the **SLIP** family of specifications for the purpose of creating interoperability between hardware wallets. Since the **BIP** specifications are very Bitcoin-specific and the understandable reluctance of Bitcoin developers to spend time updating their specification documents for "alt coins", the **SLIP** specifications fill this gap and provide practical standards for wallet manufacturers and developers wishing ot support multiple blockchains in a standard matter.
+SatoshiLabs has created the **SLIP** family of specifications for the purpose of creating interoperability between hardware wallets. Since the **BIP** specifications are very Bitcoin-specific and the understandable reluctance of Bitcoin developers to spend time updating their specification documents for "alt coins", the **SLIP** specifications fill this gap and provide practical standards for wallet manufacturers and developers wishing to support multiple blockchains in a standard matter.
 
 https://github.com/satoshilabs/slips/blob/master/slip-0044.md[SLIP-0044 : Registered coin types for BIP-0044] provides an official registry of BIP 44 coin types for various coins -- _including Omni!_  Omni is listed with coin type *200*.
 
