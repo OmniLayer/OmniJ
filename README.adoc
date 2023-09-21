@@ -308,7 +308,7 @@ The command-line consensus tool, `omnij-consensus-tool` can be built into a nati
 
 === Building
 
-Before building you'll need a GraalVM setup on your system. Besides intalling the Graal JDK, you'll need to do the following:
+Before building you'll need a GraalVM setup on your system. Besides installing the Graal JDK, you'll need to do the following:
 
 1. Set `GRAAL_HOME` to the `JAVA_HOME` of the GraalVM JDK
 2. With the GraalVM active, type `gu install native-image` to install the optional `native-image` tool.
