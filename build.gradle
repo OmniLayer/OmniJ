@@ -50,6 +50,7 @@ subprojects {
     dependencies {
         implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
+        testImplementation("org.junit.jupiter:junit-jupiter:${junitJupiterVersion}")
         testImplementation ("com.msgilligan:cj-bitcoinj-dsl-gvy:${consensusjVersion}" , {
             // These exclusions can be removed when ConsensusJ upgrades to Groovy 4.0
             exclude group: 'org.codehaus.groovy', module: 'groovy'
@@ -60,6 +61,8 @@ subprojects {
             exclude module: "groovy-all"
         }
         testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
         testRuntimeOnly "org.slf4j:slf4j-jdk14:${slf4jVersion}"     // Runtime implementation of slf4j for tests
     }
 
@@ -93,10 +96,8 @@ subprojects {
     }
 
     tasks.withType(Test).configureEach {
-        useJUnitPlatform()
         testLogging.showStandardStreams = true
     }
-
 }
 
 apply from: 'gradle/idea.gradle'
