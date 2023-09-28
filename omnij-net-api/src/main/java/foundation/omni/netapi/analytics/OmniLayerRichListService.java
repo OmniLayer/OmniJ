@@ -15,6 +15,7 @@ import org.consensusj.analytics.service.RichListService;
 import org.consensusj.analytics.service.TokenRichList;
 import org.consensusj.analytics.util.collector.LargestSliceCollector;
 import org.consensusj.analytics.util.collector.LargestSliceList;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +67,7 @@ public class OmniLayerRichListService<N extends Number & Comparable<? super N>, 
      * @return An {@code Observable} to subscribe to for a stream of rich list updates
      */
     @Override
-    public Flowable<TokenRichList<N, ID>> richListUpdates(ID currencyID, int numEntries) {
+    public Publisher<TokenRichList<N, ID>> richListUpdates(ID currencyID, int numEntries) {
         boolean usingOmniwalletClient = false;
 
         if (!usingOmniwalletClient || !currencyID.equals(CurrencyID.USDT)) {

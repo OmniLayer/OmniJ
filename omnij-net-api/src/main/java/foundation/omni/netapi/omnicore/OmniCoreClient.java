@@ -2,7 +2,6 @@ package foundation.omni.netapi.omnicore;
 
 import foundation.omni.OmniDivisibleValue;
 import foundation.omni.OmniValue;
-import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import org.bitcoinj.base.BitcoinNetwork;
 import org.bitcoinj.base.Network;
@@ -261,7 +260,7 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
     }
 
     @Override
-    public Flowable<TokenRichList<OmniValue, CurrencyID>> richListUpdates(CurrencyID id, int n) {
+    public Publisher<TokenRichList<OmniValue, CurrencyID>> richListUpdates(CurrencyID id, int n) {
         return client.pollOnNewBlock(() -> client.omniProxyGetRichListSync(id, n));
     }
 
