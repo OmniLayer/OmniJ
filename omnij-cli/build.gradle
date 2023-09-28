@@ -5,7 +5,7 @@ plugins {
 
 ext.moduleName = 'foundation.omni.cli'
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.release = 17
 }
 
@@ -59,20 +59,21 @@ jar {
 
 // Compile a native image using GraalVM's native-image tool
 // Graal must be installed at $GRAALVM_HOME
-task nativeCompile(type:Exec, dependsOn: jar) {
+tasks.register('nativeCompile', Exec) {
+    dependsOn jar
     workingDir = projectDir
     executable = "${System.env.GRAALVM_HOME}/bin/native-image"
-    args = [ '--verbose',
-             '--no-fallback',
-             '-cp', "${-> configurations.runtimeClasspath.asPath}", // Lazy configuration resolution
-             '-jar', jar.archiveFile.get(),
-             '-H:Path=build',
-             '-H:Name=omnij-consensus-tool',
-             '--initialize-at-build-time=com.fasterxml.jackson.annotation.JsonProperty$Access',
-             '-H:IncludeResources=logging.properties',
-             '-H:ReflectionConfigurationFiles=graal-reflection-config.json',
-             '-H:EnableURLProtocols=http,https',
-             '-H:+ReportUnsupportedElementsAtRuntime'
+    args = ['--verbose',
+            '--no-fallback',
+            '-cp', "${-> configurations.runtimeClasspath.asPath}", // Lazy configuration resolution
+            '-jar', jar.archiveFile.get(),
+            '-H:Path=build',
+            '-H:Name=omnij-consensus-tool',
+            '--initialize-at-build-time=com.fasterxml.jackson.annotation.JsonProperty$Access',
+            '-H:IncludeResources=logging.properties',
+            '-H:ReflectionConfigurationFiles=graal-reflection-config.json',
+            '-H:EnableURLProtocols=http,https',
+            '-H:+ReportUnsupportedElementsAtRuntime'
     ]
 }
 
@@ -93,7 +94,7 @@ sourceSets {
     }
 }
 
-task regTest(type: Test) {
+tasks.register('regTest', Test) {
     useJUnitPlatform()
     testClassesDirs = project.sourceSets.integrationTest.output.classesDirs
     classpath = project.sourceSets.integrationTest.runtimeClasspath
@@ -110,33 +111,37 @@ task regTest(type: Test) {
 
     systemProperty 'regtest', true
     systemProperty 'java.util.logging.config.file', "${project.projectDir}/src/integ/logging.properties"
-    systemProperties ([ "omni.test.rpcTestUser": rpcTestUser,
-                        "omni.test.rpcTestPassword": rpcTestPassword,
+    systemProperties(["omni.test.rpcTestUser"    : rpcTestUser,
+                      "omni.test.rpcTestPassword": rpcTestPassword,
     ])
     include 'foundation/omni/cli/**'
 }
 
 def currencyID = 1
 
-task getCoreConsensus(dependsOn: 'classes',  type: JavaExec) {
+tasks.register('getCoreConsensus', JavaExec) {
+    dependsOn 'classes'
     main = 'foundation.omni.consensus.OmniCoreConsensusTool'
     args = [currencyID, 'build/mastercore_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
-task getOmniConsensus(dependsOn: 'classes',  type: JavaExec) {
+tasks.register('getOmniConsensus', JavaExec) {
+    dependsOn 'classes'
     main = 'foundation.omni.consensus.OmniwalletConsensusTool'
     args = [currencyID, 'build/omniwallet_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
-task getConsensus(dependsOn: ['getCoreConsensus', 'getOmniConsensus']) {
+tasks.register('getConsensus') {
+    dependsOn 'getCoreConsensus', 'getOmniConsensus'
     doLast {
         logger.info "Consensus files are in build/*_consensus.txt"
     }
 }
 
-task runOmniConsensusCLI(dependsOn: 'classes',  type: JavaExec) {
+tasks.register('runOmniConsensusCLI', JavaExec) {
+    dependsOn 'classes'
     main = 'foundation.omni.cli.ConsensusCLI'
     args = ['-regtest', '-rpcwait', '-rpcconnect=127.0.0.1', "-property=${currencyID}"]
     classpath = sourceSets.main.runtimeClasspath

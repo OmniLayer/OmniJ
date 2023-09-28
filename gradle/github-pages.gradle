@@ -31,5 +31,4 @@ gitPublish {
 
 gitPublishCopy.dependsOn javadocAll, groovydocAll, asciidoctor
 
-task publishSite(dependsOn: gitPublishPush, group: 'render',
-        description: "Publishes ${siteDir}, JavaDocs, and GroovyDocs to Github Pages on 'gh-pages' branch")
+tasks.register('publishSite') { dependsOn gitPublishPush }

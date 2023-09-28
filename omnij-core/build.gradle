@@ -9,7 +9,7 @@ dependencies {
     api 'javax.money:money-api:1.1'
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-parameters'   // For use by jackson-databind
 }
 

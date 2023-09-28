@@ -31,7 +31,7 @@ allprojects {
     groovydoc groovydocSpec
 }
 
-task groovydocAll(type: Groovydoc)
+tasks.register('groovydocAll', Groovydoc)
 groovydocAll {
     destinationDir = new File(buildDir, 'docs/groovydoc')
     source = groovydoc.source

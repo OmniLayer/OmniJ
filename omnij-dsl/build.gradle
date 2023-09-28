@@ -4,7 +4,7 @@ plugins {
 
 ext.moduleName = 'foundation.omni.dsl.groovy'
 
-tasks.withType(GroovyCompile) {
+tasks.withType(GroovyCompile).configureEach {
     targetCompatibility = 1.8
 }
 

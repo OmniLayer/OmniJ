@@ -20,7 +20,7 @@ dependencies {
     testImplementation project(':omnij-dsl')
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-parameters'   // For use by jackson-databind
 }
 

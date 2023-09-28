@@ -89,32 +89,33 @@ class RegTest extends IntegrationTest {
     }
 }
 
-task integrationTest(type: IntegrationTest) {
+tasks.register('integrationTest', IntegrationTest) {
     description = 'Runs Bitcoin and Omni Core integration tests.'
 }
 
-task activationRegTest(type: RegTest) {
+tasks.register('activationRegTest', RegTest) {
     description = 'Tests Omni Protocol feature activations in regtest mode.'
 
     include 'foundation/omni/test/rpc/activation/*'
 }
 
-task regTest(type: RegTest, dependsOn: 'activationRegTest') {
+tasks.register('regTest', RegTest) {
+    dependsOn 'activationRegTest'
     description = 'Tests Omni Core RPC calls against an instance of omnicored running in regtest mode.'
 
     include 'foundation/omni/test/rpc/**', 'foundation/omni/test/scripts/**', 'foundation/omni/test/tx/**'
     exclude 'foundation/omni/test/rpc/activation/*'
 }
 
-task consensusTest(type: IntegrationTest) {
+tasks.register('consensusTest', IntegrationTest) {
     description = 'Compares balances for multiple Omni Protocol currencies against public data providers.'
 
     systemProperty 'regtest', false
-    systemProperties ([ "omni.test.rpcTestUser": rpcTestUser,
-                        "omni.test.rpcTestPassword": rpcTestPassword,
-                        "omni.test.stableOmniRpcHost": stableOmniRpcHost,
-                        "omni.test.stableOmniRpcUser": stableOmniRpcUser,
-                        "omni.test.stableOmniRpcPassword": stableOmniRpcPassword
+    systemProperties(["omni.test.rpcTestUser"          : rpcTestUser,
+                      "omni.test.rpcTestPassword"      : rpcTestPassword,
+                      "omni.test.stableOmniRpcHost"    : stableOmniRpcHost,
+                      "omni.test.stableOmniRpcUser"    : stableOmniRpcUser,
+                      "omni.test.stableOmniRpcPassword": stableOmniRpcPassword
     ])
     include 'foundation/omni/test/consensus/**'
 }
