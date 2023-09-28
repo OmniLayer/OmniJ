@@ -119,14 +119,14 @@ def currencyID = 1
 
 tasks.register('getCoreConsensus', JavaExec) {
     dependsOn 'classes'
-    main = 'foundation.omni.consensus.OmniCoreConsensusTool'
+    mainClass = 'foundation.omni.consensus.OmniCoreConsensusTool'
     args = [currencyID, 'build/mastercore_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
 
 tasks.register('getOmniConsensus', JavaExec) {
     dependsOn 'classes'
-    main = 'foundation.omni.consensus.OmniwalletConsensusTool'
+    mainClass = 'foundation.omni.consensus.OmniwalletConsensusTool'
     args = [currencyID, 'build/omniwallet_consensus.txt']
     classpath = sourceSets.main.runtimeClasspath
 }
@@ -140,7 +140,7 @@ tasks.register('getConsensus') {
 
 tasks.register('runOmniConsensusCLI', JavaExec) {
     dependsOn 'classes'
-    main = 'foundation.omni.cli.ConsensusCLI'
+    mainClass = 'foundation.omni.cli.ConsensusCLI'
     args = ['-regtest', '-rpcwait', '-rpcconnect=127.0.0.1', "-property=${currencyID}"]
     classpath = sourceSets.main.runtimeClasspath
 }
