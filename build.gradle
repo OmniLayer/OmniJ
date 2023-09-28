@@ -92,7 +92,7 @@ subprojects {
         reproducibleFileOrder = true
     }
 
-    test {
+    tasks.withType(Test).configureEach {
         useJUnitPlatform()
         testLogging.showStandardStreams = true
     }
