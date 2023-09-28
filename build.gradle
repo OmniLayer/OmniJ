@@ -107,7 +107,7 @@ apply from: 'gradle/maven-publish.gradle'
 apply from: 'gradle/github-pages.gradle'
 
 tasks.register('testReport', TestReport) {
-    destinationDir = file("$buildDir/reports/allTests")
+    destinationDirectory = file("$buildDir/reports/allTests")
     // Include the results from the `test` task in all subprojects
     reportOn subprojects*.test
 }
