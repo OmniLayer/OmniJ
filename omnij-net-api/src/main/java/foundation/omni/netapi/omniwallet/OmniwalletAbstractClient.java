@@ -26,7 +26,7 @@ import io.reactivex.rxjava3.processors.FlowableProcessor;
 import org.bitcoinj.base.Address;
 import org.bitcoinj.base.Network;
 import org.consensusj.bitcoin.json.pojo.ChainTip;
-import org.consensusj.bitcoin.rx.jsonrpc.PollingChainTipService;
+import org.consensusj.bitcoin.rx.ChainTipPublisher;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -181,9 +181,9 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
     }
 
     @Override
-    public Publisher<ChainTip> chainTipPublisher() {
+    public ChainTipPublisher chainTipPublisher() {
         start();
-        return chainTipProcessor;
+        return ChainTipPublisher.of(chainTipProcessor);
     }
 
     private ChainTip revisionInfoToChainTip(RevisionInfo info) {
@@ -191,8 +191,7 @@ public abstract class OmniwalletAbstractClient implements ConsensusService, RxOm
     }
 
     /**
-     * Using a polling interval provided by {@link PollingChainTipService#getPollingInterval()} provide a
-     * stream of distinct {@link ChainTip}s.
+     * Use polling to provide a stream of distinct {@link ChainTip}s.
      *
      * @return A stream of distinct {@code ChainTip}s.
      */

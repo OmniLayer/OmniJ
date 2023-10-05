@@ -2,7 +2,7 @@ package foundation.omni.test
 
 import foundation.omni.net.MoneyMan
 import foundation.omni.rpc.test.OmniTestClientAccessor
-import org.consensusj.bitcoin.jsonrpc.groovy.test.BTCTestSupport
+import org.consensusj.bitcoin.jsonrpc.test.BTCTestSupport
 import foundation.omni.Ecosystem
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniValue

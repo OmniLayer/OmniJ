@@ -20,6 +20,7 @@ import org.consensusj.bitcoin.jsonrpc.RpcConfig;
 import org.consensusj.bitcoin.jsonrpc.bitcoind.BitcoinConfFile;
 import org.consensusj.bitcoin.rx.jsonrpc.RxBitcoinClient;
 import org.consensusj.jsonrpc.JsonRpcException;
+import org.consensusj.jsonrpc.JsonRpcTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +61,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     }
 
     public OmniClient(Network network, URI server, String rpcuser, String rpcpassword) {
-        this(getDefaultSSLContext(), network, server, rpcuser, rpcpassword, false, false);
+        this(JsonRpcTransport.getDefaultSSLContext(), network, server, rpcuser, rpcpassword, false, false);
     }
 
     public OmniClient(SSLContext sslContext, Network network, URI server, String rpcuser, String rpcpassword, boolean useZmq) {
@@ -68,7 +69,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     }
 
     public OmniClient(Network network, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {
-        this(getDefaultSSLContext(), network, server, rpcuser, rpcpassword, useZmq, isOmniProxy);
+        this(JsonRpcTransport.getDefaultSSLContext(), network, server, rpcuser, rpcpassword, useZmq, isOmniProxy);
     }
 
     public OmniClient(SSLContext sslContext, Network network, URI server, String rpcuser, String rpcpassword, boolean useZmq, boolean isOmniProxy) {

@@ -12,7 +12,7 @@ import org.bitcoinj.base.Address;
 import org.bitcoinj.base.AddressParser;
 import org.bitcoinj.base.Sha256Hash;
 import org.consensusj.analytics.service.TokenRichList;
-import org.consensusj.jsonrpc.JacksonRpcClient;
+import org.consensusj.jsonrpc.JsonRpcClient;
 import org.consensusj.jsonrpc.JsonRpcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ import java.util.stream.StreamSupport;
 /**
  * Interface with default methods implementing omniproxy RPCs.
  */
-public interface OmniProxyMethods extends JacksonRpcClient {
+public interface OmniProxyMethods extends JsonRpcClient<JavaType> {
     Logger log = LoggerFactory.getLogger(OmniProxyMethods.class);
     AddressParser addressParser = AddressParser.getDefault();
 
@@ -37,7 +37,7 @@ public interface OmniProxyMethods extends JacksonRpcClient {
     boolean isOmniProxyServer();
 
     private List<OmniPropertyInfo> omniProxyListPropertiesSync() throws IOException {
-        JavaType javaType = getMapper().getTypeFactory().constructCollectionType(List.class, OmniPropertyInfo.class);
+        JavaType javaType = collectionTypeForClasses(List.class, OmniPropertyInfo.class);
         return send("omniproxy.listproperties", javaType);
     }
 
