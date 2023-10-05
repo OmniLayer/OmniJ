@@ -1,14 +1,9 @@
 package foundation.omni.netapi.omniwallet;
 
 import foundation.omni.netapi.OmniBalanceService;
-import foundation.omni.rpc.ConsensusFetcher;
-import io.reactivex.rxjava3.core.BackpressureStrategy;
-import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
-import org.bitcoinj.base.Sha256Hash;
 import org.consensusj.bitcoin.json.pojo.ChainTip;
-import org.consensusj.bitcoin.rx.jsonrpc.PollingChainTipService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
