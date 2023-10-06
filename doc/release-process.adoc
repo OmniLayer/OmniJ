@@ -2,8 +2,8 @@
 
 == Main Release Process
 
-. Official builds are now done with JDK 17. (Although most release JARs are compatible with earlier JDKs)
-.. `sdk use java 17.0.8.1-tem`
+. Official builds are now done with JDK 21. (Although most release JARs are compatible with earlier JDKs)
+.. `sdk use java 21-graalce` (for 0.7.0-alpha3 build)
 . Update `CHANGELOG.adoc`
 . Set versions
 .. `gradle.properties`
