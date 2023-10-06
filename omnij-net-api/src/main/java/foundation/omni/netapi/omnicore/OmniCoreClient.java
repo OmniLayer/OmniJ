@@ -13,6 +13,7 @@ import foundation.omni.json.pojo.ConsensusSnapshot;
 import foundation.omni.rpc.OmniClient;
 import org.consensusj.bitcoin.json.pojo.ChainTip;
 import org.consensusj.bitcoin.json.pojo.bitcore.AddressBalanceInfo;
+import org.consensusj.bitcoin.rx.ChainTipPublisher;
 import org.consensusj.jsonrpc.JsonRpcException;
 import org.consensusj.jsonrpc.JsonRpcStatusException;
 import foundation.omni.CurrencyID;
@@ -261,11 +262,11 @@ public class OmniCoreClient implements ConsensusService, RichListService<OmniVal
 
     @Override
     public Publisher<TokenRichList<OmniValue, CurrencyID>> richListUpdates(CurrencyID id, int n) {
-        return client.pollOnNewBlock(() -> client.omniProxyGetRichListSync(id, n));
+        return client.pollOnNewBlockAsync(() -> client.omniProxyGetRichList(id, n));
     }
 
     @Override
-    public Publisher<ChainTip> chainTipPublisher() {
+    public ChainTipPublisher chainTipPublisher() {
             return client.chainTipPublisher();
     }
 
