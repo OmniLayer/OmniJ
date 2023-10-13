@@ -7,6 +7,10 @@ A mid-level view of the changes in each *OmniJ* binary release.
 
 Released: Forthcoming
 
+=== Dependency Updates
+
+* jackson-module-parameter-names 2.15.3
+
 == v0.7.0-alpha3
 
 Released: 2023-10-05
