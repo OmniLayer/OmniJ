@@ -10,7 +10,7 @@ dependencies {
     api "com.msgilligan:cj-btc-rx-jsonrpc:${consensusjVersion}"
     api "com.msgilligan:consensusj-analytics:${consensusjVersion}"
 
-    api "com.fasterxml.jackson.module:jackson-module-parameter-names:2.15.2"
+    api "com.fasterxml.jackson.module:jackson-module-parameter-names:2.15.3"
 
     testImplementation "org.apache.groovy:groovy:${groovyVersion}"
     testImplementation ("org.apache.groovy:groovy-json:${groovyVersion}")  {
