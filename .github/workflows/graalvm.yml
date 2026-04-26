@@ -14,16 +14,15 @@ jobs:
     name: ${{ matrix.os }} JDK ${{ matrix.java-version }}.${{ matrix.distribution }}
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Set up GraalVM
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: ${{ matrix.java-version }}
         distribution: ${{ matrix.distribution }}
-        components: 'native-image'
         github-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Cache Gradle packages
-      uses: actions/cache@v3
+      uses: actions/cache@v5
       with:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
@@ -31,7 +30,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew :omnij-cli:nativeCompile --scan --info --stacktrace
     - name: Upload omnij-consensus-tool as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v6
       with:
         name: omnij-consensus-tool-${{ matrix.os }}
         path: omnij-cli/build/omnij-consensus-tool
