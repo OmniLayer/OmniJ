@@ -15,7 +15,7 @@ public class OmniSegwitAddressConverter {
     public static SegwitAddress btcToOmni(SegwitAddress btcAddress) {
         OmniNetwork omniNet = btcNetworkToOmniNetwork((BitcoinNetwork) btcAddress.network());
         Bech32.Bech32Data btcBech32Data = Bech32.decode(btcAddress.toBech32());
-        String omniAddressString = Bech32.encode(Bech32.Encoding.BECH32, omniNet.segwitAddressHrp(), btcBech32Data.data);
+        String omniAddressString = Bech32.encode(Bech32.Encoding.BECH32, omniNet.segwitAddressHrp(), btcBech32Data);
         return (SegwitAddress) OmniNetwork.addressParser.forNetwork(omniNet).parseAddress(omniAddressString);
     }
 
@@ -27,7 +27,7 @@ public class OmniSegwitAddressConverter {
     public static SegwitAddress omniToBtc(SegwitAddress omniAddress) {
         BitcoinNetwork btcNet = omniNetworkToBtcNetwork((OmniNetwork) omniAddress.network());
         Bech32.Bech32Data btcBech32Data = Bech32.decode(omniAddress.toBech32());
-        String btcAddressString = Bech32.encode(Bech32.Encoding.BECH32, btcNet.segwitAddressHrp(), btcBech32Data.data);
+        String btcAddressString = Bech32.encode(Bech32.Encoding.BECH32, btcNet.segwitAddressHrp(), btcBech32Data);
         return (SegwitAddress) OmniNetwork.addressParser.forNetwork(btcNet).parseAddress(btcAddressString);
     }
 

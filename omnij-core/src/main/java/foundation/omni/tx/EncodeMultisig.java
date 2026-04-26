@@ -61,26 +61,12 @@ public class EncodeMultisig {
             redeemableGroup.add(redeemingKey);
             redeemableGroup.addAll(group);
             Script script = ScriptBuilder.createMultiSigOutputScript(1, redeemableGroup); // 1 of redeemableGroup.size() multisig
-            TransactionOutput output = new TransactionOutput(null, Coin.ZERO, script.getProgram());
-            output.setValue(calcNonDustValue(output));
+            TransactionOutput output = new TransactionOutput(null, Coin.ZERO, script.program());
+            output.setValue(output.getMinNonDustValue());
             txClassB.addOutput(output);
         }
 
         return txClassB;
-    }
-
-    // Calculate the non-dust output value for a Class B multi-sig output
-    private Coin calcNonDustValue(TransactionOutput output) {
-        boolean useWorkaround = true;
-        if (useWorkaround) {
-            // This is a workaround until https://github.com/bitcoinj/bitcoinj/pull/3120 is merged and
-            // a new bitcoinj 0.17-xxx is released.
-            Coin feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE.multiply(3);
-            long size = output.bitcoinSerialize().length + 32 + 4 + 1 + 107 + 4; // 148
-            return feePerKb.multiply(size).divide(1000);
-        } else {
-            return output.getMinNonDustValue();
-        }
     }
 
     /**

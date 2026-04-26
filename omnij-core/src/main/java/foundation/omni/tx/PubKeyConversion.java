@@ -69,7 +69,7 @@ public class PubKeyConversion {
             try {
                 // Create a Bouncy Castle ECPoint to make sure this pubkey is valid. As of bitcoinj 0.15.10,
                 // ECKey itself is lazy and won't validate at construction, so we create the point first.
-                key = ECKey.fromPublicOnly(ECKey.CURVE.getCurve().decodePoint(pub), true);
+                key = ECKey.fromPublicOnly(ECKey.ecDomainParameters().getCurve().decodePoint(pub), true);
             } catch (IllegalArgumentException e) {
                 valid = false;
                 key = null;
