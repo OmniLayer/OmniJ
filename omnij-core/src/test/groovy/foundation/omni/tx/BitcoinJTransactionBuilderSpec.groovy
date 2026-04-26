@@ -37,7 +37,7 @@ class BitcoinJTransactionBuilderSpec extends BaseTxSpec {
         Script script = ScriptBuilder.createInputScript(null)
         def outPoint = new TransactionOutPoint(1, Sha256Hash.of("boppitybop".getBytes()))
 
-        TransactionInput input = new TransactionInput(null, script.program, outPoint, null)
+        TransactionInput input = new TransactionInput(null, script.program(), outPoint, null)
         tx.addInput(input)
         byte[] rawTx = tx.bitcoinSerialize()
 

@@ -63,7 +63,7 @@ public class ClassCEncoder {
     public TransactionOutput encodeOpReturnOutput(byte[] payload) {
         Script script = createOmniTxOpReturnScript(payload);
 
-        return new TransactionOutput(null, Coin.ZERO, script.getProgram());
+        return new TransactionOutput(null, Coin.ZERO, script.program());
     }
 
     /**
