@@ -24,7 +24,7 @@ There are currently ten active subprojects of OmniJ. Each of which builds a JAR 
 
 | omnij-cli
 | Omni consensus-checking command-line tool.
-| 17
+| 21
 | Can be natively compiled with *GraalVM* `native-image`.
 
 | omnij-core
@@ -157,7 +157,7 @@ If you are using the `omnij-jsonrpc` JAR, add the following:
 
 === Building OmniJ
 
-The only prerequisite for building OmniJ is having Java JDK 11 or later installed (JDK 17 is recommended.) All other prerequisites are downloaded automatically by the http://gradle.org/docs/current/userguide/gradle_wrapper.html[Gradle Wrapper] script.
+The only prerequisite for building OmniJ is having Java JDK 17 or later installed (JDK 21 is recommended.) All other prerequisites are downloaded automatically by the http://gradle.org/docs/current/userguide/gradle_wrapper.html[Gradle Wrapper] script.
 
 . Check out this project using Git
 
