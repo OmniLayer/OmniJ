@@ -58,17 +58,9 @@ public class ConsensusCLI extends BitcoinCLITool {
     }
 
     public static void main(String[] args) {
-        try {
-            ConsensusCLI command = new ConsensusCLI();
-            OmniCoreCLICall call = new OmniCoreCLICall(command, System.out, System.err, args);
-            command.run(call);
-        } catch (ToolException te) {
-            System.exit(te.resultCode);
-        } catch (Throwable e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-        System.exit(0);
+        ConsensusCLI command = new ConsensusCLI();
+        int resultCode = command.run( System.out, System.err, args);
+        System.exit(resultCode);
     }
 
     @Override
@@ -77,12 +69,16 @@ public class ConsensusCLI extends BitcoinCLITool {
     }
 
     @Override
-    public void run(Call call) {
+    public int run(PrintWriter out, PrintWriter err, String... args) {
         try {
-            run((OmniCoreCLICall) call);
-        } catch (IOException | InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
+            OmniCoreCLICall call = new OmniCoreCLICall(this, System.out, System.err, args);
+            run(call);
+        } catch (ToolException e) {
+            return e.resultCode;
+        } catch (Exception e) {
+            throw new RuntimeException((e));
         }
+        return 0;
     }
 
     public void run(OmniCoreCLICall call) throws IOException, InterruptedException, ExecutionException {
@@ -91,7 +87,7 @@ public class ConsensusCLI extends BitcoinCLITool {
         // Must have -p (property id) or -x (compare)
         if (!(line.hasOption("p") || line.hasOption("x"))) {
             printError(call, "Must either specify a property id with -p and/or the -x/-compare option");
-            printHelp(call, commandUsage);
+            printHelp(call.out, commandUsage);
             throw new ToolException(1, "usage error");
         }
 
@@ -117,7 +113,7 @@ public class ConsensusCLI extends BitcoinCLITool {
 
         if (line.hasOption("compare") && (tool2 == null) ) {
             printError(call, "-omnicore-url or -omniwallet-url must be specified for -x/-compare option");
-            printHelp(call, commandUsage);
+            printHelp(call.out, commandUsage);
             throw new ToolException(1, "usage error");
         } else if (line.hasOption("compare")) {
             MultiPropertyComparison multiComparison = new MultiPropertyComparison(tool1, tool2);

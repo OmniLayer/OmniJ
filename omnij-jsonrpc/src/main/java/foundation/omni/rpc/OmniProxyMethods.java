@@ -38,7 +38,7 @@ public interface OmniProxyMethods extends JsonRpcClient<JavaType> {
 
     private List<OmniPropertyInfo> omniProxyListPropertiesSync() throws IOException {
         JavaType javaType = collectionTypeForClasses(List.class, OmniPropertyInfo.class);
-        return send("omniproxy.listproperties", javaType);
+        return (List<OmniPropertyInfo>) send("omniproxy.listproperties", javaType);
     }
 
     default CompletableFuture<List<OmniPropertyInfo>> omniProxyListProperties()  {

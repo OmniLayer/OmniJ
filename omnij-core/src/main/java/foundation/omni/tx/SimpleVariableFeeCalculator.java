@@ -9,7 +9,7 @@ import org.bitcoinj.core.Transaction;
 public class SimpleVariableFeeCalculator implements FeeCalculator {
     @Override
     public Coin calculateFee(Transaction tx) {
-        long fee = (tx.getMessageSize() * Transaction.DEFAULT_TX_FEE.getValue()) / 1024;
+        long fee = (tx.messageSize() * Transaction.DEFAULT_TX_FEE.getValue()) / 1024;
         return Coin.valueOf(fee);
     }
 }

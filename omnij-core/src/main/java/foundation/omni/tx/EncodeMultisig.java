@@ -61,8 +61,8 @@ public class EncodeMultisig {
             redeemableGroup.add(redeemingKey);
             redeemableGroup.addAll(group);
             Script script = ScriptBuilder.createMultiSigOutputScript(1, redeemableGroup); // 1 of redeemableGroup.size() multisig
-            TransactionOutput output = new TransactionOutput(null, Coin.ZERO, script.program());
-            output.setValue(output.getMinNonDustValue());
+            TransactionOutput tmpOutput = new TransactionOutput(null, Coin.ZERO, script.program());
+            TransactionOutput output = new TransactionOutput(null, tmpOutput.getMinNonDustValue(), script.program());
             txClassB.addOutput(output);
         }
 

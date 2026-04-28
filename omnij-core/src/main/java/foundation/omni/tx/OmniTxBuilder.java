@@ -123,7 +123,9 @@ public class OmniTxBuilder {
      */
     static void addDustOutput(Transaction tx, Address address) {
         TransactionOutput output = tx.addOutput(Coin.ZERO, address);    // Add Output with zero amount
-        output.setValue(output.getMinNonDustValue());                   // Adjust to minimum non-dust value
+        int index = output.getIndex();
+        // Adjust to minimum non-dust value
+        tx.replaceOutput(index, output.withValue(output.getMinNonDustValue()));
     }
 
     /**
@@ -173,9 +175,9 @@ public class OmniTxBuilder {
             TransactionSignature signature = tx.calculateSignature(i, fromKey, scriptPubKey, Transaction.SigHash.ALL, false);
             // ScriptPattern should match scriptType or error
             if (ScriptPattern.isP2PK(scriptPubKey))
-                input.setScriptSig(ScriptBuilder.createInputScript(signature));
+                tx.replaceInput(i, input.withScriptSig(ScriptBuilder.createInputScript(signature)));
             else if (ScriptPattern.isP2PKH(scriptPubKey))
-                input.setScriptSig(ScriptBuilder.createInputScript(signature, fromKey));
+                tx.replaceInput(i, input.withScriptSig(ScriptBuilder.createInputScript(signature, fromKey)));
             else if (ScriptPattern.isP2SH(scriptPubKey))
                 // TODO: Support signing P2SH(P2WPKH) here
                 // (since this method takes a single ECKey we don't need multisig support in this method)
