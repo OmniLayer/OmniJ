@@ -2,14 +2,15 @@ ext.javadocSpec = {
     def javaDocLinks = [
             'https://docs.oracle.com/en/java/javase/11/docs/api/',
             "https://www.consensusj.org/consensusj/apidoc/",
-            // javadoc.io is down on 10/4/2023 and beaking the build, try renabling later?
+            // javadoc.io is down on 10/4/2023 and breaking the build, try re-enabling later?
             // Or maybe use the -linkoffline option?
             // "https://javadoc.io/doc/javax.money/money-api/1.1/",
             "https://fasterxml.github.io/jackson-core/javadoc/2.13/",
             "https://fasterxml.github.io/jackson-databind/javadoc/2.13/"
     ]
 
-    if (!bitcoinjVersion.contains("alpha") && !bitcoinjVersion.contains("beta") && !bitcoinjVersion.contains("rc")) {
+    if (!bitcoinjVersion.contains("alpha") && !bitcoinjVersion.contains("beta")
+            && !bitcoinjVersion.contains("rc") && !bitcoinjVersion.contains("0.17.1")) {
         javaDocLinks.add("https://bitcoinj.org/javadoc/${bitcoinjVersion}/".toString())
     }
 

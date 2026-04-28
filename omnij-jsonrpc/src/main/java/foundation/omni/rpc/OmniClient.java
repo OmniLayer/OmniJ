@@ -110,8 +110,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @throws IOException network error
      */
     public Map<String, Object> omniGetInfo() throws JsonRpcException, IOException {
-        Map<String, Object> result = send("omni_getinfo");
-        return result;
+        return (Map<String, Object>) send("omni_getinfo");
     }
 
     /**
@@ -123,7 +122,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<SmartPropertyListInfo> omniListProperties() throws JsonRpcException, IOException {
         JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, SmartPropertyListInfo.class);
-        return send("omni_listproperties", resultType);
+        return (List<SmartPropertyListInfo> ) send("omni_listproperties", resultType);
     }
 
     /**
@@ -135,8 +134,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @throws IOException network error
      */
     public OmniPropertyInfo omniGetProperty(CurrencyID currency) throws JsonRpcException, IOException {
-        OmniPropertyInfo result = send("omni_getproperty", OmniPropertyInfo.class, currency);
-        return result;
+        return send("omni_getproperty", OmniPropertyInfo.class, currency);
     }
 
     /**
@@ -148,8 +146,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @throws IOException network error
      */
     public Map<String, Object> omniGetCrowdsale(CurrencyID currency) throws JsonRpcException, IOException {
-        Map<String, Object> result = send("omni_getcrowdsale", currency);
-        return result;
+        return (Map<String, Object>) send("omni_getcrowdsale", currency);
     }
 
     /**
@@ -160,8 +157,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @throws IOException network error
      */
     public List<Map<String, Object>> omniGetActiveCrowdsales() throws JsonRpcException, IOException {
-        List<Map<String, Object>> result = send("omni_getactivecrowdsales");
-        return result;
+        return (List<Map<String, Object>>) send("omni_getactivecrowdsales");
     }
 
     /**
@@ -172,8 +168,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @throws IOException network error
      */
     public List<Map<String, Object>> omniGetActiveDExSells() throws JsonRpcException, IOException {
-        List<Map<String, Object>> result = send("omni_getactivedexsells");
-        return result;
+        return (List<Map<String, Object>>) send("omni_getactivedexsells");
     }
 
     /**
@@ -214,7 +209,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     public List<AddressBalanceEntry> omniGetAllBalancesForIdAsList(CurrencyID currency)
             throws JsonRpcException, IOException {
         JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, AddressBalanceEntry.class);
-        return send("omni_getallbalancesforid", resultType, currency);
+        return (List<AddressBalanceEntry>) send("omni_getallbalancesforid", resultType, currency);
     }
 
     /**
@@ -241,7 +236,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
     public List<PropertyBalanceEntry> omniGetAllBalancesForAddressAsList(Address address)
             throws JsonRpcException, IOException {
         JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, PropertyBalanceEntry.class);
-        return send("omni_getallbalancesforaddress", resultType, address);
+        return (List<PropertyBalanceEntry>) send("omni_getallbalancesforaddress", resultType, address);
     }
 
     /**
@@ -278,7 +273,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<OmniTransactionInfo> omniListTransactions(String addressFilter, Integer count, Integer skip, Integer startBlock, Integer endBlock) throws JsonRpcException, IOException {
         JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, OmniTransactionInfo.class);
-        return send("omni_listtransactions", resultType, addressFilter, count, skip, startBlock, endBlock);
+        return (List<OmniTransactionInfo>) send("omni_listtransactions", resultType, addressFilter, count, skip, startBlock, endBlock);
     }
 
     /**
@@ -291,7 +286,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<Sha256Hash> omniListBlockTransactions(Integer blockIndex) throws JsonRpcException, IOException {
         JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, Sha256Hash.class);
-        return send("omni_listblocktransactions", resultType, blockIndex);
+        return (List<Sha256Hash> ) send("omni_listblocktransactions", resultType, blockIndex);
     }
 
     /**
@@ -682,7 +677,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public Map<String, Object> omniGetSTO(Sha256Hash txid) throws JsonRpcException, IOException {
         String filter = "*"; // no filter at all
-        return send("omni_getsto", txid, filter);
+        return (Map<String, Object>) send("omni_getsto", txid, filter);
     }
 
     /**
@@ -700,7 +695,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
 
     public List<OmniTradeInfo> omniGetTradeHistoryForAddress(Address address, Integer count, CurrencyID propertyId) throws JsonRpcException, IOException {
         JavaType resultType = mapper.getTypeFactory().constructCollectionType(List.class, OmniTradeInfo.class);
-        return send("omni_gettradehistoryforaddress", resultType, address, count, propertyId);
+        return (List<OmniTradeInfo>) send("omni_gettradehistoryforaddress", resultType, address, count, propertyId);
     }
 
     /**
@@ -713,7 +708,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @since Omni Core 0.0.10
      */
     public List<Map<String, Object>> omniGetOrderbook(CurrencyID propertyForSale) throws JsonRpcException, IOException {
-        return send("omni_getorderbook", propertyForSale);
+        return (List<Map<String, Object>>) send("omni_getorderbook", propertyForSale);
     }
 
     /**
@@ -728,7 +723,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<Map<String, Object>> omniGetOrderbook(CurrencyID propertyForSale, CurrencyID propertyDesired)
             throws JsonRpcException, IOException {
-        return send("omni_getorderbook", propertyForSale, propertyDesired);
+        return (List<Map<String, Object>>) send("omni_getorderbook", propertyForSale, propertyDesired);
     }
 
     /**
@@ -740,7 +735,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @throws IOException network error
      */
     public List<Map<String, Object>> omniGetGrants(CurrencyID propertyid) throws JsonRpcException, IOException {
-        return send("omni_getgrants", propertyid);
+        return (List<Map<String, Object>>) send("omni_getgrants", propertyid);
     }
 
     /**
@@ -752,7 +747,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      * @since Omni Core 0.0.10
      */
     public Map<String, List<Map<String, Object>>> omniGetActivations() throws JsonRpcException, IOException {
-        return send("omni_getactivations");
+        return (Map<String, List<Map<String, Object>>>) send("omni_getactivations");
     }
 
     /**
@@ -769,7 +764,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<Map<String, Object>> omniGetFeeCache(CurrencyID propertyid)
             throws JsonRpcException, IOException {
-        return send("omni_getfeecache", propertyid);
+        return (List<Map<String, Object>>) send("omni_getfeecache", propertyid);
     }
 
     /**
@@ -786,7 +781,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<Map<String, Object>> omniGetFeeTrigger(CurrencyID propertyId)
             throws JsonRpcException, IOException {
-        return send("omni_getfeetrigger", propertyId);
+        return (List<Map<String, Object>>) send("omni_getfeetrigger", propertyId);
     }
 
     /**
@@ -807,7 +802,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<Map<String, Object>> omniGetFeeShare(Address address, Ecosystem ecosystem)
             throws JsonRpcException, IOException {
-        return send("omni_getfeeshare", Objects.requireNonNullElse(address, ""), ecosystem);
+        return (List<Map<String, Object>>) send("omni_getfeeshare", Objects.requireNonNullElse(address, ""), ecosystem);
     }
 
     /**
@@ -823,7 +818,7 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public Map<String, Object> omniGetFeeDistribution(Integer distributionId)
             throws JsonRpcException, IOException {
-        return send("omni_getfeedistribution", distributionId);
+        return (Map<String, Object>) send("omni_getfeedistribution", distributionId);
     }
 
     /**
@@ -839,6 +834,6 @@ public class OmniClient extends RxBitcoinClient implements OmniClientRawTxSuppor
      */
     public List<Map<String, Object>> omniGetFeeDistributions(CurrencyID propertyId)
             throws JsonRpcException, IOException {
-        return send("omni_getfeedistributions", propertyId);
+        return (List<Map<String, Object>>) send("omni_getfeedistributions", propertyId);
     }
 }
