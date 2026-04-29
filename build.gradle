@@ -6,7 +6,7 @@ buildscript {
 
 plugins {
     id 'org.asciidoctor.jvm.convert' version '4.0.5'
-    id 'org.ajoberstar.git-publish'  version '4.2.1'
+    id 'org.ajoberstar.git-publish'  version '6.0.0'
 }
 
 // See gradle.properties for some dependency version settings
