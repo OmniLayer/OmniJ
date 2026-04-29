@@ -33,7 +33,7 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.7.11'
 
     testImplementation project(':omnij-dsl')
-    testImplementation 'com.xlson.groovycsv:groovycsv:1.3'   // Used by Omni STO tests
+    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.21.3'   // Used by Omni STO tests
 }
 
 // Test Structure

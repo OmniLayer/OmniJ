@@ -1,12 +1,13 @@
 package foundation.omni.test.rpc.sto
 
+import com.fasterxml.jackson.dataformat.csv.CsvMapper
+import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import foundation.omni.OmniDivisibleValue
 import foundation.omni.OmniValue
 import foundation.omni.dsl.categories.NumberCategory
 import org.bitcoinj.base.Address
 import org.bitcoinj.base.Coin
 import org.bitcoinj.base.Sha256Hash
-import com.xlson.groovycsv.CsvParser
 import foundation.omni.BaseRegTestSpec
 import foundation.omni.CurrencyID
 import foundation.omni.Ecosystem
@@ -31,8 +32,9 @@ class SendToOwnersTestPlanSpec extends BaseRegTestSpec {
 
     def setupSpec() {
         def file = new File(getTestPlanPath())
-        def tsv = file.text
-        def data = new CsvParser().parse(tsv, separator: '\t')
+        def mapper = new CsvMapper()
+        def schema = CsvSchema.emptySchema().withColumnSeparator('\t' as char).withHeader()
+        def data = mapper.readerFor(Map).with(schema).readValues(file).readAll()
         testdata = data
     }
 
