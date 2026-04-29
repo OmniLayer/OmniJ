@@ -3,7 +3,7 @@
 == Main Release Process
 
 . Official builds are now done with JDK 21. (Although most release JARs are compatible with earlier JDKs)
-.. `sdk use java 21-tem`
+.. `sdk use java 21.0.11-tem`
 . Update `CHANGELOG.adoc`
 . Set versions
 .. `gradle.properties`

@@ -3,13 +3,28 @@
 
 A mid-level view of the changes in each *OmniJ* binary release.
 
-== v0.7.0 (planned)
+== v0.7.0-beta1
 
-Released: Forthcoming
+Released: 2026-04-29
 
 === Dependency Updates
 
-* jackson-module-parameter-names 2.15.3
+* ConsensusJ 0.7.0-beta2
+* bitcoinj 0.17.1 
+* jackson-module-parameter-names 2.21.3
+* postgresql driver 42.7.11
+
+=== Build/Test Updates
+
+* Use JDK 21 for official builds
+* JUnit Jupiter 5.14.4
+* Spock 2.4
+* Gradle Wrapper 8.14.4
+* Use jackson-dataformat-csv (instead of groovycsv) in tests
+* git-publish plugin 6.0.0
+* Asciidoctor plugin 4.0.5
+* GitHub Actions: Use specific OS versions
+* GitHub Actions: Use GraalVM 25 for native compilation
 
 == v0.7.0-alpha3
 
